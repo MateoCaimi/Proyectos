@@ -10,6 +10,34 @@ const dbConfig = {
 
 let db;
 
+function conectar() {
+  db = mysql.createConnection(dbConfig);
+
+  return new Promise((resolve, reject) => {
+    db.connect((err) => {
+      if (err) {
+        console.log("Érror al conectar: " + err);
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
+function desconectar() {
+  return new Promise((resolve, reject) => {
+    db.end((err) => {
+      if (err) {
+        console.log("Error al desconectar: " + err);
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
 async function conMySql() {
   db = mysql.createConnection(dbConfig);
 
@@ -33,97 +61,169 @@ async function conMySql() {
 }
 
 async function getMaquinas() {
-  await conMySql();
-  return new Promise((resolve, reject) => {
-    db.query("SELECT * from potencia_vial.Maquina", (err, results) => {
-      if (err) {
-        console.error("Error en la consulta: " + err);
-        reject(err);
-      } else {
-        resolve(results);
-      }
+  try {
+    await conectar();
+    return new Promise((resolve, reject) => {
+      db.query("SELECT * from potencia_vial.Maquina", (err, results) => {
+        if (err) {
+          console.error(err);
+          reject(err);
+        } else {
+          resolve(results);
+        }
+      });
     });
-  });
+  } catch (err) {
+    console.error(err);
+  } finally {
+    await desconectar();
+  }
 }
 
 async function getMaquina(id) {
-  await conMySql();
-  return new Promise((resolve, reject) => {
-    db.query(
-      `SELECT * from potencia_vial.Maquina WHERE Id = ?`,
-      [id],
-      (err, results) => {
-        if (err) {
-          console.error();
-          reject(err);
-        } else {
-          resolve(results);
+  try {
+    await conectar();
+    return new Promise((resolve, reject) => {
+      db.query(
+        `SELECT * from potencia_vial.Maquina WHERE Id = ?`,
+        [id],
+        (err, results) => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          } else {
+            resolve(results);
+          }
         }
-      }
-    );
-  });
+      );
+    });
+  } catch (err) {
+    console.error(err);
+  } finally {
+    await desconectar();
+  }
 }
 
 async function getMaquinasActivas() {
-  await conMySql();
-  return new Promise((resolve, reject) => {
-    db.query(
-      `SELECT * from potencia_vial.Maquina WHERE Condicion = 'A'`,
-      (err, results) => {
-        if (err) {
-          console.error();
-          reject(err);
-        } else {
-          resolve(results);
+  try {
+    await conectar();
+    return new Promise((resolve, reject) => {
+      db.query(
+        `SELECT * from potencia_vial.Maquina WHERE Condicion = 'Nuevo'`,
+        (err, results) => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          } else {
+            resolve(results);
+          }
         }
-      }
-    );
-  });
+      );
+    });
+  } catch (err) {
+    console.error(err);
+  } finally {
+    await desconectar();
+  }
 }
 
 async function getTipos() {
-  await conMySql();
-  return new Promise((resolve, reject) => {
-    db.query(`SELECT * from potencia_vial.Tipo`, (err, results) => {
-      if (err) {
-        console.error();
-        reject(err);
-      } else {
-        resolve(results);
-      }
-    });
-  });
-}
-
-async function getMultimediaByMaquina() {
-  await conMySql();
-  return new Promise((resolve, reject) => {
-    db.query(
-      `SELECT * from potencia_vial.MaquinaMultimedia`,
-      (err, results) => {
+  try {
+    await conectar();
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT * from potencia_vial.Tipo`, (err, results) => {
         if (err) {
-          console.error();
+          console.error(err);
           reject(err);
         } else {
           resolve(results);
         }
-      }
-    );
-  });
+      });
+    });
+  } catch (err) {
+    console.error(err);
+  } finally {
+    await desconectar();
+  }
+}
+
+async function getMultimediaByMaquina() {
+  try {
+    await conectar();
+    return new Promise((resolve, reject) => {
+      db.query(
+        `SELECT * from potencia_vial.MaquinaMultimedia`,
+        (err, results) => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
+  } catch (error) {
+    console.error(error);
+  } finally {
+    await desconectar();
+  }
 }
 
 async function getMultimedia() {
-  await conMySql();
+  try {
+    await conectar();
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT * from potencia_vial.Multimedia`, (err, results) => {
+        desconectar().then(() => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          } else {
+            resolve(results);
+          }
+        });
+      });
+    });
+  } catch (error) {
+    console.error(error);
+  } finally {
+    await desconectar();
+  }
+}
+
+async function ejecutarConsulta(query) {
   return new Promise((resolve, reject) => {
-    db.query(`SELECT * from potencia_vial.Multimedia`, (err, results) => {
+    db.query(query, (err, results) => {
       if (err) {
-        console.error();
         reject(err);
       } else {
         resolve(results);
       }
     });
   });
+}
+
+async function insertarMultimedia(query, fileName, fileType, imageContent) {
+  try {
+    await conectar();
+    return new Promise((resolve, reject) => {
+      db.query(query, [fileType, fileName, imageContent], (err, results) => {
+        desconectar().then(() => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          } else {
+            resolve(results);
+          }
+        });
+      });
+    });
+  } catch (error) {
+    console.error(error);
+  } finally {
+    await desconectar();
+  }
 }
 
 module.exports = {
@@ -133,4 +233,8 @@ module.exports = {
   getTipos,
   getMultimediaByMaquina,
   getMultimedia,
+  ejecutarConsulta,
+  conectar,
+  desconectar,
+  insertarMultimedia,
 };

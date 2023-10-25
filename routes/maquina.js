@@ -13,7 +13,7 @@ router.get("/getMaquina/:id", function (req, res, next) {
   controller.maquina_get(req, res, next);
 });
 
-/* GET maquina. */
+/* GET maquina y su tipo con su multimedia. */
 router.get("/getMaquinasAndType", function (req, res, next) {
   controller.maquinasAndType(req, res, next);
 });
