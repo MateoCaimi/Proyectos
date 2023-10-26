@@ -2,6 +2,36 @@ var express = require("express");
 const asyncHandler = require("express-async-handler");
 const dataBase = require("../BD/mysql");
 
+exports.addMaquina = asyncHandler(async (req, res, next) => {
+  const Modelo = req.body.Modelo;
+  const TipoId = req.body.TipoId;
+  const Condicion = req.body.Condicion;
+  const Altura = req.body.Altura;
+  const Largo = req.body.Largo;
+  const Ancho = req.body.Ancho;
+  const CargaMaxima = req.body.CargaMaxima;
+  const descripcion = req.body.descripcion;
+  const anio = req.body.anio;
+
+  const data = {
+    Modelo,
+    TipoId,
+    Condicion,
+    Altura,
+    Largo,
+    Ancho,
+    CargaMaxima,
+    descripcion,
+    anio,
+  };
+  const result = await dataBase.addMaquina(data);
+  if (!result) {
+    throw new Error("Error en el resultado");
+  } else {
+    res.status(200).json(result);
+  }
+});
+
 exports.maquinas_getAll = asyncHandler(async (req, res, next) => {
   const result = await dataBase.getMaquinas();
   if (!result) {
@@ -49,7 +79,11 @@ exports.maquina_get = asyncHandler(async (req, res, next) => {
           const multimedia = multimedias.find(
             (item) => item.Id === multimediaId
           );
-          return multimedia; // Agregar el elemento multimedia correspondiente a la lista
+          return {
+            Id: multimedia.Id,
+            Nombre: multimedia.Nombre,
+            Tipo: multimedia.Tipo,
+          }; // Agregar el elemento multimedia correspondiente a la lista
         }
       ),
     };
@@ -119,7 +153,11 @@ exports.maquinasAndType = asyncHandler(async (req, res, next) => {
               const multimedia = multimedias.find(
                 (item) => item.Id === multimediaId
               );
-              return multimedia; // Agregar el elemento multimedia correspondiente a la lista
+              return {
+                Id: multimedia.Id,
+                Nombre: multimedia.Nombre,
+                Tipo: multimedia.Tipo,
+              }; // Agregar el elemento multimedia correspondiente a la lista
             }
           ),
         })),

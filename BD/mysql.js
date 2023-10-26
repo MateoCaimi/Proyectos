@@ -209,15 +209,101 @@ async function insertarMultimedia(query, fileName, fileType, imageContent) {
     await conectar();
     return new Promise((resolve, reject) => {
       db.query(query, [fileType, fileName, imageContent], (err, results) => {
-        desconectar().then(() => {
+        if (err) {
+          console.error(err);
+          reject(err);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+  } catch (error) {
+    console.error(error);
+  } finally {
+    await desconectar();
+  }
+}
+
+async function insertarMaquinaMultimedia(data) {
+  try {
+    await conectar();
+    return new Promise((resolve, reject) => {
+      db.query(
+        `INSERT INTO potencia_vial.MaquinaMultimedia
+      (MaquinaId, MultimediaId)
+      VALUES(?,?);
+      `,
+        [data.MaquinaId, data.MultimediaId],
+        (err, results) => {
           if (err) {
             console.error(err);
             reject(err);
           } else {
             resolve(results);
           }
-        });
-      });
+        }
+      );
+    });
+  } catch (error) {
+    console.error(error);
+  } finally {
+    await desconectar();
+  }
+}
+
+async function get_Multimedia(id) {
+  try {
+    await conectar();
+    return new Promise((resolve, reject) => {
+      db.query(
+        `SELECT * FROM potencia_vial.Multimedia where Id = ?`,
+        [id],
+        (err, results) => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
+  } catch (error) {
+    console.error(error);
+  } finally {
+    await desconectar();
+  }
+}
+
+async function addMaquina(data) {
+  try {
+    await conectar();
+    return new Promise((resolve, reject) => {
+      db.query(
+        `INSERT INTO potencia_vial.Maquina
+      (Modelo, TipoId, Condicion, Altura, Largo, Ancho, CargaMaxima, descripcion, anio)
+      VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);
+      `,
+        [
+          data.Modelo,
+          data.TipoId,
+          data.Condicion,
+          data.Altura,
+          data.Largo,
+          data.Ancho,
+          data.CargaMaxima,
+          data.descripcion,
+          data.anio,
+        ],
+        (err, results) => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          } else {
+            resolve(results);
+          }
+        }
+      );
     });
   } catch (error) {
     console.error(error);
@@ -237,4 +323,7 @@ module.exports = {
   conectar,
   desconectar,
   insertarMultimedia,
+  get_Multimedia,
+  addMaquina,
+  insertarMaquinaMultimedia,
 };

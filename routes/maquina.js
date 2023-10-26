@@ -18,4 +18,9 @@ router.get("/getMaquinasAndType", function (req, res, next) {
   controller.maquinasAndType(req, res, next);
 });
 
+/**POST agregar maquinas */
+router.post("/addMaquina",(req,res,next)=>{
+  controller.addMaquina(req,res,next);
+})
+
 module.exports = router;

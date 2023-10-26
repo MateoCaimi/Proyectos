@@ -3,26 +3,43 @@ const dataBase = require("../BD/mysql");
 const fs = require("fs");
 const path = require("path");
 
+exports.getMultimedia = asyncHandler(async (req, res, next) => {
+  const result = await dataBase.get_Multimedia(req.params.id);
+  if (!result) {
+    throw new Error("Error en el resultado");
+  } else {
+    res.status(200).json(result);
+  }
+});
+
 exports.upload = asyncHandler(async (req, res, next) => {
   try {
+    const MaquinaId = req.body.MaquinaId;
+
     const { filename } = req.file;
     const fileType = req.file.mimetype;
-
-    console.log("fileName: " + filename);
-    console.log("fileType: " + fileType);
     const filePath = path.join(__dirname, "uploads", filename);
-    console.log('Ruta del archivo: ' + filePath);
 
     const query =
-      "INSERT INTO Multimedia (Tipo, Nombre, Valor) VALUES (?, ?, ?)";
-    const imageContent = fs.readFileSync(filePath);
-    console.log("imageConten: " + imageContent);
-    const result = dataBase.insertarMultimedia(
+      "INSERT INTO potencia_vial.Multimedia (Tipo, Nombre, Valor) VALUES (?, ?, ?)";
+    const imageContentBuffer = fs.readFileSync(filePath);
+    const imageContent = imageContentBuffer.toString("base64");
+    const result = await dataBase.insertarMultimedia(
       query,
       filename,
       fileType,
       imageContent
     );
+
+    const MultimediaId = result.insertId;
+
+    const data = {
+      MaquinaId,
+      MultimediaId,
+    };
+
+    await dataBase.insertarMaquinaMultimedia(data);
+
     if (!result) {
       throw new Error("No se encontró la máquina.");
     } else {
