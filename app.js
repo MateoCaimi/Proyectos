@@ -4,14 +4,16 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
+var jwt = require("jsonwebtoken");
+var fs = require("fs");
 
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
+var loginRouter = require("./routes/login");
 var maquinaRouter = require("./routes/maquina");
 var tipoRouter = require("./routes/tipo");
 var uploadRouter = require("./routes/upload");
 
 var app = express();
+const RSA_PRIVATE_KEY = fs.readFileSync("private.key");
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -38,12 +40,47 @@ app.use((req, res, next) => {
 
   next();
 });
-
-app.use("/", indexRouter);
-app.use("/users", usersRouter);
 app.use("/maquinas", maquinaRouter);
 app.use("/tipos", tipoRouter);
+app.use("/login", loginRouter);
+
+app.use((req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (authHeader) {
+    const token = authHeader.split(" ")[1];
+
+    jwt.verify(token, RSA_PRIVATE_KEY, (err) => {
+      if (err) {
+        console.log(err);
+        const response = {
+          Result: {
+            statuscode: "403",
+            statustext: "Unauthorized",
+          },
+          data: {},
+        };
+
+        res.status(403).json(response);
+      } else {
+        next();
+      }
+    });
+  } else {
+    console.log(authHeader);
+    const response = {
+      Result: {
+        statuscode: "401",
+        statustext: "Unauthorized",
+      },
+      data: {},
+    };
+    res.status(401).json(response);
+  }
+});
+
 app.use("/upload", uploadRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

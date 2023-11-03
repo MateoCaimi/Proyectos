@@ -19,8 +19,13 @@ router.get("/getMaquinasAndType", function (req, res, next) {
 });
 
 /**POST agregar maquinas */
-router.post("/addMaquina",(req,res,next)=>{
-  controller.addMaquina(req,res,next);
-})
+router.post("/addMaquina", (req, res, next) => {
+  controller.addMaquina(req, res, next);
+});
+
+/**DELETE eliminar maquinas */
+router.delete("/deleteMaquina", (req, res, next) => {
+  controller.eliminarMaquina(req, res, next);
+});
 
 module.exports = router;

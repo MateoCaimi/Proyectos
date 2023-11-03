@@ -1,6 +1,32 @@
 var express = require("express");
 const asyncHandler = require("express-async-handler");
 const dataBase = require("../BD/mysql");
+const { database } = require("../config/config");
+
+exports.eliminarMaquina = asyncHandler(async (req, res, next) => {
+  const maquinaId = req.body.Id;
+  await dataBase.conectar();
+  const deleteMaquina = await dataBase.ejecutarConsulta(
+    `DELETE FROM potencia_vial.Maquina where Id = ${maquinaId}`
+  );
+  const deleteMultimediaMaquina = await dataBase.ejecutarConsulta(
+    `DELETE FROM potencia_vial.MaquinaMultimedia where MaquinaId =${maquinaId}`
+  );
+  await dataBase.desconectar();
+  const result = {
+    respone: {
+      Code: 0,
+      Message: "",
+    },
+  };
+  if (!deleteMaquina && !deleteMultimediaMaquina) {
+    throw new Error("Error en el resultado");
+  } else {
+    result.respone.Code = 200;
+    result.respone.Message = `Maquina ${maquinaId} eliminada con exito`;
+    res.status(200).json(result);
+  }
+});
 
 exports.addMaquina = asyncHandler(async (req, res, next) => {
   const Modelo = req.body.Modelo;

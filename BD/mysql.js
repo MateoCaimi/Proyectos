@@ -312,6 +312,54 @@ async function addMaquina(data) {
   }
 }
 
+async function delete_Maquina(id) {
+  try {
+    await conectar();
+    return new Promise((resolve, reject) => {
+      db.query(
+        `DELETE FROM potencia_vial.Maquina where Id = ?`,
+        [id],
+        (err, results) => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
+  } catch (error) {
+    console.error(error);
+  } finally {
+    await desconectar();
+  }
+}
+
+async function deleteMaquinaMultimedia(MaquinaId) {
+  try {
+    await conectar();
+    return new Promise((resolve, reject) => {
+      db.query(
+        `DELETE FROM potencia_vial.MaquinaMultimedia where MaquinaId = ?`,
+        [MaquinaId],
+        (err, results) => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
+  } catch (error) {
+    console.error(error);
+  } finally {
+    await desconectar();
+  }
+}
+
 module.exports = {
   getMaquinas,
   getMaquina,
@@ -326,4 +374,6 @@ module.exports = {
   get_Multimedia,
   addMaquina,
   insertarMaquinaMultimedia,
+  delete_Maquina,
+  deleteMaquinaMultimedia,
 };
