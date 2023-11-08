@@ -5,14 +5,13 @@ const { database } = require("../config/config");
 
 exports.eliminarMaquina = asyncHandler(async (req, res, next) => {
   const maquinaId = req.body.Id;
-  await dataBase.conectar();
+
   const deleteMaquina = await dataBase.ejecutarConsulta(
     `DELETE FROM potencia_vial.Maquina where Id = ${maquinaId}`
   );
   const deleteMultimediaMaquina = await dataBase.ejecutarConsulta(
     `DELETE FROM potencia_vial.MaquinaMultimedia where MaquinaId =${maquinaId}`
   );
-  await dataBase.desconectar();
   const result = {
     respone: {
       Code: 0,
@@ -69,7 +68,7 @@ exports.maquinas_getAll = asyncHandler(async (req, res, next) => {
 
 exports.maquina_get = asyncHandler(async (req, res, next) => {
   try {
-    await dataBase.conectar();
+    // await dataBase.conectar();
     const maquina = await dataBase.ejecutarConsulta(
       `SELECT * FROM potencia_vial.Maquina where Id = ${req.params.id}`
     );
@@ -79,7 +78,7 @@ exports.maquina_get = asyncHandler(async (req, res, next) => {
     const multimedias = await dataBase.ejecutarConsulta(
       `SELECT * from potencia_vial.Multimedia`
     );
-    await dataBase.desconectar();
+    //await dataBase.desconectar();
 
     const multimediaMap = new Map();
     for (const multimediaMaquina of multimediasMaquinas) {
@@ -125,27 +124,17 @@ exports.maquina_get = asyncHandler(async (req, res, next) => {
 
 exports.maquinasAndType = asyncHandler(async (req, res, next) => {
   // Obtener todos los tipos, máquinas, multimedias de máquinas y multimedias de manera eficiente
-  // const [multimediasMaquinas, multimedias] = await Promise.all([
-  //   dataBase.getTipos(),
-  //   dataBase.getMaquinasActivas(),
-  //   dataBase.getMultimediaByMaquina(),
-  //   dataBase.getMultimedia(),
-  // ]);
+  const [tipos, maquinas, multimediasMaquinas, multimedias] = await Promise.all(
+    [
+      dataBase.ejecutarConsulta(`SELECT * from potencia_vial.Tipo`),
+      dataBase.ejecutarConsulta(`SELECT * from potencia_vial.Maquina`),
+      dataBase.ejecutarConsulta(
+        `SELECT * from potencia_vial.MaquinaMultimedia`
+      ),
+      dataBase.ejecutarConsulta(`SELECT * from potencia_vial.Multimedia`),
+    ]
+  );
 
-  await dataBase.conectar();
-  const tipos = await dataBase.ejecutarConsulta(
-    `SELECT * from potencia_vial.Tipo`
-  );
-  const maquinas = await dataBase.ejecutarConsulta(
-    `SELECT * from potencia_vial.Maquina`
-  );
-  const multimediasMaquinas = await dataBase.ejecutarConsulta(
-    `SELECT * from potencia_vial.MaquinaMultimedia`
-  );
-  const multimedias = await dataBase.ejecutarConsulta(
-    `SELECT * from potencia_vial.Multimedia`
-  );
-  await dataBase.desconectar();
   // Crear un mapa para relacionar multimedia con máquinas
   const multimediaMap = new Map();
   for (const multimediaMaquina of multimediasMaquinas) {

@@ -4,7 +4,6 @@ const dataBase = require("../BD/mysql");
 
 exports.tipos_get = asyncHandler(async (req, res, next) => {
   const result = await dataBase.getTipos();
-  console.log("result: " + result);
   if (!result) {
     throw new Error("Error en el resultado");
   } else {

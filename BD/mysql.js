@@ -8,174 +8,270 @@ const dbConfig = {
   database: config.database,
 };
 
-let db;
+let pool;
 
-function conectar() {
-  db = mysql.createConnection(dbConfig);
-
-  return new Promise((resolve, reject) => {
-    db.connect((err) => {
-      if (err) {
-        console.log("Érror al conectar: " + err);
-        reject(err);
-      } else {
-        resolve();
-      }
-    });
-  });
+// Función para comprobar si la conexión está activa
+async function verificarConexion(connection) {
+  return connection && connection.state === "authenticated";
 }
 
-function desconectar() {
+async function conectarPool() {
   return new Promise((resolve, reject) => {
-    db.end((err) => {
-      if (err) {
-        console.log("Error al desconectar: " + err);
-        reject(err);
-      } else {
-        resolve();
-      }
-    });
-  });
-}
-
-async function conMySql() {
-  db = mysql.createConnection(dbConfig);
-
-  db.connect((err) => {
-    if (err) {
-      console.log("[db err]", err);
-      console.log("Entro aca");
+    if (pool) {
+      console.log("Entro al if");
+      pool.getConnection(async (error, connection) => {
+        if (error) {
+          console.error("Error al obtener la conexión del pool:", error);
+          reject(error);
+        } else {
+          if (!verificarConexion(connection)) {
+            console.log("La conexión no está activa. Intentando reconectar...");
+            connection.release(); // Libera la conexión actual
+            connection = await pool.getConnection(); // Obtiene una nueva conexión del pool
+          }
+          resolve(connection); // Resuelve la promesa con la conexión activa
+        }
+      });
     } else {
-      console.log("DB conectada!");
-    }
-  });
-
-  db.on("error", (err) => {
-    console.log("[db err]", err);
-    if (err.code === "PROTOCOL_CONNECTION_LOST") {
-      conMySql();
-    } else {
-      throw err;
+      console.log("Entro al else");
+      pool = mysql.createPool(dbConfig);
+      pool.getConnection(async (error, connection) => {
+        if (error) {
+          console.error("Error al obtener la conexión del pool:", error);
+          reject(error);
+        } else {
+          resolve(connection); // Resuelve la promesa con la conexión activa
+        }
+      });
     }
   });
 }
 
 async function getMaquinas() {
+  let connection;
+
   try {
-    await conectar();
-    return new Promise((resolve, reject) => {
-      db.query("SELECT * from potencia_vial.Maquina", (err, results) => {
-        if (err) {
-          console.error(err);
-          reject(err);
-        } else {
-          resolve(results);
-        }
+    connection = await conectarPool();
+    if (connection) {
+      const results = await new Promise((resolve, reject) => {
+        connection.query(
+          "SELECT * FROM potencia_vial.Maquina",
+          (err, results) => {
+            if (err) {
+              console.error(err);
+              reject(err);
+            } else {
+              resolve(results);
+            }
+          }
+        );
       });
-    });
+
+      connection.release(); // Libera la conexión después de usarla
+      return results;
+    } else {
+      throw new Error("La conexión no se ha establecido correctamente.");
+    }
   } catch (err) {
     console.error(err);
-  } finally {
-    await desconectar();
+    throw err; // Re-lanza el error para que pueda ser manejado por código superior si es necesario
   }
 }
 
 async function getMaquina(id) {
+  let connection;
   try {
-    await conectar();
-    return new Promise((resolve, reject) => {
-      db.query(
-        `SELECT * from potencia_vial.Maquina WHERE Id = ?`,
-        [id],
-        (err, results) => {
-          if (err) {
-            console.error(err);
-            reject(err);
-          } else {
-            resolve(results);
+    connection = await conectarPool();
+    if (connection) {
+      const results = await new Promise((resolve, reject) => {
+        connection.query(
+          `SELECT * from potencia_vial.Maquina WHERE Id = ?`,
+          [id],
+          (err, results) => {
+            if (err) {
+              console.error(err);
+              reject(err);
+            } else {
+              resolve(results);
+            }
           }
-        }
-      );
-    });
+        );
+      });
+      connection.release(); // Libera la conexión después de usarla
+      return results;
+    } else {
+      throw new Error("La conexión no se ha establecido correctamente.");
+    }
   } catch (err) {
     console.error(err);
-  } finally {
-    await desconectar();
+    throw err;
   }
 }
 
-async function getMaquinasActivas() {
+async function ejecutarConsulta(query) {
+  let connection;
   try {
-    await conectar();
-    return new Promise((resolve, reject) => {
-      db.query(
-        `SELECT * from potencia_vial.Maquina WHERE Condicion = 'Nuevo'`,
-        (err, results) => {
+    connection = await conectarPool();
+    if (connection) {
+      const results = await new Promise((resolve, reject) => {
+        connection.query(query, (err, results) => {
           if (err) {
-            console.error(err);
             reject(err);
           } else {
             resolve(results);
           }
-        }
-      );
-    });
+        });
+      });
+      connection.release(); // Libera la conexión después de usarla
+      return results;
+    } else {
+      throw new Error("La conexión no se ha establecido correctamente.");
+    }
   } catch (err) {
     console.error(err);
-  } finally {
-    await desconectar();
+    throw err;
+  }
+}
+
+async function addMaquina(data) {
+  let connection;
+  try {
+    connection = await conectarPool();
+    if (connection) {
+      const results = new Promise((resolve, reject) => {
+        connection.query(
+          `INSERT INTO potencia_vial.Maquina
+      (Modelo, TipoId, Condicion, Altura, Largo, Ancho, CargaMaxima, descripcion, anio)
+      VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);
+      `,
+          [
+            data.Modelo,
+            data.TipoId,
+            data.Condicion,
+            data.Altura,
+            data.Largo,
+            data.Ancho,
+            data.CargaMaxima,
+            data.descripcion,
+            data.anio,
+          ],
+          (err, results) => {
+            if (err) {
+              console.error(err);
+              reject(err);
+            } else {
+              resolve(results);
+            }
+          }
+        );
+      });
+      connection.release();
+      return results;
+    } else {
+      throw new Error("La conexión no se ha establecido correctamente.");
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function get_Multimedia(id) {
+  let connection;
+  try {
+    connection = await conectarPool();
+    if (connection) {
+      const results = new Promise((resolve, reject) => {
+        connection.query(
+          `SELECT * FROM potencia_vial.Multimedia where Id = ?`,
+          [id],
+          (err, results) => {
+            if (err) {
+              console.error(err);
+              reject(err);
+            } else {
+              resolve(results);
+            }
+          }
+        );
+      });
+      connection.release();
+      return results;
+    } else {
+      throw new Error("La conexión no se ha establecido correctamente.");
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function insertarMultimedia(query, fileName, fileType, imageContent) {
+  let connection;
+  try {
+    connection = await conectarPool();
+    if (connection) {
+      const results = new Promise((resolve, reject) => {
+        connection.query(
+          query,
+          [fileType, fileName, imageContent],
+          (err, results) => {
+            if (err) {
+              console.error(err);
+              reject(err);
+            } else {
+              resolve(results);
+            }
+          }
+        );
+      });
+      connection.release();
+      return results;
+    } else {
+      throw new Error("La conexión no se ha establecido correctamente.");
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function insertarMaquinaMultimedia(data) {
+  let connection;
+  try {
+    connection = await conectarPool();
+    if (connection) {
+      const results = new Promise((resolve, reject) => {
+        connection.query(
+          `INSERT INTO potencia_vial.MaquinaMultimedia
+      (MaquinaId, MultimediaId)
+      VALUES(?,?);
+      `,
+          [data.MaquinaId, data.MultimediaId],
+          (err, results) => {
+            if (err) {
+              console.error(err);
+              reject(err);
+            } else {
+              resolve(results);
+            }
+          }
+        );
+      });
+      connection.release();
+      return results;
+    } else {
+      throw new Error("La conexión no se ha establecido correctamente.");
+    }
+  } catch (error) {
+    console.error(error);
   }
 }
 
 async function getTipos() {
+  let connection;
   try {
-    await conectar();
-    return new Promise((resolve, reject) => {
-      db.query(`SELECT * from potencia_vial.Tipo`, (err, results) => {
-        if (err) {
-          console.error(err);
-          reject(err);
-        } else {
-          resolve(results);
-        }
-      });
-    });
-  } catch (err) {
-    console.error(err);
-  } finally {
-    await desconectar();
-  }
-}
-
-async function getMultimediaByMaquina() {
-  try {
-    await conectar();
-    return new Promise((resolve, reject) => {
-      db.query(
-        `SELECT * from potencia_vial.MaquinaMultimedia`,
-        (err, results) => {
-          if (err) {
-            console.error(err);
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        }
-      );
-    });
-  } catch (error) {
-    console.error(error);
-  } finally {
-    await desconectar();
-  }
-}
-
-async function getMultimedia() {
-  try {
-    await conectar();
-    return new Promise((resolve, reject) => {
-      db.query(`SELECT * from potencia_vial.Multimedia`, (err, results) => {
-        desconectar().then(() => {
+    connection = await conectarPool();
+    if (connection) {
+      const results = new Promise((resolve, reject) => {
+        connection.query(`SELECT * from potencia_vial.Tipo`, (err, results) => {
           if (err) {
             console.error(err);
             reject(err);
@@ -184,196 +280,55 @@ async function getMultimedia() {
           }
         });
       });
-    });
-  } catch (error) {
-    console.error(error);
-  } finally {
-    await desconectar();
-  }
-}
-
-async function ejecutarConsulta(query) {
-  return new Promise((resolve, reject) => {
-    db.query(query, (err, results) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(results);
-      }
-    });
-  });
-}
-
-async function insertarMultimedia(query, fileName, fileType, imageContent) {
-  try {
-    await conectar();
-    return new Promise((resolve, reject) => {
-      db.query(query, [fileType, fileName, imageContent], (err, results) => {
-        if (err) {
-          console.error(err);
-          reject(err);
-        } else {
-          resolve(results);
-        }
-      });
-    });
-  } catch (error) {
-    console.error(error);
-  } finally {
-    await desconectar();
+      connection.release();
+      return results;
+    } else {
+      throw new Error("La conexión no se ha establecido correctamente.");
+    }
+  } catch (err) {
+    console.error(err);
   }
 }
 
 async function insertarMaquinaMultimedia(data) {
+  let connection;
   try {
-    await conectar();
-    return new Promise((resolve, reject) => {
-      db.query(
-        `INSERT INTO potencia_vial.MaquinaMultimedia
+    connection = await conectarPool();
+    if (connection) {
+      const results = Promise((resolve, reject) => {
+        connection.query(
+          `INSERT INTO potencia_vial.MaquinaMultimedia
       (MaquinaId, MultimediaId)
       VALUES(?,?);
       `,
-        [data.MaquinaId, data.MultimediaId],
-        (err, results) => {
-          if (err) {
-            console.error(err);
-            reject(err);
-          } else {
-            resolve(results);
+          [data.MaquinaId, data.MultimediaId],
+          (err, results) => {
+            if (err) {
+              console.error(err);
+              reject(err);
+            } else {
+              resolve(results);
+            }
           }
-        }
-      );
-    });
+        );
+      });
+      connection.release();
+      return results;
+    } else {
+      throw new Error("La conexión no se ha establecido correctamente.");
+    }
   } catch (error) {
     console.error(error);
-  } finally {
-    await desconectar();
-  }
-}
-
-async function get_Multimedia(id) {
-  try {
-    await conectar();
-    return new Promise((resolve, reject) => {
-      db.query(
-        `SELECT * FROM potencia_vial.Multimedia where Id = ?`,
-        [id],
-        (err, results) => {
-          if (err) {
-            console.error(err);
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        }
-      );
-    });
-  } catch (error) {
-    console.error(error);
-  } finally {
-    await desconectar();
-  }
-}
-
-async function addMaquina(data) {
-  try {
-    await conectar();
-    return new Promise((resolve, reject) => {
-      db.query(
-        `INSERT INTO potencia_vial.Maquina
-      (Modelo, TipoId, Condicion, Altura, Largo, Ancho, CargaMaxima, descripcion, anio)
-      VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);
-      `,
-        [
-          data.Modelo,
-          data.TipoId,
-          data.Condicion,
-          data.Altura,
-          data.Largo,
-          data.Ancho,
-          data.CargaMaxima,
-          data.descripcion,
-          data.anio,
-        ],
-        (err, results) => {
-          if (err) {
-            console.error(err);
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        }
-      );
-    });
-  } catch (error) {
-    console.error(error);
-  } finally {
-    await desconectar();
-  }
-}
-
-async function delete_Maquina(id) {
-  try {
-    await conectar();
-    return new Promise((resolve, reject) => {
-      db.query(
-        `DELETE FROM potencia_vial.Maquina where Id = ?`,
-        [id],
-        (err, results) => {
-          if (err) {
-            console.error(err);
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        }
-      );
-    });
-  } catch (error) {
-    console.error(error);
-  } finally {
-    await desconectar();
-  }
-}
-
-async function deleteMaquinaMultimedia(MaquinaId) {
-  try {
-    await conectar();
-    return new Promise((resolve, reject) => {
-      db.query(
-        `DELETE FROM potencia_vial.MaquinaMultimedia where MaquinaId = ?`,
-        [MaquinaId],
-        (err, results) => {
-          if (err) {
-            console.error(err);
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        }
-      );
-    });
-  } catch (error) {
-    console.error(error);
-  } finally {
-    await desconectar();
   }
 }
 
 module.exports = {
   getMaquinas,
   getMaquina,
-  getMaquinasActivas,
   getTipos,
-  getMultimediaByMaquina,
-  getMultimedia,
   ejecutarConsulta,
-  conectar,
-  desconectar,
   insertarMultimedia,
   get_Multimedia,
   addMaquina,
   insertarMaquinaMultimedia,
-  delete_Maquina,
-  deleteMaquinaMultimedia,
 };

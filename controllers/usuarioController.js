@@ -7,14 +7,14 @@ const fs = require("fs");
 const RSA_PRIVATE_KEY = fs.readFileSync("private.key");
 
 exports.validateUser = asyncHandler(async (req, res, next) => {
-  console.log("Entro al validar usuario");
   const username = req.body.username;
   const password = req.body.password;
-  console.log(username);
+
   const data = {
     username,
     password,
   };
+
   const response = {
     resultado: {
       statusCode: "",
@@ -28,15 +28,9 @@ exports.validateUser = asyncHandler(async (req, res, next) => {
   };
   if (username && password) {
     try {
-      console.log(
-        `SELECT * FROM potencia_vial.Usuario where Usuario ="${username}"`
-      );
-      await dataBase.conectar();
       const result = await dataBase.ejecutarConsulta(
         `SELECT * FROM potencia_vial.Usuario where Usuario ="${username}"`
       );
-      await dataBase.desconectar();
-      console.log(result);
       if (result.length === 0) {
         response.resultado.statusCode = "404";
         response.resultado.statusText = "User Not Found";
