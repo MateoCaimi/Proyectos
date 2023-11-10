@@ -7,10 +7,12 @@ var cors = require("cors");
 var jwt = require("jsonwebtoken");
 var fs = require("fs");
 
+var indexRouter = require("./routes/index");
 var loginRouter = require("./routes/login");
 var maquinaRouter = require("./routes/maquina");
 var tipoRouter = require("./routes/tipo");
 var uploadRouter = require("./routes/upload");
+var multimediaRouter = require("./routes/multimedia");
 
 var app = express();
 const RSA_PRIVATE_KEY = fs.readFileSync("private.key");
@@ -40,13 +42,16 @@ app.use((req, res, next) => {
 
   next();
 });
+
+app.use("/", indexRouter);
 app.use("/maquinas", maquinaRouter);
 app.use("/tipos", tipoRouter);
+app.use("/multimedia", multimediaRouter);
 app.use("/login", loginRouter);
 
 app.use((req, res, next) => {
   const authHeader = req.headers.authorization;
-
+  console.log("Entro al midd jwt");
   if (authHeader) {
     const token = authHeader.split(" ")[1];
 
@@ -67,6 +72,7 @@ app.use((req, res, next) => {
       }
     });
   } else {
+    console.log("Entro al else midd jwt");
     console.log(authHeader);
     const response = {
       Result: {
@@ -79,16 +85,18 @@ app.use((req, res, next) => {
   }
 });
 
-app.use("/upload", uploadRouter);
-
-
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
+  console.log("Entro al error 404");
+  //res.status(404).json(response);
   next(createError(404));
 });
 
+app.use("/upload", uploadRouter);
+
 // error handler
 app.use(function (err, req, res, next) {
+  console.log("Entro al error handler");
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};

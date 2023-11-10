@@ -37,6 +37,7 @@ exports.addMaquina = asyncHandler(async (req, res, next) => {
   const CargaMaxima = req.body.CargaMaxima;
   const descripcion = req.body.descripcion;
   const anio = req.body.anio;
+  const Marca = req.body.marca;
 
   const data = {
     Modelo,
@@ -48,6 +49,7 @@ exports.addMaquina = asyncHandler(async (req, res, next) => {
     CargaMaxima,
     descripcion,
     anio,
+    Marca,
   };
   const result = await dataBase.addMaquina(data);
   if (!result) {
@@ -99,6 +101,9 @@ exports.maquina_get = asyncHandler(async (req, res, next) => {
       Largo: maquina[0].Largo,
       Ancho: maquina[0].Ancho,
       CargaMaxima: maquina[0].CargaMaxima,
+      Anio: maquina[0].anio,
+      Descripcion: maquina[0].descripcion,
+      Marca: maquina[0].marca,
       MaquinaMultimedia: (multimediaMap.get(maquina[0].Id) || []).map(
         (multimediaId) => {
           const multimedia = multimedias.find(
@@ -163,6 +168,9 @@ exports.maquinasAndType = asyncHandler(async (req, res, next) => {
           Largo: maquina.Largo,
           Ancho: maquina.Ancho,
           CargaMaxima: maquina.CargaMaxima,
+          Anio: maquina.anio,
+          Descripcion: maquina.descripcion,
+          Marca: maquina.marca,
           MaquinaMultimedia: (multimediaMap.get(maquina.Id) || []).map(
             (multimediaId) => {
               const multimedia = multimedias.find(

@@ -24,9 +24,4 @@ router.post("/upload", upload.single("image"), function (req, res, next) {
   controller.upload(req, res, next);
 });
 
-router.get("/getMultimedia/:id",(req,res,next)=>{
-    controller.getMultimedia(req,res,next)
-});
-
-
 module.exports = router;

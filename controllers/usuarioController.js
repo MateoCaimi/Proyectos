@@ -29,7 +29,7 @@ exports.validateUser = asyncHandler(async (req, res, next) => {
   if (username && password) {
     try {
       const result = await dataBase.ejecutarConsulta(
-        `SELECT * FROM potencia_vial.Usuario where Usuario ="${username}"`
+        `SELECT * FROM potencia_vial.Usuario where Usuario ="${username}" and Contraseña = "${password}"`
       );
       if (result.length === 0) {
         response.resultado.statusCode = "404";
@@ -51,7 +51,7 @@ exports.validateUser = asyncHandler(async (req, res, next) => {
         res.status(200).json(response);
       }
     } catch (err) {
-      res.status(500).json({ error: err?.message });
+      res.status(500).json({ err });
     }
   } else {
     response.resultado.statusCode = "404";
