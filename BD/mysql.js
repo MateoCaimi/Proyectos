@@ -108,28 +108,31 @@ async function getMaquina(id) {
   }
 }
 
-async function ejecutarConsulta(query) {
+async function ejecutarConsulta(query, params) {
   let connection;
   try {
     connection = await conectarPool();
-    if (connection) {
-      const results = await new Promise((resolve, reject) => {
-        connection.query(query, (err, results) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        });
-      });
-      connection.release(); // Libera la conexión después de usarla
-      return results;
-    } else {
+    if (!connection) {
       throw new Error("La conexión no se ha establecido correctamente.");
     }
+    const results = await new Promise((resolve, reject) => {
+      connection.query(query, params, (err, results) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+
+    return results;
   } catch (err) {
-    console.error(err);
-    throw err;
+    console.error("Error en ejecutarConsulta:", err);
+    throw new Error("Error al ejecutar la consulta.");
+  } finally {
+    if (connection) {
+      connection.release(); // Libera la conexión después de usarla
+    }
   }
 }
 
@@ -296,7 +299,7 @@ async function insertarMaquinaMultimedia(data) {
   try {
     connection = await conectarPool();
     if (connection) {
-      const results = Promise((resolve, reject) => {
+      const results = new Promise((resolve, reject) => {
         connection.query(
           `INSERT INTO potencia_vial.MaquinaMultimedia
       (MaquinaId, MultimediaId)

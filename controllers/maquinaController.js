@@ -7,10 +7,12 @@ exports.eliminarMaquina = asyncHandler(async (req, res, next) => {
   const maquinaId = req.body.Id;
 
   const deleteMaquina = await dataBase.ejecutarConsulta(
-    `DELETE FROM potencia_vial.Maquina where Id = ${maquinaId}`
+    `DELETE FROM potencia_vial.Maquina where Id = ?`,
+    [maquinaId]
   );
   const deleteMultimediaMaquina = await dataBase.ejecutarConsulta(
-    `DELETE FROM potencia_vial.MaquinaMultimedia where MaquinaId =${maquinaId}`
+    `DELETE FROM potencia_vial.MaquinaMultimedia where MaquinaId = ?`,
+    [maquinaId]
   );
   const result = {
     respone: {
@@ -72,10 +74,12 @@ exports.maquina_get = asyncHandler(async (req, res, next) => {
   try {
     // await dataBase.conectar();
     const maquina = await dataBase.ejecutarConsulta(
-      `SELECT * FROM potencia_vial.Maquina where Id = ${req.params.id}`
+      `SELECT * FROM potencia_vial.Maquina where Id = ?`,
+      [req.params.id]
     );
     const multimediasMaquinas = await dataBase.ejecutarConsulta(
-      `SELECT * FROM potencia_vial.MaquinaMultimedia where MaquinaId = ${maquina[0].Id}`
+      `SELECT * FROM potencia_vial.MaquinaMultimedia where MaquinaId = ?`,
+      [maquina[0].Id]
     );
     const multimedias = await dataBase.ejecutarConsulta(
       `SELECT * from potencia_vial.Multimedia`

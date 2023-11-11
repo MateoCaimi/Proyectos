@@ -51,13 +51,10 @@ app.use("/login", loginRouter);
 
 app.use((req, res, next) => {
   const authHeader = req.headers.authorization;
-  console.log("Entro al midd jwt");
   if (authHeader) {
     const token = authHeader.split(" ")[1];
-
-    jwt.verify(token, RSA_PRIVATE_KEY, (err) => {
+    jwt.verify(token, RSA_PRIVATE_KEY, { algorithms: "RS256" }, (err) => {
       if (err) {
-        console.log(err);
         const response = {
           Result: {
             statuscode: "403",
@@ -72,8 +69,6 @@ app.use((req, res, next) => {
       }
     });
   } else {
-    console.log("Entro al else midd jwt");
-    console.log(authHeader);
     const response = {
       Result: {
         statuscode: "401",
@@ -85,18 +80,15 @@ app.use((req, res, next) => {
   }
 });
 
+app.use("/upload", uploadRouter);
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  console.log("Entro al error 404");
-  //res.status(404).json(response);
   next(createError(404));
 });
 
-app.use("/upload", uploadRouter);
-
 // error handler
 app.use(function (err, req, res, next) {
-  console.log("Entro al error handler");
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
