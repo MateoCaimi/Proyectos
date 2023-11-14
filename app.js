@@ -43,44 +43,48 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/", indexRouter);
+app.use("/", express.static(path.join(__dirname, "../public_html")));
 app.use("/maquinas", maquinaRouter);
 app.use("/tipos", tipoRouter);
 app.use("/multimedia", multimediaRouter);
+app.use("/upload", uploadRouter);
 app.use("/login", loginRouter);
 
-app.use((req, res, next) => {
-  const authHeader = req.headers.authorization;
-  if (authHeader) {
-    const token = authHeader.split(" ")[1];
-    jwt.verify(token, RSA_PRIVATE_KEY, { algorithms: "RS256" }, (err) => {
-      if (err) {
-        const response = {
-          Result: {
-            statuscode: "403",
-            statustext: "Unauthorized",
-          },
-          data: {},
-        };
+// app.get("*", (req, res) => {
+//   console.log('dirname: ' + __dirname);
+//   res.sendFile(path.join(__dirname, "public", "index.html"));
+// });
 
-        res.status(403).json(response);
-      } else {
-        next();
-      }
-    });
-  } else {
-    const response = {
-      Result: {
-        statuscode: "401",
-        statustext: "Unauthorized",
-      },
-      data: {},
-    };
-    res.status(401).json(response);
-  }
-});
+// app.use((req, res, next) => {
+//   const authHeader = req.headers.authorization;
+//   if (authHeader) {
+//     const token = authHeader.split(" ")[1];
+//     jwt.verify(token, RSA_PRIVATE_KEY, { algorithms: "RS256" }, (err) => {
+//       if (err) {
+//         const response = {
+//           Result: {
+//             statuscode: "403",
+//             statustext: "Unauthorized",
+//           },
+//           data: {},
+//         };
 
-app.use("/upload", uploadRouter);
+//         res.status(403).json(response);
+//       } else {
+//         next();
+//       }
+//     });
+//   } else {
+//     const response = {
+//       Result: {
+//         statuscode: "401",
+//         statustext: "Unauthorized",
+//       },
+//       data: {},
+//     };
+//     res.status(401).json(response);
+//   }
+// });
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

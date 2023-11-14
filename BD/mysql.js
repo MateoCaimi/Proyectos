@@ -18,7 +18,6 @@ async function verificarConexion(connection) {
 async function conectarPool() {
   return new Promise((resolve, reject) => {
     if (pool) {
-      console.log("Entro al if");
       pool.getConnection(async (error, connection) => {
         if (error) {
           console.error("Error al obtener la conexión del pool:", error);
@@ -33,7 +32,6 @@ async function conectarPool() {
         }
       });
     } else {
-      console.log("Entro al else");
       pool = mysql.createPool(dbConfig);
       pool.getConnection(async (error, connection) => {
         if (error) {

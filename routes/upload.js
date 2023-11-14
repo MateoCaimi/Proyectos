@@ -7,7 +7,7 @@ let controller = require("../controllers/multimediaController");
 // Configura la ubicación y el nombre del archivo en el servidor
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "controllers/uploads"); // Carpeta donde se guardarán las imágenes
+    cb(null, "public/images"); // Carpeta donde se guardarán las imágenes
   },
   filename: (req, file, cb) => {
     cb(

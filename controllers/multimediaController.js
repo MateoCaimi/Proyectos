@@ -18,7 +18,7 @@ exports.upload = asyncHandler(async (req, res, next) => {
 
     const { filename } = req.file;
     const fileType = req.file.mimetype;
-    const filePath = path.join(__dirname, "uploads", filename);
+    const filePath = path.join(__dirname, "../public/images", filename);
 
     const query =
       "INSERT INTO potencia_vial.Multimedia (Tipo, Nombre, Valor) VALUES (?, ?, ?)";
