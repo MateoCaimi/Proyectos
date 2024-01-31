@@ -142,8 +142,8 @@ async function addMaquina(data) {
       const results = new Promise((resolve, reject) => {
         connection.query(
           `INSERT INTO potencia_vial.Maquina
-      (Modelo, TipoId, Condicion, Altura, Largo, Ancho, CargaMaxima, descripcion, anio,marca)
-      VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      (Modelo, TipoId, Condicion, Altura, Largo, Ancho, CargaMaxima, descripcion, anio,marca, Precio)
+      VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       `,
           [
             data.Modelo,
@@ -156,6 +156,7 @@ async function addMaquina(data) {
             data.descripcion,
             data.anio,
             data.Marca,
+            data.Precio,
           ],
           (err, results) => {
             if (err) {
