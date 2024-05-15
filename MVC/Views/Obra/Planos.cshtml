@@ -1,0 +1,70 @@
+﻿@model IEnumerable<LogicaNegocio.Entidades.Plano>
+
+@{
+    ViewData["Title"] = "Planos";
+}
+
+<h1>Planos</h1>
+
+<p>
+    <a asp-action="Create">Agregar plano</a> <!-- Hay que redirigirlo al controlador de plano y la vista de crear -->
+</p>
+
+
+<form method="post">
+
+    <label for="filtro" class="form-label">Seleccione</label>
+    <select class="form-select" aria-label="Default select example" id="filtro" name="filtro">
+        <option selected>Buscar por:</option>
+        <option value="nombre">Nombre</option>
+        <option value="tipo">Tipo</option>
+        <option value="anti">Antiguedad</option>
+    </select>
+    <div class="mb-3">
+        <label for="parametro" class="form-label">Ingrese el paraetro a buscar</label>
+        <input type="text" class="form-control" id="parametro" name="parametro">
+    </div>
+    <button type="submit" class="btn btn-primary">Buscar</button>
+</form>
+
+
+@if (Model == null)
+{
+    <p>No hay planos en esta obra</p>   
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TipoPlano)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaPublicado)
+            </th>
+            <th></th>   
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TipoPlano.Categoria)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaPublicado)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

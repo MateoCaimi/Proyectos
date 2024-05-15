@@ -215,15 +215,17 @@ namespace LogicaAccesoDatos.Repositorios
             return planos;
         }
 
-        public IEnumerable<Plano> PlanosTotales(Obra obra)
+        public IEnumerable<Plano> PlanosTotales(int id)
         {
+            Obra obra = Buscar(id);
             if (obra == null)
             {
                 throw new ObraException("No se pueden buscar planos en una obra nula.");
             }
-            IEnumerable<Plano> planos = obra.Planos; //creo que es descendiente, revisar luego
+            IEnumerable<Plano> planos = obra.Planos;
             return planos;
         }
+
 
         public IEnumerable<Obra> TomarTodos()
         {

@@ -102,5 +102,17 @@ namespace MVC.Controllers
                 return View();
             }
         }
+
+        public ActionResult Planos(int id)
+        {
+            IEnumerable<Plano> planos = Repositorio.PlanosTotales(id);
+            if (planos == null)
+            {
+
+                planos = new List<LogicaNegocio.Entidades.Plano>();
+            }
+
+            return View(planos);
+        }
     }
 }
