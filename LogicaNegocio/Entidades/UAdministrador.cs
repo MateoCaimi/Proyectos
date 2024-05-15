@@ -8,5 +8,8 @@ namespace LogicaNegocio.Entidades
 {
     public class UAdministrador : Usuario
     {
+        public UAdministrador(string nombre, string nomUsuario, string pass) : base(nombre, nomUsuario, pass)
+        {
+        }
     }
 }

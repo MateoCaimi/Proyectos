@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LogicaNegocio.Excepciones;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,8 @@ namespace LogicaNegocio.Entidades
 {
     public class UDeOficina : Usuario
     {
+        public UDeOficina(string nombre, string nomUsuario, string pass) : base(nombre, nomUsuario, pass)
+        {
+        }
     }
 }

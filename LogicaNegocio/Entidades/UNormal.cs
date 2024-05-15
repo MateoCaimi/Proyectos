@@ -8,5 +8,8 @@ namespace LogicaNegocio.Entidades
 {
     public class UNormal : Usuario
     {
+        public UNormal(string nombre, string nomUsuario, string pass) : base(nombre, nomUsuario, pass)
+        {
+        }
     }
 }
