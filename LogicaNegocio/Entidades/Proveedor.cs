@@ -5,6 +5,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LogicaNegocio.Excepciones;
+using System.Text.RegularExpressions;
 
 namespace LogicaNegocio.Entidades
 {
@@ -17,5 +19,27 @@ namespace LogicaNegocio.Entidades
         public string Nombre { get; set; }
         public string Telefono { get; set; }
         public string Mail { get; set; }
+
+        public Proveedor(string nom, string tel, string mail) {
+            
+            this.Nombre = nom;
+            this.Telefono = tel;
+            this.Mail = mail;
+
+        }
+
+        public void ValidarMail()
+        {
+         
+            string regla = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+
+            if (!Regex.IsMatch(this.Mail, regla))
+            {
+                throw new ProveedorException("El correo electrónico no tiene un formato válido.");
+            }
+        }
+
+
+
     }
 }
