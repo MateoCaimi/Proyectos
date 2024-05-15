@@ -204,14 +204,14 @@ namespace LogicaAccesoDatos.Repositorios
             }
             return planos.ToList();
         }
-
-        public IEnumerable<Plano> PlanosPorAntiguedad(Obra obra)
+       
+        public IEnumerable<Plano> PlanosPorAntiguedad(Obra obras)
         {
-            if (obra == null)
+            if (obras == null)
             {
                 throw new ObraException("No se pueden buscar planos en una obra nula.");
             }
-            IEnumerable<Plano> planos = obra.Planos.OrderByDescending(p => p.FechaPublicado); //creo que es descendiente, revisar luego
+            IEnumerable<Plano> planos = obras.Planos.OrderByDescending(p => p.FechaPublicado); //creo que es descendiente, revisar luego
             return planos;
         }
 
