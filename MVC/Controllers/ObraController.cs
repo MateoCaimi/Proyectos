@@ -13,7 +13,7 @@ namespace MVC.Controllers
     {
         private IRepositorioObra Repositorio = new RepositorioObra();
         // GET: ObraController
-        public ActionResult Listado()
+        public ActionResult Index()
         {
             IEnumerable<Obra> obras = Repositorio.TomarTodos();
             return View(obras);
@@ -21,7 +21,7 @@ namespace MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Listado(string nombre, string direccion, bool finalizada)
+        public ActionResult Index(string nombre, string direccion, bool finalizada)
         {
             IEnumerable<Obra> listadoObras = Repositorio.ObrasFiltradas(nombre, direccion, finalizada);
             return View(listadoObras);
@@ -65,7 +65,7 @@ namespace MVC.Controllers
                 return View();
             }
         }
-
+            
         // GET: ObraController/Edit/5
         public ActionResult Editar(int id)
         {
@@ -83,7 +83,7 @@ namespace MVC.Controllers
         }
 
         // POST: ObraController/Edit/5
-        [HttpPost, ActionName("Edit")]
+        [HttpPost, ActionName("Editar")]
         [ValidateAntiForgeryToken]
         public ActionResult EditarConfirmado(Obra nuevaObra)
         {
@@ -117,7 +117,7 @@ namespace MVC.Controllers
         }
 
         // POST: ObraController/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("Eliminar")]
         [ValidateAntiForgeryToken]
         public ActionResult EliminarConfirmado(int id)
         {

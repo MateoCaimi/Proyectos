@@ -139,7 +139,7 @@ namespace LogicaAccesoDatos.Repositorios
         {
             try
             {
-                nuevaObra.Validar();
+                //nuevaObra.Validar();
                 Obra obra = this.Buscar(nuevaObra.IdObra);
                 if (obra == null)
                 {
