@@ -29,10 +29,10 @@ namespace LogicaNegocio.Entidades
         public List<Plano> Planos { get; set; }
         public List<Solicitud> Solicitudes { get; set; }
 
-        public void Validar()
-        {
-            throw new NotImplementedException();
-        }
+        //public void Validar()
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public void FinalizarObra()
         {
@@ -50,6 +50,10 @@ namespace LogicaNegocio.Entidades
         public bool TieneSolicitudesPendientes()
         {
             bool haySolicitudes = false;
+            if (Solicitudes == null)
+            {
+                return haySolicitudes;
+            }
             foreach(Solicitud s in Solicitudes)
             {
                 if(s.Aprovador != null)

@@ -23,5 +23,20 @@ namespace LogicaNegocio.Entidades
         public Usuario? Solicitante { get; set; }
         [ForeignKey("UDeOficina")] public int IdUDeOficina { get; set; }
         public UDeOficina? Aprovador { get; set; }
+
+        public Solicitud (int id, int idProveedor, Proveedor? proveedor, int idObra, Obra? obra, int idUsuario, Usuario? solicitante, int idUDeOficina, UDeOficina? aprovador)
+        {
+            Id = id;
+            IdProveedor = idProveedor;
+            Proveedor = proveedor;
+            IdObra = idObra;
+            Obra = obra;
+            IdUsuario = idUsuario;
+            Solicitante = solicitante;
+            IdUDeOficina = idUDeOficina;
+            Aprovador = aprovador;
+        }
+
+        public Solicitud () { }
     }
 }

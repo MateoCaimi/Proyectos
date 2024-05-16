@@ -22,7 +22,7 @@ namespace LogicaAccesoDatos.Repositorios
         }
         public void Agregar(Obra item)
         {
-            item.Validar(); //En el validar fijarse que la fecha no sea posterior a hoy.
+           // item.Validar(); //En el validar fijarse que la fecha no sea posterior a hoy.
             if(this.ObraPorNombre(item.Nombre) != null)
             {
                 throw new ObraException("El nombre de obra ingresado ya está en uso. Elegir otro.");
@@ -139,7 +139,7 @@ namespace LogicaAccesoDatos.Repositorios
         {
             try
             {
-                nuevaObra.Validar();
+               // nuevaObra.Validar();
                 Obra obra = this.Buscar(id);
                 if (obra == null)
                 {

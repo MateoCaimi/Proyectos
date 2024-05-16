@@ -30,6 +30,8 @@ namespace LogicaNegocio.Entidades
             this.Contrasenia = pass;
         }
 
+        public Usuario() { }
+
 
 
         public void ValidarContrasena()

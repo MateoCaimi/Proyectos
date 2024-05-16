@@ -11,6 +11,9 @@ namespace LogicaNegocio.Entidades
     {
         public UDeOficina(string nombre, string nomUsuario, string pass) : base(nombre, nomUsuario, pass)
         {
+            
         }
+
+        public UDeOficina() { }
     }
 }

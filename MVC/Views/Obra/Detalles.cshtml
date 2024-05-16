@@ -1,0 +1,50 @@
+﻿@model LogicaNegocio.Entidades.Obra
+
+@{
+    ViewData["Title"] = "Detalles";
+}
+
+<h1>Detalles</h1>
+
+<div>
+    <h4>Obra</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FechaInicio)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FechaInicio)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FechaFinalizacion)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FechaFinalizacion)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Direccion)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Direccion)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Finalizada)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Finalizada)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Modificar" asp-route-id="@Model?.IdObra">Edit</a> |
+    <a asp-action="Eliminar" asp-route-id="@Model?.IdObra">Eliminar</a>
+
+    <a asp-action="Index">Back to List</a>
+</div>

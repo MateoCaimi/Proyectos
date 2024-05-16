@@ -28,13 +28,14 @@ namespace MVC.Controllers
         }
 
         // GET: ObraController/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Detalles(int id)
         {
-            return View();
+            Obra obra = Repositorio.Buscar(id);
+            return View(obra);
         }
 
         // GET: ObraController/Create
-        public ActionResult Create()
+        public ActionResult Agregar()
         {
             return View();
         }
@@ -42,7 +43,7 @@ namespace MVC.Controllers
         // POST: ObraController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Obra aIngresar)
+        public ActionResult Agregar(Obra aIngresar)
         {
             try
             {
@@ -57,7 +58,7 @@ namespace MVC.Controllers
         }
 
         // GET: ObraController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Modificar(int id)
         {
             return View();
         }
@@ -65,7 +66,7 @@ namespace MVC.Controllers
         // POST: ObraController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Obra nuevaObra)
+        public ActionResult Modificar(int id, Obra nuevaObra)
         {
             try
             {
@@ -80,7 +81,7 @@ namespace MVC.Controllers
         }
 
         // GET: ObraController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Eliminar(int id)
         {
             Obra obra = Repositorio.Buscar(id);
             return View(obra);
@@ -89,7 +90,7 @@ namespace MVC.Controllers
         // POST: ObraController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, Obra obra)
+        public ActionResult Eliminar(int id, Obra obra)
         {
             try
             {
