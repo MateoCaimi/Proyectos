@@ -12,5 +12,10 @@ namespace LogicaNegocio.Entidades
         [Key]
         public DateTime Fecha { get; set; }
         public int Horas { get; set; }
+
+        public Dia()
+        {
+            
+        }
     }
 }

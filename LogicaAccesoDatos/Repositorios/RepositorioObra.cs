@@ -135,15 +135,15 @@ namespace LogicaAccesoDatos.Repositorios
             }
         }
 
-        public void Modificar(int id, Obra nuevaObra)
+        public void Modificar(Obra nuevaObra)
         {
             try
             {
                 nuevaObra.Validar();
-                Obra obra = this.Buscar(id);
+                Obra obra = this.Buscar(nuevaObra.IdObra);
                 if (obra == null)
                 {
-                    throw new ObraException("No se encontró la obra.");
+                    throw new ObraException("No se encontró la obra a modificar.");
                 }
 
                 obra.Nombre = nuevaObra.Nombre;

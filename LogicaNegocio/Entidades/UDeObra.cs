@@ -12,6 +12,11 @@ namespace LogicaNegocio.Entidades
         {
         }
 
+        public UDeObra() : base()
+        {
+            
+        }
+
         public List<Obra> ObrasACargo { get; set; }
     }
 }

@@ -26,5 +26,10 @@ namespace LogicaNegocio.Entidades
         [Range(0,double.MaxValue)]
         public double Compensacion { get; set; }
 
+        public TipoEmpleado()
+        {
+            
+        }
+
     }
 }

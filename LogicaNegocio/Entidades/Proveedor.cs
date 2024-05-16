@@ -28,6 +28,11 @@ namespace LogicaNegocio.Entidades
 
         }
 
+        public Proveedor()
+        {
+            
+        }
+
         public void ValidarMail()
         {
          

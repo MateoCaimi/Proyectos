@@ -24,5 +24,10 @@ namespace LogicaNegocio.Entidades
         {
             throw new NotImplementedException();
         }
+
+        public Plano()
+        {
+            
+        }
     }
 }

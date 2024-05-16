@@ -20,5 +20,10 @@ namespace LogicaNegocio.Entidades
         [Required]
         public DateTime FechaIngreso { get; set; }
         public DateTime FechaEgreso { get; set; }
+
+        public ObraEmpleado()
+        {
+            
+        }
     }
 }

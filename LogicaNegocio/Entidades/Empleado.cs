@@ -23,5 +23,10 @@ namespace LogicaNegocio.Entidades
         public string Banco { get; set; }
         public List<Obra> Obras { get; set; }
 
+        public Empleado()
+        {
+            
+        }
+
     }
 }
