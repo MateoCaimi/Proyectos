@@ -29,10 +29,15 @@ namespace LogicaNegocio.Entidades
         public List<Plano> Planos { get; set; }
         public List<Solicitud> Solicitudes { get; set; }
 
-        //public void Validar()
-        //{
-        //    throw new NotImplementedException();
-        //}
+        public Obra()
+        {
+            
+        }
+
+        public void Validar()
+        {
+            throw new NotImplementedException();
+        }
 
         public void FinalizarObra()
         {

@@ -5,6 +5,7 @@ using LogicaNegocio.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using MVC.Models;
 
 namespace MVC.Controllers
 {
@@ -12,7 +13,7 @@ namespace MVC.Controllers
     {
         private IRepositorioObra Repositorio = new RepositorioObra();
         // GET: ObraController
-        public ActionResult Index()
+        public ActionResult Listado()
         {
             IEnumerable<Obra> obras = Repositorio.TomarTodos();
             return View(obras);
@@ -20,9 +21,8 @@ namespace MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Index(string nombre, string direccion, bool finalizada)
+        public ActionResult Listado(string nombre, string direccion, bool finalizada)
         {
-
             IEnumerable<Obra> listadoObras = Repositorio.ObrasFiltradas(nombre, direccion, finalizada);
             return View(listadoObras);
         }
@@ -30,8 +30,17 @@ namespace MVC.Controllers
         // GET: ObraController/Details/5
         public ActionResult Detalles(int id)
         {
-            Obra obra = Repositorio.Buscar(id);
-            return View(obra);
+            try
+            {
+                Obra obra = Repositorio.Buscar(id);
+                return View(obra);
+            }
+            catch (ObraException e)
+            {
+                ErrorViewModel errorModel = new ErrorViewModel();
+                errorModel.RequestId = e.Message;
+                return View("Error", errorModel); //usar shared hasta tener vistas de error para cada coso
+            }
         }
 
         // GET: ObraController/Create
@@ -50,7 +59,7 @@ namespace MVC.Controllers
                 Repositorio.Agregar(aIngresar);
                 return RedirectToAction(nameof(Index));
             }
-            catch(ObraException e)
+            catch (Exception e)
             {
                 ViewBag.Error = e.Message;
                 return View();
@@ -58,62 +67,92 @@ namespace MVC.Controllers
         }
 
         // GET: ObraController/Edit/5
-        public ActionResult Modificar(int id)
-        {
-            return View();
-        }
-
-        // POST: ObraController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Modificar(int id, Obra nuevaObra)
+        public ActionResult Editar(int id)
         {
             try
             {
-                Repositorio.Modificar(id, nuevaObra);
+                Obra obra = Repositorio.Buscar(id);
+                return View(obra);
+            }
+            catch (ObraException e)
+            {
+                ErrorViewModel errorModel = new ErrorViewModel();
+                errorModel.RequestId = e.Message;
+                return View("Error", errorModel); //usar shared hasta tener vistas de error para cada coso
+            }
+        }
+
+        // POST: ObraController/Edit/5
+        [HttpPost, ActionName("Edit")]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditarConfirmado(Obra nuevaObra)
+        {
+            try
+            {
+                Repositorio.Modificar(nuevaObra);
                 return RedirectToAction(nameof(Index));
             }
-            catch(ObraException e)
+            catch (ObraException e)
             {
-                ViewBag.Error = e.Message;
-                return View();
+                ErrorViewModel errorModel = new ErrorViewModel();
+                errorModel.RequestId = e.Message;
+                return View("Error", errorModel); //usar shared hasta tener vistas de error para cada coso
             }
         }
 
         // GET: ObraController/Delete/5
         public ActionResult Eliminar(int id)
         {
-            Obra obra = Repositorio.Buscar(id);
-            return View(obra);
+            try
+            {
+                Obra obra = Repositorio.Buscar(id);
+                return View(obra);
+            }
+            catch (ObraException e)
+            {
+                ErrorViewModel errorModel = new ErrorViewModel();
+                errorModel.RequestId = e.Message;
+                return View("Error", errorModel); //usar shared hasta tener vistas de error para cada coso
+            }
         }
 
         // POST: ObraController/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Eliminar(int id, Obra obra)
+        public ActionResult EliminarConfirmado(int id)
         {
             try
             {
-                Repositorio.Eliminar(obra);
+                Obra obraABorrar = Repositorio.Buscar(id);
+                Repositorio.Eliminar(obraABorrar);
                 return RedirectToAction(nameof(Index));
             }
             catch (ObraException e)
             {
-                ViewBag.Error = e.Message;
-                return View();
+                ErrorViewModel errorModel = new ErrorViewModel();
+                errorModel.RequestId = e.Message;
+                return View("Error", errorModel); //usar shared hasta tener vistas de error para cada coso
             }
         }
 
         public ActionResult Planos(int id)
         {
-            IEnumerable<Plano> planos = Repositorio.PlanosTotales(id);
-            if (planos == null)
+            try
             {
-
-                planos = new List<LogicaNegocio.Entidades.Plano>();
+                IEnumerable<Plano> planos = Repositorio.PlanosTotales(id);
+                if (planos == null) 
+                {
+                    planos = new List<LogicaNegocio.Entidades.Plano>();
+                }
+                return View(planos);
             }
+            catch(ObraException e) //Solo manda ObraException si no existe obra
+            {
+                ErrorViewModel errorModel = new ErrorViewModel();
+                errorModel.RequestId = e.Message;
+                return View("Error", errorModel); //usar shared hasta tener vistas de error para cada coso
+            } 
 
-            return View(planos);
         }
     }
 }

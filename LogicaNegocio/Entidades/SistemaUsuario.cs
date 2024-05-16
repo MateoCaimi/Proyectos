@@ -10,5 +10,6 @@ namespace LogicaNegocio.Entidades
     {
         public List<Usuario> Usuarios { get; set; }
         public Usuario UsuarioActual { get; set; }
+
     }
 }

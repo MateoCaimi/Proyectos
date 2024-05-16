@@ -16,5 +16,10 @@ namespace LogicaNegocio.Entidades
         public int Stock { get; set;}
         [Required]
         public string UnidadDeMedida { get; set; }
+
+        public Material()
+        {
+            
+        }
     }
 }

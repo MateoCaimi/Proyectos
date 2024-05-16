@@ -12,5 +12,7 @@ namespace LogicaNegocio.Entidades
         public List<Obra> ObrasActuales { get; set; }
         public List<Empleado> Empleados { get; set; }
         public List<Proveedor> Proveedores { get; set; }
+
+
     }
 }
