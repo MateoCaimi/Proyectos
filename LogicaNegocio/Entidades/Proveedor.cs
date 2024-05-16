@@ -12,6 +12,7 @@ namespace LogicaNegocio.Entidades
 {
     public class Proveedor
     {
+
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int Id { get; set; }
