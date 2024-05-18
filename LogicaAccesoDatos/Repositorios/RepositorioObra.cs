@@ -125,6 +125,9 @@ namespace LogicaAccesoDatos.Repositorios
             }
             try
             {   //No me convence. Repositorio de planos????? No entiendo bien como hacerlo, el tema es que no tenemos referencia de obra en plano.
+
+                //(Agus)Tampoco me cierra que onda con repositorio planos? CRUD Planos? dentro de obra en todo caso
+
                 plano.Validar();
                 obra.Planos.Add(plano);
                 Context.Planos.Add(plano);

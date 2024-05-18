@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,6 +39,9 @@ namespace LogicaNegocio.Entidades
         public void Validar()
         {
             ValidarFechaInicio();
+            ValidarFechaFinal();
+            ValidarNombre();
+            ValidarDireccion();
         }
 
         public void ValidarFechaInicio()
@@ -45,9 +49,36 @@ namespace LogicaNegocio.Entidades
             if(this.FechaInicio < DateTime.Now)
             {
                 throw new ObraException("La fecha de la obra no puede ser antes de hoy");
+                //si quieren agregar alguna que tienen empezada?
             }
         }
 
+        public void ValidarFechaFinal()
+        {
+            if(this.FechaFinalizacion < this.FechaInicio)
+            {
+                throw new ObraException("La fecha de finalizacion no puede ser previa a la de inicio");
+            }
+        }
+
+        public void ValidarNombre()
+        {
+            if (this.Nombre.Any(char.IsDigit))
+            {
+                throw new ObraException("El nombre no puede contener numeros");
+                //Podriamos preguntar por las dudas
+            }
+
+        }
+
+        public void ValidarDireccion()
+        {
+            
+            if (this.Direccion.All(char.IsDigit))
+            {
+                throw new ObraException("Debe escribir una direccion");
+            }
+        }
 
         public void FinalizarObra()
         {
@@ -71,9 +102,9 @@ namespace LogicaNegocio.Entidades
             }
             foreach(Solicitud s in Solicitudes)
             {
-                if(s.Aprovador != null)
+                if(s.Estado != Estado.Recibido)
                 {
-                    haySolicitudes = true;  //No me parece esto
+                    haySolicitudes = true;  
                 }
             }
             return haySolicitudes;
