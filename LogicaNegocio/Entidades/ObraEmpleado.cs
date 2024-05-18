@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using LogicaNegocio.Excepciones;
+using LogicaNegocio.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,7 +12,7 @@ using System.Threading.Tasks;
 namespace LogicaNegocio.Entidades
 {
     [PrimaryKey(nameof(IdObra), nameof(IdEmpleado))]
-    public class ObraEmpleado
+    public class ObraEmpleado : IValidable
     {
         [ForeignKey("Obra")]
         public int IdObra { get; set; }
@@ -24,6 +26,20 @@ namespace LogicaNegocio.Entidades
         public ObraEmpleado()
         {
             
+        }
+
+        public void Validar()
+        {
+            ValidarFechaIngreso();
+            
+        }
+
+        public void ValidarFechaIngreso() //Esto podemos cambiarlo capaz
+        {
+            if (this.FechaIngreso > DateTime.Now)
+            {
+                throw new EmpleadoException("La fecha de ingreso no puede ser mayor a la de hoy");
+            }
         }
     }
 }

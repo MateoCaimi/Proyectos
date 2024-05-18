@@ -19,7 +19,7 @@ namespace LogicaNegocio.Entidades
 
         public Material()
         {
-            
+            this.Stock = 0;
         }
 
     }

@@ -37,13 +37,16 @@ namespace LogicaNegocio.Entidades
 
         public void Validar()
         {
-            throw new NotImplementedException();
+            ValidarFechaInicio();
         }
 
-
-
-
-
+        public void ValidarFechaInicio()
+        {
+            if(this.FechaInicio < DateTime.Now)
+            {
+                throw new ObraException("La fecha de la obra no puede ser antes de hoy");
+            }
+        }
 
 
         public void FinalizarObra()
@@ -70,12 +73,12 @@ namespace LogicaNegocio.Entidades
             {
                 if(s.Aprovador != null)
                 {
-                    haySolicitudes = true;
+                    haySolicitudes = true;  //No me parece esto
                 }
             }
             return haySolicitudes;
         }
+ 
 
-       
     }
 }

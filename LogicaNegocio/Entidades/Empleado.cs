@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LogicaNegocio.Excepciones;
+using LogicaNegocio.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace LogicaNegocio.Entidades
 {
-    public class Empleado
+    public class Empleado : IValidable
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
@@ -28,5 +30,24 @@ namespace LogicaNegocio.Entidades
             
         }
 
+        public void Validar()
+        {
+            ValidarCuentaDeBanco(); //Por banco o algo en especial? Numeros y letras pero no caract?
+            ValidarFechaIngreso();
+        }
+
+        public void ValidarCuentaDeBanco()
+        {
+
+        }
+
+        public void ValidarFechaIngreso()
+        {
+            if(this.FechaIngreso > DateTime.Now)
+            {
+                throw new EmpleadoException("La fecha de ingreso no puede ser despues de hoy");
+            }
+
+        }
     }
 }
