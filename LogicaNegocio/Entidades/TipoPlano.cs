@@ -19,6 +19,8 @@ namespace LogicaNegocio.Entidades
         [Key]
         public int Id { get; set; }
 
+        public TipoPlano() { }
+
         public TipoPlano(string cat)
         {
             this.Categoria = cat;

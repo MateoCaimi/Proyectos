@@ -5,10 +5,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LogicaNegocio.Interfaces;
 
 namespace LogicaNegocio.Entidades
 {
-    public class Plano
+    public class Plano : IValidable
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
@@ -20,11 +21,16 @@ namespace LogicaNegocio.Entidades
         [Required]
         public DateTime FechaPublicado { get; set; }
 
-
+        
         public Plano()
         {
             this.FechaPublicado = DateTime.Now;
             
+        }
+
+        public void Validar()
+        {
+
         }
     }
 }
