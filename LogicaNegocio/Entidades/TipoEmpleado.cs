@@ -6,10 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
+using LogicaNegocio.Interfaces;
+using LogicaNegocio.Excepciones;
 
 namespace LogicaNegocio.Entidades
 {
-    public class TipoEmpleado
+    public class TipoEmpleado: IValidable
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
@@ -30,6 +32,43 @@ namespace LogicaNegocio.Entidades
         {
             
         }
+
+        public void Validar()
+        {
+            ValidarValorHora();
+            ValidarPresentismo();
+            ValidarCompensacion();
+
+        }
+
+        public void ValidarValorHora()
+        {
+            if (this.ValorHora <= 0)
+            {
+                throw new EmpleadoException("El valor debe ser mayor a 0");
+            }
+        }
+
+        public void ValidarPresentismo()
+        {
+            if (this.ValorHora <= 0)
+            {
+                throw new EmpleadoException("El valor debe ser mayor a 0");
+            }
+        }
+
+        public void ValidarCompensacion()
+        {
+            if (this.Compensacion <= 0)
+            {
+                throw new EmpleadoException("El valor debe ser mayor a 0");
+            }
+        }
+
+
+
+
+
 
     }
 }

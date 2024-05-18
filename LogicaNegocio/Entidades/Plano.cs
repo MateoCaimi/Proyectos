@@ -20,13 +20,10 @@ namespace LogicaNegocio.Entidades
         [Required]
         public DateTime FechaPublicado { get; set; }
 
-        public void Validar()
-        {
-            throw new NotImplementedException();
-        }
 
         public Plano()
         {
+            this.FechaPublicado = DateTime.Now;
             
         }
     }

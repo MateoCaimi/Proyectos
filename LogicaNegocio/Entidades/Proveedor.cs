@@ -7,10 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using LogicaNegocio.Excepciones;
 using System.Text.RegularExpressions;
+using LogicaNegocio.Interfaces;
 
 namespace LogicaNegocio.Entidades
 {
-    public class Proveedor
+    public class Proveedor : IValidable
     {
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -42,7 +43,16 @@ namespace LogicaNegocio.Entidades
             }
         }
 
+        public void ValidarTelefono()
+        {
+            //Validar celular y telefono para montevideo?
+        }
 
-
+        public void Validar()
+        {
+            ValidarMail();
+            ValidarTelefono();
+        }
+        
     }
 }

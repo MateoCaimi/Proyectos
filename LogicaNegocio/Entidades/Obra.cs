@@ -1,4 +1,5 @@
 ﻿using LogicaNegocio.Excepciones;
+using LogicaNegocio.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 namespace LogicaNegocio.Entidades
 {
     //Documentar cambios en requerimientos: Listado de Obras, Vista de Obras, Filtro de Obras
-    public class Obra
+    public class Obra : IValidable
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
@@ -38,6 +39,12 @@ namespace LogicaNegocio.Entidades
         {
             throw new NotImplementedException();
         }
+
+
+
+
+
+
 
         public void FinalizarObra()
         {
@@ -68,5 +75,7 @@ namespace LogicaNegocio.Entidades
             }
             return haySolicitudes;
         }
+
+       
     }
 }

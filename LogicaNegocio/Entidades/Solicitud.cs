@@ -5,10 +5,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LogicaNegocio.Interfaces;
 
 namespace LogicaNegocio.Entidades
 {
-    public class Solicitud
+    public class Solicitud : IValidable
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
@@ -24,7 +25,10 @@ namespace LogicaNegocio.Entidades
         [ForeignKey("UDeOficina")] public int IdUDeOficina { get; set; }
         public UDeOficina? Aprovador { get; set; }
 
-        public Solicitud (int id, int idProveedor, Proveedor? proveedor, int idObra, Obra? obra, int idUsuario, Usuario? solicitante, int idUDeOficina, UDeOficina? aprovador)
+        public string Estado { get; set; } //Solicitado, Aprobado-Rechazado, Recibido.
+
+
+        public Solicitud (int id, int idProveedor, Proveedor? proveedor, int idObra, Obra? obra, int idUsuario, Usuario? solicitante, int idUDeOficina, UDeOficina? aprovador, string estado)
         {
             Id = id;
             IdProveedor = idProveedor;
@@ -35,8 +39,14 @@ namespace LogicaNegocio.Entidades
             Solicitante = solicitante;
             IdUDeOficina = idUDeOficina;
             Aprovador = aprovador;
+            Estado = estado;
         }
 
         public Solicitud () { }
+
+        public void Validar()
+        {
+
+        }
     }
 }

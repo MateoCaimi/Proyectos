@@ -6,10 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LogicaNegocio.Excepciones;
+using LogicaNegocio.Interfaces;
 
 namespace LogicaNegocio.Entidades
 {
-    public abstract class Usuario
+    public abstract class Usuario : IValidable
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
@@ -41,16 +42,39 @@ namespace LogicaNegocio.Entidades
         {
             //Verifico si la password tiene mas de 8 caracteres, si tiene una mayuscula y si tiene un numero. Si la password es igual para todos no hay que rescribir en clases hijas.
 
+
+            //falta caracter especial
             if (this.Contrasenia.Length >= 8 && this.Contrasenia.Any(char.IsUpper) && this.Contrasenia.Any(char.IsDigit))
             {
                 
             }
             else
             {
-                throw new UsuarioException("La contrasenia debe tener almenos 8 caracteres, 1 mayuscula y 1 caracter especial");
+                throw new UsuarioException("La contrasenia debe tener al menos 8 caracteres, 1 mayuscula y 1 numero");
+            }
+        }
+        public void ValidarNombre()
+        {
+            bool num = true;
+            for (var i = 0; i < this.Nombre.Length; i++)
+            {
+                if (char.IsDigit(Nombre[i]))
+                {
+                    num = false;
+                }
+            }
+            if (!num)
+            {
+                throw new UsuarioException("El nombre no puede contener digitos numericos");
             }
         }
 
 
+
+        public void Validar()
+        {
+            ValidarNombre();
+            ValidarContrasena();
+        }
     }
 }
