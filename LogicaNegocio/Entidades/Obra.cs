@@ -1,5 +1,6 @@
 ﻿using LogicaNegocio.Excepciones;
 using LogicaNegocio.Interfaces;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -46,10 +47,9 @@ namespace LogicaNegocio.Entidades
 
         public void ValidarFechaInicio()
         {
-            if(this.FechaInicio < DateTime.Now)
+            if(this.FechaInicio > DateTime.Now)
             {
-                throw new ObraException("La fecha de la obra no puede ser antes de hoy");
-                //si quieren agregar alguna que tienen empezada?
+                throw new ObraException("La fecha de la obra no puede ser después de hoy");
             }
         }
 
@@ -82,7 +82,7 @@ namespace LogicaNegocio.Entidades
 
         public void FinalizarObra()
         {
-            if (!this.Finalizada)
+            if (this.Finalizada)
             {
                 throw new ObraException("La obra ya ha sido finalizada.");
             }

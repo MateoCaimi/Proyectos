@@ -2,6 +2,7 @@
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones;
 using LogicaNegocio.Interfaces;
+using LogicaNegocio.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -32,7 +33,15 @@ namespace MVC.Controllers
         {
             try
             {
-                Obra obra = Repositorio.Buscar(id);
+                ObraEstadisticasViewModel obra = new ObraEstadisticasViewModel();
+                obra.Obra = Repositorio.Buscar(id);
+                if (obra.Obra.Finalizada) //Yo sé que esto parece una locura.Usa un viewmodel para pasar todo de una a la vista y no usar muchos viewbags o tempdata, queda feo pero creo que es mejor.
+                {
+                    obra.MaterialMasSolicitado = Repositorio.MaterialMasSolicitado(obra.Obra.IdObra);
+                    obra.MaterialMenosSolicitado = Repositorio.MaterialMenosSolicitado(obra.Obra.IdObra);
+                    obra.AprobadorMasComun = Repositorio.AprobadorMasComun(obra.Obra.IdObra);
+                    obra.ProveedorMasComun = Repositorio.ProveedorMasComun(obra.Obra.IdObra);
+                }
                 return View(obra);
             }
             catch (ObraException e)
@@ -125,6 +134,41 @@ namespace MVC.Controllers
             {
                 Obra obraABorrar = Repositorio.Buscar(id);
                 Repositorio.Eliminar(obraABorrar);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (ObraException e)
+            {
+                ErrorViewModel errorModel = new ErrorViewModel();
+                errorModel.RequestId = e.Message;
+                return View("Error", errorModel); //usar shared hasta tener vistas de error para cada coso
+            }
+        }
+
+        // GET: ObraController/Cerrar/5
+        public ActionResult Cerrar(int id)
+        {
+            try
+            {
+                Obra obra = Repositorio.Buscar(id);
+                return View(obra);
+            }
+            catch (ObraException e)
+            {
+                ErrorViewModel errorModel = new ErrorViewModel();
+                errorModel.RequestId = e.Message;
+                return View("Error", errorModel); //usar shared hasta tener vistas de error para cada coso
+            }
+        }
+
+        // POST: ObraController/Delete/5
+        [HttpPost, ActionName("Cerrar")]
+        [ValidateAntiForgeryToken]
+        public ActionResult CerrarConfirmado(int id)
+        {
+            try
+            {
+                Obra obraABorrar = Repositorio.Buscar(id);
+                Repositorio.FinalizarObra(obraABorrar);
                 return RedirectToAction(nameof(Index));
             }
             catch (ObraException e)

@@ -1,4 +1,4 @@
-﻿@model LogicaNegocio.Entidades.Obra
+﻿@model LogicaNegocio.ViewModel.ObraEstadisticasViewModel
 
 @{
     ViewData["Title"] = "Detalles";
@@ -11,40 +11,68 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FechaInicio)
+            @Html.DisplayNameFor(model => model.Obra.FechaInicio)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FechaInicio)
+            @Html.DisplayFor(model => model.Obra.FechaInicio)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FechaFinalizacion)
+            @Html.DisplayNameFor(model => model.Obra.FechaFinalizacion)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FechaFinalizacion)
+            @Html.DisplayFor(model => model.Obra.FechaFinalizacion)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
+            @Html.DisplayNameFor(model => model.Obra.Nombre)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
+            @Html.DisplayFor(model => model.Obra.Nombre)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Direccion)
+            @Html.DisplayNameFor(model => model.Obra.Direccion)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Direccion)
+            @Html.DisplayFor(model => model.Obra.Direccion)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Finalizada)
+            @Html.DisplayNameFor(model => model.Obra.Finalizada)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Finalizada)
+            @Html.DisplayFor(model => model.Obra.Finalizada)
         </dd>
     </dl>
 </div>
+
 <div>
-    <a asp-action="Editar" asp-route-id="@Model?.IdObra">Modificar</a> |
-    <a asp-action="Eliminar" asp-route-id="@Model?.IdObra">Eliminar</a>
+    <h5>Estadísticas de obra</h5>
+        <dt class="col-sm-2">
+            Material más solicitado
+        </dt>
+        <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.MaterialMasSolicitado)
+        </dd>
+        <dt class="col-sm-2">
+            Material menos solicitado
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaterialMenosSolicitado)
+        </dd>
+        <dt class="col-sm-2">
+            Solicitante más común
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SolicitanteMasComun)
+        </dd>
+        <dt class="col-sm-2">
+            Proveedor más común
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ProveedorMasComun)
+        </dd>
+</div>
+<div>
+    <a asp-action="Editar" asp-route-id="@Model?.Obra.IdObra">Modificar</a> |
+    <a asp-action="Eliminar" asp-route-id="@Model?.Obra.IdObra">Eliminar</a>
 
     <a asp-action="Index">Back to List</a>
 </div>
