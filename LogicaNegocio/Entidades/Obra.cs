@@ -33,7 +33,24 @@ namespace LogicaNegocio.Entidades
 
         public Obra()
         {
-            
+            MaterialesSolicitados = new List<Material>();
+            MaterialesObra = new List<Material>();
+            Planos = new List<Plano>();
+            Solicitudes = new List<Solicitud>();
+        }
+
+        public Obra(int idObra, DateTime fechaInicio, DateTime fechaFinalizacion, string nombre, string direccion, bool finalizada)
+        {
+            IdObra = idObra;
+            FechaInicio = fechaInicio;
+            FechaFinalizacion = fechaFinalizacion;
+            Nombre = nombre;
+            Direccion = direccion;
+            Finalizada = finalizada;
+            MaterialesSolicitados = new List<Material>();
+            MaterialesObra = new List<Material>();
+            Planos = new List<Plano>();
+            Solicitudes = new List<Solicitud>();
         }
 
         public void Validar()

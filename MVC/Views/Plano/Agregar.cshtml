@@ -1,0 +1,61 @@
+﻿@using LogicaNegocio.Entidades
+@model LogicaNegocio.Entidades.Plano
+
+@{
+    ViewData["Title"] = "AgregarPlano";
+}
+
+<h1>Agregar</h1>
+
+<h4>Plano</h4>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
+}
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Agregar">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Nombre" class="control-label"></label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdTipoPlano" class="control-label"></label>
+                <select asp-for="IdTipoPlano" class="form-control">
+                    <option value="">-- Selecciona un tipo de plano --</option>
+                    @foreach (var tipo in  ViewBag.TiposdePlano)
+                    {
+                        <option value="@tipo.Id">@tipo.Categoria</option>
+                    }
+                </select>
+                <span asp-validation-for="IdTipoPlano" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="FechaPublicado" class="form-control" type="hidden" value="@DateTime.Now" />
+                <span asp-validation-for="FechaPublicado" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input asp-for="IdObra" class="form-control" type="hidden" value="@ViewBag.IdObra" />
+                <span asp-validation-for="IdObra" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

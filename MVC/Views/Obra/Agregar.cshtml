@@ -3,6 +3,12 @@
 @{
     ViewData["Title"] = "Agregar";
 }
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
+}
 
 <h1>Agregar</h1>
 
@@ -44,12 +50,6 @@
     </div>
 </div>
 
-@if (ViewBag.Error != null)
-{
-    <div class="alert alert-danger">
-        @ViewBag.Error
-    </div>
-}
 
 
 

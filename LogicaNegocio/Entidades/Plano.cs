@@ -16,16 +16,21 @@ namespace LogicaNegocio.Entidades
         public int Id { get; set; }
         [Required]
         public string Nombre { get; set; }
-        [ForeignKey("TipoPlano")] public int IdPlano { get; set; }
+
+        [ForeignKey("IdTipoPlano")] 
         public TipoPlano? TipoPlano { get; set; }
+        public int IdTipoPlano { get; set; }
         [Required]
         public DateTime FechaPublicado { get; set; }
+
+        [ForeignKey("IdObra")] 
+        public Obra? Obra { get; set; }
+        public int IdObra { get; set; }
 
         
         public Plano()
         {
             this.FechaPublicado = DateTime.Now;
-            
         }
 
         public void Validar()

@@ -1,0 +1,90 @@
+﻿@model IEnumerable<LogicaNegocio.Entidades.Plano>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<h1>Planos</h1>
+
+<p>
+    <a href="@Url.Action("Agregar", new {idObra = ViewBag.IdObra})"> Agregar Plano</a>
+</p>
+
+
+<form method="post">
+
+    <div class="form-group">
+        <label for="Nombre" class="control-label">Nombre: </label>
+        <input id="Nombre" name="Nombre" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="IdTipoPlano" class="control-label">Categoria: </label>
+        <select id="IdTipoPlano" name="IdTipoPlano" class="form-control">
+            <option value=0>-- Selecciona un tipo de plano --</option>
+            @foreach (var tipo in ViewBag.TiposdePlano)
+            {
+                <option value="@tipo.Id">@tipo.Categoria</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="FechaInicio" class="control-label">Fecha de Inicio: </label>
+        <input type="date" id="FechaInicio" name="FechaInicio" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="FechaFin" class="control-label">Fecha de Fin: </label>
+        <input type="date" id="FechaFin" name="FechaFin" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Buscar" class="btn btn-primary" />
+    </div>
+</form>
+
+@if (Model == null)
+{
+    <p>No hay planos en esta obra</p>
+}
+else
+{
+    
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TipoPlano)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaPublicado)
+            </th>
+            <th></th>   
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TipoPlano.Categoria)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaPublicado)
+            </td>
+            <td>
+
+                <a asp-action="Eliminar" asp-route-id="@item.Id">Eliminar</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+}

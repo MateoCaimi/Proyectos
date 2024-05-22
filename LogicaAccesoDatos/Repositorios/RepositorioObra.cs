@@ -25,7 +25,7 @@ namespace LogicaAccesoDatos.Repositorios
 
             item.Validar();
             if (this.ObraPorNombre(item.Nombre) != null)
-            {
+            {   
                 throw new ObraException("El nombre de obra ingresado ya está en uso. Elegir otro.");
             }
             if (this.ObraPorDireccion(item.Direccion) != null)
@@ -74,28 +74,6 @@ namespace LogicaAccesoDatos.Repositorios
             Context.SaveChanges();
         }
 
-        public void EliminarPlano(Plano plano, Obra obra)
-        {
-            if (obra == null)
-            {
-                throw new ObraException("No se puede eliminar un plano de una obra nula.");
-            }
-            if (plano == null)
-            {
-                throw new ObraException("No se puede eliminar un plano nulo.");
-            }
-            try
-            {   //No me convence. Repositorio de planos????? No entiendo bien como hacerlo, el tema es que no tenemos referencia de obra en plano.
-                obra.Planos.Remove(plano);
-                Context.Planos.Remove(plano);
-                Context.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                throw new ObraException("Error eliminando plano: " + e.Message);
-            }
-        }
-
         public void FinalizarObra(Obra obra)
         {
             if (obra == null)
@@ -113,31 +91,7 @@ namespace LogicaAccesoDatos.Repositorios
             }
         }
 
-        public void IngresarPlano(Plano plano, Obra obra)
-        {
-            if (obra == null)
-            {
-                throw new ObraException("No se puede ingresar un plano en una obra nula.");
-            }
-            if (plano == null)
-            {
-                throw new ObraException("No se puede ingresar un plano nulo.");
-            }
-            try
-            {   //No me convence. Repositorio de planos????? No entiendo bien como hacerlo, el tema es que no tenemos referencia de obra en plano.
-
-                //(Agus)Tampoco me cierra que onda con repositorio planos? CRUD Planos? dentro de obra en todo caso
-
-                plano.Validar();
-                obra.Planos.Add(plano);
-                Context.Planos.Add(plano);
-                Context.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                throw new ObraException("Error ingresando plano: " + e.Message);
-            }
-        }
+      
 
         public void Modificar(Obra nuevaObra)
         {
@@ -180,56 +134,6 @@ namespace LogicaAccesoDatos.Repositorios
             }
             return obras.ToList();
         }
-
-        public IEnumerable<Plano> PlanosFiltrados(Obra obra, TipoPlano? tipo, string? nombre, DateTime? fechaDesde, DateTime? fechaHasta)
-        {
-            if (obra == null)
-            {
-                throw new ObraException("No se pueden buscar planos en una obra nula.");
-            }
-            IEnumerable<Plano> planos = obra.Planos; //creo que es descendiente, revisar luego
-            if(tipo != null)
-            {
-                planos = planos.Where(p => p.TipoPlano.Id == tipo.Id);
-            }
-            if(nombre != null)
-            {
-                planos = planos.Where(p => p.Nombre.Contains(nombre));
-            }
-            if(fechaDesde != null && fechaHasta != null)
-            {
-                if(fechaDesde > fechaHasta)
-                {
-                    DateTime aux = (DateTime)fechaHasta;
-                    fechaHasta = fechaDesde;
-                    fechaDesde = aux;
-                }
-                planos = planos.Where(p => p.FechaPublicado >= fechaDesde && p.FechaPublicado <= fechaHasta); 
-            }
-            return planos.ToList();
-        }
-       
-        public IEnumerable<Plano> PlanosPorAntiguedad(Obra obra)
-        {
-            if (obra == null)
-            {
-                throw new ObraException("No se pueden buscar planos en una obra nula.");
-            }
-            IEnumerable<Plano> planos = obra.Planos.OrderByDescending(p => p.FechaPublicado); //creo que es descendiente, revisar luego
-            return planos;
-        }
-
-        public IEnumerable<Plano> PlanosTotales(int id)
-        {
-            Obra obra = Buscar(id);
-            if (obra == null)
-            {
-                throw new ObraException("No se pueden buscar planos en una obra nula.");
-            }
-            IEnumerable<Plano> planos = obra.Planos;
-            return planos;
-        }
-
 
         public IEnumerable<Obra> TomarTodos()
         {

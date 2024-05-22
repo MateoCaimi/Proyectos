@@ -11,13 +11,12 @@ namespace LogicaNegocio.Entidades
 {
     public class TipoPlano 
     {
-        [Required]
-        public string Categoria { get; set; }
-
-
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int Id { get; set; }
+
+        [Required]
+        public string Categoria { get; set; }
 
         public TipoPlano() { }
 
