@@ -19,18 +19,22 @@ namespace LogicaNegocio.Entidades
         [Key]
         public int IdObra { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Ingrese una fecha de inicio")]
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFinalizacion { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Ingrese un nombre valido")]
         public string Nombre { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Ingrese una direccion")]
         public string Direccion { get; set; }
         public bool Finalizada { get; set; }
+
+
+        //Listas sacarlas
         public List<Material> MaterialesSolicitados { get; set; }
         public List<Material> MaterialesObra { get; set; }
         public List<Plano> Planos { get; set; }
         public List<Solicitud> Solicitudes { get; set; }
+
 
         public Obra()
         {
@@ -62,6 +66,8 @@ namespace LogicaNegocio.Entidades
             ValidarDireccion();
         }
 
+
+        //Esta validacion se va
         public void ValidarFechaInicio()
         {
             if(this.FechaInicio > DateTime.Now)

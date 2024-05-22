@@ -81,7 +81,7 @@ namespace LogicaAccesoDatos.Repositorios
             }
             if (nombre != null)
             {
-                planos = planos.Where(p => p.Nombre.Contains(nombre));
+                planos = planos.Where(p => p.Nombre.ToUpper().Contains(nombre.ToUpper()));
             }
             if (fechaDesde != null && fechaHasta != null)
             {

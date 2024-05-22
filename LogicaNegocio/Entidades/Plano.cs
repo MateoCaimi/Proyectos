@@ -14,19 +14,20 @@ namespace LogicaNegocio.Entidades
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int Id { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Ingrese un nombre")]
         public string Nombre { get; set; }
 
         [ForeignKey("IdTipoPlano")] 
         public TipoPlano? TipoPlano { get; set; }
         public int IdTipoPlano { get; set; }
-        [Required]
+        [Required]// Esto no es automatico?
         public DateTime FechaPublicado { get; set; }
 
         [ForeignKey("IdObra")] 
         public Obra? Obra { get; set; }
         public int IdObra { get; set; }
 
+        // archivo img o lo que sea IMPORTANTE
         
         public Plano()
         {

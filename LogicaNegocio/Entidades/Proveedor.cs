@@ -17,7 +17,7 @@ namespace LogicaNegocio.Entidades
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int Id { get; set; }
-        [Required] 
+        [Required(ErrorMessage = "Ingrese un nombre")] 
         public string Nombre { get; set; }
         public string Telefono { get; set; }
         public string Mail { get; set; }

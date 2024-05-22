@@ -11,10 +11,10 @@ namespace LogicaNegocio.Entidades
     {
         [Key]
         public int Id { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Ingrese un nombre para el material")]
         public string Nombre { get; set; }
         public int Stock { get; set;}
-        [Required]
+        [Required(ErrorMessage = "Ingrese una unidad de medida")]
         public string UnidadDeMedida { get; set; }
 
         public Material()

@@ -15,11 +15,11 @@ namespace LogicaNegocio.Entidades
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int Id { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Ingrese un nombre")]
         public string Nombre { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Ingrese un nombre de usuario")]
         public string NombreUsuario { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Ingrese una contraseña")]
         [MinLength(8)]
         public string Contrasenia { get; set; }
 

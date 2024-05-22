@@ -16,15 +16,15 @@ namespace LogicaNegocio.Entidades
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int Id { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Ingrese una categoria")]
         public string Categoría { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Ingrese un valor por hora")]
         [Range(0,double.MaxValue)]
         public double ValorHora { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Ingrese un presentismo")]
         [Range(0,double.MaxValue)]
         public double Presentismo { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Ingrese una compensacion")]
         [Range(0,double.MaxValue)]
         public double Compensacion { get; set; }
 

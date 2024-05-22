@@ -179,22 +179,6 @@ namespace MVC.Controllers
             }
         }
 
-        public ActionResult Planos(int id)
-        {
-            try
-            {
-                IEnumerable<Plano> planos = Repositorio.PlanosTotales(id);
-                if (planos == null) 
-                {
-                    planos = new List<LogicaNegocio.Entidades.Plano>();
-                }
-                return View(planos);
-            }
-            catch(ObraException e) //Solo manda ObraException si no existe obra
-            {
-                ErrorViewModel errorModel = new ErrorViewModel();
-                errorModel.RequestId = e.Message;
-                return View("Error", errorModel); //usar shared hasta tener vistas de error para cada coso
-            } 
 
+}
 }

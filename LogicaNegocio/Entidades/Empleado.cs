@@ -15,14 +15,17 @@ namespace LogicaNegocio.Entidades
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int Id { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Ingrese un nombre")]
         public string Nombre { get; set; }
         public DateTime FechaIngreso { get; set; }
         [ForeignKey("TipoEmpleado")] public int IdEmpleado { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Ingrese un tipo de empleado")]
         public TipoEmpleado? TipoEmpleado { get; set; }
         public string CuentaBanco { get; set; }
         public string Banco { get; set; }
+
+
+        //Lista de Obras se va
         public List<Obra> Obras { get; set; }
 
         public Empleado()
