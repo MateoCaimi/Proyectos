@@ -16,6 +16,11 @@ namespace LogicaNegocio.Interfaces
         public IEnumerable<Obra> BuscarPorNombre(string nombre);
         public IEnumerable<Obra> BuscarPorDireccion(string direccion);
         public void FinalizarObra(Obra obra);
+        public Material MaterialMenosSolicitado(int IdObra);
+        public Material MaterialMasSolicitado(int IdObra);
+        public Proveedor ProveedorMasComun(int IdObra);
+        public Usuario SolicitanteMasComun(int IdObra);
+        public UDeOficina AprobadorMasComun(int IdObra);
 
     }
 }

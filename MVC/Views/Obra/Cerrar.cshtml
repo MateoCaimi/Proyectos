@@ -1,0 +1,27 @@
+﻿@model LogicaNegocio.Entidades.Obra
+
+@{
+    ViewData["Title"] = "Cerrar obra";
+}
+
+<h1>Cerrar obra</h1>
+
+<h3>¿Estás seguro que quieres cerrar esta obra?</h3>
+<div>
+    <h4>Obra</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+    </dl>
+
+    <form asp-action="Cerrar">
+        <input type="hidden" asp-for="IdObra" />
+        <input type="submit" value="Cerrar" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

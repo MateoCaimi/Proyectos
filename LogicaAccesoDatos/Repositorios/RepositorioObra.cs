@@ -144,5 +144,105 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return Context.Obras.Find(id);
         }
+
+        public Material MaterialMasSolicitado(int IdObra)
+        {
+            Dictionary<Material, int> retorno = new Dictionary<Material, int>();
+            IEnumerable<Solicitud> solicitudesObra = Context.Solicitudes.Where(s => s.IdObra == IdObra);
+            foreach (Solicitud s in solicitudesObra)
+            {
+                foreach (Material m in s.MaterialesSolicitados)
+                {
+                    KeyValuePair<Material, int> var = retorno.First(r => r.Key.Id == m.Id);
+                    if (var.Key != null)
+                    {
+                        retorno.Add(m, m.Stock);
+                    }
+                    else
+                    {
+                        var = new KeyValuePair<Material, int>(var.Key, var.Value + m.Stock);
+                    }
+                }
+            }
+            return retorno.Max().Key;
+        }
+        public Material MaterialMenosSolicitado(int IdObra)
+        {
+            Dictionary<Material, int> retorno = new Dictionary<Material, int>();
+            IEnumerable<Solicitud> solicitudesObra = Context.Solicitudes.Where(s => s.IdObra == IdObra);
+            foreach (Solicitud s in solicitudesObra)
+            {
+                foreach (Material m in s.MaterialesSolicitados)
+                {
+                    KeyValuePair<Material, int> var = retorno.First(r => r.Key.Id == m.Id);
+                    if (var.Key != null)
+                    {
+                        retorno.Add(m, m.Stock);
+                    }
+                    else
+                    {
+                        var = new KeyValuePair<Material, int>(var.Key, var.Value + m.Stock);
+                    }
+                }
+            }
+            return retorno.Min().Key;
+        }
+        public Proveedor ProveedorMasComun(int IdObra)
+        {
+            Dictionary<Proveedor, int> retorno = new Dictionary<Proveedor, int>();
+            IEnumerable<Solicitud> solicitudesObra = Context.Solicitudes.Where(s => s.IdObra == IdObra);
+            foreach (Solicitud s in solicitudesObra)
+            {
+                KeyValuePair<Proveedor, int> var = retorno.First(r => r.Key.Id == s.IdProveedor);
+                if (var.Key != null)
+                {
+                    retorno.Add(BuscarProveedor(s.IdProveedor), 1);
+                }
+                else{
+                    var = new KeyValuePair<Proveedor, int>(BuscarProveedor(s.IdProveedor), var.Value + 1);
+                }
+            }
+            return retorno.Max().Key;
+        }
+        public Usuario SolicitanteMasComun(int IdObra)
+        {
+            Dictionary<Usuario, int> retorno = new Dictionary<Usuario, int>();
+            IEnumerable<Solicitud> solicitudesObra = Context.Solicitudes.Where(s => s.IdObra == IdObra);
+            foreach (Solicitud s in solicitudesObra)
+            {
+                KeyValuePair<Usuario, int> var = retorno.First(r => r.Key == s.Solicitante);
+                if (var.Key != null)
+                {
+                    retorno.Add(s.Solicitante, 1);
+                }
+                else
+                {
+                    var = new KeyValuePair<Usuario, int>(s.Solicitante, var.Value + 1);
+                }
+            }
+            return retorno.Max().Key;
+        }
+        public UDeOficina AprobadorMasComun(int IdObra)
+        {
+            Dictionary<UDeOficina, int> retorno = new Dictionary<UDeOficina, int>();
+            IEnumerable<Solicitud> solicitudesObra = Context.Solicitudes.Where(s => s.IdObra == IdObra);
+            foreach (Solicitud s in solicitudesObra)
+            {
+                KeyValuePair<UDeOficina, int> var = retorno.First(r => r.Key == s.Aprovador);
+                if (var.Key != null)
+                {
+                    retorno.Add(s.Aprovador, 1);
+                }
+                else
+                {
+                    var = new KeyValuePair<UDeOficina, int>(s.Aprovador, var.Value + 1);
+                }
+            }
+            return retorno.Max().Key;
+        }
+        private Proveedor BuscarProveedor(int idProveedor)
+        {
+            return Context.Proveedores.Find(idProveedor);
+        }
     }
 }
