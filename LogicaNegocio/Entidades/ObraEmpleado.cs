@@ -18,7 +18,7 @@ namespace LogicaNegocio.Entidades
         public int IdObra { get; set; }
         [ForeignKey("Empleado")]
         public int IdEmpleado { get; set; }
-        public List<Dia> Dias { get; set; }
+        public List<Dia> Dias { get; set; } //SOLUCIONAR ESTO
         [Required(ErrorMessage = "Ingrese una fecha")]
         public DateTime FechaIngreso { get; set; }
         public DateTime FechaEgreso { get; set; }

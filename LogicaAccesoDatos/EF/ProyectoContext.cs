@@ -22,7 +22,8 @@ namespace LogicaAccesoDatos.EF
         public DbSet<Solicitud> Solicitudes { get; set; }
         public DbSet<Dia> Dias { get; set; }
         public DbSet<ObraEmpleado> ObrasEmpleados { get; set; }
-
+        public DbSet<SolicitudMaterial> SolicitudesMateriales { get; set; }
+ 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string cadenaConexion =

@@ -66,7 +66,7 @@ namespace LogicaAccesoDatos.Repositorios
             {
                 throw new ObraException("No se puede eliminar una obra nula.");
             }
-            if (obra.TieneSolicitudesPendientes())
+            if (TieneSolicitudesPendientes(obra))
             {
                 throw new ObraException("No se puede eliminar la obra, tiene solicitudes de material en estado pendiente.");
             }
@@ -79,6 +79,10 @@ namespace LogicaAccesoDatos.Repositorios
             if (obra == null)
             {
                 throw new ObraException("No se puede finalizar una obra nula.");
+            }
+            if (TieneSolicitudesPendientes(obra))
+            {
+                throw new ObraException("No se puede cerrar la obra, tiene solicitudes de material en estado pendiente.");
             }
             try
             {
@@ -151,16 +155,17 @@ namespace LogicaAccesoDatos.Repositorios
             IEnumerable<Solicitud> solicitudesObra = Context.Solicitudes.Where(s => s.IdObra == IdObra);
             foreach (Solicitud s in solicitudesObra)
             {
-                foreach (Material m in s.MaterialesSolicitados)
+                IEnumerable<SolicitudMaterial> MaterialesSolicitados = Context.SolicitudesMateriales.Where(m => m.IdSolicitud == s.Id);
+                foreach (SolicitudMaterial m in MaterialesSolicitados)
                 {
-                    KeyValuePair<Material, int> var = retorno.First(r => r.Key.Id == m.Id);
+                    KeyValuePair<Material, int> var = retorno.First(r => r.Key.Id == m.IdMaterial);
                     if (var.Key != null)
                     {
-                        retorno.Add(m, m.Stock);
+                        retorno.Add(m.Material, m.Cantidad);
                     }
                     else
                     {
-                        var = new KeyValuePair<Material, int>(var.Key, var.Value + m.Stock);
+                        var = new KeyValuePair<Material, int>(var.Key, var.Value + m.Cantidad);
                     }
                 }
             }
@@ -172,16 +177,17 @@ namespace LogicaAccesoDatos.Repositorios
             IEnumerable<Solicitud> solicitudesObra = Context.Solicitudes.Where(s => s.IdObra == IdObra);
             foreach (Solicitud s in solicitudesObra)
             {
-                foreach (Material m in s.MaterialesSolicitados)
+                IEnumerable<SolicitudMaterial> MaterialesSolicitados = Context.SolicitudesMateriales.Where(m => m.IdSolicitud == s.Id);
+                foreach (SolicitudMaterial m in MaterialesSolicitados)
                 {
-                    KeyValuePair<Material, int> var = retorno.First(r => r.Key.Id == m.Id);
+                    KeyValuePair<Material, int> var = retorno.First(r => r.Key.Id == m.IdMaterial);
                     if (var.Key != null)
                     {
-                        retorno.Add(m, m.Stock);
+                        retorno.Add(m.Material, m.Cantidad);
                     }
                     else
                     {
-                        var = new KeyValuePair<Material, int>(var.Key, var.Value + m.Stock);
+                        var = new KeyValuePair<Material, int>(var.Key, var.Value + m.Cantidad);
                     }
                 }
             }
@@ -243,6 +249,11 @@ namespace LogicaAccesoDatos.Repositorios
         private Proveedor BuscarProveedor(int idProveedor)
         {
             return Context.Proveedores.Find(idProveedor);
+        }
+
+        private bool TieneSolicitudesPendientes(Obra obra)
+        {
+            return Context.Solicitudes.Where(s => s.Obra.IdObra == obra.IdObra && s.Estado == Estado.Solicitado).Any();
         }
     }
 }

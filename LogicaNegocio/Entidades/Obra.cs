@@ -21,27 +21,18 @@ namespace LogicaNegocio.Entidades
 
         [Required(ErrorMessage = "Ingrese una fecha de inicio")]
         public DateTime FechaInicio { get; set; }
-        public DateTime FechaFinalizacion { get; set; }
+        public DateTime? FechaFinalizacion { get; set; }
         [Required(ErrorMessage = "Ingrese un nombre valido")]
         public string Nombre { get; set; }
         [Required(ErrorMessage = "Ingrese una direccion")]
         public string Direccion { get; set; }
         public bool Finalizada { get; set; }
-
-
-        //Listas sacarlas
-        public List<Material> MaterialesSolicitados { get; set; }
-        public List<Material> MaterialesObra { get; set; }
-        public List<Plano> Planos { get; set; }
-        public List<Solicitud> Solicitudes { get; set; }
-
+        [Required][ForeignKey("UsuarioACargo")] public int IdACargo { get; set; }
+        public UDeObra UsuarioACargo { get; set; }  
 
         public Obra()
         {
-            MaterialesSolicitados = new List<Material>();
-            MaterialesObra = new List<Material>();
-            Planos = new List<Plano>();
-            Solicitudes = new List<Solicitud>();
+
         }
 
         public Obra(int idObra, DateTime fechaInicio, DateTime fechaFinalizacion, string nombre, string direccion, bool finalizada)
@@ -52,10 +43,6 @@ namespace LogicaNegocio.Entidades
             Nombre = nombre;
             Direccion = direccion;
             Finalizada = finalizada;
-            MaterialesSolicitados = new List<Material>();
-            MaterialesObra = new List<Material>();
-            Planos = new List<Plano>();
-            Solicitudes = new List<Solicitud>();
         }
 
         public void Validar()
@@ -109,29 +96,10 @@ namespace LogicaNegocio.Entidades
             {
                 throw new ObraException("La obra ya ha sido finalizada.");
             }
-            if (this.TieneSolicitudesPendientes())
-            {
-                throw new ObraException("No se puede cerrar la obra, tiene solicitudes de material en estado pendiente.");
-            }
             this.Finalizada = true;
         }
 
-        public bool TieneSolicitudesPendientes()
-        {
-            bool haySolicitudes = false;
-            if (Solicitudes == null)
-            {
-                return haySolicitudes;
-            }
-            foreach(Solicitud s in Solicitudes)
-            {
-                if(s.Estado != Estado.Recibido)
-                {
-                    haySolicitudes = true;  
-                }
-            }
-            return haySolicitudes;
-        }
+
  
 
     }

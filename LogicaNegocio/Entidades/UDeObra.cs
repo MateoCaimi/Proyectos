@@ -16,7 +16,5 @@ namespace LogicaNegocio.Entidades
         {
             
         }
-
-        public List<Obra> ObrasACargo { get; set; }
     }
 }

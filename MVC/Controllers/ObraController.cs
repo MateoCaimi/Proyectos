@@ -12,11 +12,11 @@ namespace MVC.Controllers
 {
     public class ObraController : Controller
     {
-        private IRepositorioObra Repositorio = new RepositorioObra();
+        private Fachada Fachada = new Fachada();
         // GET: ObraController
         public ActionResult Index()
         {
-            IEnumerable<Obra> obras = Repositorio.TomarTodos();
+            IEnumerable<Obra> obras = Fachada.TomarTodasObras();
             return View(obras);
         }
 
@@ -24,7 +24,7 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Index(string nombre, string direccion, bool finalizada)
         {
-            IEnumerable<Obra> listadoObras = Repositorio.ObrasFiltradas(nombre, direccion, finalizada);
+            IEnumerable<Obra> listadoObras = Fachada.ObrasFiltradas(nombre, direccion, finalizada);
             return View(listadoObras);
         }
 
@@ -34,13 +34,13 @@ namespace MVC.Controllers
             try
             {
                 ObraEstadisticasViewModel obra = new ObraEstadisticasViewModel();
-                obra.Obra = Repositorio.Buscar(id);
+                obra.Obra = Fachada.BuscarObra(id);
                 if (obra.Obra.Finalizada) //Yo sé que esto parece una locura.Usa un viewmodel para pasar todo de una a la vista y no usar muchos viewbags o tempdata, queda feo pero creo que es mejor.
                 {
-                    obra.MaterialMasSolicitado = Repositorio.MaterialMasSolicitado(obra.Obra.IdObra);
-                    obra.MaterialMenosSolicitado = Repositorio.MaterialMenosSolicitado(obra.Obra.IdObra);
-                    obra.AprobadorMasComun = Repositorio.AprobadorMasComun(obra.Obra.IdObra);
-                    obra.ProveedorMasComun = Repositorio.ProveedorMasComun(obra.Obra.IdObra);
+                    obra.MaterialMasSolicitado = Fachada.MaterialMasSolicitado(obra.Obra.IdObra);
+                    obra.MaterialMenosSolicitado = Fachada.MaterialMenosSolicitado(obra.Obra.IdObra);
+                    obra.AprobadorMasComun = Fachada.AprobadorMasComun(obra.Obra.IdObra);
+                    obra.ProveedorMasComun = Fachada.ProveedorMasComun(obra.Obra.IdObra);
                 }
                 return View(obra);
             }
@@ -65,7 +65,7 @@ namespace MVC.Controllers
         {
             try
             {
-                Repositorio.Agregar(aIngresar);
+                Fachada.AgregarObra(aIngresar);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception e)
@@ -80,7 +80,7 @@ namespace MVC.Controllers
         {
             try
             {
-                Obra obra = Repositorio.Buscar(id);
+                Obra obra = Fachada.BuscarObra(id);
                 return View(obra);
             }
             catch (ObraException e)
@@ -98,7 +98,7 @@ namespace MVC.Controllers
         {   
             try
             {
-                Repositorio.Modificar(nuevaObra);
+                Fachada.ModificarObra(nuevaObra);
                 return RedirectToAction(nameof(Index));
             }
             catch (ObraException e)
@@ -114,7 +114,7 @@ namespace MVC.Controllers
         {
             try
             {
-                Obra obra = Repositorio.Buscar(id);
+                Obra obra = Fachada.BuscarObra(id);
                 return View(obra);
             }
             catch (ObraException e)
@@ -132,8 +132,8 @@ namespace MVC.Controllers
         {
             try
             {
-                Obra obraABorrar = Repositorio.Buscar(id);
-                Repositorio.Eliminar(obraABorrar);
+                Obra obraABorrar = Fachada.BuscarObra(id);
+                Fachada.EliminarObra(obraABorrar);
                 return RedirectToAction(nameof(Index));
             }
             catch (ObraException e)
@@ -149,7 +149,7 @@ namespace MVC.Controllers
         {
             try
             {
-                Obra obra = Repositorio.Buscar(id);
+                Obra obra = Fachada.BuscarObra(id);
                 return View(obra);
             }
             catch (ObraException e)
@@ -167,8 +167,8 @@ namespace MVC.Controllers
         {
             try
             {
-                Obra obraABorrar = Repositorio.Buscar(id);
-                Repositorio.FinalizarObra(obraABorrar);
+                Obra obraABorrar = Fachada.BuscarObra(id);
+                Fachada.FinalizarObra(obraABorrar);
                 return RedirectToAction(nameof(Index));
             }
             catch (ObraException e)

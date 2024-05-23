@@ -25,11 +25,6 @@ namespace LogicaNegocio.Entidades
         [ForeignKey("UDeOficina")] public int IdUDeOficina { get; set; }
         public UDeOficina? Aprovador { get; set; }
 
-
-        //Lista hay que sacar
-        public List<Material> MaterialesSolicitados { get; set; }
-
-
         public Estado Estado { get; set; }
        
 
