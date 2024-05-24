@@ -28,16 +28,18 @@ namespace LogicaAccesoDatos.EF
         {
             string cadenaConexion =
                 @"SERVER=(localdb)\MSsqlLocaldb;
-                DATABASE=ProyectoIntegrador1; 
+                DATABASE=ProyectoIntegrador4; 
                 INTEGRATED SECURITY=TRUE;
                 ENCRYPT=False"; //Puede evitar problemas si no hay un certificado y se usa SSL
             optionsBuilder.UseSqlServer(cadenaConexion)
                 .EnableDetailedErrors();
         }
-        /*protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ObraEmpleado>()
-                .HasKey(c => new { c.IdObra, c.IdEmpleado});
-        }*/
+            modelBuilder.Entity<Obra>()
+            .HasOne(o => o.UsuarioACargo)
+            .WithMany()
+            .OnDelete(DeleteBehavior.NoAction); //LAS OBRAS TIENEN UN USUARIO A CARGO. LOS USUARIOS A CARGO TIENEN MUCHAS OBRAS. CUANDO SE BORRE OBRA / USUARIO NO BORRAR EL OTRO, dejar null. Esa es la idea.
+        }
     }
 }

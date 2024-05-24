@@ -65,9 +65,12 @@ namespace LogicaNegocio.Entidades
 
         public void ValidarFechaFinal()
         {
-            if(this.FechaFinalizacion < this.FechaInicio)
+            if(this.FechaFinalizacion != null)
             {
-                throw new ObraException("La fecha de finalizacion no puede ser previa a la de inicio");
+                if (this.FechaFinalizacion < this.FechaInicio)
+                {
+                    throw new ObraException("La fecha de finalizacion no puede ser previa a la de inicio");
+                }
             }
         }
 
@@ -97,6 +100,7 @@ namespace LogicaNegocio.Entidades
                 throw new ObraException("La obra ya ha sido finalizada.");
             }
             this.Finalizada = true;
+            this.FechaFinalizacion = DateTime.Now; //Hacer esto? Y solo a las finalizadas poder setear manualmente la finalización.
         }
 
 

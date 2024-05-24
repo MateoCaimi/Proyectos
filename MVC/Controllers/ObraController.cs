@@ -55,6 +55,7 @@ namespace MVC.Controllers
         // GET: ObraController/Create
         public ActionResult Agregar()
         {
+            ViewBag.Usuarios = Fachada.ObtenerUsuariosDeObra();
             return View();
         }
 

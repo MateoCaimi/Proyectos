@@ -11,6 +11,14 @@ namespace LogicaAccesoDatos.Repositorios
     {
         RepositorioObra RepositorioObra { get; set; }
         RepositorioPlano RepositorioPlano { get; set; }
+        RepositorioUsuario RepositorioUsuario { get; set; }
+
+        public Fachada()
+        {
+            RepositorioObra = new RepositorioObra();
+            RepositorioPlano = new RepositorioPlano();
+            RepositorioUsuario = new RepositorioUsuario();
+        }
         public Obra ObraPorDireccion(string direccion)
         {
             return RepositorioObra.ObraPorDireccion(direccion);
@@ -110,6 +118,11 @@ namespace LogicaAccesoDatos.Repositorios
         public IEnumerable<Plano> TomarTodosPlanos()
         {
             return RepositorioPlano.TomarTodos();
+        }
+
+        public IEnumerable<Usuario> ObtenerUsuariosDeObra()
+        {
+            return RepositorioUsuario.TomarTodosDeObra();
         }
     }
 }

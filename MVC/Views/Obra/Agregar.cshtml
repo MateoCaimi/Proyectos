@@ -25,7 +25,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="FechaFinalizacion" class="control-label"></label>
-                <input asp-for="FechaFinalizacion" class="form-control" />
+                <input asp-for="FechaFinalizacion" class="form-control" id="FechaFinalizacion"/>
                 <span asp-validation-for="FechaFinalizacion" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -40,8 +40,18 @@
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Finalizada" /> @Html.DisplayNameFor(model => model.Finalizada)
+                    <input class="form-check-input" id="Finalizada" asp-for="Finalizada" /> @Html.DisplayNameFor(model => model.Finalizada)
                 </label> 
+            </div>
+            <div class="form-group">
+                <label asp-for="IdACargo" class="control-label"></label>
+                <select asp-for="IdACargo" class="form-control" >
+                    @foreach(var item in ViewBag.Usuarios)
+                    {
+                        <option value="@item.Id">@item.Nombre</option>
+                    }
+                </select>
+                <span asp-validation-for="IdACargo" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -50,13 +60,26 @@
     </div>
 </div>
 
-
-
-
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var checkboxFinalizada = document.getElementById("Finalizada");
+            var fechaFinalizacion = document.getElementById("FechaFinalizacion");
+
+            function toggleFechaFinalizacion() {
+                fechaFinalizacion.disabled = !checkboxFinalizada.checked;
+            }
+
+            // Inicializar al cargar página
+            toggleFechaFinalizacion();
+            checkboxFinalizada.addEventListener("change", toggleFechaFinalizacion);
+        });
+    </script>
 }
