@@ -124,5 +124,15 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioUsuario.TomarTodosDeObra();
         }
+
+        public void AgregarUsuario(Usuario usuario)
+        {
+            RepositorioUsuario.Agregar(usuario);
+        }
+
+        public UDeObra BuscarUsuarioObra(int idACargo)
+        {
+            return (UDeObra)RepositorioUsuario.Buscar(idACargo);
+        }
     }
 }

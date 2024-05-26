@@ -3,6 +3,12 @@
 @{
     ViewData["Title"] = "Detalles";
 }
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
+}
 
 <h1>Detalles</h1>
 
@@ -83,9 +89,10 @@
 <div>
     <a asp-action="Editar" asp-route-id="@Model?.Obra.IdObra">Modificar</a> |
     <a asp-action="Eliminar" asp-route-id="@Model?.Obra.IdObra">Eliminar</a>
+    <a asp-action="Cerrar" asp-route-id="@Model?.Obra.IdObra">Cerrar Obra</a>
     @if (!Model.Obra.Finalizada)
     {
-        <a asp-action="Cerrar" asp-route-id="@Model?.Obra.IdObra">Cerrar Obra</a>
+        
     }
         <a href="@Url.Action("Index","Plano", new{idObra = Model?.Obra.IdObra})">Planos</a> |
 

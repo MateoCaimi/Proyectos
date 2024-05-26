@@ -55,6 +55,8 @@ namespace MVC.Controllers
         // GET: ObraController/Create
         public ActionResult Agregar()
         {
+            /*Usuario uDeObraTesting = new UDeObra("Federico Ruiz Estévez", "federuiz2729", "Pepepepe123");
+            Fachada.AgregarUsuario(uDeObraTesting);*/
             ViewBag.Usuarios = Fachada.ObtenerUsuariosDeObra();
             return View();
         }
@@ -71,6 +73,7 @@ namespace MVC.Controllers
             }
             catch (Exception e)
             {
+                ViewBag.Usuarios = Fachada.ObtenerUsuariosDeObra();
                 ViewBag.Error = e.Message;
                 return View();
             }
@@ -82,6 +85,7 @@ namespace MVC.Controllers
             try
             {
                 Obra obra = Fachada.BuscarObra(id);
+                ViewBag.Usuarios = Fachada.ObtenerUsuariosDeObra();
                 return View(obra);
             }
             catch (ObraException e)
@@ -99,6 +103,7 @@ namespace MVC.Controllers
         {   
             try
             {
+                ViewBag.Usuarios = Fachada.ObtenerUsuariosDeObra();
                 Fachada.ModificarObra(nuevaObra);
                 return RedirectToAction(nameof(Index));
             }
@@ -166,17 +171,16 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CerrarConfirmado(int id)
         {
+            Obra obraACerrar = Fachada.BuscarObra(id);
             try
             {
-                Obra obraABorrar = Fachada.BuscarObra(id);
-                Fachada.FinalizarObra(obraABorrar);
+                Fachada.FinalizarObra(obraACerrar);
                 return RedirectToAction(nameof(Index));
             }
             catch (ObraException e)
             {
-                ErrorViewModel errorModel = new ErrorViewModel();
-                errorModel.RequestId = e.Message;
-                return View("Error", errorModel); //usar shared hasta tener vistas de error para cada coso
+                ViewBag.Error = e.Message;
+                return View(obraACerrar);
             }
         }
 

@@ -4,6 +4,13 @@
     ViewData["Title"] = "Index";
 }
 
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
+}
+
 
 <h1>Planos</h1>
 

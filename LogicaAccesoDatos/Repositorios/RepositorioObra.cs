@@ -91,7 +91,7 @@ namespace LogicaAccesoDatos.Repositorios
             }
             catch (Exception e)
             {
-                throw new ObraException($"No se puede finalizar la obra {obra.Nombre}: ", e);
+                throw new ObraException($"No se puede finalizar la obra {obra.Nombre}: {e.Message}");
             }
         }
 
@@ -169,7 +169,14 @@ namespace LogicaAccesoDatos.Repositorios
                     }
                 }
             }
-            return retorno.Max().Key;
+            if(retorno.Count > 0)
+            {
+                return retorno.Max().Key;
+            }
+            else
+            {
+                return null;
+            }
         }
         public Material MaterialMenosSolicitado(int IdObra)
         {
@@ -191,7 +198,14 @@ namespace LogicaAccesoDatos.Repositorios
                     }
                 }
             }
-            return retorno.Min().Key;
+            if (retorno.Count > 0)
+            {
+                return retorno.Min().Key;
+            }
+            else
+            {
+                return null;
+            }
         }
         public Proveedor ProveedorMasComun(int IdObra)
         {
@@ -208,7 +222,14 @@ namespace LogicaAccesoDatos.Repositorios
                     var = new KeyValuePair<Proveedor, int>(BuscarProveedor(s.IdProveedor), var.Value + 1);
                 }
             }
-            return retorno.Max().Key;
+            if (retorno.Count > 0)
+            {
+                return retorno.Max().Key;
+            }
+            else
+            {
+                return null;
+            }
         }
         public Usuario SolicitanteMasComun(int IdObra)
         {
@@ -226,7 +247,14 @@ namespace LogicaAccesoDatos.Repositorios
                     var = new KeyValuePair<Usuario, int>(s.Solicitante, var.Value + 1);
                 }
             }
-            return retorno.Max().Key;
+            if (retorno.Count > 0)
+            {
+                return retorno.Max().Key;
+            }
+            else
+            {
+                return null;
+            }
         }
         public UDeOficina AprobadorMasComun(int IdObra)
         {
@@ -244,7 +272,14 @@ namespace LogicaAccesoDatos.Repositorios
                     var = new KeyValuePair<UDeOficina, int>(s.Aprovador, var.Value + 1);
                 }
             }
-            return retorno.Max().Key;
+            if (retorno.Count > 0)
+            {
+                return retorno.Max().Key;
+            }
+            else
+            {
+                return null;
+            }
         }
         private Proveedor BuscarProveedor(int idProveedor)
         {

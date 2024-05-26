@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using MVC.Models;
 using System.Numerics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MVC.Controllers
 {
@@ -20,6 +21,11 @@ namespace MVC.Controllers
         {
             try
             {
+                if (TempData["Error"] != null) //Para cuando viene de Agregar Plano siendo finalizada
+                {
+                    ViewBag.Error = TempData["Error"].ToString();
+                }
+                TempData["Error"] = null;
                 Obra obra = Fachada.BuscarObra(idObra);
                 IEnumerable<Plano> planos = Fachada.PlanosTotales(obra);
                 if (planos == null)
@@ -63,9 +69,18 @@ namespace MVC.Controllers
         // GET: PlanoController/Create
         public ActionResult Agregar(int idObra)
         {
+            TempData["Error"] = null;
             ViewBag.IdObra = idObra;
-            ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
-            return View();
+            if (!Fachada.BuscarObra(idObra).Finalizada)
+            {
+                ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
+                return View();
+            }
+            else
+            {
+                TempData["Error"] = "No se puede agregar planos a una obra finalizada.";
+                return RedirectToAction("Index", new { idObra = idObra });
+            }
         }
 
         // POST: PlanoController/Create
@@ -82,7 +97,7 @@ namespace MVC.Controllers
             }
             catch (Exception e)
             {
-                ViewBag.Error = e.Message;
+                TempData["Error"] = e.Message;
                 return RedirectToAction("Index", new { idObra = aIngresar.IdObra });
             }
         }
