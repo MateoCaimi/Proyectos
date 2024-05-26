@@ -85,7 +85,7 @@ namespace LogicaAccesoDatos.Repositorios
             {
                 if (fechaDesde > fechaHasta)
                 {
-                    DateTime aux = (DateTime)fechaHasta;
+                    DateTime aux = (DateTime)fechaHasta; //Esto habria que revisar 
                     fechaHasta = fechaDesde;
                     fechaDesde = aux;
                 }

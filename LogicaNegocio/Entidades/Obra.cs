@@ -29,6 +29,7 @@ namespace LogicaNegocio.Entidades
         public bool Finalizada { get; set; }
         [Required][ForeignKey("UsuarioACargo")] public int IdACargo { get; set; }
         public UDeObra UsuarioACargo { get; set; }  
+        
 
         public Obra()
         {
