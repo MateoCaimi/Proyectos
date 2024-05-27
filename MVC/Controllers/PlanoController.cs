@@ -5,6 +5,7 @@ using LogicaNegocio.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 using MVC.Models;
 using System.Numerics;
@@ -84,21 +85,28 @@ namespace MVC.Controllers
             }
         }
 
-        // POST: PlanoController/Create
+    
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Agregar(Plano aIngresar, IFormFile archivoImagen)
+        public async Task<ActionResult> Agregar(Plano aIngresar, IFormFile archivoImagen)
         {
             try
             {
-                using (var memoryStream = new MemoryStream())
+                if (aIngresar == null || aIngresar.TipoPdf != "application/pdf")
                 {
-                    archivoImagen.CopyToAsync(memoryStream);
-                    aIngresar.NombreImagen = archivoImagen.FileName;
-                    aIngresar.TipoImagen = archivoImagen.ContentType;
-                    aIngresar.Imagen = memoryStream.ToArray();
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await archivoImagen.CopyToAsync(memoryStream);
+                        aIngresar.NombrePdf = archivoImagen.FileName;
+                        aIngresar.TipoPdf = archivoImagen.ContentType;
+                        aIngresar.Pdf = memoryStream.ToArray();
+                    }
                 }
-
+                else
+                {
+                    TempData["Error"] = "Debe proporcionar un archivo válido.";
+                    return View();
+                }
 
                 ViewBag.IdObra = aIngresar.IdObra;
                 ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
@@ -111,6 +119,7 @@ namespace MVC.Controllers
                 return RedirectToAction("Index", new { idObra = aIngresar.IdObra });
             }
         }
+
 
         // GET: PlanoController/Delete/5
         public ActionResult Eliminar(int id)
@@ -140,17 +149,17 @@ namespace MVC.Controllers
 
 
 
-        [HttpGet("{id}/imagen")]
-        public IActionResult ObtenerImagen(int id)
+        [HttpGet("{id}/pdf")]
+        public IActionResult ObtenerPDF(int id)
         {
             Plano plano = Fachada.BuscarPlano(id);
 
-            if (plano == null || plano.Imagen == null)
+            if (plano == null || plano.Pdf == null)
             {
                 return NotFound();
             }
 
-            return File(plano.Imagen, plano.TipoImagen);
+            return File(plano.Pdf, plano.TipoPdf, plano.NombrePdf);
         }
     }
 }

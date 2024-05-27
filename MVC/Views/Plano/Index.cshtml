@@ -72,7 +72,7 @@ else
                 @Html.DisplayNameFor(model => model.FechaPublicado)
             </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Imagen)
+                    @Html.DisplayNameFor(model => model.Pdf)
                 </th>
             <th></th>   
         </tr>
@@ -90,8 +90,10 @@ else
                 @Html.DisplayFor(modelItem => item.FechaPublicado)
             </td>
              <td>
-                        <img src="@Url.Action("ObtenerImagen", "Planos", new { id = item.Id })" class="img-fluid" />
-            </td>
+                      @*   @if (item.TipoPdf == "application/pdf") *@
+                                <a href="@Url.Action("ObtenerPdf", "Plano", new { id = item.Id })" target="_blank">Ver PDF</a>
+                        
+                        
             <td>
 
                 <a asp-action="Eliminar" asp-route-id="@item.Id">Eliminar</a>

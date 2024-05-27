@@ -27,7 +27,7 @@ namespace LogicaNegocio.Entidades
         [Required(ErrorMessage = "Ingrese una direccion")]
         public string Direccion { get; set; }
         public bool Finalizada { get; set; }
-        [Required][ForeignKey("UsuarioACargo")] public int IdACargo { get; set; }
+        [ForeignKey("UsuarioACargo")] public int IdACargo { get; set; }
         public UDeObra UsuarioACargo { get; set; }  
         
 

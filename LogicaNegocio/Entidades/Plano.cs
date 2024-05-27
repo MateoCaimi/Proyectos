@@ -20,20 +20,16 @@ namespace LogicaNegocio.Entidades
         [ForeignKey("IdTipoPlano")] 
         public TipoPlano? TipoPlano { get; set; }
         public int IdTipoPlano { get; set; }
-        [Required]// Esto no es automatico?
+        [Required]
         public DateTime FechaPublicado { get; set; }
 
         [ForeignKey("IdObra")] 
         public Obra? Obra { get; set; }
         public int IdObra { get; set; }
+        public string NombrePdf { get; set; }
+        public string TipoPdf { get; set; }
+        public byte[] Pdf { get; set; }
 
-        // archivo img o lo que sea IMPORTANTE
-        // IMG
-        public string NombreImagen { get; set; }
-        public string TipoImagen { get; set; }
-        public byte[] Imagen { get; set; }
-
-        // IMG
         public Plano()
         {
             this.FechaPublicado = DateTime.Now;
