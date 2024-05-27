@@ -71,6 +71,9 @@ else
             <th>
                 @Html.DisplayNameFor(model => model.FechaPublicado)
             </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Imagen)
+                </th>
             <th></th>   
         </tr>
     </thead>
@@ -85,6 +88,9 @@ else
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.FechaPublicado)
+            </td>
+             <td>
+                        <img src="@Url.Action("ObtenerImagen", "Planos", new { id = item.Id })" class="img-fluid" />
             </td>
             <td>
 

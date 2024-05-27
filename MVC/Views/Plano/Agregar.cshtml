@@ -18,7 +18,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Agregar">
+        <form asp-action="Agregar" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Nombre" class="control-label"></label>
@@ -36,6 +36,13 @@
                 </select>
                 <span asp-validation-for="IdTipoPlano" class="text-danger"></span>
             </div>
+
+            <div class="form-group">
+                <label for="archivoImagen">Subir Imagen</label>
+                <input type="file" name="archivoImagen" id="archivoImagen" class="form-control" />
+            </div>
+
+
             <div class="form-group">
                 <input asp-for="FechaPublicado" class="form-control" type="hidden" value="@DateTime.Now" />
                 <span asp-validation-for="FechaPublicado" class="text-danger"></span>

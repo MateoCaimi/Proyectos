@@ -28,7 +28,12 @@ namespace LogicaNegocio.Entidades
         public int IdObra { get; set; }
 
         // archivo img o lo que sea IMPORTANTE
-        
+        // IMG
+        public string NombreImagen { get; set; }
+        public string TipoImagen { get; set; }
+        public byte[] Imagen { get; set; }
+
+        // IMG
         public Plano()
         {
             this.FechaPublicado = DateTime.Now;
