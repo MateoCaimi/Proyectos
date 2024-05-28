@@ -10,7 +10,7 @@ using LogicaNegocio.Interfaces;
 
 namespace LogicaNegocio.Entidades
 {
-    public abstract class Usuario : IValidable
+    public class Usuario : IValidable
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]

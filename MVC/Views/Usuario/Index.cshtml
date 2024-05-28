@@ -1,0 +1,30 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<h1>Bienvenido</h1>
+<br>
+
+<form action="/Usuario/Index" method="post">
+
+    <label for="NombreUsuario" class="form-label">Nombre de Usuario:</label>
+    <input type="text" id="NombreUsuario" class="form-control" name="NombreUsuario" />
+
+    <label for="Contrasenia" class="form-label">Contraseña:</label>
+    <input type="password" id="Contrasenia" class="form-control" name="Contrasenia" />
+    <br>
+    <button type="submit" class="btn btn-primary btn-block mb-4">Iniciar Sesion</button>
+    <br>
+
+
+    @*  <td>@Html.ActionLink("Precargar Datos", "PrecargaDatos", "Usuario")</td>*@
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            <p>@ViewBag.Error</p>
+        </div>
+
+    }
+</form>

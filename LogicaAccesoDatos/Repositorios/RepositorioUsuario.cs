@@ -30,6 +30,22 @@ namespace LogicaAccesoDatos.Repositorios
             Context.SaveChanges();
         }
 
+        public void InicioSesion(Usuario u)
+        {
+            foreach (Usuario unU in Context.Usuarios)
+            {
+                if (unU.NombreUsuario == u.NombreUsuario)
+                {
+                    if (unU.Contrasenia == u.Contrasenia)
+                    {
+                        return;
+                    }
+                }
+            }
+            throw new Exception("Usuario o contraseña incorrecto.");
+        }
+
+
         public Usuario UsuarioPorNombreUsuario(string nombreUsuario)
         {
             return Context.Usuarios.Where(u => u.NombreUsuario == nombreUsuario).FirstOrDefault();
@@ -53,8 +69,8 @@ namespace LogicaAccesoDatos.Repositorios
             Context.Usuarios.Remove(item);
             Context.SaveChanges();
         }
-
-        private bool TieneObrasAbiertas(Usuario item)
+        //estaba en private
+        public bool TieneObrasAbiertas(Usuario item)
         {
             return Context.Obras.Where(o => o.UsuarioACargo.Id == item.Id && !o.Finalizada).Any();
         }

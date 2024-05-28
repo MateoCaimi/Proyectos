@@ -12,6 +12,7 @@ namespace LogicaAccesoDatos.Repositorios
         RepositorioObra RepositorioObra { get; set; }
         RepositorioPlano RepositorioPlano { get; set; }
         RepositorioUsuario RepositorioUsuario { get; set; }
+        
 
         public Fachada()
         {
@@ -119,7 +120,10 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioPlano.TomarTodos();
         }
-
+        public void InicioSesion(Usuario u)
+        {
+            RepositorioUsuario.InicioSesion(u);
+        }
         public IEnumerable<Usuario> ObtenerUsuariosDeObra()
         {
             return RepositorioUsuario.TomarTodosDeObra();

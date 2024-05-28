@@ -48,21 +48,13 @@ namespace LogicaNegocio.Entidades
 
         public void Validar()
         {
-            ValidarFechaInicio();
             ValidarFechaFinal();
             ValidarNombre();
             ValidarDireccion();
         }
 
 
-        //Esta validacion se va
-        public void ValidarFechaInicio()
-        {
-            if(this.FechaInicio > DateTime.Now)
-            {
-                throw new ObraException("La fecha de la obra no puede ser después de hoy");
-            }
-        }
+      
 
         public void ValidarFechaFinal()
         {
