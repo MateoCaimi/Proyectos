@@ -7,12 +7,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using MVC.Models;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MVC.Controllers
 {
     public class ObraController : Controller
     {
         private Fachada Fachada = new Fachada();
+        static HttpClient client = new HttpClient();
         // GET: ObraController
         public ActionResult Index()
         {
@@ -64,10 +66,25 @@ namespace MVC.Controllers
         // POST: ObraController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Agregar(Obra aIngresar)
+        public async Task<ActionResult> Agregar(Obra aIngresar, IFormFile archivoImagen)
         {
             try
             {
+                if (aIngresar == null || aIngresar.TipoCronograma != "application/pdf")
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await archivoImagen.CopyToAsync(memoryStream);
+                        aIngresar.NombreCronograma = archivoImagen.FileName;
+                        aIngresar.TipoCronograma = archivoImagen.ContentType;
+                        aIngresar.Cronograma = memoryStream.ToArray();
+                    }
+                }
+                else
+                {
+                    TempData["Error"] = "Debe proporcionar un archivo válido.";
+                    return View();
+                }
                 Fachada.AgregarObra(aIngresar);
                 return RedirectToAction(nameof(Index));
             }
@@ -99,10 +116,25 @@ namespace MVC.Controllers
         // POST: ObraController/Edit/5
         [HttpPost, ActionName("Editar")]
         [ValidateAntiForgeryToken]
-        public ActionResult EditarConfirmado(Obra nuevaObra)
+        public async Task<ActionResult> EditarConfirmado(Obra nuevaObra, IFormFile archivoImagen)
         {   
             try
             {
+                if (nuevaObra == null || nuevaObra.TipoCronograma != "application/pdf")
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await archivoImagen.CopyToAsync(memoryStream);
+                        nuevaObra.NombreCronograma = archivoImagen.FileName;
+                        nuevaObra.TipoCronograma = archivoImagen.ContentType;
+                        nuevaObra.Cronograma = memoryStream.ToArray();
+                    }
+                }
+                else
+                {
+                    TempData["Error"] = "Debe proporcionar un archivo válido.";
+                    return View();
+                }
                 ViewBag.Usuarios = Fachada.ObtenerUsuariosDeObra();
                 Fachada.ModificarObra(nuevaObra);
                 return RedirectToAction(nameof(Index));
@@ -184,6 +216,34 @@ namespace MVC.Controllers
             }
         }
 
+        [HttpGet("{id}/cronograma")]
+        public IActionResult ObtenerCronograma(int id)
+        {
+            Obra obra = Fachada.BuscarObra(id);
 
-}
+            if (obra == null || obra.Cronograma == null)
+            {
+                return NotFound();
+            }
+
+            return File(obra.Cronograma, obra.TipoCronograma, obra.NombreCronograma);
+        }
+
+        /*
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ObtenerQr(int id, string text, string filePath)
+        {
+            string url = $"https://quickchart.io/qr?text={Uri.EscapeDataString("localhost:7339/Plano?idObra=")}";
+
+            HttpResponseMessage response = await client.GetAsync(url);
+
+            response.EnsureSuccessStatusCode();
+
+            byte[] qrCodeImage = await response.Content.ReadAsByteArrayAsync();
+
+            await File.WriteAllBytesAsync(filePath, qrCodeImage);
+        }*/
+
+    }
 }

@@ -112,6 +112,9 @@ namespace LogicaAccesoDatos.Repositorios
                 obra.Direccion = nuevaObra.Direccion;
                 obra.FechaInicio = nuevaObra.FechaInicio;
                 obra.FechaFinalizacion = nuevaObra.FechaFinalizacion;
+                obra.Cronograma = nuevaObra.Cronograma;
+                obra.TipoCronograma = nuevaObra.TipoCronograma;
+                obra.NombreCronograma = nuevaObra.NombreCronograma;
                 Context.Entry(obra).State = EntityState.Modified;
                 Context.SaveChanges();
             }

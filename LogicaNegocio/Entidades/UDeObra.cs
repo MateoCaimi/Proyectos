@@ -16,5 +16,7 @@ namespace LogicaNegocio.Entidades
         {
             
         }
+
+        public override string Tipo { get => "Usuario de obra"; }
     }
 }

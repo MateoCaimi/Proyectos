@@ -27,6 +27,9 @@
           @*   <th>
                 @Html.DisplayNameFor(model => model.Finalizada)
             </th> *@
+            <th>
+                @Html.DisplayNameFor(model => model.Cronograma)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -48,6 +51,12 @@
           @*   <td>
                 @Html.DisplayFor(modelItem => item.Finalizada)
             </td> *@
+            <td>
+                    @*   @if (item.TipoPdf == "application/pdf") *@
+                    <a href="@Url.Action("ObtenerCronograma", "Obra", new { id = item.IdObra })" target="_blank">Ver Cronograma</a>
+
+
+    |       <td>
             <td>
                 <a asp-action="Detalles" asp-route-id="@item.IdObra">Detalles</a> |
             </td>

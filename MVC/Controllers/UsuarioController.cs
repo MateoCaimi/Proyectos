@@ -31,7 +31,7 @@ namespace MVC.Controllers
                 return View();
             }
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Obra");
         }
 
 
@@ -111,6 +111,13 @@ namespace MVC.Controllers
             {
                 return View();
             }
+        }
+
+        // GET: UsuarioController/Listado/5
+        public ActionResult Listado()
+        {
+            IEnumerable<Usuario> usuarios = Fachada.ObtenerUsuarios();
+            return View(usuarios);
         }
     }
 }
