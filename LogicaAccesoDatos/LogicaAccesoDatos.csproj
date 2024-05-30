@@ -7,6 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20240526024626_Testing.cs" />
+    <Compile Remove="Migrations\20240526024626_Testing.Designer.cs" />
+    <Compile Remove="Migrations\20240527011950_foto.cs" />
+    <Compile Remove="Migrations\20240527011950_foto.Designer.cs" />
+    <Compile Remove="Migrations\20240528182352_pdfs.cs" />
+    <Compile Remove="Migrations\20240528182352_pdfs.Designer.cs" />
+    <Compile Remove="Migrations\20240530122451_uno.cs" />
+    <Compile Remove="Migrations\20240530122451_uno.Designer.cs" />
+    <Compile Remove="Migrations\20240530125031_tres.cs" />
+    <Compile Remove="Migrations\20240530125031_tres.Designer.cs" />
+    <Compile Remove="Migrations\20240530130233_cuatro.cs" />
+    <Compile Remove="Migrations\20240530130233_cuatro.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.5" />
   </ItemGroup>
 

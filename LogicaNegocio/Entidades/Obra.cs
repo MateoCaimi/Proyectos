@@ -28,8 +28,10 @@ namespace LogicaNegocio.Entidades
         public string Direccion { get; set; }
         public bool Finalizada { get; set; }
         [ForeignKey("UsuarioACargo")] public int IdACargo { get; set; }
-        public UDeObra UsuarioACargo { get; set; }  
-        
+        public UDeObra UsuarioACargo { get; set; }
+        public string NombreCronograma { get; set; }
+        public string TipoCronograma { get; set; }
+        public byte[] Cronograma { get; set; }
 
         public Obra()
         {
@@ -48,21 +50,13 @@ namespace LogicaNegocio.Entidades
 
         public void Validar()
         {
-            ValidarFechaInicio();
             ValidarFechaFinal();
             ValidarNombre();
             ValidarDireccion();
         }
 
 
-        //Esta validacion se va
-        public void ValidarFechaInicio()
-        {
-            if(this.FechaInicio > DateTime.Now)
-            {
-                throw new ObraException("La fecha de la obra no puede ser después de hoy");
-            }
-        }
+      
 
         public void ValidarFechaFinal()
         {

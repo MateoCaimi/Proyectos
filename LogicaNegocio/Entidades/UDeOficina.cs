@@ -15,5 +15,7 @@ namespace LogicaNegocio.Entidades
         }
 
         public UDeOficina() { }
+
+        public override string Tipo { get => "Usuario de oficina";}
     }
 }
