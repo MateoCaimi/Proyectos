@@ -171,19 +171,19 @@ namespace LogicaAccesoDatos.Migrations
                     b.Property<int>("IdTipoPlano")
                         .HasColumnType("int");
 
-                    b.Property<byte[]>("Imagen")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NombreImagen")
+                    b.Property<string>("NombrePdf")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TipoImagen")
+                    b.Property<byte[]>("Pdf")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("TipoPdf")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
