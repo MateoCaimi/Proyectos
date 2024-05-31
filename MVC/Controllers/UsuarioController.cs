@@ -2,6 +2,8 @@
 using LogicaNegocio.Entidades;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Reflection;
 
 namespace MVC.Controllers
 {
@@ -51,22 +53,38 @@ namespace MVC.Controllers
         }
 
         // GET: UsuarioController/Create
-        public ActionResult Create()
+        public ActionResult Agregar()
         {
+            var subclassTypes = Assembly
+            .GetAssembly(typeof(Usuario))
+            .GetTypes()
+            .Where(t => t.IsSubclassOf(typeof(Usuario)));
+              ViewBag.TipoUsuario = subclassTypes;
             return View();
         }
 
         // POST: UsuarioController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Agregar(Usuario u)
         {
+
+            if (u == null)
+            {
+                return BadRequest();
+            }
+
             try
             {
+
+                //Falta hacer new del usuario especificado en el tipo con un switch o varios if
+
+                Fachada.AgregarUsuario(u);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception e)
             {
+                ViewBag.Error = e.Message;
                 return View();
             }
         }
@@ -101,10 +119,16 @@ namespace MVC.Controllers
         // POST: UsuarioController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(Usuario u)
         {
+            if (u == null)
+            {
+                return BadRequest();
+            }
+
             try
             {
+                Fachada.EliminarUsuario(u);
                 return RedirectToAction(nameof(Index));
             }
             catch
