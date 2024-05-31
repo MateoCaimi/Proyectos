@@ -10,7 +10,7 @@ using LogicaNegocio.Interfaces;
 
 namespace LogicaNegocio.Entidades
 {
-    public class Usuario : IValidable
+    public abstract class Usuario : IValidable
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
@@ -22,6 +22,7 @@ namespace LogicaNegocio.Entidades
         [Required(ErrorMessage = "Ingrese una contraseña")]
         [MinLength(8)]
         public string Contrasenia { get; set; }
+        public abstract string Tipo { get; }
 
         public TipoUsuario Tipo {  get; set; }
 
@@ -38,7 +39,7 @@ namespace LogicaNegocio.Entidades
             
         }
 
-
+        
 
         public void ValidarContrasena()
         {

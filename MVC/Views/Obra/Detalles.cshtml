@@ -99,3 +99,9 @@
 
     <a asp-action="Index">Back to List</a>
 </div>
+
+<form asp-action="Qr">
+    <input type="hidden" asp-for="@Model.Obra.IdObra" />
+    <input type="submit" value="Qr" class="btn" /> |
+    <a asp-action="Index">Back to List</a>
+</form>

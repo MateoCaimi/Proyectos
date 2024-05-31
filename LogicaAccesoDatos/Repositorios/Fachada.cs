@@ -129,6 +129,11 @@ namespace LogicaAccesoDatos.Repositorios
             return RepositorioUsuario.TomarTodosDeObra();
         }
 
+        public IEnumerable<Usuario> ObtenerUsuarios()
+        {
+            return RepositorioUsuario.TomarTodos();
+        }
+
         public void AgregarUsuario(Usuario usuario)
         {
             RepositorioUsuario.Agregar(usuario);

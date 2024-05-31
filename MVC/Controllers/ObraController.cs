@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using MVC.Models;
+using Newtonsoft.Json;
+using System.IO;
+using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MVC.Controllers
 {
@@ -42,6 +46,7 @@ namespace MVC.Controllers
                     obra.AprobadorMasComun = Fachada.AprobadorMasComun(obra.Obra.IdObra);
                     obra.ProveedorMasComun = Fachada.ProveedorMasComun(obra.Obra.IdObra);
                 }
+                Qr(id);
                 return View(obra);
             }
             catch (ObraException e)
@@ -64,10 +69,25 @@ namespace MVC.Controllers
         // POST: ObraController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Agregar(Obra aIngresar)
+        public async Task<ActionResult> Agregar(Obra aIngresar, IFormFile archivoImagen)
         {
             try
             {
+                if (aIngresar == null || aIngresar.TipoCronograma != "application/pdf")
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await archivoImagen.CopyToAsync(memoryStream);
+                        aIngresar.NombreCronograma = archivoImagen.FileName;
+                        aIngresar.TipoCronograma = archivoImagen.ContentType;
+                        aIngresar.Cronograma = memoryStream.ToArray();
+                    }
+                }
+                else
+                {
+                    TempData["Error"] = "Debe proporcionar un archivo válido.";
+                    return View();
+                }
                 Fachada.AgregarObra(aIngresar);
                 return RedirectToAction(nameof(Index));
             }
@@ -78,7 +98,7 @@ namespace MVC.Controllers
                 return View();
             }
         }
-            
+
         // GET: ObraController/Edit/5
         public ActionResult Editar(int id)
         {
@@ -99,10 +119,25 @@ namespace MVC.Controllers
         // POST: ObraController/Edit/5
         [HttpPost, ActionName("Editar")]
         [ValidateAntiForgeryToken]
-        public ActionResult EditarConfirmado(Obra nuevaObra)
-        {   
+        public async Task<ActionResult> EditarConfirmado(Obra nuevaObra, IFormFile archivoImagen)
+        {
             try
             {
+                if (nuevaObra == null || nuevaObra.TipoCronograma != "application/pdf")
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await archivoImagen.CopyToAsync(memoryStream);
+                        nuevaObra.NombreCronograma = archivoImagen.FileName;
+                        nuevaObra.TipoCronograma = archivoImagen.ContentType;
+                        nuevaObra.Cronograma = memoryStream.ToArray();
+                    }
+                }
+                else
+                {
+                    TempData["Error"] = "Debe proporcionar un archivo válido.";
+                    return View();
+                }
                 ViewBag.Usuarios = Fachada.ObtenerUsuariosDeObra();
                 Fachada.ModificarObra(nuevaObra);
                 return RedirectToAction(nameof(Index));
@@ -184,6 +219,68 @@ namespace MVC.Controllers
             }
         }
 
+        [HttpGet("{id}/cronograma")]
+        public IActionResult ObtenerCronograma(int id)
+        {
+            Obra obra = Fachada.BuscarObra(id);
 
-}
+            if (obra == null || obra.Cronograma == null)
+            {
+                return NotFound();
+            }
+
+            return File(obra.Cronograma, obra.TipoCronograma, obra.NombreCronograma);
+        }
+
+
+        [HttpGet]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ObtenerQr(int id)
+        {
+            string data = $"HOLAMUNDO"; 
+            string url = $"https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={data}";
+
+            using (HttpClient cliente = new HttpClient())
+            {
+                HttpResponseMessage respuesta;
+                try
+                {
+                    respuesta = await cliente.GetAsync(url);
+                }
+                catch (Exception ex)
+                {
+                    // Maneja errores de conexión
+                    return StatusCode(500, $"Error al conectar con la API: {ex.Message}");
+                }
+
+                if (respuesta.IsSuccessStatusCode)
+                {
+                    byte[] qrCodeImage = await respuesta.Content.ReadAsByteArrayAsync();
+                    Obra obra = Fachada.BuscarObra(id);
+                    obra.QR = qrCodeImage;
+                    return Qr(id);
+                }
+                else
+                {
+                    // Maneja errores de la API
+                    return StatusCode((int)respuesta.StatusCode, "Error al generar el código QR");
+                }
+            }
+
+
+        }
+            [HttpGet("{id}/Qr")]
+            public IActionResult Qr(int id)
+            {
+                Obra obra = Fachada.BuscarObra(id);
+
+                if (obra == null || obra.QR == null)
+                {
+                    return NotFound();
+                }
+            return File(obra.Cronograma, "obra", "hola.png");
+            }
+
+
+    }
 }

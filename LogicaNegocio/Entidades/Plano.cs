@@ -14,8 +14,8 @@ namespace LogicaNegocio.Entidades
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int Id { get; set; }
-        [Required(ErrorMessage = "Ingrese un nombre")]
-        public string Nombre { get; set; }
+        //[Required(ErrorMessage = "Ingrese un nombre")] LO COMENTO PARA HACER QUE SI EL NOMBRE ES VACÍO, SE USA EL DEL ARCHIVO.
+        public string? Nombre { get; set; }
 
         [ForeignKey("IdTipoPlano")] 
         public TipoPlano? TipoPlano { get; set; }

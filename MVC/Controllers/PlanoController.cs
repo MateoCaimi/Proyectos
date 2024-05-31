@@ -9,6 +9,7 @@ using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 using MVC.Models;
 using System.Numerics;
+using System.Text.RegularExpressions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MVC.Controllers
@@ -107,7 +108,14 @@ namespace MVC.Controllers
                     TempData["Error"] = "Debe proporcionar un archivo válido.";
                     return View();
                 }
-
+                if(aIngresar.Nombre == null)
+                {
+                    aIngresar.Nombre = aIngresar.NombrePdf.ToUpper();
+                    string path = aIngresar.Nombre;
+                    string pattern = @"\.\w+$";
+                    Match match = Regex.Match(path, pattern);
+                    aIngresar.Nombre = aIngresar.Nombre.Replace(match.Value, "");
+                }
                 ViewBag.IdObra = aIngresar.IdObra;
                 ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
                 Fachada.AgregarPlano(aIngresar);

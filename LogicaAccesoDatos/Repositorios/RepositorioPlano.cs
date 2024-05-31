@@ -36,7 +36,7 @@ namespace LogicaAccesoDatos.Repositorios
             }
             try
             {
-                Obra obra = Context.Obras.FirstOrDefault(o => o.IdObra == plano.IdObra); //Y esto?
+                Obra obra = Context.Obras.FirstOrDefault(o => o.IdObra == plano.IdObra); 
                 plano.Obra = obra;
                 plano.FechaPublicado = DateTime.Now;
                 plano.Validar();
