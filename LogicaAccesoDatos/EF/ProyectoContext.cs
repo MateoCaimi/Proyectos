@@ -23,12 +23,12 @@ namespace LogicaAccesoDatos.EF
         public DbSet<Dia> Dias { get; set; }
         public DbSet<ObraEmpleado> ObrasEmpleados { get; set; }
         public DbSet<SolicitudMaterial> SolicitudesMateriales { get; set; }
- 
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string cadenaConexion =
                 @"SERVER=(localdb)\MSsqlLocaldb;
-                DATABASE=ProyectoIntegrador8; 
+                DATABASE=ProyectoIntegrador9; 
                 INTEGRATED SECURITY=TRUE;
                 ENCRYPT=False"; //Puede evitar problemas si no hay un certificado y se usa SSL
             optionsBuilder.UseSqlServer(cadenaConexion)

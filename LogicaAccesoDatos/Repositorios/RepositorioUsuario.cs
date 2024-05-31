@@ -97,7 +97,7 @@ namespace LogicaAccesoDatos.Repositorios
                 throw new UsuarioException(ex.Message);
             }
         }
-
+        
         public IEnumerable<Usuario> TomarTodos()
         {
             return Context.Usuarios.ToList();

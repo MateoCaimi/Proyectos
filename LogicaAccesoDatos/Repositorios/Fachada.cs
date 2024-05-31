@@ -138,5 +138,9 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return (UDeObra)RepositorioUsuario.Buscar(idACargo);
         }
+        public void EliminarUsuario (Usuario usuario)
+        {
+            RepositorioUsuario.Eliminar(usuario);
+        }
     }
 }

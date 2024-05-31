@@ -23,12 +23,14 @@ namespace LogicaNegocio.Entidades
         [MinLength(8)]
         public string Contrasenia { get; set; }
 
+        public TipoUsuario Tipo {  get; set; }
 
         public Usuario(string nombre, string nomUsuario, string pass)
         {
             this.Nombre = nombre;
             this.NombreUsuario= nomUsuario;
             this.Contrasenia = pass;
+        
         }
 
         public Usuario()        
