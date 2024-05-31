@@ -147,5 +147,10 @@ namespace LogicaAccesoDatos.Repositorios
         {
             RepositorioUsuario.Eliminar(usuario);
         }
+
+        public Usuario CastearUsuario(string nombre, string nomUsuario, string pass, string tipo)
+        {
+            return RepositorioUsuario.CastearU( nombre,  nomUsuario,  pass,  tipo);
+        }
     }
 }

@@ -118,5 +118,38 @@ namespace LogicaAccesoDatos.Repositorios
             return Context.Usuarios.Where(u => u is UNormal).ToList();
         }
 
+        public Usuario CastearU(string nombre, string nomUsuario, string pass, string tipo)
+        {
+            Usuario u2;
+
+            switch (tipo)
+            {
+                
+            
+                case "UDeObra":
+                     u2 = new UDeObra();
+                    break;
+
+                case "UDeOficina":
+                     u2 = new UDeOficina();
+                    break;
+
+                case "UAdministrador":
+                    u2 = new UDeOficina();
+                    break;
+
+                default :
+                    u2 = new UDeOficina();
+                    break;
+            }
+
+            u2.NombreUsuario = nomUsuario;
+            u2.Nombre = nombre;
+            u2.Tipo = tipo;
+            u2.Contrasenia = pass;
+
+            return u2;
+
+        }
     }
 }

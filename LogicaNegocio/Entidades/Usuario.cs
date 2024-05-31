@@ -22,9 +22,9 @@ namespace LogicaNegocio.Entidades
         [Required(ErrorMessage = "Ingrese una contraseña")]
         [MinLength(8)]
         public string Contrasenia { get; set; }
-        public abstract string Tipo { get; }
+        public virtual string Tipo { get; set; }
 
-        public TipoUsuario Tipo {  get; set; }
+     //   public TipoUsuario Tipo {  get; set; }
 
         public Usuario(string nombre, string nomUsuario, string pass)
         {

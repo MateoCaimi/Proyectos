@@ -7,6 +7,7 @@ using System.Reflection;
 
 namespace MVC.Controllers
 {
+    
     public class UsuarioController : Controller
     {
 
@@ -59,29 +60,26 @@ namespace MVC.Controllers
             .GetAssembly(typeof(Usuario))
             .GetTypes()
             .Where(t => t.IsSubclassOf(typeof(Usuario)));
-              ViewBag.TipoUsuario = subclassTypes;
+            ViewBag.TipoUsuario = subclassTypes;
             return View();
         }
 
         // POST: UsuarioController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Agregar(Usuario u)
+        public ActionResult Agregar(string nombre, string nombreUsuario, string contrasenia, string tipo)
         {
-
-            if (u == null)
-            {
-                return BadRequest();
-            }
 
             try
             {
-
+                Usuario u = Fachada.CastearUsuario(nombre, nombreUsuario, contrasenia, tipo);
                 //Falta hacer new del usuario especificado en el tipo con un switch o varios if
 
                 Fachada.AgregarUsuario(u);
                 return RedirectToAction(nameof(Index));
             }
+
+            //Error invalid column name tipo
             catch(Exception e)
             {
                 ViewBag.Error = e.Message;
