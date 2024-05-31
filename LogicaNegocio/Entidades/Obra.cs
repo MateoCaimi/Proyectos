@@ -31,8 +31,8 @@ namespace LogicaNegocio.Entidades
         public UDeObra UsuarioACargo { get; set; }
         public string NombreCronograma { get; set; }
         public string TipoCronograma { get; set; }
-        public byte[] Cronograma { get; set; }
-
+        public byte[]? Cronograma { get; set; }
+        public byte[]? QR { get; set; }
         public Obra()
         {
 

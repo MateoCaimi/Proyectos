@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using MVC.Models;
+using Newtonsoft.Json;
+using System.IO;
+using System.Text;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace MVC.Controllers
@@ -14,7 +17,6 @@ namespace MVC.Controllers
     public class ObraController : Controller
     {
         private Fachada Fachada = new Fachada();
-        static HttpClient client = new HttpClient();
         // GET: ObraController
         public ActionResult Index()
         {
@@ -44,6 +46,7 @@ namespace MVC.Controllers
                     obra.AprobadorMasComun = Fachada.AprobadorMasComun(obra.Obra.IdObra);
                     obra.ProveedorMasComun = Fachada.ProveedorMasComun(obra.Obra.IdObra);
                 }
+                Qr(id);
                 return View(obra);
             }
             catch (ObraException e)
@@ -95,7 +98,7 @@ namespace MVC.Controllers
                 return View();
             }
         }
-            
+
         // GET: ObraController/Edit/5
         public ActionResult Editar(int id)
         {
@@ -117,7 +120,7 @@ namespace MVC.Controllers
         [HttpPost, ActionName("Editar")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditarConfirmado(Obra nuevaObra, IFormFile archivoImagen)
-        {   
+        {
             try
             {
                 if (nuevaObra == null || nuevaObra.TipoCronograma != "application/pdf")
@@ -229,21 +232,55 @@ namespace MVC.Controllers
             return File(obra.Cronograma, obra.TipoCronograma, obra.NombreCronograma);
         }
 
-        /*
-        [HttpPost]
+
+        [HttpGet]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ObtenerQr(int id, string text, string filePath)
+        public async Task<IActionResult> ObtenerQr(int id)
         {
-            string url = $"https://quickchart.io/qr?text={Uri.EscapeDataString("localhost:7339/Plano?idObra=")}";
+            string data = $"HOLAMUNDO"; 
+            string url = $"https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={data}";
 
-            HttpResponseMessage response = await client.GetAsync(url);
+            using (HttpClient cliente = new HttpClient())
+            {
+                HttpResponseMessage respuesta;
+                try
+                {
+                    respuesta = await cliente.GetAsync(url);
+                }
+                catch (Exception ex)
+                {
+                    // Maneja errores de conexión
+                    return StatusCode(500, $"Error al conectar con la API: {ex.Message}");
+                }
 
-            response.EnsureSuccessStatusCode();
+                if (respuesta.IsSuccessStatusCode)
+                {
+                    byte[] qrCodeImage = await respuesta.Content.ReadAsByteArrayAsync();
+                    Obra obra = Fachada.BuscarObra(id);
+                    obra.QR = qrCodeImage;
+                    return Qr(id);
+                }
+                else
+                {
+                    // Maneja errores de la API
+                    return StatusCode((int)respuesta.StatusCode, "Error al generar el código QR");
+                }
+            }
 
-            byte[] qrCodeImage = await response.Content.ReadAsByteArrayAsync();
 
-            await File.WriteAllBytesAsync(filePath, qrCodeImage);
-        }*/
+        }
+            [HttpGet("{id}/Qr")]
+            public IActionResult Qr(int id)
+            {
+                Obra obra = Fachada.BuscarObra(id);
+
+                if (obra == null || obra.QR == null)
+                {
+                    return NotFound();
+                }
+            return File(obra.Cronograma, "obra", "hola.png");
+            }
+
 
     }
 }
