@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LogicaAccesoDatos.Migrations
 {
     /// <inheritdoc />
-    public partial class Testing : Migration
+    public partial class uno : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -93,6 +93,7 @@ namespace LogicaAccesoDatos.Migrations
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     NombreUsuario = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Contrasenia = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Tipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Discriminator = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false)
                 },
                 constraints: table =>
@@ -153,7 +154,11 @@ namespace LogicaAccesoDatos.Migrations
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Direccion = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Finalizada = table.Column<bool>(type: "bit", nullable: false),
-                    IdACargo = table.Column<int>(type: "int", nullable: false)
+                    IdACargo = table.Column<int>(type: "int", nullable: false),
+                    NombreCronograma = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TipoCronograma = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Cronograma = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    QR = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -171,10 +176,13 @@ namespace LogicaAccesoDatos.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IdTipoPlano = table.Column<int>(type: "int", nullable: false),
                     FechaPublicado = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IdObra = table.Column<int>(type: "int", nullable: false)
+                    IdObra = table.Column<int>(type: "int", nullable: false),
+                    NombrePdf = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TipoPdf = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Pdf = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
                 },
                 constraints: table =>
                 {

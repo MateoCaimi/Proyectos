@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogicaAccesoDatos.Migrations
 {
     [DbContext(typeof(ProyectoContext))]
-    [Migration("20240531142846_createUsuario")]
-    partial class createUsuario
+    [Migration("20240601133358_uno")]
+    partial class uno
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -111,6 +111,9 @@ namespace LogicaAccesoDatos.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdObra"));
 
+                    b.Property<byte[]>("Cronograma")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("Direccion")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -128,6 +131,17 @@ namespace LogicaAccesoDatos.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NombreCronograma")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("QR")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("TipoCronograma")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -175,7 +189,6 @@ namespace LogicaAccesoDatos.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Nombre")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NombrePdf")
@@ -352,8 +365,9 @@ namespace LogicaAccesoDatos.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Tipo")
-                        .HasColumnType("int");
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
