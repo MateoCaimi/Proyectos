@@ -96,12 +96,8 @@
     }
     <a href="@Url.Action("Index","Plano", new{idObra = Model?.Obra.IdObra})">Planos</a>
 
+    <a asp-action="ObtenerQr" asp-route-id="@Model?.Obra.IdObra">Código QR</a>
+
 
     <a asp-action="Index">Back to List</a>
 </div>
-
-<form asp-action="Qr">
-    <input type="hidden" asp-for="@Model.Obra.IdObra" />
-    <input type="submit" value="Qr" class="btn" /> |
-    <a asp-action="Index">Back to List</a>
-</form>

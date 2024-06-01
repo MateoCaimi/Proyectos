@@ -1,17 +1,10 @@
 ﻿using LogicaAccesoDatos.Repositorios;
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones;
-using LogicaNegocio.Interfaces;
 using LogicaNegocio.ViewModel;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using MVC.Models;
-using Newtonsoft.Json;
-using System.IO;
-using System.Text;
-using static System.Net.Mime.MediaTypeNames;
-
+using System.Drawing;
 namespace MVC.Controllers
 {
     public class ObraController : Controller
@@ -46,7 +39,7 @@ namespace MVC.Controllers
                     obra.AprobadorMasComun = Fachada.AprobadorMasComun(obra.Obra.IdObra);
                     obra.ProveedorMasComun = Fachada.ProveedorMasComun(obra.Obra.IdObra);
                 }
-                Qr(id);
+                //Qr(id);
                 return View(obra);
             }
             catch (ObraException e)
@@ -233,12 +226,10 @@ namespace MVC.Controllers
         }
 
 
-        [HttpGet]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ObtenerQr(int id)
         {
             string data = $"HOLAMUNDO"; 
-            string url = $"https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={data}";
+            string url = $"https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&qzone=30&data={data}";
 
             using (HttpClient cliente = new HttpClient())
             {
@@ -278,9 +269,26 @@ namespace MVC.Controllers
                 {
                     return NotFound();
                 }
-            return File(obra.Cronograma, "obra", "hola.png");
-            }
+                MemoryStream stream = new MemoryStream(obra.QR);
+                Bitmap bitmap = new Bitmap(stream);
+                Bitmap tempBitmap = new Bitmap(bitmap.Width, bitmap.Height); //Se crea uno vacío y se dibuja sobre ese.
+                {
+                    // Draw the original bitmap onto the graphics of the new bitmap
+                    g.DrawImage(bitmap, 0, 0);
+                }
+                Graphics graphics = Graphics.FromImage(tempBitmap);
+                Font arial = new Font("Arial", 50, FontStyle.Regular);
+                Brush brush = new SolidBrush(Color.Black);
+                string text = "Obra: " + obra.Nombre;
+                Rectangle rectangle = new Rectangle(0, 0, 1000, 200);
+                Pen pen = new Pen(Color.White, 2);
+                graphics.DrawRectangle(pen, rectangle);
+                graphics.DrawString(text, arial, brush, rectangle);
+                tempBitmap.Save("C:\\Users\\user\\Desktop\\image.png");
+                ImageConverter converter = new ImageConverter();
 
+            return File((byte[])converter.ConvertTo(tempBitmap, typeof(byte[])), "image/png", obra.Nombre + " - QR.png");
+            }
 
     }
 }

@@ -24,8 +24,6 @@ namespace LogicaNegocio.Entidades
         public string Contrasenia { get; set; }
         public virtual string Tipo { get; set; }
 
-     //   public TipoUsuario Tipo {  get; set; }
-
         public Usuario(string nombre, string nomUsuario, string pass)
         {
             this.Nombre = nombre;
