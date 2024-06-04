@@ -1,9 +1,11 @@
 ﻿using LogicaAccesoDatos.Repositorios;
 using LogicaNegocio.Entidades;
+using LogicaNegocio.Excepciones;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Reflection;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MVC.Controllers
 {
@@ -73,65 +75,81 @@ namespace MVC.Controllers
             try
             {
                 Usuario u = Fachada.CastearUsuario(nombre, nombreUsuario, contrasenia, tipo);
-                //Falta hacer new del usuario especificado en el tipo con un switch o varios if
 
                 Fachada.AgregarUsuario(u);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Listado));
             }
 
             //Error invalid column name tipo
             catch(Exception e)
             {
+                var subclassTypes = Assembly
+            .GetAssembly(typeof(Usuario))
+            .GetTypes()
+            .Where(t => t.IsSubclassOf(typeof(Usuario)));
+                ViewBag.TipoUsuario = subclassTypes;
                 ViewBag.Error = e.Message;
                 return View();
             }
         }
 
         // GET: UsuarioController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+        //public ActionResult Editar(int id)
+        //{
+        //    Usuario usuario = Fachada.BuscarUsuario(id);
+        //    return View(usuario);
+        //}
 
-        // POST: UsuarioController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        //// POST: UsuarioController/Edit/5
+        //[HttpPost, ActionName("Editar")]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult EditarConfirmado(int id, string nombre, string nombreUsuario, string contrasenia, string tipo)
+        //{
+        //    try
+        //    {
+        //        Usuario nuevoUsuario = Fachada.CastearUsuario(nombre, nombreUsuario, contrasenia, tipo);
+        //        nuevoUsuario.Id = id;
+        //        Fachada.ModificarUsuario(nuevoUsuario);
+        //        return RedirectToAction(nameof(Listado));
+        //    }
+        //    catch(UsuarioException ue)
+        //    {
+        //        ViewBag.Error(ue.Message);
+        //        return RedirectToAction(nameof(Listado));
+        //    }
+        //}
+
+        // GET: UsuarioController/Delete/5
+        public ActionResult Eliminar(int id)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+            Usuario usuario = Fachada.BuscarUsuario(id);
+            return View(usuario);
 
-        // GET: UsuarioController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
+            }
+            catch (UsuarioException ue)
+            {
+                ViewBag.Error(ue.Message);
+                return RedirectToAction(nameof(Listado));
+            }
         }
 
         // POST: UsuarioController/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Eliminar")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(Usuario u)
-        {
-            if (u == null)
-            {
-                return BadRequest();
-            }
-
+        public ActionResult EliminarConfirmado(int id)
+        { 
             try
             {
+                Usuario u = Fachada.BuscarUsuario(id);
                 Fachada.EliminarUsuario(u);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Listado));
             }
-            catch
+            catch(UsuarioException ue)
             {
-                return View();
+                ViewBag.Error = ue.Message;
+                return RedirectToAction(nameof(Listado));
             }
         }
 

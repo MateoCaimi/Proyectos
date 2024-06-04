@@ -152,5 +152,15 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioUsuario.CastearU( nombre,  nomUsuario,  pass,  tipo);
         }
+
+        public Usuario BuscarUsuario(int id)
+        {
+            return RepositorioUsuario.Buscar(id);
+        }
+
+        public void ModificarUsuario(Usuario u)
+        {
+            RepositorioUsuario.Modificar(u);
+        }
     }
 }

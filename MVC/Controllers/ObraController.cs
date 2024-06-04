@@ -272,11 +272,11 @@ namespace MVC.Controllers
                 MemoryStream stream = new MemoryStream(obra.QR);
                 Bitmap bitmap = new Bitmap(stream);
                 Bitmap tempBitmap = new Bitmap(bitmap.Width, bitmap.Height); //Se crea uno vacío y se dibuja sobre ese.
-                {
-                    // Draw the original bitmap onto the graphics of the new bitmap
-                    g.DrawImage(bitmap, 0, 0);
-                }
                 Graphics graphics = Graphics.FromImage(tempBitmap);
+                {
+                // Draw the original bitmap onto the graphics of the new bitmap
+                    graphics.DrawImage(bitmap, 0, 0);
+                }
                 Font arial = new Font("Arial", 50, FontStyle.Regular);
                 Brush brush = new SolidBrush(Color.Black);
                 string text = "Obra: " + obra.Nombre;
@@ -284,7 +284,7 @@ namespace MVC.Controllers
                 Pen pen = new Pen(Color.White, 2);
                 graphics.DrawRectangle(pen, rectangle);
                 graphics.DrawString(text, arial, brush, rectangle);
-                tempBitmap.Save("C:\\Users\\user\\Desktop\\image.png");
+                //tempBitmap.Save("C:\\Users\\user\\Desktop\\image.png");
                 ImageConverter converter = new ImageConverter();
 
             return File((byte[])converter.ConvertTo(tempBitmap, typeof(byte[])), "image/png", obra.Nombre + " - QR.png");

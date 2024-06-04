@@ -89,6 +89,7 @@ namespace LogicaAccesoDatos.Repositorios
                 usuario.Nombre = item.Nombre;
                 usuario.NombreUsuario = item.NombreUsuario;
                 usuario.Contrasenia = item.Contrasenia;
+                usuario.Tipo = item.Tipo;
                 Context.Entry(usuario).State = EntityState.Modified;
                 Context.SaveChanges();
             }
@@ -120,26 +121,21 @@ namespace LogicaAccesoDatos.Repositorios
 
         public Usuario CastearU(string nombre, string nomUsuario, string pass, string tipo)
         {
-            Usuario u2;
 
+                Usuario u2;
             switch (tipo)
             {
-                
-            
+
                 case "UDeObra":
-                     u2 = new UDeObra();
+                    u2 = new UDeObra();
                     break;
 
                 case "UDeOficina":
                      u2 = new UDeOficina();
                     break;
 
-                case "UAdministrador":
-                    u2 = new UDeOficina();
-                    break;
-
                 default :
-                    u2 = new UDeOficina();
+                   u2 = new UNormal();
                     break;
             }
 

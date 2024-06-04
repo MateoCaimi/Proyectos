@@ -8,6 +8,14 @@
 
 <h4>Obra</h4>
 <hr />
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
+}
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Editar" enctype="multipart/form-data">
@@ -60,13 +68,6 @@
 </div>
 
 
-
-@if (ViewBag.Error != null)
-{
-    <div class="alert alert-danger">
-        @ViewBag.Error
-    </div>
-}
 
 
 <div>
