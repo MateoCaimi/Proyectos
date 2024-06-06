@@ -17,17 +17,29 @@ namespace MVC.Controllers
         // GET: UsuarioController
         public ActionResult Index()
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") != null)
+            {
+                return RedirectToAction("Index", "Obra");
+            }
+
             return View();
         }
 
         [HttpPost]
         public ActionResult Index(Usuario u)
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") != null)
+            {
+                return RedirectToAction("Index", "Obra");
+            }
+
             try
             {
                 Fachada.InicioSesion(u);
                 HttpContext.Session.SetString("UsuarioLogueado", u.NombreUsuario);
-                //Me deberia traer tipo usuario para ver que cosas mostrar
+                HttpContext.Session.SetString("UsuarioTipo", u.Tipo);
 
             }
             catch (Exception e)
@@ -42,6 +54,12 @@ namespace MVC.Controllers
 
         public ActionResult CerrarSesion()
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+
             HttpContext.Session.Remove("UsuarioLogueado");
 
 
@@ -58,6 +76,18 @@ namespace MVC.Controllers
         // GET: UsuarioController/Create
         public ActionResult Agregar()
         {
+
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "UAdministrador")
+            {
+                return RedirectToAction("Index", "Obra");
+            }
+                                                     
+
             var subclassTypes = Assembly
             .GetAssembly(typeof(Usuario))
             .GetTypes()
@@ -72,8 +102,20 @@ namespace MVC.Controllers
         public ActionResult Agregar(string nombre, string nombreUsuario, string contrasenia, string tipo)
         {
 
+           
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if(HttpContext.Session.GetString("UsuarioTipo") != "UAdministrador")
+            {
+                return RedirectToAction("Index", "Obra");
+            }
+
+
             try
             {
+
                 Usuario u = Fachada.CastearUsuario(nombre, nombreUsuario, contrasenia, tipo);
 
                 Fachada.AgregarUsuario(u);
@@ -96,6 +138,7 @@ namespace MVC.Controllers
         // GET: UsuarioController/Edit/5
         //public ActionResult Editar(int id)
         //{
+
         //    Usuario usuario = Fachada.BuscarUsuario(id);
         //    return View(usuario);
         //}
@@ -122,6 +165,16 @@ namespace MVC.Controllers
         // GET: UsuarioController/Delete/5
         public ActionResult Eliminar(int id)
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "UAdministrador")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             try
             {
             Usuario usuario = Fachada.BuscarUsuario(id);
@@ -139,7 +192,18 @@ namespace MVC.Controllers
         [HttpPost, ActionName("Eliminar")]
         [ValidateAntiForgeryToken]
         public ActionResult EliminarConfirmado(int id)
-        { 
+        {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "UAdministrador")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+
             try
             {
                 Usuario u = Fachada.BuscarUsuario(id);
@@ -156,6 +220,16 @@ namespace MVC.Controllers
         // GET: UsuarioController/Listado/5
         public ActionResult Listado()
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "UAdministrador")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             IEnumerable<Usuario> usuarios = Fachada.ObtenerUsuarios();
             return View(usuarios);
         }

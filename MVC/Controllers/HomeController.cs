@@ -19,6 +19,16 @@ namespace MVC.Controllers
 
         public IActionResult Index()
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+
             /*Usuario usuarioTest = new UDeOficina("Federico Ruiz", "JorgeJorge123", "JorgeJorge123");
             Fachada.AgregarUsuario(usuarioTest);*/
             return View();

@@ -19,7 +19,7 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        @if (Context.Session.GetString("UsuarioLogueado") != null)
+                        @if (Context.Session.GetString("UsuarioLogueado") != null && Context.Session.GetString("UsuarioTipo") != "UAdministrador")
                         {
 
                             <li class="nav-item">
@@ -36,6 +36,16 @@
                             </li>
 
                         }
+                        else if (Context.Session.GetString("UsuarioLogueado") != null && Context.Session.GetString("UsuarioTipo") == "UAdministrador")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Listado">Lista de Usuarios</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Agregar">Registrar Usuario</a>
+                            </li>
+                        }
+
                       
                     </ul>
 

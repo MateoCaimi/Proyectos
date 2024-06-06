@@ -22,6 +22,16 @@ namespace MVC.Controllers
         // GET: PlanoController
         public ActionResult Index(int idObra)
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+
             try
             {
                 if (TempData["Error"] != null) //Para cuando viene de Agregar Plano siendo finalizada
@@ -61,6 +71,16 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult IndexFiltrado(int idObra, string nombre, int idTipoPlano, DateTime? fechaInicio, DateTime? fechaFin)
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+
             Obra obra = Fachada.BuscarObra(idObra);
             IEnumerable<Plano> planosFiltrados = Fachada.PlanosFiltrados(obra,idTipoPlano,nombre,fechaInicio,fechaFin);
             ViewBag.IdObra = idObra;
@@ -72,6 +92,19 @@ namespace MVC.Controllers
         // GET: PlanoController/Create
         public ActionResult Agregar(int idObra)
         {
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            {
+                return RedirectToAction("Index", "Obra");
+            }
+
             TempData["Error"] = null;
             ViewBag.IdObra = idObra;
             if (!Fachada.BuscarObra(idObra).Finalizada)
@@ -91,6 +124,21 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Agregar(Plano aIngresar, IFormFile archivoImagen)
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            {
+                return RedirectToAction("Index", "Obra");
+            }
+
+
             try
             {
                 if (aIngresar == null || aIngresar.TipoPdf != "application/pdf")
@@ -132,6 +180,19 @@ namespace MVC.Controllers
         // GET: PlanoController/Delete/5
         public ActionResult Eliminar(int id)
         {
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            {
+                return RedirectToAction("Index", "Obra");
+            }
+
             Plano plano = Fachada.BuscarPlano(id);
             return View(plano);
         }
@@ -141,6 +202,19 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EliminarConfirmado(int id)
         {
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            {
+                return RedirectToAction("Index", "Obra");
+            }
+
             try
             {
                 Plano planoABorrar = Fachada.BuscarPlano(id);
@@ -160,6 +234,15 @@ namespace MVC.Controllers
         [HttpGet("{id}/pdf")]
         public IActionResult ObtenerPDF(int id)
         {
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+
             Plano plano = Fachada.BuscarPlano(id);
 
             if (plano == null || plano.Pdf == null)

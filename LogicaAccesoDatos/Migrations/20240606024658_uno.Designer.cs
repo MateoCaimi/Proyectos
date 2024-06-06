@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogicaAccesoDatos.Migrations
 {
     [DbContext(typeof(ProyectoContext))]
-    [Migration("20240601133358_uno")]
+    [Migration("20240606024658_uno")]
     partial class uno
     {
         /// <inheritdoc />
@@ -352,11 +352,6 @@ namespace LogicaAccesoDatos.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("nvarchar(13)");
-
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -367,13 +362,14 @@ namespace LogicaAccesoDatos.Migrations
 
                     b.Property<string>("Tipo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Usuarios");
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Usuario");
+                    b.HasDiscriminator<string>("Tipo").HasValue("Usuario");
 
                     b.UseTphMappingStrategy();
                 });
@@ -390,6 +386,13 @@ namespace LogicaAccesoDatos.Migrations
                     b.HasBaseType("LogicaNegocio.Entidades.Usuario");
 
                     b.HasDiscriminator().HasValue("UDeOficina");
+                });
+
+            modelBuilder.Entity("LogicaNegocio.Entidades.UNormal", b =>
+                {
+                    b.HasBaseType("LogicaNegocio.Entidades.Usuario");
+
+                    b.HasDiscriminator().HasValue("UNormal");
                 });
 
             modelBuilder.Entity("LogicaNegocio.Entidades.Dia", b =>

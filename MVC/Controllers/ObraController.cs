@@ -13,6 +13,17 @@ namespace MVC.Controllers
         // GET: ObraController
         public ActionResult Index()
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            
+
             IEnumerable<Obra> obras = Fachada.TomarTodasObras();
             return View(obras);
         }
@@ -21,6 +32,18 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Index(string nombre, string direccion, bool finalizada)
         {
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+
+            
+
+
             IEnumerable<Obra> listadoObras = Fachada.ObrasFiltradas(nombre, direccion, finalizada);
             return View(listadoObras);
         }
@@ -28,6 +51,16 @@ namespace MVC.Controllers
         // GET: ObraController/Details/5
         public ActionResult Detalles(int id)
         {
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            //detalles de obra solo ve el u de ofi o tambien de obra
+
             try
             {
                 ObraEstadisticasViewModel obra = new ObraEstadisticasViewModel();
@@ -53,6 +86,19 @@ namespace MVC.Controllers
         // GET: ObraController/Create
         public ActionResult Agregar()
         {
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             /*Usuario uDeObraTesting = new UDeObra("Federico Ruiz Estévez", "federuiz2729", "Pepepepe123");
             Fachada.AgregarUsuario(uDeObraTesting);*/
             ViewBag.Usuarios = Fachada.ObtenerUsuariosDeObra();
@@ -64,6 +110,19 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Agregar(Obra aIngresar, IFormFile archivoImagen)
         {
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             try
             {
                 if (aIngresar == null || aIngresar.TipoCronograma != "application/pdf")
@@ -95,6 +154,21 @@ namespace MVC.Controllers
         // GET: ObraController/Edit/5
         public ActionResult Editar(int id)
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            // no deberia editar mas nadie que el u de oficina
+
             try
             {
                 Obra obra = Fachada.BuscarObra(id);
@@ -114,6 +188,21 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditarConfirmado(Obra nuevaObra, IFormFile archivoImagen)
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+
             try
             {
                 if (nuevaObra == null || nuevaObra.TipoCronograma != "application/pdf")
@@ -146,6 +235,22 @@ namespace MVC.Controllers
         // GET: ObraController/Delete/5
         public ActionResult Eliminar(int id)
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+
+
             try
             {
                 Obra obra = Fachada.BuscarObra(id);
@@ -164,6 +269,21 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EliminarConfirmado(int id)
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+
             try
             {
                 Obra obraABorrar = Fachada.BuscarObra(id);
@@ -181,6 +301,20 @@ namespace MVC.Controllers
         // GET: ObraController/Cerrar/5
         public ActionResult Cerrar(int id)
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             try
             {
                 Obra obra = Fachada.BuscarObra(id);
@@ -199,6 +333,21 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CerrarConfirmado(int id)
         {
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+
+
             Obra obraACerrar = Fachada.BuscarObra(id);
             try
             {
@@ -215,6 +364,17 @@ namespace MVC.Controllers
         [HttpGet("{id}/cronograma")]
         public IActionResult ObtenerCronograma(int id)
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            
+
             Obra obra = Fachada.BuscarObra(id);
 
             if (obra == null || obra.Cronograma == null)
@@ -228,6 +388,17 @@ namespace MVC.Controllers
 
         public async Task<IActionResult> ObtenerQr(int id)
         {
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            
+
+
             string data = $"HOLAMUNDO"; 
             string url = $"https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&qzone=30&data={data}";
 
@@ -263,7 +434,18 @@ namespace MVC.Controllers
             [HttpGet("{id}/Qr")]
             public IActionResult Qr(int id)
             {
-                Obra obra = Fachada.BuscarObra(id);
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+           
+
+            Obra obra = Fachada.BuscarObra(id);
 
                 if (obra == null || obra.QR == null)
                 {
