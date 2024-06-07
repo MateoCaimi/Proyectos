@@ -1,16 +1,24 @@
-﻿using LogicaAccesoDatos.Repositorios;
+﻿using Azure.Core;
+using LogicaAccesoDatos.EF;
+using LogicaAccesoDatos.Repositorios;
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones;
 using LogicaNegocio.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Graph.Models;
+using Microsoft.Graph;
 using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 using MVC.Models;
+using Newtonsoft.Json.Linq;
+using System.Net.Http.Headers;
 using System.Numerics;
 using System.Text.RegularExpressions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Azure.Identity;
+
 
 namespace MVC.Controllers
 {
@@ -19,18 +27,23 @@ namespace MVC.Controllers
 
         private Fachada Fachada = new Fachada();
 
+        public PlanoController()
+        {
+            
+        }
+
         // GET: PlanoController
         public ActionResult Index(int idObra)
         {
 
-            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("Index", "Usuario");
             }
             else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
             {
                 return RedirectToAction("Listado", "Usuario");
-            }
+            }*/
 
             try
             {
@@ -72,14 +85,14 @@ namespace MVC.Controllers
         public ActionResult IndexFiltrado(int idObra, string nombre, int idTipoPlano, DateTime? fechaInicio, DateTime? fechaFin)
         {
 
-            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("Index", "Usuario");
             }
             else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
             {
                 return RedirectToAction("Listado", "Usuario");
-            }
+            }*/
 
             Obra obra = Fachada.BuscarObra(idObra);
             IEnumerable<Plano> planosFiltrados = Fachada.PlanosFiltrados(obra,idTipoPlano,nombre,fechaInicio,fechaFin);
@@ -92,7 +105,7 @@ namespace MVC.Controllers
         // GET: PlanoController/Create
         public ActionResult Agregar(int idObra)
         {
-            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("Index", "Usuario");
             }
@@ -103,12 +116,16 @@ namespace MVC.Controllers
             else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
             {
                 return RedirectToAction("Index", "Obra");
-            }
+            }*/
 
             TempData["Error"] = null;
             ViewBag.IdObra = idObra;
             if (!Fachada.BuscarObra(idObra).Finalizada)
             {
+                TipoPlano tipo = new TipoPlano("Electrica");
+                ProyectoContext context = new ProyectoContext();
+                context.TiposPlanos.Add(tipo);
+                context.SaveChanges();
                 ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
                 return View();
             }
@@ -125,7 +142,7 @@ namespace MVC.Controllers
         public async Task<ActionResult> Agregar(Plano aIngresar, IFormFile archivoImagen)
         {
 
-            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("Index", "Usuario");
             }
@@ -136,7 +153,7 @@ namespace MVC.Controllers
             else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
             {
                 return RedirectToAction("Index", "Obra");
-            }
+            }*/
 
 
             try
@@ -167,6 +184,9 @@ namespace MVC.Controllers
                 ViewBag.IdObra = aIngresar.IdObra;
                 ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
                 Fachada.AgregarPlano(aIngresar);
+                //graph api todo acá    
+                await ObtenerCarpeta();
+
                 return RedirectToAction("Index", new { idObra = aIngresar.IdObra });
             }
             catch (Exception e)
@@ -252,5 +272,105 @@ namespace MVC.Controllers
 
             return File(plano.Pdf, plano.TipoPdf, plano.NombrePdf);
         }
+
+        private async Task<string> ObtenerTokenDeAccesoGraph()
+        {
+            var clientId = "dbde2b1a-6c38-46c7-9465-e8f4c3fa7961";
+            var clientSecret = "72D8Q~vHtGdsR-kcRd~rd4BIPgOpVDHfN6bv6a4.";
+            var tenantId = "d79720cd-d8c0-4d0c-a404-2dcd025f01e3";
+            var authority = $"https://login.microsoftonline.com/{tenantId}";
+
+            var app = ConfidentialClientApplicationBuilder.Create(clientId)
+                .WithClientSecret(clientSecret)
+                .WithAuthority(new Uri(authority))
+                .Build();
+
+            string[] scopes = { "https://graph.microsoft.com/.default" };
+
+            AuthenticationResult result = await app.AcquireTokenForClient(scopes).ExecuteAsync();
+            string accessToken = result.AccessToken;
+            return accessToken;
+        }
+
+        private async Task SubirATeams(Plano aIngresar)
+        {
+            string tokenAcceso = ObtenerTokenDeAccesoGraph().Result;
+            string groupId = "66f0d73d-1cad-4e6a-9291-c31f775b4937";
+            MemoryStream aSubir = new MemoryStream(aIngresar.Pdf);
+            using (HttpClient httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenAcceso);
+
+
+                var content = new StreamContent(aSubir);
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+
+                var uploadUrl = $"https://graph.microsoft.com/v1.0/groups/{groupId}/drive/items/root:/{aIngresar.NombrePdf}:/content";
+
+                HttpResponseMessage response = await httpClient.PutAsync(uploadUrl, content);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    string errorResponse = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Error: {response.StatusCode}");
+                    Console.WriteLine(errorResponse);
+                }
+                response.EnsureSuccessStatusCode();
+
+                string responseBody = await response.Content.ReadAsStringAsync();
+                JObject jsonResponse = JObject.Parse(responseBody);
+
+                Console.WriteLine("File uploaded successfully!");
+                Console.WriteLine(jsonResponse.ToString());
+
+            }
+        }
+
+        public async Task<DriveItem> ObtenerCarpeta()
+        {
+
+            try
+            {
+                var scopes = new[] { "User.Read" };
+
+                // Multi-tenant apps can use "common",
+                // single-tenant apps must use the tenant ID from the Azure portal
+                var tenantId = "d79720cd-d8c0-4d0c-a404-2dcd025f01e3";
+
+                // Value from app registration
+                var clientId = "dbde2b1a-6c38-46c7-9465-e8f4c3fa7961";
+
+                // using Azure.Identity;
+                var options = new DeviceCodeCredentialOptions
+                {
+                    AuthorityHost = AzureAuthorityHosts.AzurePublicCloud,
+                    ClientId = clientId,
+                    TenantId = tenantId,
+                    // Callback function that receives the user prompt
+                    // Prompt contains the generated device code that user must
+                    // enter during the auth process in the browser
+                    DeviceCodeCallback = (code, cancellation) =>
+                    {
+                        Console.WriteLine(code.Message);
+                        return Task.FromResult(0);
+                    },
+                };
+
+                // https://learn.microsoft.com/dotnet/api/azure.identity.devicecodecredential
+                var deviceCodeCredential = new DeviceCodeCredential(options);
+
+                var graphClient = new GraphServiceClient(deviceCodeCredential, scopes);
+
+                var result = await graphClient.Me.Drives["driveId"].Items["root"].Children.GetAsync();
+
+                return result.Value.FirstOrDefault();
+            }
+            catch (ServiceException ex)
+            {
+                Console.WriteLine($"Error getting folder: {ex.Message}");
+                throw;
+            }
+        }
+
     }
 }
