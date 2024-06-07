@@ -27,11 +27,17 @@ namespace LogicaNegocio.Entidades
         public Usuario(string nombre, string nomUsuario, string pass)
         {
             this.Nombre = nombre;
-            this.NombreUsuario= nomUsuario;
+            this.NombreUsuario = nomUsuario;
             this.Contrasenia = pass;
-        
-        }
 
+        }
+        public Usuario( string nomUsuario, string pass)
+        {
+
+            this.NombreUsuario = nomUsuario;
+            this.Contrasenia = pass;
+
+        }
         public Usuario()        
         {
             

@@ -29,12 +29,12 @@ namespace MVC.Controllers
         [HttpPost]
         public ActionResult Index(string nombreUsuario, string contrasenia) 
         {
-
+           
             if (HttpContext.Session.GetString("UsuarioLogueado") != null)
             {
                 return RedirectToAction("Index", "Obra");
             }
-
+            
             try
             {
                 Usuario u = Fachada.InicioSesion(nombreUsuario, contrasenia);
