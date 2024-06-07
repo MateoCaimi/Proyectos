@@ -136,6 +136,21 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return Context.Planos.Find(id);
         }
+
+        public IEnumerable<Plano> BuscarCarpeta(string carpeta)
+        { 
+            return Context.Planos.Where(p=>p.Carpeta == carpeta);
+        }
+
+        public IEnumerable<string> CrearCarpetas()
+        {
+            return ["ALBAÑILERIA", "DETALLES DEL SECTOR", "DETALLES CONSTRUCTIVOS", "METRAJES", "CIELORRASOS", "PAVIMENTOS", "PLANILLAS", "ESCTRUCTURA", "SANITARIA", "ELECTRICA", "TERMICO", "ASCENSORES", "INCENDIOS" ];
+        }
+
+        public IEnumerable<string> CrearCarpetasPlanillas()
+        {
+            return ["ALUMINIO", "CARPINTERIA", "PLACARES", "HERRERIA", "BARANDAS", "VIDRIOS Y ESPEJOS", "MESADAS", "HABITACIONES", "CIELORRASOS", "ARTEFACTOS BAÑO COCINA", "PRORRATEO AREAS"];
+        }
         public void Modificar(Plano item)
         {
             throw new NotImplementedException();
@@ -143,6 +158,17 @@ namespace LogicaAccesoDatos.Repositorios
         public IEnumerable<Plano> TomarTodos()
         {
             throw new NotImplementedException();
+        }
+
+        public Dictionary<string, int> CarpetasConCantidad()
+        {
+            Dictionary<string, int> retorno = new Dictionary<string, int>();
+            IEnumerable<string> carpetas = CrearCarpetas();
+            foreach (string c in carpetas)
+            {                
+                    retorno.Add(c, BuscarCarpeta(c).Count());
+            }
+            return retorno;
         }
 
     }

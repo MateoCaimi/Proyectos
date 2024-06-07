@@ -162,5 +162,29 @@ namespace LogicaAccesoDatos.Repositorios
         {
             RepositorioUsuario.Modificar(u);
         }
+
+        public IEnumerable<Plano> BuscarCarpeta(string carpeta)
+        {
+           return RepositorioPlano.BuscarCarpeta(carpeta);
+        }
+
+        public IEnumerable<string> CrearCarpetas()
+        {
+            return RepositorioPlano.CrearCarpetas();
+        }
+
+        public IEnumerable<string> CrearCarpetasPlanillas()
+        {
+            return RepositorioPlano.CrearCarpetasPlanillas();
+        }
+
+        public Dictionary<string, int> CarpetasConCantidad()
+        {
+            return RepositorioPlano.CarpetasConCantidad();
+        }
+
+
+
+
     }
 }

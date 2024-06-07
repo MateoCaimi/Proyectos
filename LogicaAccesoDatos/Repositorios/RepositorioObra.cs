@@ -266,7 +266,7 @@ namespace LogicaAccesoDatos.Repositorios
             foreach (Solicitud s in solicitudesObra)
             {
                 KeyValuePair<UDeOficina, int> var = retorno.First(r => r.Key == s.Aprovador);
-                if (var.Key != null)
+                if (var.Key == null)
                 {
                     retorno.Add(s.Aprovador, 1);
                 }

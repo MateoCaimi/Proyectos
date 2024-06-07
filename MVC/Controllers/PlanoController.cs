@@ -46,7 +46,7 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Listado", "Usuario");
             }*/
-
+            Dictionary<string, int> carpetas = Fachada.CarpetasConCantidad();
             try
             {
                 if (TempData["Error"] != null) //Para cuando viene de Agregar Plano siendo finalizada
@@ -54,21 +54,19 @@ namespace MVC.Controllers
                     ViewBag.Error = TempData["Error"].ToString();
                 }
                 TempData["Error"] = null;
-                Obra obra = Fachada.BuscarObra(idObra);
-                IEnumerable<Plano> planos = Fachada.PlanosTotales(obra);
-                if (planos == null)
-                {
-                    planos = new List<LogicaNegocio.Entidades.Plano>();
-                }
-                ViewBag.IdObra = idObra;
-                ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
-                return View(planos);
+                //Obra obra = Fachada.BuscarObra(idObra);
+                //IEnumerable<Plano> planos = Fachada.PlanosTotales(obra);
+                ViewBag.carpetas = carpetas;
+                //ViewBag.IdObra = idObra;
+                //ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
+                return View();
             }
             catch (ObraException e) //Solo manda ObraException si no existe obra
             {
                 ErrorViewModel errorModel = new ErrorViewModel();
                 errorModel.RequestId = e.Message;
                 ViewBag.IdObra = idObra;
+                ViewBag.carpetas = carpetas;
                 ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
                 return View("Error", errorModel); //usar shared hasta tener vistas de error para cada coso
             }
@@ -77,31 +75,32 @@ namespace MVC.Controllers
                 ErrorViewModel errorModel = new ErrorViewModel();
                 errorModel.RequestId = e.Message;
                 ViewBag.IdObra = idObra;
+                ViewBag.carpetas = carpetas;
                 ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
                 return View("Error", errorModel); //usar shared hasta tener vistas de error para cada coso
             }
         }
 
-        [HttpPost, ActionName("Index")]
-        [ValidateAntiForgeryToken]
-        public ActionResult IndexFiltrado(int idObra, string nombre, int idTipoPlano, DateTime? fechaInicio, DateTime? fechaFin)
-        {
+        //[HttpPost, ActionName("Index")]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult IndexFiltrado(int idObra, string nombre, int idTipoPlano, DateTime? fechaInicio, DateTime? fechaFin)
+        //{
 
-            /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            {
-                return RedirectToAction("Index", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
-            {
-                return RedirectToAction("Listado", "Usuario");
-            }*/
+        //    /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+        //    {
+        //        return RedirectToAction("Index", "Usuario");
+        //    }
+        //    else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+        //    {
+        //        return RedirectToAction("Listado", "Usuario");
+        //    }*/
 
-            Obra obra = Fachada.BuscarObra(idObra);
-            IEnumerable<Plano> planosFiltrados = Fachada.PlanosFiltrados(obra,idTipoPlano,nombre,fechaInicio,fechaFin);
-            ViewBag.IdObra = idObra;
-            ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
-            return View(planosFiltrados);
-        }
+        //    Obra obra = Fachada.BuscarObra(idObra);
+        //    IEnumerable<Plano> planosFiltrados = Fachada.PlanosFiltrados(obra,idTipoPlano,nombre,fechaInicio,fechaFin);
+        //    ViewBag.IdObra = idObra;
+        //    ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
+        //    return View(planosFiltrados);
+        //}
 
 
         // GET: PlanoController/Create
@@ -202,18 +201,18 @@ namespace MVC.Controllers
         // GET: PlanoController/Delete/5
         public ActionResult Eliminar(int id)
         {
-            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            {
-                return RedirectToAction("Index", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
-            {
-                return RedirectToAction("Listado", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
-            {
-                return RedirectToAction("Index", "Obra");
-            }
+            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            //{
+            //    return RedirectToAction("Index", "Usuario");
+            //}
+            //else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            //{
+            //    return RedirectToAction("Listado", "Usuario");
+            //}
+            //else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            //{
+            //    return RedirectToAction("Index", "Obra");
+            //}
 
             Plano plano = Fachada.BuscarPlano(id);
             return View(plano);
@@ -224,18 +223,18 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EliminarConfirmado(int id)
         {
-            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            {
-                return RedirectToAction("Index", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
-            {
-                return RedirectToAction("Listado", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
-            {
-                return RedirectToAction("Index", "Obra");
-            }
+            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            //{
+            //    return RedirectToAction("Index", "Usuario");
+            //}
+            //else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            //{
+            //    return RedirectToAction("Listado", "Usuario");
+            //}
+            //else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            //{
+            //    return RedirectToAction("Index", "Obra");
+            //}
 
             try
             {
@@ -256,14 +255,14 @@ namespace MVC.Controllers
         [HttpGet("{id}/pdf")]
         public IActionResult ObtenerPDF(int id)
         {
-            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            {
-                return RedirectToAction("Index", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
-            {
-                return RedirectToAction("Listado", "Usuario");
-            }
+            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            //{
+            //    return RedirectToAction("Index", "Usuario");
+            //}
+            //else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            //{
+            //    return RedirectToAction("Listado", "Usuario");
+            //}
 
             Plano plano = Fachada.BuscarPlano(id);
 
@@ -369,6 +368,13 @@ namespace MVC.Controllers
                 Console.WriteLine($"Error getting folder: {ex.Message}");
                 throw;
             }
+        }
+
+        public ActionResult ListarPlano(string carpeta)
+        {
+            IEnumerable<Plano> planos = Fachada.BuscarCarpeta(carpeta);
+            return View(planos);
+
         }
 
     }

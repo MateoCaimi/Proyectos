@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LogicaNegocio.Interfaces;
+using System.Runtime.CompilerServices;
 
 namespace LogicaNegocio.Entidades
 {
@@ -29,6 +30,8 @@ namespace LogicaNegocio.Entidades
         public string NombrePdf { get; set; }
         public string TipoPdf { get; set; }
         public byte[] Pdf { get; set; }
+        [Required]
+        public string Carpeta {  get; set; }
 
         public Plano()
         {
