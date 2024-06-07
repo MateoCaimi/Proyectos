@@ -18,6 +18,8 @@ using System.Numerics;
 using System.Text.RegularExpressions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Azure.Identity;
+using System.Net.Http;
+using Microsoft.Graph.Models.TermStore;
 
 
 namespace MVC.Controllers
@@ -331,7 +333,9 @@ namespace MVC.Controllers
 
             try
             {
-                var scopes = new[] { "User.Read" };
+                string tokenAcceso = ObtenerTokenDeAccesoGraph().Result;
+                
+                var scopes = new[] { "https://graph.microsoft.com/.default" };
 
                 // Multi-tenant apps can use "common",
                 // single-tenant apps must use the tenant ID from the Azure portal
@@ -340,30 +344,25 @@ namespace MVC.Controllers
                 // Value from app registration
                 var clientId = "dbde2b1a-6c38-46c7-9465-e8f4c3fa7961";
 
-                // using Azure.Identity;
-                var options = new DeviceCodeCredentialOptions
+                var clientSecret = "72D8Q~vHtGdsR-kcRd~rd4BIPgOpVDHfN6bv6a4.";
+
+                var clientSecretCredential = new ClientSecretCredential(tenantId, clientId, clientSecret);
+
+                var graphClient = new GraphServiceClient(clientSecretCredential, scopes);
+
+                var result = await graphClient.Drives.GetAsync();
+
+                /*using (HttpClient httpClient = new HttpClient())
                 {
-                    AuthorityHost = AzureAuthorityHosts.AzurePublicCloud,
-                    ClientId = clientId,
-                    TenantId = tenantId,
-                    // Callback function that receives the user prompt
-                    // Prompt contains the generated device code that user must
-                    // enter during the auth process in the browser
-                    DeviceCodeCallback = (code, cancellation) =>
-                    {
-                        Console.WriteLine(code.Message);
-                        return Task.FromResult(0);
-                    },
-                };
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenAcceso);
+                    HttpResponseMessage response = await httpClient.GetAsync($"https://graph.microsoft.com/v1.0/me/drive/recent");
 
-                // https://learn.microsoft.com/dotnet/api/azure.identity.devicecodecredential
-                var deviceCodeCredential = new DeviceCodeCredential(options);
+                    
+                    return null;
+                }*/
 
-                var graphClient = new GraphServiceClient(deviceCodeCredential, scopes);
+                return null;
 
-                var result = await graphClient.Me.Drives["driveId"].Items["root"].Children.GetAsync();
-
-                return result.Value.FirstOrDefault();
             }
             catch (ServiceException ex)
             {
