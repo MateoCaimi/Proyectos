@@ -22,12 +22,12 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Obra");
             }
-
+            IEnumerable<Usuario> usuarios =  Fachada.ObtenerUsuarios();
             return View();
         }
 
         [HttpPost]
-        public ActionResult Index(Usuario u)
+        public ActionResult Index(string nombreUsuario, string contrasenia) 
         {
 
             if (HttpContext.Session.GetString("UsuarioLogueado") != null)
@@ -37,7 +37,7 @@ namespace MVC.Controllers
 
             try
             {
-                Fachada.InicioSesion(u);
+                Usuario u = Fachada.InicioSesion(nombreUsuario, contrasenia);
                 HttpContext.Session.SetString("UsuarioLogueado", u.NombreUsuario);
                 HttpContext.Session.SetString("UsuarioTipo", u.Tipo);
 
@@ -213,7 +213,7 @@ namespace MVC.Controllers
             catch(UsuarioException ue)
             {
                 ViewBag.Error = ue.Message;
-                return RedirectToAction(nameof(Listado));
+                return View();
             }
         }
 

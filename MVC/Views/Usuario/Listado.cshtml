@@ -5,6 +5,13 @@
     ViewData["Title"] = "Listado";
 }
 
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
+}
+
 <h1>Listado</h1>
 
 <p>

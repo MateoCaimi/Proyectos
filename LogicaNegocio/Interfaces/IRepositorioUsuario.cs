@@ -9,7 +9,7 @@ namespace LogicaNegocio.Interfaces
 {
     public interface IRepositorioUsuario : IRepositorio<Usuario>
     {
-        public void InicioSesion(Usuario u);
+        public Usuario InicioSesion(string nombreUsuario, string contrasenia);
         public Usuario UsuarioPorNombreUsuario(string nombreUsuario);
 
         public Usuario Buscar(int id);

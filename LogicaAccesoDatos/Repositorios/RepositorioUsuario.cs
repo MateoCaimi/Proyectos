@@ -30,19 +30,23 @@ namespace LogicaAccesoDatos.Repositorios
             Context.SaveChanges();
         }
 
-        public void InicioSesion(Usuario u)
+        public Usuario InicioSesion(string nombreUsuario, string contrasenia)
         {
             foreach (Usuario unU in Context.Usuarios)
             {
-                if (unU.NombreUsuario == u.NombreUsuario)
+                if (unU.NombreUsuario == nombreUsuario)
                 {
-                    if (unU.Contrasenia == u.Contrasenia)
+                    if (unU.Contrasenia == contrasenia)
                     {
-                        return;
+                        return unU;
+                    }
+                    else
+                    {
+                        throw new UsuarioException("La contraseña es incorrecta.");
                     }
                 }
             }
-            throw new Exception("Usuario o contraseña incorrecto.");
+            throw new UsuarioException("El nombre de usuario ingresado no existe.");
         }
 
 

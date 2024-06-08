@@ -1,4 +1,5 @@
 ﻿using LogicaNegocio.Entidades;
+using LogicaNegocio.Excepciones;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -120,9 +121,9 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioPlano.TomarTodos();
         }
-        public void InicioSesion(Usuario u)
+        public Usuario InicioSesion(string nombreUsuario, string contrasenia)
         {
-            RepositorioUsuario.InicioSesion(u);
+            return RepositorioUsuario.InicioSesion(nombreUsuario, contrasenia);
         }
         public IEnumerable<Usuario> ObtenerUsuariosDeObra()
         {

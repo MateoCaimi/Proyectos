@@ -20,7 +20,7 @@ namespace LogicaNegocio.Entidades
         [Required(ErrorMessage = "Ingrese un nombre de usuario")]
         public string NombreUsuario { get; set; }
         [Required(ErrorMessage = "Ingrese una contraseña")]
-        [MinLength(8)]
+        [RegularExpression(@"^.{8,}$", ErrorMessage = "La contraseña debe tener un mínimo de 8 caracteres.")]
         public string Contrasenia { get; set; }
         public virtual string Tipo { get; set; }
 
