@@ -121,9 +121,9 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioPlano.TomarTodos();
         }
-        public Usuario InicioSesion(string nombreUsuario, string contrasenia)
+        public Usuario InicioSesion(string nomUsu, string pass)
         {
-            return RepositorioUsuario.InicioSesion(nombreUsuario, contrasenia);
+            return RepositorioUsuario.InicioSesion(nomUsu, pass);
         }
         public IEnumerable<Usuario> ObtenerUsuariosDeObra()
         {

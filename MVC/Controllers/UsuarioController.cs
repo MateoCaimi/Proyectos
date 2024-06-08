@@ -17,6 +17,7 @@ namespace MVC.Controllers
         // GET: UsuarioController
         public ActionResult Index()
         {
+          
 
             if (HttpContext.Session.GetString("UsuarioLogueado") != null)
             {
@@ -27,7 +28,7 @@ namespace MVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(string nombreUsuario, string contrasenia) 
+        public ActionResult Index(string NombreUsuario, string Contrasenia)
         {
            
             if (HttpContext.Session.GetString("UsuarioLogueado") != null)
@@ -37,10 +38,15 @@ namespace MVC.Controllers
             
             try
             {
-                Usuario u = Fachada.InicioSesion(nombreUsuario, contrasenia);
+                Usuario u = Fachada.InicioSesion(NombreUsuario, Contrasenia);
+
+                if (u.CambioContrasenia)
+                {
+                    return RedirectToAction("CambiarPass", "Usuario", new { nomU = NombreUsuario });
+                }
+
                 HttpContext.Session.SetString("UsuarioLogueado", u.NombreUsuario);
                 HttpContext.Session.SetString("UsuarioTipo", u.Tipo);
-
             }
             catch (Exception e)
             {
@@ -48,7 +54,22 @@ namespace MVC.Controllers
                 return View();
             }
 
+
+
             return RedirectToAction("Index", "Obra");
+        }
+
+
+        public ActionResult CambiarPass(string nomU)
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public ActionResult CambiarPass(string nomUsuario, string pass)
+        {
+            return RedirectToAction("Index", "Usuario");
         }
 
 

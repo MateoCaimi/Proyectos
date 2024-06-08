@@ -99,7 +99,7 @@ namespace MVC.Controllers
             //    return RedirectToAction("Index", "Home");
             //}
 
-            /*Usuario uDeObraTesting = new UDeObra("Federico Ruiz Estévez", "federuiz2729", "Pepepepe123");
+            /*Usuario uAdminTesting = new UAdministrador("Federico Ruiz Estévez", "federuiz2729", "Pepepepe123");
             Fachada.AgregarUsuario(uDeObraTesting);*/
             ViewBag.Usuarios = Fachada.ObtenerUsuariosDeObra();
             return View();

@@ -23,12 +23,15 @@ namespace LogicaNegocio.Entidades
         [RegularExpression(@"^.{8,}$", ErrorMessage = "La contraseña debe tener un mínimo de 8 caracteres.")]
         public string Contrasenia { get; set; }
         public virtual string Tipo { get; set; }
+        public bool CambioContrasenia { get; set; } 
+
 
         public Usuario(string nombre, string nomUsuario, string pass)
         {
             this.Nombre = nombre;
             this.NombreUsuario = nomUsuario;
             this.Contrasenia = pass;
+            this.CambioContrasenia = true;
 
         }
         public Usuario( string nomUsuario, string pass)

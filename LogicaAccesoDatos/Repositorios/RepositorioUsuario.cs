@@ -33,6 +33,7 @@ namespace LogicaAccesoDatos.Repositorios
 
         public Usuario InicioSesion(string nombreUsuario, string contrasenia)
         {
+
             foreach (Usuario unU in Context.Usuarios)
             {
                 if (unU.NombreUsuario == nombreUsuario)

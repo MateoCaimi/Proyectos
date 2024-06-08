@@ -15,11 +15,13 @@ namespace MVC.Controllers
         {
             _logger = logger;
             Fachada = new Fachada();
+         
+
         }
 
         public IActionResult Index()
         {
-
+            
             if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("Index", "Usuario");
