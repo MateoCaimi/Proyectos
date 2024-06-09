@@ -135,32 +135,41 @@ namespace MVC.Controllers
             }
         }
 
-        // GET: UsuarioController/Edit/5
-        //public ActionResult Editar(int id)
-        //{
+        //GET: UsuarioController/Edit/5
+        public ActionResult Editar(int id)
+        {
+            Usuario usuario = Fachada.BuscarUsuario(id);
+            var subclassTypes = Assembly
+            .GetAssembly(typeof(Usuario))
+            .GetTypes()
+            .Where(t => t.IsSubclassOf(typeof(Usuario)));
+            ViewBag.TipoUsuario = subclassTypes;
+            return View(usuario);
+        }
 
-        //    Usuario usuario = Fachada.BuscarUsuario(id);
-        //    return View(usuario);
-        //}
-
-        //// POST: UsuarioController/Edit/5
-        //[HttpPost, ActionName("Editar")]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult EditarConfirmado(int id, string nombre, string nombreUsuario, string contrasenia, string tipo)
-        //{
-        //    try
-        //    {
-        //        Usuario nuevoUsuario = Fachada.CastearUsuario(nombre, nombreUsuario, contrasenia, tipo);
-        //        nuevoUsuario.Id = id;
-        //        Fachada.ModificarUsuario(nuevoUsuario);
-        //        return RedirectToAction(nameof(Listado));
-        //    }
-        //    catch(UsuarioException ue)
-        //    {
-        //        ViewBag.Error(ue.Message);
-        //        return RedirectToAction(nameof(Listado));
-        //    }
-        //}
+        // POST: UsuarioController/Edit/5
+        [HttpPost, ActionName("Editar")]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditarConfirmado(int id, string nombre, string nombreUsuario, string contrasenia, string tipo)
+        {
+            try
+            {
+                Usuario nuevoUsuario = Fachada.CastearUsuario(nombre, nombreUsuario, contrasenia, tipo);
+                nuevoUsuario.Id = id;
+                Fachada.ModificarUsuario(nuevoUsuario);
+                return RedirectToAction(nameof(Listado));
+            }
+            catch (UsuarioException ue)
+            {
+                var subclassTypes = Assembly
+                .GetAssembly(typeof(Usuario))
+                .GetTypes()
+                .Where(t => t.IsSubclassOf(typeof(Usuario)));
+                ViewBag.TipoUsuario = subclassTypes;
+                ViewBag.Error = ue.Message;
+                return RedirectToAction(nameof(Listado));
+            }
+        }
 
         // GET: UsuarioController/Delete/5
         public ActionResult Eliminar(int id)

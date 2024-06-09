@@ -1,7 +1,14 @@
-﻿@model LogicaNegocio.Entidades.Usuario
+﻿@using LogicaNegocio.Entidades
+@model LogicaNegocio.Entidades.Usuario
 
 @{
     ViewData["Title"] = "Editar";
+}
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
 }
 
 <h1>Editar</h1>
@@ -33,19 +40,8 @@
                     <input asp-for="Contrasenia" class="form-control" />
                     <span asp-validation-for="Contrasenia" class="text-danger"></span>
                 </div>
-                <br>
                 <div class="form-group">
-                    <label asp-for="Tipo" class="control-label"></label>
-                    <select asp-for="Tipo" class="form-control">
-                        @foreach (var item in ViewBag.TipoUsuario)
-                        {
-                            if (item.Name != "UAdministrador")
-                            {
-                                <option value="@item.Name">@item.Name</option>
-                            }
-                        }
-                    </select>
-                    <span asp-validation-for="Tipo" class="text-danger"></span>
+                    <input asp-for="Tipo" class="form-control" type="hidden"/>
                 </div>
                 <br />
                 <div class="form-group">
@@ -60,3 +56,8 @@
 </div>
 
 
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
