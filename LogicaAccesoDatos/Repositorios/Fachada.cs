@@ -131,7 +131,7 @@ namespace LogicaAccesoDatos.Repositorios
         }
 
         public IEnumerable<Usuario> ObtenerUsuarios()
-        {
+       {
             return RepositorioUsuario.TomarTodos();
         }
 

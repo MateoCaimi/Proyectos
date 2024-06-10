@@ -23,7 +23,7 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Obra");
             }
-            IEnumerable<Usuario> usuarios =  Fachada.ObtenerUsuarios();
+         //   IEnumerable<Usuario> usuarios =  Fachada.ObtenerUsuarios();
             return View();
         }
 
