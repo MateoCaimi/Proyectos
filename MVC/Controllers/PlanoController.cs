@@ -46,7 +46,7 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Listado", "Usuario");
             }*/
-            Dictionary<string, int> carpetas = Fachada.CarpetasConCantidad();
+            //Dictionary<string, int> carpetas = Fachada.CarpetasConCantidad();
             try
             {
                 if (TempData["Error"] != null) //Para cuando viene de Agregar Plano siendo finalizada
@@ -54,11 +54,8 @@ namespace MVC.Controllers
                     ViewBag.Error = TempData["Error"].ToString();
                 }
                 TempData["Error"] = null;
-                //Obra obra = Fachada.BuscarObra(idObra);
-                //IEnumerable<Plano> planos = Fachada.PlanosTotales(obra);
-                ViewBag.carpetas = carpetas;
-                //ViewBag.IdObra = idObra;
-                //ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
+                ViewBag.IdObra = idObra;
+                ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
                 return View();
             }
             catch (ObraException e) //Solo manda ObraException si no existe obra
@@ -66,7 +63,6 @@ namespace MVC.Controllers
                 ErrorViewModel errorModel = new ErrorViewModel();
                 errorModel.RequestId = e.Message;
                 ViewBag.IdObra = idObra;
-                ViewBag.carpetas = carpetas;
                 ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
                 return View("Error", errorModel); //usar shared hasta tener vistas de error para cada coso
             }
@@ -75,7 +71,6 @@ namespace MVC.Controllers
                 ErrorViewModel errorModel = new ErrorViewModel();
                 errorModel.RequestId = e.Message;
                 ViewBag.IdObra = idObra;
-                ViewBag.carpetas = carpetas;
                 ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
                 return View("Error", errorModel); //usar shared hasta tener vistas de error para cada coso
             }
@@ -123,10 +118,6 @@ namespace MVC.Controllers
             ViewBag.IdObra = idObra;
             if (!Fachada.BuscarObra(idObra).Finalizada)
             {
-                TipoPlano tipo = new TipoPlano("Electrica");
-                ProyectoContext context = new ProyectoContext();
-                context.TiposPlanos.Add(tipo);
-                context.SaveChanges();
                 ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
                 return View();
             }
@@ -185,8 +176,7 @@ namespace MVC.Controllers
                 ViewBag.IdObra = aIngresar.IdObra;
                 ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
                 Fachada.AgregarPlano(aIngresar);
-                //graph api todo acá    
-                await ObtenerCarpeta();
+          
 
                 return RedirectToAction("Index", new { idObra = aIngresar.IdObra });
             }
@@ -274,108 +264,110 @@ namespace MVC.Controllers
             return File(plano.Pdf, plano.TipoPdf, plano.NombrePdf);
         }
 
-        private async Task<string> ObtenerTokenDeAccesoGraph()
+        public ActionResult ListarPlanos(int idTipoPlano, int idObra)
         {
-            var clientId = "dbde2b1a-6c38-46c7-9465-e8f4c3fa7961";
-            var clientSecret = "72D8Q~vHtGdsR-kcRd~rd4BIPgOpVDHfN6bv6a4.";
-            var tenantId = "d79720cd-d8c0-4d0c-a404-2dcd025f01e3";
-            var authority = $"https://login.microsoftonline.com/{tenantId}";
-
-            var app = ConfidentialClientApplicationBuilder.Create(clientId)
-                .WithClientSecret(clientSecret)
-                .WithAuthority(new Uri(authority))
-                .Build();
-
-            string[] scopes = { "https://graph.microsoft.com/.default" };
-
-            AuthenticationResult result = await app.AcquireTokenForClient(scopes).ExecuteAsync();
-            string accessToken = result.AccessToken;
-            return accessToken;
-        }
-
-        private async Task SubirATeams(Plano aIngresar)
-        {
-            string tokenAcceso = ObtenerTokenDeAccesoGraph().Result;
-            string groupId = "66f0d73d-1cad-4e6a-9291-c31f775b4937";
-            MemoryStream aSubir = new MemoryStream(aIngresar.Pdf);
-            using (HttpClient httpClient = new HttpClient())
-            {
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenAcceso);
-
-
-                var content = new StreamContent(aSubir);
-                content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-
-                var uploadUrl = $"https://graph.microsoft.com/v1.0/groups/{groupId}/drive/items/root:/{aIngresar.NombrePdf}:/content";
-
-                HttpResponseMessage response = await httpClient.PutAsync(uploadUrl, content);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    string errorResponse = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine($"Error: {response.StatusCode}");
-                    Console.WriteLine(errorResponse);
-                }
-                response.EnsureSuccessStatusCode();
-
-                string responseBody = await response.Content.ReadAsStringAsync();
-                JObject jsonResponse = JObject.Parse(responseBody);
-
-                Console.WriteLine("File uploaded successfully!");
-                Console.WriteLine(jsonResponse.ToString());
-
-            }
-        }
-
-        public async Task<DriveItem> ObtenerCarpeta()
-        {
-
-            try
-            {
-                string tokenAcceso = ObtenerTokenDeAccesoGraph().Result;
-                
-                var scopes = new[] { "https://graph.microsoft.com/.default" };
-
-                // Multi-tenant apps can use "common",
-                // single-tenant apps must use the tenant ID from the Azure portal
-                var tenantId = "d79720cd-d8c0-4d0c-a404-2dcd025f01e3";
-
-                // Value from app registration
-                var clientId = "dbde2b1a-6c38-46c7-9465-e8f4c3fa7961";
-
-                var clientSecret = "72D8Q~vHtGdsR-kcRd~rd4BIPgOpVDHfN6bv6a4.";
-
-                var clientSecretCredential = new ClientSecretCredential(tenantId, clientId, clientSecret);
-
-                var graphClient = new GraphServiceClient(clientSecretCredential, scopes);
-
-                var result = await graphClient.Drives.GetAsync();
-
-                /*using (HttpClient httpClient = new HttpClient())
-                {
-                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenAcceso);
-                    HttpResponseMessage response = await httpClient.GetAsync($"https://graph.microsoft.com/v1.0/me/drive/recent");
-
-                    
-                    return null;
-                }*/
-
-                return null;
-
-            }
-            catch (ServiceException ex)
-            {
-                Console.WriteLine($"Error getting folder: {ex.Message}");
-                throw;
-            }
-        }
-
-        public ActionResult ListarPlano(string carpeta)
-        {
-            IEnumerable<Plano> planos = Fachada.BuscarCarpeta(carpeta);
+            IEnumerable<Plano> planos = Fachada.BuscarPlanosDelTipoEnObra(idTipoPlano, idObra);
+            ViewBag.Tipo = Fachada.BuscarTipoPlano(idTipoPlano);
             return View(planos);
 
         }
 
     }
 }
+
+
+        //private async Task<string> ObtenerTokenDeAccesoGraph()
+        //{
+        //    var clientId = "dbde2b1a-6c38-46c7-9465-e8f4c3fa7961";
+        //    var clientSecret = "72D8Q~vHtGdsR-kcRd~rd4BIPgOpVDHfN6bv6a4.";
+        //    var tenantId = "d79720cd-d8c0-4d0c-a404-2dcd025f01e3";
+        //    var authority = $"https://login.microsoftonline.com/{tenantId}";
+
+        //    var app = ConfidentialClientApplicationBuilder.Create(clientId)
+        //        .WithClientSecret(clientSecret)
+        //        .WithAuthority(new Uri(authority))
+        //        .Build();
+
+        //    string[] scopes = { "https://graph.microsoft.com/.default" };
+
+        //    AuthenticationResult result = await app.AcquireTokenForClient(scopes).ExecuteAsync();
+        //    string accessToken = result.AccessToken;
+        //    return accessToken;
+        //}
+
+        //private async Task SubirATeams(Plano aIngresar)
+        //{
+        //    string tokenAcceso = ObtenerTokenDeAccesoGraph().Result;
+        //    string groupId = "66f0d73d-1cad-4e6a-9291-c31f775b4937";
+        //    MemoryStream aSubir = new MemoryStream(aIngresar.Pdf);
+        //    using (HttpClient httpClient = new HttpClient())
+        //    {
+        //        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenAcceso);
+
+
+        //        var content = new StreamContent(aSubir);
+        //        content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+
+        //        var uploadUrl = $"https://graph.microsoft.com/v1.0/groups/{groupId}/drive/items/root:/{aIngresar.NombrePdf}:/content";
+
+        //        HttpResponseMessage response = await httpClient.PutAsync(uploadUrl, content);
+
+        //        if (!response.IsSuccessStatusCode)
+        //        {
+        //            string errorResponse = await response.Content.ReadAsStringAsync();
+        //            Console.WriteLine($"Error: {response.StatusCode}");
+        //            Console.WriteLine(errorResponse);
+        //        }
+        //        response.EnsureSuccessStatusCode();
+
+        //        string responseBody = await response.Content.ReadAsStringAsync();
+        //        JObject jsonResponse = JObject.Parse(responseBody);
+
+        //        Console.WriteLine("File uploaded successfully!");
+        //        Console.WriteLine(jsonResponse.ToString());
+
+        //    }
+        //}
+
+        //public async Task<DriveItem> ObtenerCarpeta()
+        //{
+
+        //    try
+        //    {
+        //        string tokenAcceso = ObtenerTokenDeAccesoGraph().Result;
+                
+        //        var scopes = new[] { "https://graph.microsoft.com/.default" };
+
+        //        // Multi-tenant apps can use "common",
+        //        // single-tenant apps must use the tenant ID from the Azure portal
+        //        var tenantId = "d79720cd-d8c0-4d0c-a404-2dcd025f01e3";
+
+        //        // Value from app registration
+        //        var clientId = "dbde2b1a-6c38-46c7-9465-e8f4c3fa7961";
+
+        //        var clientSecret = "72D8Q~vHtGdsR-kcRd~rd4BIPgOpVDHfN6bv6a4.";
+
+        //        var clientSecretCredential = new ClientSecretCredential(tenantId, clientId, clientSecret);
+
+        //        var graphClient = new GraphServiceClient(clientSecretCredential, scopes);
+
+        //        var result = await graphClient.Drives.GetAsync();
+
+        //        /*using (HttpClient httpClient = new HttpClient())
+        //        {
+        //            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenAcceso);
+        //            HttpResponseMessage response = await httpClient.GetAsync($"https://graph.microsoft.com/v1.0/me/drive/recent");
+
+                    
+        //            return null;
+        //        }*/
+
+        //        return null;
+
+        //    }
+        //    catch (ServiceException ex)
+        //    {
+        //        Console.WriteLine($"Error getting folder: {ex.Message}");
+        //        throw;
+        //    }
+        //}

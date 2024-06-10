@@ -4,77 +4,7 @@
     ViewData["Title"] = "ListarPlanos";
 }
 
-<h1>ListarPlanos</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TipoPlano)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaPublicado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Obra)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NombrePdf)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TipoPdf)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Pdf)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Carpeta)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TipoPlano.Categoria)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaPublicado)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Obra.Direccion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NombrePdf)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TipoPdf)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Pdf)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Carpeta)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<h1>Listado de Planos</h1>
 
 
 @if (ViewBag.Error != null)
@@ -85,11 +15,7 @@
 }
 
 
-<h1>Planos</h1>
-
-<p>
-    <a href="@Url.Action("Agregar", new {idObra = ViewBag.IdObra})"> Agregar Plano</a>
-</p>
+<h4> @ViewBag.Tipo.Categoria</h4>
 
 
 @* <form method="post">
@@ -149,10 +75,7 @@
                     @Html.DisplayFor(modelItem => item.FechaPublicado)
                 </td>
                 <td>
-                    @*   @if (item.TipoPdf == "application/pdf") *@
-                    <a href="@Url.Action("ObtenerPdf", "Plano", new { id = item.Id })" target="_blank">Ver PDF</a>
-
-
+                    <a href="@Url.Action("ObtenerPdf", new { id = item.Id })" target="_blank">Ver PDF</a>
                 <td>
 
                     <a asp-action="Eliminar" asp-route-id="@item.Id">Eliminar</a>

@@ -30,8 +30,6 @@ namespace LogicaNegocio.Entidades
         public string NombrePdf { get; set; }
         public string TipoPdf { get; set; }
         public byte[] Pdf { get; set; }
-        [Required]
-        public string Carpeta {  get; set; }
 
         public Plano()
         {

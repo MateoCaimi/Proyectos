@@ -164,27 +164,15 @@ namespace LogicaAccesoDatos.Repositorios
             RepositorioUsuario.Modificar(u);
         }
 
-        public IEnumerable<Plano> BuscarCarpeta(string carpeta)
+        public IEnumerable<Plano> BuscarPlanosDelTipoEnObra(int idTipo, int idObra)
         {
-           return RepositorioPlano.BuscarCarpeta(carpeta);
+            return RepositorioPlano.BuscarPlanosDelTipoEnObra(idTipo, idObra);
         }
 
-        public IEnumerable<string> CrearCarpetas()
+        public TipoPlano BuscarTipoPlano(int idTipo)
         {
-            return RepositorioPlano.CrearCarpetas();
+            return RepositorioPlano.BuscarTipoPlano(idTipo);
         }
-
-        public IEnumerable<string> CrearCarpetasPlanillas()
-        {
-            return RepositorioPlano.CrearCarpetasPlanillas();
-        }
-
-        public Dictionary<string, int> CarpetasConCantidad()
-        {
-            return RepositorioPlano.CarpetasConCantidad();
-        }
-
-
 
 
     }

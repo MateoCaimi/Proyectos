@@ -54,6 +54,11 @@ namespace LogicaAccesoDatos.Repositorios
             return Context.Planos.Where(p => p.Nombre == nombre && p.IdTipoPlano == idTipoPlano).FirstOrDefault();
         }
 
+        public IEnumerable<Plano> BuscarPlanosDelTipoEnObra(int idTipoPlano, int idObra)
+        {
+            return Context.Planos.Where(p => p.IdTipoPlano == idTipoPlano && p.IdObra ==idObra);
+        }
+
         public void Eliminar(Plano plano)
         {
             Obra obra = Context.Obras.FirstOrDefault(o => o.IdObra == plano.IdObra);
@@ -117,9 +122,7 @@ namespace LogicaAccesoDatos.Repositorios
 
         public IEnumerable<Plano> PlanosTotales(Obra obra)
         {
-            /*TipoPlano tipoPlano = new TipoPlano("Eléctrica");
-            Context.TiposPlanos.Add(tipoPlano);
-            Context.SaveChanges();*/
+ 
             if (obra == null)
             {
                 throw new ObraException("No se pueden buscar planos en una obra nula.");
@@ -132,25 +135,16 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return Context.TiposPlanos.ToList();
         }
+
+        public TipoPlano BuscarTipoPlano(int idTipo)
+        {
+            return Context.TiposPlanos.Where(tp=>tp.Id == idTipo).FirstOrDefault();
+        }
         public Plano Buscar(int id)
         {
             return Context.Planos.Find(id);
         }
 
-        public IEnumerable<Plano> BuscarCarpeta(string carpeta)
-        { 
-            return Context.Planos.Where(p=>p.Carpeta == carpeta);
-        }
-
-        public IEnumerable<string> CrearCarpetas()
-        {
-            return ["ALBAÑILERIA", "DETALLES DEL SECTOR", "DETALLES CONSTRUCTIVOS", "METRAJES", "CIELORRASOS", "PAVIMENTOS", "PLANILLAS", "ESCTRUCTURA", "SANITARIA", "ELECTRICA", "TERMICO", "ASCENSORES", "INCENDIOS" ];
-        }
-
-        public IEnumerable<string> CrearCarpetasPlanillas()
-        {
-            return ["ALUMINIO", "CARPINTERIA", "PLACARES", "HERRERIA", "BARANDAS", "VIDRIOS Y ESPEJOS", "MESADAS", "HABITACIONES", "CIELORRASOS", "ARTEFACTOS BAÑO COCINA", "PRORRATEO AREAS"];
-        }
         public void Modificar(Plano item)
         {
             throw new NotImplementedException();
@@ -158,17 +152,6 @@ namespace LogicaAccesoDatos.Repositorios
         public IEnumerable<Plano> TomarTodos()
         {
             throw new NotImplementedException();
-        }
-
-        public Dictionary<string, int> CarpetasConCantidad()
-        {
-            Dictionary<string, int> retorno = new Dictionary<string, int>();
-            IEnumerable<string> carpetas = CrearCarpetas();
-            foreach (string c in carpetas)
-            {                
-                    retorno.Add(c, BuscarCarpeta(c).Count());
-            }
-            return retorno;
         }
 
     }

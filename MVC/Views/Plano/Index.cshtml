@@ -21,29 +21,19 @@
 
     
 <table class="table">
-    <thead>
-        <tr>
-            <th>
-                Nombre
-            </th>
-            <th>
-                Cantidad
-            </th>
-            
-        </tr>
-    </thead>
     <tbody>
-@foreach (var item in ViewBag.carpetas) {
+@foreach (var item in ViewBag.TiposdePlano) {
+
+
         <tr>
             <td>Foto</td>  
             <td>
-                    <a href="@Url.Action("ListarPlanos", new {carpeta = item.Key})"></a>  @item.Key
-            </td>
-            <td>
-                @item.Value
+                    <a href="@Url.Action("ListarPlanos", new {idTipoPlano = item.Id, idObra = ViewBag.IdObra})">@item.Categoria</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+
 

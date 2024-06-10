@@ -13,7 +13,9 @@ namespace LogicaNegocio.Interfaces
         public IEnumerable<Plano> PlanosFiltrados(Obra obra, int? tipo, string? nombre, DateTime? fechaDesde, DateTime? fechaHasta);
         public IEnumerable<Plano> PlanosPorAntiguedad(Obra obra);
         public IEnumerable<TipoPlano> BuscarTiposPlanos();
-        public IEnumerable<Plano> BuscarCarpeta(string carpeta);
+        public TipoPlano BuscarTipoPlano(int idTipo);
+
+        // public IEnumerable<Plano> BuscarCarpeta(string carpeta);
 
     }
 }
