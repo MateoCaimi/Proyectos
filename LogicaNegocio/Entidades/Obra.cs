@@ -33,6 +33,9 @@ namespace LogicaNegocio.Entidades
         public string TipoCronograma { get; set; }
         public byte[]? Cronograma { get; set; }
         public byte[]? QR { get; set; }
+
+        //Pruebas de listas
+        public List<Material> Materiales { get; set; } = new List<Material>();
         public Obra()
         {
 

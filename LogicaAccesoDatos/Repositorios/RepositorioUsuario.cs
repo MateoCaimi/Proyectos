@@ -53,22 +53,23 @@ namespace LogicaAccesoDatos.Repositorios
                         Context.SaveChanges();
                         return unU;
                     }
-                    else{
+                    else
+                    {
 
-                            unU.IntentosFallidos++;
+                        unU.IntentosFallidos++;
+                        Context.SaveChanges();//esto tira error
+                        if (unU.IntentosFallidos >= 3)
+                        {
+                            unU.TiempoDeBloqueo = DateTime.UtcNow.AddMinutes(1);
+                            unU.IntentosFallidos = 0;
+                            unU.UsuarioBloqueado = true;
                             Context.SaveChanges();
-                            if (unU.IntentosFallidos >= 3)
-                            {
-                                unU.TiempoDeBloqueo = DateTime.UtcNow.AddMinutes(1);
-                                unU.IntentosFallidos = 0;
-                                unU.UsuarioBloqueado = true;
-                                Context.SaveChanges();
-                                throw new UsuarioException("Cuenta bloqueada por múltiples intentos fallidos. Inténtelo de nuevo en 1 minutos.");
+                            throw new UsuarioException("Cuenta bloqueada por múltiples intentos fallidos. Inténtelo de nuevo en 1 minutos.");
 
-                            }
+                        }
 
-                           
-                            throw new UsuarioException("La contraseña es incorrecta.");
+
+                        throw new UsuarioException("La contraseña es incorrecta.");
                     }
 
                 }
@@ -118,7 +119,7 @@ namespace LogicaAccesoDatos.Repositorios
                     throw new UsuarioException("No se encontró el usuario a modificar.");
                 }
                 Usuario yaExistente = this.UsuarioPorNombreUsuario(item.NombreUsuario);
-                if (yaExistente != null && yaExistente.Id != item.Id) 
+                if (yaExistente != null && yaExistente.Id != item.Id)
                 {
                     throw new UsuarioException("El nombre de usuario ingresado ya está en uso. Elegir otro.");
                 }
@@ -189,18 +190,18 @@ namespace LogicaAccesoDatos.Repositorios
             switch (tipo)
             {
 
-                case "UDeObra" :
+                case "UDeObra":
                 case "Usuario de obra":
                     u2 = new UDeObra();
                     break;
 
                 case "UDeOficina":
                 case "Usuario de oficina":
-                     u2 = new UDeOficina();
+                    u2 = new UDeOficina();
                     break;
 
-                default :
-                   u2 = new UNormal();
+                default:
+                    u2 = new UNormal();
                     break;
             }
 

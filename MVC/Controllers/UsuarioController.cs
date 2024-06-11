@@ -10,7 +10,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MVC.Controllers
 {
-    
+
     public class UsuarioController : Controller
     {
 
@@ -18,25 +18,25 @@ namespace MVC.Controllers
         // GET: UsuarioController
         public ActionResult Index()
         {
-          
+
 
             if (HttpContext.Session.GetString("UsuarioLogueado") != null)
             {
                 return RedirectToAction("Index", "Obra");
             }
-         //   IEnumerable<Usuario> usuarios =  Fachada.ObtenerUsuarios();
+            //   IEnumerable<Usuario> usuarios =  Fachada.ObtenerUsuarios();
             return View();
         }
 
         [HttpPost]
         public ActionResult Index(string NombreUsuario, string Contrasenia)
         {
-           
+
             if (HttpContext.Session.GetString("UsuarioLogueado") != null)
             {
                 return RedirectToAction("Index", "Obra");
             }
-            
+
             try
             {
                 Usuario u = Fachada.InicioSesion(NombreUsuario, Contrasenia);
@@ -45,7 +45,7 @@ namespace MVC.Controllers
                 {
                     return RedirectToAction("CambiarPass", "Usuario", new { nomU = NombreUsuario });
                 }
-               
+
 
                 HttpContext.Session.SetString("UsuarioLogueado", u.NombreUsuario);
                 HttpContext.Session.SetString("UsuarioTipo", u.Tipo);
@@ -148,7 +148,7 @@ namespace MVC.Controllers
             }
 
             //Error invalid column name tipo
-            catch(Exception e)
+            catch (Exception e)
             {
                 var subclassTypes = Assembly
             .GetAssembly(typeof(Usuario))
@@ -211,8 +211,8 @@ namespace MVC.Controllers
 
             try
             {
-            Usuario usuario = Fachada.BuscarUsuario(id);
-            return View(usuario);
+                Usuario usuario = Fachada.BuscarUsuario(id);
+                return View(usuario);
 
             }
             catch (UsuarioException ue)
@@ -244,7 +244,7 @@ namespace MVC.Controllers
                 Fachada.EliminarUsuario(u);
                 return RedirectToAction(nameof(Listado));
             }
-            catch(UsuarioException ue)
+            catch (UsuarioException ue)
             {
                 ViewBag.Error = ue.Message;
                 return View();

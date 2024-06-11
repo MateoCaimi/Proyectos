@@ -1,0 +1,52 @@
+﻿@model IEnumerable<LogicaNegocio.Entidades.Material>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Materiales</h1>
+
+<p>
+    <a asp-action="Agregar">Agregar material nuevo</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Stock)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnidadDeMedida)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var mat in Model)
+        {
+            <tr>
+          
+                <td>
+                    @Html.DisplayFor(modelItem => mat.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => mat.Stock)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => mat.UnidadDeMedida)
+                </td>
+              
+                <td>
+                    <a asp-action="Detalles" asp-route-id="@mat.Id">Detalles</a> |
+                </td>
+                <td>
+                    <a asp-action="Eliminar" asp-route-id="@mat.Id">Eliminar</a> |
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

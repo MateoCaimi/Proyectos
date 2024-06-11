@@ -13,6 +13,7 @@ namespace LogicaAccesoDatos.Repositorios
         RepositorioObra RepositorioObra { get; set; }
         RepositorioPlano RepositorioPlano { get; set; }
         RepositorioUsuario RepositorioUsuario { get; set; }
+        RepositorioMaterial RepositorioMaterial { get; set; }
         
 
         public Fachada()
@@ -20,6 +21,7 @@ namespace LogicaAccesoDatos.Repositorios
             RepositorioObra = new RepositorioObra();
             RepositorioPlano = new RepositorioPlano();
             RepositorioUsuario = new RepositorioUsuario();
+            RepositorioMaterial = new RepositorioMaterial();
         }
         public Obra ObraPorDireccion(string direccion)
         {
@@ -177,6 +179,21 @@ namespace LogicaAccesoDatos.Repositorios
         public void CambiarPass(string nombreUsuario, string contrasenia, string confirmarPass)
         {
             RepositorioUsuario.cambiarPass(nombreUsuario, contrasenia, confirmarPass);
+        }
+
+        public IEnumerable<Material> TomarTodosMateriales()
+        {
+            return RepositorioMaterial.TomarTodos();
+        }
+
+        public void AgregarMaterial(string nombre, int stock, string unidadDeMedida)
+        {
+            RepositorioMaterial.Agregar(nombre, stock, unidadDeMedida);
+        }
+
+        public void EliminarMaterial(int id)
+        {
+            RepositorioMaterial.Eliminar(id);
         }
     }
 }
