@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogicaAccesoDatos.Migrations
 {
     [DbContext(typeof(ProyectoContext))]
-    [Migration("20240606024658_uno")]
-    partial class uno
+    [Migration("20240610164436_b")]
+    partial class b
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -178,6 +178,10 @@ namespace LogicaAccesoDatos.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Carpeta")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("FechaPublicado")
                         .HasColumnType("datetime2");
@@ -348,6 +352,9 @@ namespace LogicaAccesoDatos.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("CambioContrasenia")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Contrasenia")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -362,8 +369,8 @@ namespace LogicaAccesoDatos.Migrations
 
                     b.Property<string>("Tipo")
                         .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("nvarchar(13)");
+                        .HasMaxLength(21)
+                        .HasColumnType("nvarchar(21)");
 
                     b.HasKey("Id");
 
@@ -372,6 +379,13 @@ namespace LogicaAccesoDatos.Migrations
                     b.HasDiscriminator<string>("Tipo").HasValue("Usuario");
 
                     b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("LogicaNegocio.Entidades.UAdministrador", b =>
+                {
+                    b.HasBaseType("LogicaNegocio.Entidades.Usuario");
+
+                    b.HasDiscriminator().HasValue("UAdministrador");
                 });
 
             modelBuilder.Entity("LogicaNegocio.Entidades.UDeObra", b =>

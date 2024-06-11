@@ -24,6 +24,9 @@ namespace LogicaNegocio.Entidades
         public string Contrasenia { get; set; }
         public virtual string Tipo { get; set; }
         public bool CambioContrasenia { get; set; } 
+        public int IntentosFallidos { get; set; }
+        public bool UsuarioBloqueado { get; set; } 
+        public DateTime? TiempoDeBloqueo { get; set; }
 
 
         public Usuario(string nombre, string nomUsuario, string pass)
@@ -32,6 +35,8 @@ namespace LogicaNegocio.Entidades
             this.NombreUsuario = nomUsuario;
             this.Contrasenia = pass;
             this.CambioContrasenia = true;
+            this.UsuarioBloqueado = false;
+            this.IntentosFallidos = 0;
 
         }
         public Usuario( string nomUsuario, string pass)

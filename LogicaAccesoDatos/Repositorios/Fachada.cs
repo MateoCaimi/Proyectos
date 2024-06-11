@@ -174,6 +174,9 @@ namespace LogicaAccesoDatos.Repositorios
             return RepositorioPlano.BuscarTipoPlano(idTipo);
         }
 
-
+        public void CambiarPass(string nombreUsuario, string contrasenia, string confirmarPass)
+        {
+            RepositorioUsuario.cambiarPass(nombreUsuario, contrasenia, confirmarPass);
+        }
     }
 }

@@ -31,6 +31,7 @@ namespace LogicaAccesoDatos.Repositorios
             Context.SaveChanges();
         }
 
+
         public Usuario InicioSesion(string nombreUsuario, string contrasenia)
         {
 
@@ -40,14 +41,39 @@ namespace LogicaAccesoDatos.Repositorios
                 {
                     if (unU.Contrasenia == contrasenia)
                     {
+
+                        if (unU.TiempoDeBloqueo.HasValue && unU.TiempoDeBloqueo.Value > DateTime.UtcNow)
+                        {
+                            throw new UsuarioException("Cuenta bloqueada. Inténtelo de nuevo más tarde.");
+                        }
+
+                        unU.IntentosFallidos = 0;
+                        unU.TiempoDeBloqueo = null;
+                        unU.UsuarioBloqueado = false;
+                        Context.SaveChanges();
                         return unU;
                     }
-                    else
-                    {
-                        throw new UsuarioException("La contraseña es incorrecta.");
+                    else{
+
+                            unU.IntentosFallidos++;
+                            Context.SaveChanges();
+                            if (unU.IntentosFallidos >= 3)
+                            {
+                                unU.TiempoDeBloqueo = DateTime.UtcNow.AddMinutes(1);
+                                unU.IntentosFallidos = 0;
+                                unU.UsuarioBloqueado = true;
+                                Context.SaveChanges();
+                                throw new UsuarioException("Cuenta bloqueada por múltiples intentos fallidos. Inténtelo de nuevo en 1 minutos.");
+
+                            }
+
+                           
+                            throw new UsuarioException("La contraseña es incorrecta.");
                     }
+
                 }
             }
+
             throw new UsuarioException("El nombre de usuario ingresado no existe.");
         }
 
@@ -182,9 +208,40 @@ namespace LogicaAccesoDatos.Repositorios
             u2.Nombre = nombre;
             u2.Tipo = tipo;
             u2.Contrasenia = pass;
+            u2.CambioContrasenia = true;
+            u2.IntentosFallidos = 0;
+            u2.UsuarioBloqueado = false;
+            u2.TiempoDeBloqueo = null;
 
             return u2;
 
+        }
+
+        internal void cambiarPass(string nombreUsuario, string contrasenia, string confirmarPass)
+        {
+            try
+            {
+                Usuario u = this.UsuarioPorNombreUsuario(nombreUsuario);
+                if (contrasenia == confirmarPass)
+                {
+                    if (u.Contrasenia == contrasenia)
+                    {
+                        throw new UsuarioException("La contrasenia nueva no puede ser igual a la anterior");
+                    }
+                    u.Contrasenia = contrasenia;
+                    u.Validar();
+                    u.CambioContrasenia = false;
+                    Context.SaveChanges();
+                }
+                else
+                {
+                    throw new UsuarioException("La confirmacion de la contrasenia debe ser la misma");
+                }
+            }
+            catch (Exception e)
+            {
+                throw new UsuarioException(e.Message);
+            }
         }
     }
 }

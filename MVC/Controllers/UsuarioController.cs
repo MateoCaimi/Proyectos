@@ -4,6 +4,7 @@ using LogicaNegocio.Excepciones;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -44,6 +45,7 @@ namespace MVC.Controllers
                 {
                     return RedirectToAction("CambiarPass", "Usuario", new { nomU = NombreUsuario });
                 }
+               
 
                 HttpContext.Session.SetString("UsuarioLogueado", u.NombreUsuario);
                 HttpContext.Session.SetString("UsuarioTipo", u.Tipo);
@@ -62,13 +64,15 @@ namespace MVC.Controllers
 
         public ActionResult CambiarPass(string nomU)
         {
+            ViewBag.nom = nomU;
             return View();
         }
 
 
         [HttpPost]
-        public ActionResult CambiarPass(string nomUsuario, string pass)
+        public ActionResult CambiarPass(string NombreUsuario, string Contrasenia, string confirmarPass)
         {
+            Fachada.CambiarPass(NombreUsuario, Contrasenia, confirmarPass);
             return RedirectToAction("Index", "Usuario");
         }
 
@@ -99,15 +103,15 @@ namespace MVC.Controllers
         {
 
 
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") != "UAdministrador")
-            //{
-            //    return RedirectToAction("Index", "Obra");
-            //}
-                                                     
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario administrador")
+            {
+                return RedirectToAction("Index", "Obra");
+            }
+
 
             var subclassTypes = Assembly
             .GetAssembly(typeof(Usuario))
@@ -123,15 +127,15 @@ namespace MVC.Controllers
         public ActionResult Agregar(string nombre, string nombreUsuario, string contrasenia, string tipo)
         {
 
-           
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if(HttpContext.Session.GetString("UsuarioTipo") != "UAdministrador")
-            //{
-            //    return RedirectToAction("Index", "Obra");
-            //}
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario administrador")
+            {
+                return RedirectToAction("Index", "Obra");
+            }
 
 
             try

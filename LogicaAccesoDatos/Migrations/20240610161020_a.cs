@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LogicaAccesoDatos.Migrations
 {
     /// <inheritdoc />
-    public partial class uno : Migration
+    public partial class a : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -93,7 +93,8 @@ namespace LogicaAccesoDatos.Migrations
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     NombreUsuario = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Contrasenia = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Tipo = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false)
+                    Tipo = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
+                    CambioContrasenia = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -181,7 +182,8 @@ namespace LogicaAccesoDatos.Migrations
                     IdObra = table.Column<int>(type: "int", nullable: false),
                     NombrePdf = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TipoPdf = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Pdf = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
+                    Pdf = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    Carpeta = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {

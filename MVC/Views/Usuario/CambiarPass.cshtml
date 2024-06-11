@@ -10,19 +10,25 @@
 <br>
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Index">
+        <form asp-action="CambiarPass">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <br>
+
+
             <div class="form-group">
-                <label asp-for="NombreUsuario" class="control-label"></label>
-                <input asp-for="NombreUsuario" class="form-control" />
+                <label asp-for="NombreUsuario" class="control-label">Nombre de usuario</label>
+                <input asp-for="NombreUsuario" class="form-control" readonly value="@ViewBag.nom" />
                 <span asp-validation-for="NombreUsuario" class="text-danger"></span>
             </div>
             <br>
             <div class="form-group">
-                <label asp-for="Contrasenia" class="control-label"></label>
-                <input asp-for="Contrasenia" class="form-control" />
-                <span asp-validation-for="Contrasenia" class="text-danger"></span>
+                <label class="control-label">Nueva Contraseña:</label>
+                <input type="password" id="Contrasenia" name="Contrasenia" />
+            </div>
+            <br>
+            <div class="form-group">
+                <label class="control-label">Confirmar Contraseña:</label>
+                <input type="password" id="confirmarPass" name="confirmarPass" />
             </div>
             <br>
             <div class="form-group">
