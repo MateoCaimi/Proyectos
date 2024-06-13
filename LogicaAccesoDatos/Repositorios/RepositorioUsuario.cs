@@ -34,8 +34,8 @@ namespace LogicaAccesoDatos.Repositorios
 
         public Usuario InicioSesion(string nombreUsuario, string contrasenia)
         {
-
-            foreach (Usuario unU in Context.Usuarios)
+            IEnumerable<Usuario> Usuarios = this.TomarTodos();
+            foreach (Usuario unU in Usuarios)
             {
                 if (unU.NombreUsuario == nombreUsuario)
                 {
@@ -126,6 +126,7 @@ namespace LogicaAccesoDatos.Repositorios
                 usuario.Nombre = item.Nombre;
                 usuario.NombreUsuario = item.NombreUsuario;
                 usuario.Contrasenia = item.Contrasenia;
+                usuario.CambioContrasenia = true;
                 Context.Entry(usuario).State = EntityState.Modified;
                 Context.SaveChanges();
             }

@@ -223,5 +223,9 @@ namespace LogicaAccesoDatos.Repositorios
             return RepositorioMaterial.TomarTodos();
         }
 
+        public Usuario BuscarUsuarioXNombreU(string nombreUsuario)
+        {
+            return RepositorioUsuario.UsuarioPorNombreUsuario(nombreUsuario);
+        }
     }
 }
