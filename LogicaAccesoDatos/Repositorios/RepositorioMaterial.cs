@@ -3,11 +3,13 @@ using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones;
 using LogicaNegocio.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace LogicaAccesoDatos.Repositorios
 {
@@ -19,34 +21,33 @@ namespace LogicaAccesoDatos.Repositorios
         {
             this.Context = new ProyectoContext();
         }
-        public void Agregar(string nom, int stock, string unidadDeMedida)
+        public void Agregar(Material nuevoMaterial)
         {
-            Material material = new Material(nom, stock, unidadDeMedida);
-            material.Validar();
-            if (this.MaterialPorNombre(material.Nombre) != null)
+
+            nuevoMaterial.Validar();
+            if (this.MaterialPorNombre(nuevoMaterial.Nombre) != null)
             {
-                throw new ObraException("El nombre del material que esta queriendo ingresar ya se encuentra ingresado.");
+                throw new MaterialException("El nombre del material que esta queriendo ingresar ya se encuentra ingresado.");
             }
 
-            Context.Materiales.Add(material);
+            Context.Materiales.Add(nuevoMaterial);
             Context.SaveChanges();
         }
 
 
 
-        public void Eliminar(int id)
+        public void Eliminar(Material material)
         {
-            Material m = this.Buscar(id);
 
-            if (m == null)
+            if (material == null)
             {
-                throw new ObraException("No se puede eliminar un material nulo.");
+                throw new MaterialException("No se puede eliminar un material nulo.");
             }
-            if (MaterialSeEncuentraEnObra(m))
+            if (MaterialSeEncuentraEnObra(material))
             {
-                throw new ObraException("No se puede eliminar el material. Este se esta utilizando en alguna obra.");
+                throw new MaterialException("No se puede eliminar el material. Este se esta utilizando en alguna obra.");
             }
-            Context.Materiales.Remove(m);
+            Context.Materiales.Remove(material);
             Context.SaveChanges();
         }
 
@@ -62,10 +63,9 @@ namespace LogicaAccesoDatos.Repositorios
             }
 
             material.Nombre = m.Nombre;
-            material.Stock = m.Stock;
             material.UnidadDeMedida = m.UnidadDeMedida;
             material.Validar();
-            Context.Entry(m).State = EntityState.Modified;
+            Context.Materiales.Update(material);
             Context.SaveChanges();
 
 
@@ -104,19 +104,12 @@ namespace LogicaAccesoDatos.Repositorios
             return false;
         }
 
-
-
-
-
-        //si no esta me tira error pero no va
-        public void Agregar(Material item)
+        public IEnumerable<Material> MaterialesFiltados(string nombre)
         {
-            throw new NotImplementedException();
-        }
-
-        public void Eliminar(Material item)
-        {
-            throw new NotImplementedException();
+            if (nombre == null) throw new MaterialException("Ingrese un nombre para buscar");
+            IEnumerable<Material> materiales = Context.Materiales.ToList();
+            materiales = materiales.Where(m => m.Nombre.ToUpper().StartsWith(nombre.ToUpper()));
+            return materiales;
         }
     }
 }

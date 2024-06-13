@@ -1,5 +1,6 @@
 ﻿using LogicaAccesoDatos.Repositorios;
 using LogicaNegocio.Entidades;
+using LogicaNegocio.Excepciones;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,26 +14,49 @@ namespace MVC.Controllers
         public ActionResult Index()
         {
 
-            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            {
-                return RedirectToAction("Index", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
-            {
-                return RedirectToAction("Listado", "Usuario");
-            }
-
+            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            //{
+            //    return RedirectToAction("Index", "Usuario");
+            //}
+            //else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            //{
+            //    return RedirectToAction("Listado", "Usuario");
+            //}
 
             IEnumerable<Material> materiales = Fachada.TomarTodosMateriales();
             return View(materiales);
+
         }
-    
-        // GET: MaterialController/Details/5
-        public ActionResult Detalles(int id)
+
+
+
+        [HttpPost, ActionName("Index")]
+        [ValidateAntiForgeryToken]
+        public ActionResult IndexFiltrado(string nombre)
         {
-            //detalles de materiales?
-            return View();
+
+            /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }*/
+            try
+            {
+            IEnumerable<Material> materialesFiltrados = Fachada.MaterialesFiltrados(nombre);
+            return View(materialesFiltrados);
+
+            }
+            catch (MaterialException me)
+            {
+                ViewBag.Error = me.Message;
+                IEnumerable<Material> materiales = Fachada.TomarTodosMateriales();
+                return View(materiales);
+            }
         }
+
 
         // GET: MaterialController/Create
         public ActionResult Agregar()
@@ -43,12 +67,11 @@ namespace MVC.Controllers
         // POST: MaterialController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Agregar(string Nombre, int Stock, string UnidadDeMedida)
+        public ActionResult Agregar(Material nuevoMaterial)
         {
             try
             {
-                Fachada.AgregarMaterial(Nombre, Stock, UnidadDeMedida);
-
+                Fachada.AgregarMaterial(nuevoMaterial);
                 return RedirectToAction("Index");
             }
             catch(Exception e)
@@ -59,23 +82,26 @@ namespace MVC.Controllers
         }
 
         // GET: MaterialController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Editar(int id)
         {
-            return View();
+            Material material = Fachada.BuscarMaterial(id);
+            return View(material);
         }
 
         // POST: MaterialController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Editar(Material material)
         {
             try
             {
+                Fachada.ModificarMaterial(material);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(MaterialException me)
             {
-                return View();
+                ViewBag.Error = me.Message;
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -84,9 +110,8 @@ namespace MVC.Controllers
         {
             try
             {
-
-                Fachada.EliminarMaterial(id);
-                return RedirectToAction("Index");
+                Material material = Fachada.BuscarMaterial(id);
+                return View(material);
 
             }
             catch (Exception e)
@@ -97,23 +122,21 @@ namespace MVC.Controllers
                 
         }
 
-
-
-
-
-        //este ni lo usamos
         // POST: MaterialController/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Eliminar")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult EliminarConfirmado(int id)
         {
             try
             {
+                Material material = Fachada.BuscarMaterial(id);
+                Fachada.EliminarMaterial(material);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(MaterialException me)
             {
-                return View();
+                ViewBag.Error = me.Message;
+                return RedirectToAction("Index");
             }
         }
     }

@@ -1,0 +1,9 @@
+﻿@model IEnumerable<LogicaNegocio.Entidades.SolicitudMaterial>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>@item.Material</td>
+        <td>@item.Cantidad</td>
+    </tr>
+}

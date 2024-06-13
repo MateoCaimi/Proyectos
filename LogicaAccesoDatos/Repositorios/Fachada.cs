@@ -14,6 +14,7 @@ namespace LogicaAccesoDatos.Repositorios
         RepositorioPlano RepositorioPlano { get; set; }
         RepositorioUsuario RepositorioUsuario { get; set; }
         RepositorioMaterial RepositorioMaterial { get; set; }
+        RepositorioSolicitud RepositorioSolicitud { get; set; }
         
 
         public Fachada()
@@ -22,6 +23,7 @@ namespace LogicaAccesoDatos.Repositorios
             RepositorioPlano = new RepositorioPlano();
             RepositorioUsuario = new RepositorioUsuario();
             RepositorioMaterial = new RepositorioMaterial();
+            RepositorioSolicitud = new RepositorioSolicitud();
         }
         public Obra ObraPorDireccion(string direccion)
         {
@@ -186,14 +188,40 @@ namespace LogicaAccesoDatos.Repositorios
             return RepositorioMaterial.TomarTodos();
         }
 
-        public void AgregarMaterial(string nombre, int stock, string unidadDeMedida)
+        public void AgregarMaterial(Material nuevoMaterial)
         {
-            RepositorioMaterial.Agregar(nombre, stock, unidadDeMedida);
+            RepositorioMaterial.Agregar(nuevoMaterial);
         }
 
-        public void EliminarMaterial(int id)
+        public void EliminarMaterial(Material material)
         {
-            RepositorioMaterial.Eliminar(id);
+            RepositorioMaterial.Eliminar(material);
         }
+
+        public Material BuscarMaterial(int id)
+        {
+            return RepositorioMaterial.Buscar(id);
+        }
+
+        public void ModificarMaterial(Material material)
+        {
+            RepositorioMaterial.Modificar(material);
+        }
+
+        public IEnumerable <Material> MaterialesFiltrados(string nombre)
+        {
+            return RepositorioMaterial.MaterialesFiltados(nombre);
+        }
+
+        public IEnumerable<Solicitud> SolicitudesDeObra(int idObra)
+        {
+            return RepositorioSolicitud.SolicitudesDeObra(idObra);
+        }
+
+        public IEnumerable<Material> TodosLosMateriales()
+        {
+            return RepositorioMaterial.TomarTodos();
+        }
+
     }
 }

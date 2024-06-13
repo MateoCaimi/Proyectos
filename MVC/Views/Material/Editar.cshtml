@@ -1,45 +1,38 @@
 ﻿@model LogicaNegocio.Entidades.Material
 
 @{
-    ViewData["Title"] = "Agregar";
+    ViewData["Title"] = "Editar";
 }
 
-<h1>Agregar</h1>
+<h1>Editar</h1>
 
 <h4>Material</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Agregar">
+        <form asp-action="Editar">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <label asp-for="Nombre" class="control-label">Nombre:</label>
+                <label asp-for="Nombre" class="control-label"></label>
                 <input asp-for="Nombre" class="form-control" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="UnidadDeMedida" class="control-label">Unidad de medida:</label>
+                <label asp-for="UnidadDeMedida" class="control-label"></label>
                 <input asp-for="UnidadDeMedida" class="form-control" />
                 <span asp-validation-for="UnidadDeMedida" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Volver al listado</a>
+    <a asp-action="Index">Back to List</a>
 </div>
-
-
-@if (ViewBag.Error != null)
-{
-    <div class="alert alert-danger">
-        @ViewBag.Error
-    </div>
-}
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

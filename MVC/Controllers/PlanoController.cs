@@ -29,10 +29,6 @@ namespace MVC.Controllers
 
         private Fachada Fachada = new Fachada();
 
-        public PlanoController()
-        {
-            
-        }
 
         // GET: PlanoController
         public ActionResult Index(int idObra)

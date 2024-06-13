@@ -14,14 +14,14 @@ namespace MVC.Controllers
         public ActionResult Index()
         {
 
-            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            {
-                return RedirectToAction("Index", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
-            {
-                return RedirectToAction("Listado", "Usuario");
-            }
+            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            //{
+            //    return RedirectToAction("Index", "Usuario");
+            //}
+            //else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            //{
+            //    return RedirectToAction("Listado", "Usuario");
+            //}
 
 
             IEnumerable<Obra> obras = Fachada.TomarTodasObras();
@@ -72,7 +72,6 @@ namespace MVC.Controllers
                     obra.AprobadorMasComun = Fachada.AprobadorMasComun(obra.Obra.IdObra);
                     obra.ProveedorMasComun = Fachada.ProveedorMasComun(obra.Obra.IdObra);
                 }
-                //Qr(id);
                 return View(obra);
             }
             catch (ObraException e)
@@ -99,8 +98,6 @@ namespace MVC.Controllers
             //    return RedirectToAction("Index", "Home");
             //}
 
-            /*Usuario uAdminTesting = new UAdministrador("Federico Ruiz Estévez", "federuiz2729", "Pepepepe123");
-            Fachada.AgregarUsuario(uDeObraTesting);*/
             ViewBag.Usuarios = Fachada.ObtenerUsuariosDeObra();
             return View();
         }
@@ -346,8 +343,6 @@ namespace MVC.Controllers
             //    return RedirectToAction("Index", "Home");
             //}
 
-
-
             Obra obraACerrar = Fachada.BuscarObra(id);
             try
             {
@@ -471,6 +466,10 @@ namespace MVC.Controllers
 
             return File((byte[])converter.ConvertTo(tempBitmap, typeof(byte[])), "image/png", obra.Nombre + " - QR.png");
             }
+
+
+
+
 
     }
 }

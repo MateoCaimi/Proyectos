@@ -1,0 +1,95 @@
+﻿@model LogicaNegocio.Entidades.Solicitud
+
+@{
+    ViewBag.Title = "Solicitud de Material";
+}
+
+<h2>Solicitud de material</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
+}
+else
+{
+    @using (Html.BeginForm("Crear", "Solicitud", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <div>
+            <label>Nombre de la obra</label>
+            @Html.HiddenFor(m => m.IdObra)
+            <input type="text" class="form-control" value="@ViewBag.IdObra" readonly="readonly" />
+        </div>
+
+        <div>
+            <label>Material</label>
+            <select id="Material" class="form-control">
+                @foreach (var item in ViewBag.Materiales)
+                {
+                    <option value="@item.Id">@item.Nombre</option>
+                }
+            </select>
+            <label>Cantidad</label>
+            <input type="number" name="Cantidad" class="form-control" />
+            <button type="button" id="addItem" class="btn btn-primary">Agregar</button>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Material</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+            <tbody id="materialList">
+                @if (ViewBag.TempMaterials != null)
+                {
+                    foreach (var item in ViewBag.TempMaterials)
+                    {
+                        <tr>
+                            <td>@item.Material</td>
+                            <td>@item.Cantidad</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+        <button type="submit" class="btn btn-success">Enviar</button>
+    }
+}
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#addItem").click(function () {
+                var nuevoMaterialId = $("select[name='IdMaterial']").val();
+                var nuevoMaterialTexto = $("select[name='IdMaterial'] option:selected").text();
+                var nuevaCantidad = $("input[name='Cantidad']").val();
+                if (nuevoMaterialId && nuevaCantidad) {
+                    $.ajax({
+                        url: '@Url.Action("Agregar", "Solicitud")',
+                        type: 'POST',
+                        data: {
+                            IdMaterial: nuevoMaterialId,
+                            Material: nuevoMaterialTexto,
+                            Cantidad: nuevaCantidad,
+                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function (response) {
+                            $("#materialList").html(response);
+                            $("input[name='Cantidad']").val('');
+                        },
+                        error: function () {
+                            alert("Error al agregar el material. Inténtalo de nuevo.");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    }

@@ -88,15 +88,16 @@
 
 <div>
     <a asp-action="Editar" asp-route-id="@Model?.Obra.IdObra">Modificar</a> |
-    <a asp-action="Eliminar" asp-route-id="@Model?.Obra.IdObra">Eliminar</a>
+    <a asp-action="Eliminar" asp-route-id="@Model?.Obra.IdObra">Eliminar</a>|
     
     @if (!Model.Obra.Finalizada)
     {
-        <a asp-action="Cerrar" asp-route-id="@Model?.Obra.IdObra">Cerrar Obra</a>
+        <a asp-action="Cerrar" asp-route-id="@Model?.Obra.IdObra">| Cerrar Obra</a>
     }
-    <a href="@Url.Action("Index","Plano", new{idObra = Model?.Obra.IdObra})">Planos</a>
+    <a href="@Url.Action("Index","Plano", new{idObra = Model?.Obra.IdObra})">Planos</a>|
 
-    <a asp-action="ObtenerQr" asp-route-id="@Model?.Obra.IdObra">Código QR</a>
+    <a asp-action="ObtenerQr" asp-route-id="@Model?.Obra.IdObra">Código QR</a>|
+    <a href="@Url.Action("Index","Solicitud", new{idObra = Model?.Obra.IdObra})">Ver solicitudes</a>|
 
 
     <a asp-action="Index">Back to List</a>
