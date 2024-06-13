@@ -32,14 +32,14 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Index(string nombre, string direccion, bool finalizada)
         {
-            //    if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //    {
-            //        return RedirectToAction("Index", "Usuario");
-            //    }
-            //    else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
-            //    {
-            //        return RedirectToAction("Listado", "Usuario");
-            //    }
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
 
 
 
@@ -48,18 +48,18 @@ namespace MVC.Controllers
             return View(listadoObras);
         }
 
-        // GET: ObraController/Details/5
+       // GET: ObraController/Details/5
         public ActionResult Detalles(int id)
         {
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
-            //detalles de obra solo ve el u de ofi o tambien de obra
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+         //   detalles de obra solo ve el u de ofi o tambien de obra
 
             try
             {
@@ -86,18 +86,18 @@ namespace MVC.Controllers
         // GET: ObraController/Create
         public ActionResult Agregar()
         {
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
-            //{
-            //    return RedirectToAction("Index", "Home");
-            //}
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
             /*Usuario uAdminTesting = new UAdministrador("Federico Ruiz Estévez", "federuiz2729", "Pepepepe123");
             Fachada.AgregarUsuario(uDeObraTesting);*/
@@ -110,18 +110,18 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Agregar(Obra aIngresar, IFormFile archivoImagen)
         {
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
-            //{
-            //    return RedirectToAction("Index", "Home");
-            //}
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
             try
             {
@@ -155,19 +155,19 @@ namespace MVC.Controllers
         public ActionResult Editar(int id)
         {
 
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
-            //{
-            //    return RedirectToAction("Index", "Home");
-            //}
-            // no deberia editar mas nadie que el u de oficina
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+           // no deberia editar mas nadie que el u de oficina
 
             try
             {
@@ -189,18 +189,18 @@ namespace MVC.Controllers
         public async Task<ActionResult> EditarConfirmado(Obra nuevaObra, IFormFile archivoImagen)
         {
 
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
-            //{
-            //    return RedirectToAction("Index", "Home");
-            //}
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
 
             try
@@ -236,18 +236,18 @@ namespace MVC.Controllers
         public ActionResult Eliminar(int id)
         {
 
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
-            //{
-            //    return RedirectToAction("Index", "Home");
-            //}
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
 
 
@@ -270,18 +270,18 @@ namespace MVC.Controllers
         public ActionResult EliminarConfirmado(int id)
         {
 
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
-            //{
-            //    return RedirectToAction("Index", "Home");
-            //}
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
 
             try
@@ -302,18 +302,18 @@ namespace MVC.Controllers
         public ActionResult Cerrar(int id)
         {
 
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
-            //{
-            //    return RedirectToAction("Index", "Home");
-            //}
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
             try
             {
@@ -333,18 +333,18 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CerrarConfirmado(int id)
         {
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
-            //{
-            //    return RedirectToAction("Index", "Home");
-            //}
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
 
 
@@ -365,15 +365,15 @@ namespace MVC.Controllers
         public IActionResult ObtenerCronograma(int id)
         {
 
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
-            
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+
 
             Obra obra = Fachada.BuscarObra(id);
 
@@ -388,15 +388,15 @@ namespace MVC.Controllers
 
         public async Task<IActionResult> ObtenerQr(int id)
         {
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
-            
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+
 
 
             string data = $"HOLAMUNDO"; 
@@ -435,15 +435,15 @@ namespace MVC.Controllers
             public IActionResult Qr(int id)
             {
 
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
-           
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+
 
             Obra obra = Fachada.BuscarObra(id);
 

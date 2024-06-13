@@ -195,5 +195,10 @@ namespace LogicaAccesoDatos.Repositorios
         {
             RepositorioMaterial.Eliminar(id);
         }
+
+        public Usuario BuscarUsuarioXNombreU(string nombreUsuario)
+        {
+            return RepositorioUsuario.UsuarioPorNombreUsuario(nombreUsuario);
+        }
     }
 }
