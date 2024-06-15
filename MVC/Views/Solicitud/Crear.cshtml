@@ -1,7 +1,7 @@
-﻿@model LogicaNegocio.Entidades.Solicitud
+﻿@model LogicaNegocio.ViewModel.SolicitudMaterialesViewModel
 
 @{
-    ViewBag.Title = "Solicitud de Material";
+    ViewData["Title"] = "Solicitud de material";
 }
 
 <h2>Solicitud de material</h2>
@@ -20,7 +20,7 @@ else
 
         <div>
             <label>Nombre de la obra</label>
-            @Html.HiddenFor(m => m.IdObra)
+            @Html.HiddenFor(m => m.Solicitud.IdObra)
             <input type="text" class="form-control" value="@ViewBag.IdObra" readonly="readonly" />
         </div>
 
@@ -45,9 +45,9 @@ else
                 </tr>
             </thead>
             <tbody id="materialList">
-                @if (ViewBag.TempMaterials != null)
+                @if (Model.TempMaterials != null)
                 {
-                    foreach (var item in ViewBag.TempMaterials)
+                    foreach (var item in Model.TempMaterials)
                     {
                         <tr>
                             <td>@item.Material</td>
@@ -92,4 +92,4 @@ else
             });
         });
     </script>
-    }
+}

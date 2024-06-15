@@ -1,5 +1,6 @@
 ﻿using LogicaAccesoDatos.Repositorios;
 using LogicaNegocio.Entidades;
+using LogicaNegocio.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,15 +34,10 @@ namespace MVC.Controllers
                     ViewBag.Materiales = Fachada.TodosLosMateriales();
                     ViewBag.IdObra = idObra;
 
-                    if (TempData["TempMaterials"] == null)
-                    {
-                        TempData["TempMaterials"] = new List<SolicitudMaterial>();
-                    }
+                    SolicitudMaterialesViewModel vm = new SolicitudMaterialesViewModel();
+                    vm.TempMaterials = new List<SolicitudMaterial>();
 
-                    ViewBag.TempMaterials = TempData["TempMaterials"] as List<SolicitudMaterial>;
-                    TempData.Keep("TempMaterials");
-
-                    return View();
+                    return View(vm);
                 }
                 else
                 {
