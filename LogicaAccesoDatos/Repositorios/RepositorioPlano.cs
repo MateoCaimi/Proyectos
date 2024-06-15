@@ -2,6 +2,7 @@
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones;
 using LogicaNegocio.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -154,5 +155,21 @@ namespace LogicaAccesoDatos.Repositorios
             throw new NotImplementedException();
         }
 
+        public List<Plano> CrearPlanosMultiples(int idObra, int idTipoPlano, List<IFormFile> postedFiles)
+        {
+            List<Plano> list = new List<Plano>();
+            foreach (IFormFile f in postedFiles)
+            {
+                Plano p = new Plano();
+                p.IdObra = idObra;
+                p.Nombre = f.FileName;
+                p.IdTipoPlano = idTipoPlano;
+                p.NombrePdf = f.FileName;
+                p.TipoPdf = f.ContentType;
+                list.Add(p);
+            }
+
+            return list;
+        }
     }
 }

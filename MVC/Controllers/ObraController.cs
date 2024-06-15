@@ -36,7 +36,7 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
             {
                 return RedirectToAction("Listado", "Usuario");
             }
@@ -55,7 +55,7 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
             {
                 return RedirectToAction("Listado", "Usuario");
             }
@@ -89,11 +89,11 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
             {
                 return RedirectToAction("Listado", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario de oficina")
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -111,11 +111,11 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
             {
                 return RedirectToAction("Listado", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario de oficina")
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -156,11 +156,11 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
             {
                 return RedirectToAction("Listado", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario de oficina")
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -190,11 +190,11 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
             {
                 return RedirectToAction("Listado", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario de oficina")
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -237,11 +237,11 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
             {
                 return RedirectToAction("Listado", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario de oficina")
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -271,11 +271,11 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
             {
                 return RedirectToAction("Listado", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario de oficina")
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -303,11 +303,11 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
             {
                 return RedirectToAction("Listado", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario de oficina")
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -334,11 +334,11 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
             {
                 return RedirectToAction("Listado", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario de oficina")
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -364,7 +364,7 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
             {
                 return RedirectToAction("Listado", "Usuario");
             }
@@ -387,7 +387,7 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
             {
                 return RedirectToAction("Listado", "Usuario");
             }
@@ -434,7 +434,7 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
             {
                 return RedirectToAction("Listado", "Usuario");
             }

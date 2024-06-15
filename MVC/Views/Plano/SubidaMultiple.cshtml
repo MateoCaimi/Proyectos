@@ -1,0 +1,42 @@
+﻿@using LogicaNegocio.Entidades
+@model LogicaNegocio.Entidades.Plano
+
+@{
+    ViewData["Title"] = "AgregarMultiplesPlanos";
+}
+
+<h1>Agregar</h1>
+
+<html>
+<head>
+    <title>Index</title>
+</head>
+<body>
+
+    <div>
+        @using (Html.BeginForm("SubidaMultiple", "Plano", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="form-group">
+                <label for="IdTipoPlano" class="control-label"></label>
+                <select id="IdTipoPlano" name="IdTipoPlano" class="form-control">
+                    <option value="">-- Selecciona una carpeta para los planos --</option>
+                    @foreach (var tipo in ViewBag.TiposdePlano)
+                    {
+                        <option value="@tipo.Id">@tipo.Categoria</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="IdTipoPlano" class="control-label"></label>
+                <input type="number" hidden="true" id="IdObra" name="IdObra" value="@ViewBag.IdObra" />
+            </div>
+            <span>Seleccionar archivos:</span>
+            <input type="file" name="postedFiles" multiple="multiple"/>
+            <hr/>
+            <input type="submit" value="Subir"/>
+            <br/>
+            <span style="color:green">@Html.Raw(ViewBag.Message)</span>
+        }
+    </div>
+</body>
+</html>

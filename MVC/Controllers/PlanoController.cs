@@ -267,8 +267,54 @@ namespace MVC.Controllers
             return View(planos);
 
         }
+        public ActionResult SubidaMultiple(int idObra)
+        {
+            TempData["Error"] = null;
+            ViewBag.IdObra = idObra;
+            if (!Fachada.BuscarObra(idObra).Finalizada)
+            {
+                ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
+                return View();
+            }
+            else
+            {
+                TempData["Error"] = "No se puede agregar planos a una obra finalizada.";
+                return RedirectToAction("Index", new { idObra = idObra });
+            }
+        }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SubidaMultiple(int IdObra, int idTipoPlano, List<IFormFile> postedFiles)
+        {
+            
+            TempData["Error"] = null;
+            ViewBag.IdObra = IdObra;
+            if (!Fachada.BuscarObra(IdObra).Finalizada)
+            {
+                List<Plano> planos = Fachada.CrearPlanosMultiples(IdObra, idTipoPlano, postedFiles);
+                for(int i = 0; i < planos.Count(); i++)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await postedFiles[i].CopyToAsync(memoryStream);
+                        planos[i].Pdf = memoryStream.ToArray();
+                    }
+                }
+                foreach(Plano p in planos)
+                {
+                    Fachada.AgregarPlano(p);
+                }
+                return View();
+            }
+            else
+            {
+                TempData["Error"] = "No se puede agregar planos a una obra finalizada.";
+                return RedirectToAction("Index", new { idObra = IdObra });
+            }
+        }
     }
+
 }
 
 
@@ -367,3 +413,4 @@ namespace MVC.Controllers
         //        throw;
         //    }
         //}
+

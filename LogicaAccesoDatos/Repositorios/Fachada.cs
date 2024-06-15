@@ -1,5 +1,6 @@
 ﻿using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -226,6 +227,11 @@ namespace LogicaAccesoDatos.Repositorios
         public Usuario BuscarUsuarioXNombreU(string nombreUsuario)
         {
             return RepositorioUsuario.UsuarioPorNombreUsuario(nombreUsuario);
+        }
+
+        public List<Plano> CrearPlanosMultiples(int idObra, int idTipoPlano, List<IFormFile> postedFiles)
+        {
+            return RepositorioPlano.CrearPlanosMultiples(idObra, idTipoPlano, postedFiles);
         }
     }
 }
