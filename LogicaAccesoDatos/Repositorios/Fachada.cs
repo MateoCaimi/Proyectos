@@ -233,5 +233,30 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioPlano.CrearPlanosMultiples(idObra, idTipoPlano, postedFiles);
         }
+
+        public void AgregarSolicitud(Solicitud solicitud)
+        {
+            RepositorioSolicitud.Agregar(solicitud);
+        }
+
+        public void AgregarSolicitudMateriales(List<SolicitudMaterial>? item)
+        {
+            RepositorioSolicitud.AgregarSolicitudMateriales(item);
+        }
+
+        public List<SolicitudMaterial>? DarIdAMaterialesSolicitud(Solicitud solicitud, List<SolicitudMaterial>? item)
+        {
+            return RepositorioSolicitud.DarIdAMaterialesSolicitud(solicitud, item);
+        }
+
+        public Solicitud BuscarSolicitud(int id)
+        {
+            return RepositorioSolicitud.Buscar(id);
+        }
+
+        public IEnumerable<SolicitudMaterial> BuscarMaterialesSolicitud(int id)
+        {
+            return RepositorioSolicitud.MaterialesDeSolicitud(id);
+        }
     }
 }

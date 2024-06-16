@@ -30,6 +30,16 @@ namespace LogicaNegocio.Entidades
             
         }
 
+        public SolicitudMaterial(Solicitud solicitud, Material material, int cantidad)
+        {
+            this.Solicitud = solicitud;
+            this.IdSolicitud = solicitud.Id;
+            this.Material = material;
+            this.Material.Id = material.Id;
+            this.Cantidad = cantidad;
+
+        }
+
         public void Validar()
         {
             if(Cantidad <= 0)

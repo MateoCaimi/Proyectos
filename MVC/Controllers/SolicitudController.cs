@@ -3,6 +3,9 @@ using LogicaNegocio.Entidades;
 using LogicaNegocio.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Graph.Models;
+using Microsoft.Graph.Models.Security;
+using Newtonsoft.Json;
 
 namespace MVC.Controllers
 {
@@ -21,7 +24,10 @@ namespace MVC.Controllers
         // GET: SolicitudController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            IEnumerable<SolicitudMaterial> solicitudMateriales = Fachada.BuscarMaterialesSolicitud(id);
+            Solicitud solicitud = Fachada.BuscarSolicitud(id);
+            ViewBag.Materiales = solicitudMateriales;
+            return View(solicitud);
         }
 
         // GET: SolicitudController/Create
@@ -29,6 +35,7 @@ namespace MVC.Controllers
         {
             try
             {
+                TempData["ListaActual"] = null;
                 if (!Fachada.BuscarObra(idObra).Finalizada)
                 {
                     ViewBag.Materiales = Fachada.TodosLosMateriales();
@@ -59,23 +66,16 @@ namespace MVC.Controllers
         {
             try
             {
-                //// Guardar la solicitud en la base de datos
-                //using (var context = new YourDbContext())
-                //{
-                //    context.Solicitudes.Add(solicitud);
-                //    context.SaveChanges();
-
-                //    // Recuperar los materiales desde TempData y guardarlos en la base de datos
-                //    var tempMaterials = TempData["TempMaterials"] as List<SolicitudMaterial>;
-                //    foreach (var material in tempMaterials)
-                //    {
-                //        material.SolicitudId = solicitud.Id;
-                //        context.SolicitudMateriales.Add(material);
-                //    }
-                //    context.SaveChanges();
-                //}
-
-                //TempData["TempMaterials"] = null;
+                List<SolicitudMaterial> item = JsonConvert.DeserializeObject<List<SolicitudMaterial>>((string)TempData["ListaActual"]);
+                Obra obra = Fachada.BuscarObra(IdObra);
+                Solicitud solicitud = new Solicitud();
+                solicitud.IdObra = IdObra;
+                Usuario solicitante = Fachada.BuscarUsuarioXNombreU(HttpContext.Session.GetString("UsuarioLogueado"));
+                solicitud.IdUsuario = solicitante.Id;
+                solicitud.Estado = Estado.Solicitado;
+                Fachada.AgregarSolicitud(solicitud);
+                item = Fachada.DarIdAMaterialesSolicitud(solicitud, item);
+                Fachada.AgregarSolicitudMateriales(item);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -86,14 +86,24 @@ namespace MVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult Agregar(SolicitudMaterial solicitudMaterial, List<SolicitudMaterial> tempMaterials)
+        public ActionResult Agregar(SolicitudMaterial solicitudMaterial)
         {
             try
             {
-                solicitudMaterial.Material = Fachada.BuscarMaterial(solicitudMaterial.IdMaterial);
-                tempMaterials.Add(solicitudMaterial);
+                List<SolicitudMaterial> item;
+                if (TempData["ListaActual"] != null)
+                {
+                    item = JsonConvert.DeserializeObject<List<SolicitudMaterial>>((string)TempData["ListaActual"]);
+                }
+                else
+                {
+                    item = new List<SolicitudMaterial>();
+                }
+
+                item.Add(solicitudMaterial);
+                TempData["ListaActual"] = JsonConvert.SerializeObject(item);
                 ViewBag.Materiales = Fachada.TodosLosMateriales();
-                return PartialView("ListaMateriales", tempMaterials); // Aquí se usa ListaMateriales
+                return PartialView("ListaMateriales", item); // Aquí se usa ListaMateriales
             }
             catch
             {

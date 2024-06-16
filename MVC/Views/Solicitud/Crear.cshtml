@@ -53,6 +53,7 @@ else
                             <td>@item.Cantidad</td>
                         </tr>
                     }
+                    
                 }
             </tbody>
         </table>
@@ -67,17 +68,15 @@ else
         $(document).ready(function () {
             $("#addItem").click(function () {
                 var nuevoMaterialId = $("select[name='Material'] option:selected").val();
-                console.log(nuevoMaterialId);
                 var nuevoMaterialTexto = $("select[name='Material'] option:selected").text();
-                console.log(nuevoMaterialTexto);
                 var nuevaCantidad = $("input[name='Cantidad']").val();
-                console.log(nuevaCantidad);
-                if (nuevoMaterialId != null && nuevaCantidad != null) {
 
-                    $.ajax({
+                
+                if (nuevoMaterialId != null && nuevaCantidad != null ) {
+
+                    $.ajax({                        
                         url: '@Url.Action("Agregar", "Solicitud", Model.ToList())',
                         type: 'POST',
-                        async: 'false',
                         data: {
                             IdMaterial: nuevoMaterialId,
                             Cantidad: nuevaCantidad,

@@ -219,10 +219,10 @@ namespace LogicaAccesoDatos.Repositorios
                 KeyValuePair<Proveedor, int> var = retorno.First(r => r.Key.Id == s.IdProveedor);
                 if (var.Key != null)
                 {
-                    retorno.Add(BuscarProveedor(s.IdProveedor), 1);
+                    retorno.Add(BuscarProveedor((int)s.IdProveedor), 1);
                 }
                 else{
-                    var = new KeyValuePair<Proveedor, int>(BuscarProveedor(s.IdProveedor), var.Value + 1);
+                    var = new KeyValuePair<Proveedor, int>(BuscarProveedor((int)s.IdProveedor), var.Value + 1);
                 }
             }
             if (retorno.Count > 0)
