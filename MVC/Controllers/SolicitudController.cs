@@ -34,10 +34,8 @@ namespace MVC.Controllers
                     ViewBag.Materiales = Fachada.TodosLosMateriales();
                     ViewBag.IdObra = idObra;
 
-                    SolicitudMaterialesViewModel vm = new SolicitudMaterialesViewModel();
-                    vm.TempMaterials = new List<SolicitudMaterial>();
-
-                    return View(vm);
+                    List<SolicitudMaterial> tempMaterials = new List<SolicitudMaterial>();
+                    return View(tempMaterials);
                 }
                 else
                 {
@@ -55,9 +53,9 @@ namespace MVC.Controllers
         }
 
         // POST: SolicitudController/Crear
-        [HttpPost]
+        [HttpPost, ActionName("Crear")]
         [ValidateAntiForgeryToken]
-        public ActionResult Crear(Solicitud solicitud)
+        public ActionResult CrearPost(int IdObra)
         {
             try
             {
@@ -88,16 +86,13 @@ namespace MVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult Agregar(SolicitudMaterial solicitudMaterial)
+        public ActionResult Agregar(SolicitudMaterial solicitudMaterial, List<SolicitudMaterial> tempMaterials)
         {
             try
             {
-                var tempMaterials = TempData["TempMaterials"] as List<SolicitudMaterial>;
+                solicitudMaterial.Material = Fachada.BuscarMaterial(solicitudMaterial.IdMaterial);
                 tempMaterials.Add(solicitudMaterial);
-
-                TempData["TempMaterials"] = tempMaterials;
-                TempData.Keep("TempMaterials");
-
+                ViewBag.Materiales = Fachada.TodosLosMateriales();
                 return PartialView("ListaMateriales", tempMaterials); // Aquí se usa ListaMateriales
             }
             catch

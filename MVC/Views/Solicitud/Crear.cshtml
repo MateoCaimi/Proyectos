@@ -1,4 +1,4 @@
-﻿@model LogicaNegocio.ViewModel.SolicitudMaterialesViewModel
+﻿@model IEnumerable<LogicaNegocio.Entidades.SolicitudMaterial>
 
 @{
     ViewData["Title"] = "Solicitud de material";
@@ -20,13 +20,12 @@ else
 
         <div>
             <label>Nombre de la obra</label>
-            @Html.HiddenFor(m => m.Solicitud.IdObra)
-            <input type="text" class="form-control" value="@ViewBag.IdObra" readonly="readonly" />
+            <input type="text" class="form-control" value="@ViewBag.IdObra" name="IdObra" readonly="readonly" />
         </div>
 
         <div>
             <label>Material</label>
-            <select id="Material" class="form-control">
+            <select id="Material" name="Material" class="form-control">
                 @foreach (var item in ViewBag.Materiales)
                 {
                     <option value="@item.Id">@item.Nombre</option>
@@ -45,12 +44,12 @@ else
                 </tr>
             </thead>
             <tbody id="materialList">
-                @if (Model.TempMaterials != null)
+                @if (Model != null)
                 {
-                    foreach (var item in Model.TempMaterials)
+                    foreach (var item in Model)
                     {
                         <tr>
-                            <td>@item.Material</td>
+                            <td>@item.Material.Nombre</td>
                             <td>@item.Cantidad</td>
                         </tr>
                     }
@@ -67,16 +66,20 @@ else
     <script>
         $(document).ready(function () {
             $("#addItem").click(function () {
-                var nuevoMaterialId = $("select[name='IdMaterial']").val();
-                var nuevoMaterialTexto = $("select[name='IdMaterial'] option:selected").text();
+                var nuevoMaterialId = $("select[name='Material'] option:selected").val();
+                console.log(nuevoMaterialId);
+                var nuevoMaterialTexto = $("select[name='Material'] option:selected").text();
+                console.log(nuevoMaterialTexto);
                 var nuevaCantidad = $("input[name='Cantidad']").val();
-                if (nuevoMaterialId && nuevaCantidad) {
+                console.log(nuevaCantidad);
+                if (nuevoMaterialId != null && nuevaCantidad != null) {
+
                     $.ajax({
-                        url: '@Url.Action("Agregar", "Solicitud")',
+                        url: '@Url.Action("Agregar", "Solicitud", Model.ToList())',
                         type: 'POST',
+                        async: 'false',
                         data: {
                             IdMaterial: nuevoMaterialId,
-                            Material: nuevoMaterialTexto,
                             Cantidad: nuevaCantidad,
                             __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
                         },
