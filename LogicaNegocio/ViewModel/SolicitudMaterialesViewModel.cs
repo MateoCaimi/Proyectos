@@ -9,7 +9,7 @@ namespace LogicaNegocio.ViewModel
 {
     public class SolicitudMaterialesViewModel
     {
-        public Solicitud Solicitud { get; set; }
+        public List<SolicitudMaterial> MainMaterials { get; set; }
         public List<SolicitudMaterial> TempMaterials { get; set; }
     }
 }

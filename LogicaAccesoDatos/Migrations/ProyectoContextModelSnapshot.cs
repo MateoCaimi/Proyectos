@@ -91,9 +91,6 @@ namespace LogicaAccesoDatos.Migrations
                     b.Property<int?>("ObraIdObra")
                         .HasColumnType("int");
 
-                    b.Property<int>("Stock")
-                        .HasColumnType("int");
-
                     b.Property<string>("UnidadDeMedida")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -247,36 +244,30 @@ namespace LogicaAccesoDatos.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AprovadorId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Estado")
                         .HasColumnType("int");
 
                     b.Property<int>("IdObra")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdProveedor")
+                    b.Property<int?>("IdProveedor")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdUDeOficina")
+                    b.Property<int?>("IdUDeOficina")
                         .HasColumnType("int");
 
                     b.Property<int>("IdUsuario")
                         .HasColumnType("int");
 
-                    b.Property<int>("SolicitanteId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("AprovadorId");
 
                     b.HasIndex("IdObra");
 
                     b.HasIndex("IdProveedor");
 
-                    b.HasIndex("SolicitanteId");
+                    b.HasIndex("IdUDeOficina");
+
+                    b.HasIndex("IdUsuario");
 
                     b.ToTable("Solicitudes");
                 });
@@ -473,10 +464,6 @@ namespace LogicaAccesoDatos.Migrations
 
             modelBuilder.Entity("LogicaNegocio.Entidades.Solicitud", b =>
                 {
-                    b.HasOne("LogicaNegocio.Entidades.UDeOficina", "Aprovador")
-                        .WithMany()
-                        .HasForeignKey("AprovadorId");
-
                     b.HasOne("LogicaNegocio.Entidades.Obra", "Obra")
                         .WithMany()
                         .HasForeignKey("IdObra")
@@ -485,14 +472,17 @@ namespace LogicaAccesoDatos.Migrations
 
                     b.HasOne("LogicaNegocio.Entidades.Proveedor", "Proveedor")
                         .WithMany()
-                        .HasForeignKey("IdProveedor")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdProveedor");
+
+                    b.HasOne("LogicaNegocio.Entidades.UDeOficina", "Aprovador")
+                        .WithMany()
+                        .HasForeignKey("IdUDeOficina")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("LogicaNegocio.Entidades.Usuario", "Solicitante")
                         .WithMany()
-                        .HasForeignKey("SolicitanteId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("IdUsuario")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Aprovador");

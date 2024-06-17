@@ -6,26 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LogicaAccesoDatos.Migrations
 {
     /// <inheritdoc />
-    public partial class a : Migration
+    public partial class uno : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Materiales",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Stock = table.Column<int>(type: "int", nullable: false),
-                    UnidadDeMedida = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Materiales", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "ObrasEmpleados",
                 columns: table => new
@@ -93,8 +78,11 @@ namespace LogicaAccesoDatos.Migrations
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     NombreUsuario = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Contrasenia = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Tipo = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
-                    CambioContrasenia = table.Column<bool>(type: "bit", nullable: false)
+                    Tipo = table.Column<string>(type: "nvarchar(21)", maxLength: 21, nullable: false),
+                    CambioContrasenia = table.Column<bool>(type: "bit", nullable: false),
+                    IntentosFallidos = table.Column<int>(type: "int", nullable: false),
+                    UsuarioBloqueado = table.Column<bool>(type: "bit", nullable: false),
+                    TiempoDeBloqueo = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -171,6 +159,26 @@ namespace LogicaAccesoDatos.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Materiales",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UnidadDeMedida = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ObraIdObra = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Materiales", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Materiales_Obras_ObraIdObra",
+                        column: x => x.ObraIdObra,
+                        principalTable: "Obras",
+                        principalColumn: "IdObra");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Planos",
                 columns: table => new
                 {
@@ -182,8 +190,7 @@ namespace LogicaAccesoDatos.Migrations
                     IdObra = table.Column<int>(type: "int", nullable: false),
                     NombrePdf = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TipoPdf = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Pdf = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    Carpeta = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Pdf = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -208,12 +215,10 @@ namespace LogicaAccesoDatos.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    IdProveedor = table.Column<int>(type: "int", nullable: false),
+                    IdProveedor = table.Column<int>(type: "int", nullable: true),
                     IdObra = table.Column<int>(type: "int", nullable: false),
                     IdUsuario = table.Column<int>(type: "int", nullable: false),
-                    SolicitanteId = table.Column<int>(type: "int", nullable: false),
                     IdUDeOficina = table.Column<int>(type: "int", nullable: false),
-                    AprovadorId = table.Column<int>(type: "int", nullable: true),
                     Estado = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -229,19 +234,17 @@ namespace LogicaAccesoDatos.Migrations
                         name: "FK_Solicitudes_Proveedores_IdProveedor",
                         column: x => x.IdProveedor,
                         principalTable: "Proveedores",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Solicitudes_Usuarios_AprovadorId",
-                        column: x => x.AprovadorId,
+                        name: "FK_Solicitudes_Usuarios_IdUDeOficina",
+                        column: x => x.IdUDeOficina,
                         principalTable: "Usuarios",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Solicitudes_Usuarios_SolicitanteId",
-                        column: x => x.SolicitanteId,
+                        name: "FK_Solicitudes_Usuarios_IdUsuario",
+                        column: x => x.IdUsuario,
                         principalTable: "Usuarios",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -280,6 +283,11 @@ namespace LogicaAccesoDatos.Migrations
                 column: "IdEmpleado");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Materiales_ObraIdObra",
+                table: "Materiales",
+                column: "ObraIdObra");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Obras_IdACargo",
                 table: "Obras",
                 column: "IdACargo");
@@ -295,11 +303,6 @@ namespace LogicaAccesoDatos.Migrations
                 column: "IdTipoPlano");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Solicitudes_AprovadorId",
-                table: "Solicitudes",
-                column: "AprovadorId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Solicitudes_IdObra",
                 table: "Solicitudes",
                 column: "IdObra");
@@ -310,9 +313,14 @@ namespace LogicaAccesoDatos.Migrations
                 column: "IdProveedor");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Solicitudes_SolicitanteId",
+                name: "IX_Solicitudes_IdUDeOficina",
                 table: "Solicitudes",
-                column: "SolicitanteId");
+                column: "IdUDeOficina");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Solicitudes_IdUsuario",
+                table: "Solicitudes",
+                column: "IdUsuario");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SolicitudesMateriales_IdMaterial",

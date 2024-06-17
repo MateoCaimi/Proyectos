@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogicaAccesoDatos.Migrations
 {
     [DbContext(typeof(ProyectoContext))]
-    [Migration("20240610164436_b")]
-    partial class b
+    [Migration("20240616232050_uno")]
+    partial class uno
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -91,7 +91,7 @@ namespace LogicaAccesoDatos.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Stock")
+                    b.Property<int?>("ObraIdObra")
                         .HasColumnType("int");
 
                     b.Property<string>("UnidadDeMedida")
@@ -99,6 +99,8 @@ namespace LogicaAccesoDatos.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ObraIdObra");
 
                     b.ToTable("Materiales");
                 });
@@ -179,10 +181,6 @@ namespace LogicaAccesoDatos.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Carpeta")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("FechaPublicado")
                         .HasColumnType("datetime2");
 
@@ -249,16 +247,13 @@ namespace LogicaAccesoDatos.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AprovadorId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Estado")
                         .HasColumnType("int");
 
                     b.Property<int>("IdObra")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdProveedor")
+                    b.Property<int?>("IdProveedor")
                         .HasColumnType("int");
 
                     b.Property<int>("IdUDeOficina")
@@ -267,18 +262,15 @@ namespace LogicaAccesoDatos.Migrations
                     b.Property<int>("IdUsuario")
                         .HasColumnType("int");
 
-                    b.Property<int>("SolicitanteId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("AprovadorId");
 
                     b.HasIndex("IdObra");
 
                     b.HasIndex("IdProveedor");
 
-                    b.HasIndex("SolicitanteId");
+                    b.HasIndex("IdUDeOficina");
+
+                    b.HasIndex("IdUsuario");
 
                     b.ToTable("Solicitudes");
                 });
@@ -359,6 +351,9 @@ namespace LogicaAccesoDatos.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("IntentosFallidos")
+                        .HasColumnType("int");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -367,10 +362,16 @@ namespace LogicaAccesoDatos.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("TiempoDeBloqueo")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Tipo")
                         .IsRequired()
                         .HasMaxLength(21)
                         .HasColumnType("nvarchar(21)");
+
+                    b.Property<bool>("UsuarioBloqueado")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -427,6 +428,13 @@ namespace LogicaAccesoDatos.Migrations
                     b.Navigation("TipoEmpleado");
                 });
 
+            modelBuilder.Entity("LogicaNegocio.Entidades.Material", b =>
+                {
+                    b.HasOne("LogicaNegocio.Entidades.Obra", null)
+                        .WithMany("Materiales")
+                        .HasForeignKey("ObraIdObra");
+                });
+
             modelBuilder.Entity("LogicaNegocio.Entidades.Obra", b =>
                 {
                     b.HasOne("LogicaNegocio.Entidades.UDeObra", "UsuarioACargo")
@@ -459,10 +467,6 @@ namespace LogicaAccesoDatos.Migrations
 
             modelBuilder.Entity("LogicaNegocio.Entidades.Solicitud", b =>
                 {
-                    b.HasOne("LogicaNegocio.Entidades.UDeOficina", "Aprovador")
-                        .WithMany()
-                        .HasForeignKey("AprovadorId");
-
                     b.HasOne("LogicaNegocio.Entidades.Obra", "Obra")
                         .WithMany()
                         .HasForeignKey("IdObra")
@@ -471,14 +475,18 @@ namespace LogicaAccesoDatos.Migrations
 
                     b.HasOne("LogicaNegocio.Entidades.Proveedor", "Proveedor")
                         .WithMany()
-                        .HasForeignKey("IdProveedor")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("IdProveedor");
+
+                    b.HasOne("LogicaNegocio.Entidades.UDeOficina", "Aprovador")
+                        .WithMany()
+                        .HasForeignKey("IdUDeOficina")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("LogicaNegocio.Entidades.Usuario", "Solicitante")
                         .WithMany()
-                        .HasForeignKey("SolicitanteId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("IdUsuario")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Aprovador");
@@ -507,6 +515,11 @@ namespace LogicaAccesoDatos.Migrations
                     b.Navigation("Material");
 
                     b.Navigation("Solicitud");
+                });
+
+            modelBuilder.Entity("LogicaNegocio.Entidades.Obra", b =>
+                {
+                    b.Navigation("Materiales");
                 });
 
             modelBuilder.Entity("LogicaNegocio.Entidades.ObraEmpleado", b =>
