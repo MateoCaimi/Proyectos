@@ -14,11 +14,13 @@ namespace LogicaAccesoDatos.Repositorios
 {
     public class RepositorioSolicitud : IRepositorioSolicitud
     {
+      
         public ProyectoContext Context { get; set; }
 
         public RepositorioSolicitud()
         {
             this.Context = new ProyectoContext();
+               
         }
 
         public void Agregar(Solicitud item)
@@ -80,6 +82,16 @@ namespace LogicaAccesoDatos.Repositorios
             solicitud.IdUsuario = idSolicitante;
             solicitud.Estado = Estado.Solicitado;
             return solicitud;
+        }
+
+        internal void AsignarMat(SolicitudMaterial solicitudMaterial)
+        {
+            Fachada fachada = new Fachada();
+            if (solicitudMaterial != null)
+            {
+                solicitudMaterial.Material = fachada.BuscarMaterial(solicitudMaterial.IdMaterial);
+                Context.SaveChanges();
+            }
         }
     }
 }
