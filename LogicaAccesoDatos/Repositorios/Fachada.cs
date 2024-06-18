@@ -258,5 +258,25 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioSolicitud.CrearSolicitud(idObra, idSolicitante);
         }
+
+        public IEnumerable<Solicitud> BuscarSolicitudPendientes()
+        {
+            return RepositorioSolicitud.BuscarSolicitudesPendientes();
+        }
+
+        public IEnumerable<Solicitud> BuscarSolicitudAprobadas()
+        {
+            return RepositorioSolicitud.BuscarSolicitudesAprobadas();
+        }
+
+        public IEnumerable<Solicitud> BuscarSolicitudRechazadas()
+        {
+            return RepositorioSolicitud.BuscarSolicitudesRechazadas();
+        }
+
+        public IEnumerable<Solicitud> BuscarSolicitudRecibidas()
+        {
+            return RepositorioSolicitud.BuscarSolicitudesRecibido();
+        }
     }
 }

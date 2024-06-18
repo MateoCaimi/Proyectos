@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogicaAccesoDatos.Migrations
 {
     [DbContext(typeof(ProyectoContext))]
-    [Migration("20240616232050_uno")]
-    partial class uno
+    [Migration("20240618190137_m")]
+    partial class m
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -256,7 +256,7 @@ namespace LogicaAccesoDatos.Migrations
                     b.Property<int?>("IdProveedor")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdUDeOficina")
+                    b.Property<int?>("IdUDeOficina")
                         .HasColumnType("int");
 
                     b.Property<int>("IdUsuario")
@@ -480,8 +480,7 @@ namespace LogicaAccesoDatos.Migrations
                     b.HasOne("LogicaNegocio.Entidades.UDeOficina", "Aprovador")
                         .WithMany()
                         .HasForeignKey("IdUDeOficina")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("LogicaNegocio.Entidades.Usuario", "Solicitante")
                         .WithMany()

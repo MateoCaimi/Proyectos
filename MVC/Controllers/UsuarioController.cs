@@ -58,7 +58,7 @@ namespace MVC.Controllers
 
 
 
-            return RedirectToAction("Index", "Obra");
+            return RedirectToAction("Index", "Home");
         }
 
 

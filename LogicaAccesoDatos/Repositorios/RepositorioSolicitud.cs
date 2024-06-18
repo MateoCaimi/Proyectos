@@ -93,5 +93,25 @@ namespace LogicaAccesoDatos.Repositorios
                 Context.SaveChanges();
             }
         }
+
+        internal IEnumerable<Solicitud> BuscarSolicitudesPendientes()
+        {
+            return Context.Solicitudes.Where(sp => sp.Estado == Estado.Solicitado);
+        }
+
+        internal IEnumerable<Solicitud> BuscarSolicitudesAprobadas()
+        {
+            return Context.Solicitudes.Where(sp => sp.Estado == Estado.Aprobado);
+        }
+
+        internal IEnumerable<Solicitud> BuscarSolicitudesRechazadas()
+        {
+            return Context.Solicitudes.Where(sp => sp.Estado == Estado.Rechazado);
+        }
+
+        internal IEnumerable<Solicitud> BuscarSolicitudesRecibido()
+        {
+            return Context.Solicitudes.Where(sp => sp.Estado == Estado.Rechazado);
+        }
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LogicaAccesoDatos.Migrations
 {
     /// <inheritdoc />
-    public partial class uno : Migration
+    public partial class n : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -218,7 +218,7 @@ namespace LogicaAccesoDatos.Migrations
                     IdProveedor = table.Column<int>(type: "int", nullable: true),
                     IdObra = table.Column<int>(type: "int", nullable: false),
                     IdUsuario = table.Column<int>(type: "int", nullable: false),
-                    IdUDeOficina = table.Column<int>(type: "int", nullable: false),
+                    IdUDeOficina = table.Column<int>(type: "int", nullable: true),
                     Estado = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

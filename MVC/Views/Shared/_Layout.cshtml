@@ -10,6 +10,7 @@
 </head>
 <body>
     <header>
+        
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MVC</a>
@@ -49,11 +50,23 @@
                       
                     </ul>
 
-
+    
+                       
+                       
 
                     <ul class="navbar-nav flex-grow-1" style="justify-content:flex-end">
                         @if (Context.Session.GetString("UsuarioLogueado") != null)
                         {
+
+                            <div id="notification-container">
+                                <i id="notification-bell" class="fa fa-bell">IconCamp</i>
+                                <div id="notification-count" style="display: none;"></div>
+                                <div id="notifications" style="display: none;">
+                                    <ul id="notification-list"></ul>
+                                </div>
+                            </div>
+
+
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="CerrarSesion">Cerrar sesion</a>
                             </li>

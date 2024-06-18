@@ -101,7 +101,10 @@ namespace LogicaNegocio.Entidades
             this.FechaFinalizacion = DateTime.Now; //Hacer esto? Y solo a las finalizadas poder setear manualmente la finalización.
         }
 
-
+        public override string ToString()
+        {
+            return this.Nombre;
+        }
  
 
     }

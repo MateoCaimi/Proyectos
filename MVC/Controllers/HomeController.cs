@@ -24,11 +24,21 @@ namespace MVC.Controllers
             
             if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
-                return RedirectToAction("Index", "Usuario");
+
+            return RedirectToAction("Index", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
             {
                 return RedirectToAction("Listado", "Usuario");
+            }
+
+            if(HttpContext.Session.GetString("UsuarioTipo") == "Usuario de oficina")
+            {
+             IEnumerable<Solicitud> solicitudesPendientes = Fachada.BuscarSolicitudPendientes();
+                if(solicitudesPendientes != null)
+                {
+                return View(solicitudesPendientes);
+                }
             }
 
             /*Usuario usuarioTest = new UDeOficina("Federico Ruiz", "JorgeJorge123", "JorgeJorge123");
