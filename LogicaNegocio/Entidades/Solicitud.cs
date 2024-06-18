@@ -17,10 +17,8 @@ namespace LogicaNegocio.Entidades
         [ForeignKey("Proveedor")] public int? IdProveedor { get; set; }
         public Proveedor? Proveedor { get; set; }
         [ForeignKey("Obra")] public int IdObra { get; set; }
-        [Required(ErrorMessage = "Ingrese una Obra")]
         public Obra? Obra { get; set; }
         [ForeignKey("Solicitante")] public int IdUsuario { get; set; }
-        [Required(ErrorMessage = "Ingrese un solicitante")] // esto mas que requerido no es automatico?
         public Usuario? Solicitante { get; set; }
         [ForeignKey("Aprovador")] public int? IdUDeOficina { get; set; }
         public UDeOficina? Aprovador { get; set; }

@@ -239,14 +239,9 @@ namespace LogicaAccesoDatos.Repositorios
             RepositorioSolicitud.Agregar(solicitud);
         }
 
-        public void AgregarSolicitudMateriales(List<SolicitudMaterial>? item)
+        public void AgregarSolicitudMateriales(Solicitud solicitud, List<SolicitudMaterial>? item)
         {
-            RepositorioSolicitud.AgregarSolicitudMateriales(item);
-        }
-
-        public List<SolicitudMaterial>? DarIdAMaterialesSolicitud(Solicitud solicitud, List<SolicitudMaterial>? item)
-        {
-            return RepositorioSolicitud.DarIdAMaterialesSolicitud(solicitud, item);
+            RepositorioSolicitud.AgregarSolicitudMateriales(solicitud, item);
         }
 
         public Solicitud BuscarSolicitud(int id)
@@ -257,6 +252,11 @@ namespace LogicaAccesoDatos.Repositorios
         public IEnumerable<SolicitudMaterial> BuscarMaterialesSolicitud(int id)
         {
             return RepositorioSolicitud.MaterialesDeSolicitud(id);
+        }
+
+        public Solicitud CrearSolicitud(int idObra, int idSolicitante)
+        {
+            return RepositorioSolicitud.CrearSolicitud(idObra, idSolicitante);
         }
     }
 }

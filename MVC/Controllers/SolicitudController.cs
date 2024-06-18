@@ -3,6 +3,7 @@ using LogicaNegocio.Entidades;
 using LogicaNegocio.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.Graph.Models;
 using Microsoft.Graph.Models.Security;
 using Newtonsoft.Json;
@@ -22,11 +23,12 @@ namespace MVC.Controllers
         }
 
         // GET: SolicitudController/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(int id, int idObra)
         {
             IEnumerable<SolicitudMaterial> solicitudMateriales = Fachada.BuscarMaterialesSolicitud(id);
             Solicitud solicitud = Fachada.BuscarSolicitud(id);
             ViewBag.Materiales = solicitudMateriales;
+            ViewBag.IdObra = idObra;
             return View(solicitud);
         }
 
@@ -50,7 +52,7 @@ namespace MVC.Controllers
                     return View();
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 ViewBag.Error = e.Message;
                 ViewBag.IdObra = idObra;
@@ -67,21 +69,16 @@ namespace MVC.Controllers
             try
             {
                 List<SolicitudMaterial> item = JsonConvert.DeserializeObject<List<SolicitudMaterial>>((string)TempData["ListaActual"]);
-                Obra obra = Fachada.BuscarObra(IdObra);
-                Solicitud solicitud = new Solicitud();
-                solicitud.IdObra = IdObra;
                 Usuario solicitante = Fachada.BuscarUsuarioXNombreU(HttpContext.Session.GetString("UsuarioLogueado"));
-                solicitud.IdUsuario = solicitante.Id;
-                solicitud.Estado = Estado.Solicitado;
+                Solicitud solicitud = Fachada.CrearSolicitud(IdObra, solicitante.Id);
                 Fachada.AgregarSolicitud(solicitud);
-                item = Fachada.DarIdAMaterialesSolicitud(solicitud, item);
-                Fachada.AgregarSolicitudMateriales(item);
-
-                return RedirectToAction(nameof(Index));
+                Fachada.AgregarSolicitudMateriales(solicitud, item);
+                return RedirectToAction("Index", new { idObra = IdObra });
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                ViewBag.Error = e.Message;
+                return RedirectToAction("Index", new { idObra = IdObra });
             }
         }
 
@@ -90,20 +87,21 @@ namespace MVC.Controllers
         {
             try
             {
-                List<SolicitudMaterial> item;
+                List<SolicitudMaterial> lista;
                 if (TempData["ListaActual"] != null)
                 {
-                    item = JsonConvert.DeserializeObject<List<SolicitudMaterial>>((string)TempData["ListaActual"]);
+                    lista = JsonConvert.DeserializeObject<List<SolicitudMaterial>>((string)TempData["ListaActual"]);
                 }
                 else
                 {
-                    item = new List<SolicitudMaterial>();
+                    lista = new List<SolicitudMaterial>();
                 }
-
-                item.Add(solicitudMaterial);
-                TempData["ListaActual"] = JsonConvert.SerializeObject(item);
+                Material material = Fachada.BuscarMaterial(solicitudMaterial.IdMaterial);
+                solicitudMaterial.Material = material;
+                lista.Add(solicitudMaterial);
+                TempData["ListaActual"] = JsonConvert.SerializeObject(lista);
                 ViewBag.Materiales = Fachada.TodosLosMateriales();
-                return PartialView("ListaMateriales", item); // Aquí se usa ListaMateriales
+                return PartialView("ListaMateriales", lista); // Aquí se usa ListaMateriales
             }
             catch
             {
@@ -133,25 +131,6 @@ namespace MVC.Controllers
             }
         }
 
-        // GET: SolicitudController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
 
-        // POST: SolicitudController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
     }
 }
