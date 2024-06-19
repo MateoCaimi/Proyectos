@@ -33,20 +33,20 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var solicitud in Model)
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Obra)
+                            @solicitud.Obra.Nombre
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Solicitante.Nombre)
+                            @solicitud.Solicitante.Nombre
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Estado)
+                            @solicitud.Estado
                         </td>
                         <td>
-                            <a href="@Url.Action("Details", "Solicitud", new { id = item.Id, idObra = item.IdObra})" target="_blank">Ver Solicitud</a>
+                            <a href="@Url.Action("Details", "Solicitud", new { id = solicitud.Id, idObra = solicitud.IdObra})" target="_blank">Ver Solicitud</a>
 
                         </td>
                     </tr>

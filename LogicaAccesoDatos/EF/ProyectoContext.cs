@@ -52,6 +52,12 @@ namespace LogicaAccesoDatos.EF
             .WithMany()
             .OnDelete(DeleteBehavior.NoAction);
 
+            modelBuilder.Entity<SolicitudMaterial>()
+           .HasOne(s => s.Material)
+           .WithMany()
+           .OnDelete(DeleteBehavior.NoAction);
+           
+
             modelBuilder.Entity<Usuario>()
                 .HasDiscriminator<string>("Tipo")
                 .HasValue<UAdministrador>("UAdministrador")

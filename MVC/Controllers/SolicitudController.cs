@@ -25,11 +25,22 @@ namespace MVC.Controllers
         // GET: SolicitudController/Details/5
         public ActionResult Details(int id, int idObra)
         {
+
             IEnumerable<SolicitudMaterial> solicitudMateriales = Fachada.BuscarMaterialesSolicitud(id);
             Solicitud solicitud = Fachada.BuscarSolicitud(id);
             ViewBag.Materiales = solicitudMateriales;
             ViewBag.IdObra = idObra;
             return View(solicitud);
+             
+        }
+
+        [HttpPost]
+        public ActionResult Details(int idObra)
+        {
+
+
+            return RedirectToAction("Index", idObra);
+
         }
 
         // GET: SolicitudController/Create

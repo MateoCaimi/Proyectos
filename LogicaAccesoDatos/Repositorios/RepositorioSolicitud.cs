@@ -73,6 +73,19 @@ namespace LogicaAccesoDatos.Repositorios
         internal IEnumerable<SolicitudMaterial> MaterialesDeSolicitud(int id)
         {
             return Context.SolicitudesMateriales.Include(sm => sm.Material).Where(sm => sm.IdSolicitud == id);
+
+
+           // Fachada fachada = new Fachada();
+           //IEnumerable<SolicitudMaterial> solicitudMateriales = Context.SolicitudesMateriales.Where(sm => sm.IdSolicitud == id);
+           // foreach (var soliMat in solicitudMateriales)
+           // {
+           //     soliMat.Material = fachada.BuscarMaterial(soliMat.IdMaterial);
+                
+           // }
+
+           // return Context.SolicitudesMateriales.Where(sm => sm.IdSolicitud == id);
+
+            //return 
         }
 
         internal Solicitud CrearSolicitud(int idObra, int idSolicitante)
@@ -96,7 +109,16 @@ namespace LogicaAccesoDatos.Repositorios
 
         internal IEnumerable<Solicitud> BuscarSolicitudesPendientes()
         {
-            return Context.Solicitudes.Where(sp => sp.Estado == Estado.Solicitado);
+            Fachada fachada = new Fachada();
+            IEnumerable<Solicitud> solicitudesPendientes = Context.Solicitudes.Where(sp => sp.Estado == Estado.Solicitado);
+
+            foreach (var soli in solicitudesPendientes)
+            {
+                soli.Obra = fachada.BuscarObra(soli.IdObra);
+                soli.Solicitante = fachada.BuscarUsuarioObra(soli.IdUsuario);
+            }
+
+            return solicitudesPendientes;
         }
 
         internal IEnumerable<Solicitud> BuscarSolicitudesAprobadas()
