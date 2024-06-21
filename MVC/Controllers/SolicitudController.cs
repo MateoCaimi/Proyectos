@@ -23,7 +23,7 @@ namespace MVC.Controllers
         }
 
         // GET: SolicitudController/Details/5
-        public ActionResult Details(int id, int idObra)
+        public ActionResult Detalles(int id, int idObra)
         {
 
             IEnumerable<SolicitudMaterial> solicitudMateriales = Fachada.BuscarMaterialesSolicitud(id);
@@ -31,15 +31,6 @@ namespace MVC.Controllers
             ViewBag.Materiales = solicitudMateriales;
             ViewBag.IdObra = idObra;
             return View(solicitud);
-             
-        }
-
-        [HttpPost]
-        public ActionResult Details(int idObra)
-        {
-
-
-            return RedirectToAction("Index", idObra);
 
         }
 
@@ -121,27 +112,73 @@ namespace MVC.Controllers
         }
 
 
-        // GET: SolicitudController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: SolicitudController/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Aprobar(int solicitudId, List<int> materialesSeleccionados, IFormCollection form)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                Dictionary<int, int> materialesSeleccionadosConCantidad = new Dictionary<int, int>();
+
+                if (materialesSeleccionados.Count != 0)
+                {
+                    foreach (int materialId in materialesSeleccionados)
+                    {
+                        // Obtener la cantidad correspondiente de los materiales seleccionados
+                        int cantidad = int.Parse(form[$"Cantidad_{materialId}"]);
+                        materialesSeleccionadosConCantidad.Add(materialId, cantidad);
+                    }
+
+
+                    IEnumerable<SolicitudMaterial> laSolicitudConMateriales = Fachada.BuscarMaterialesSolicitud(solicitudId);
+                    Fachada.ConfigurarSolicitud(laSolicitudConMateriales, materialesSeleccionadosConCantidad);
+                    Usuario aprobador = Fachada.BuscarUsuarioXNombreU(HttpContext.Session.GetString("UsuarioLogueado"));
+                    Solicitud solicitud = Fachada.BuscarSolicitud(solicitudId);
+                    Fachada.AceptarSolicitud(solicitud, (UDeOficina)aprobador);
+                    //Dejar notificacion de solicitud aprovada al solicitante y tarea de confirmar que llegue el material
+                    //hacer pdf orden de compra
+                    //problema si el solicitante es el mismo que el aprobador
+                    return RedirectToAction("Index", new { idObra = solicitud.IdObra });
+                }
+                else
+                {
+                    ViewBag.Error("No se selecciono ningun material");
+                    Solicitud solicitud = Fachada.BuscarSolicitud(solicitudId);
+                    return RedirectToAction("Index", new { idObra = solicitud.IdObra });
+                }
+
             }
-            catch
+            catch (Exception e)
             {
+                ViewBag.Error(e.Message);
                 return View();
             }
         }
 
+        [HttpPost]
+        public IActionResult Rechazar(int SolicitudId)
+        {
+            try
+            {
+                Solicitud solicitud = Fachada.BuscarSolicitud(SolicitudId);
+                if (solicitud == null)
+                {
+                    ViewBag.Error = "La solicitud no existe.";
+                    return View();
+                }
+                Usuario rechazador = Fachada.BuscarUsuarioXNombreU(HttpContext.Session.GetString("UsuarioLogueado"));
+                Fachada.RechazarSolicitud(solicitud, (UDeOficina)rechazador);
+                ViewBag.Mensaje = "Solicitud rechazada correctamente.";
+                //Dejar notificacion de solicitud rechazada al solicitante 
+
+                return RedirectToAction("Index", new { idObra = solicitud.IdObra });
+            }
+            catch (Exception ex)
+            {
+                Solicitud solicitud = Fachada.BuscarSolicitud(SolicitudId);
+                ViewBag.Error = $"Error al procesar la solicitud: {ex.Message}";
+                return RedirectToAction("Index", new { idObra = solicitud.IdObra });
+            }
+        }
 
     }
 }

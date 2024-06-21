@@ -14,13 +14,13 @@ namespace LogicaAccesoDatos.Repositorios
 {
     public class RepositorioSolicitud : IRepositorioSolicitud
     {
-      
+
         public ProyectoContext Context { get; set; }
 
         public RepositorioSolicitud()
         {
             this.Context = new ProyectoContext();
-               
+
         }
 
         public void Agregar(Solicitud item)
@@ -32,7 +32,7 @@ namespace LogicaAccesoDatos.Repositorios
 
         public Solicitud Buscar(int id)
         {
-            return Context.Solicitudes.Include(s => s.Solicitante).Include(s => s.Obra).FirstOrDefault(s =>  s.Id == id); 
+            return Context.Solicitudes.Include(s => s.Solicitante).Include(s => s.Obra).FirstOrDefault(s => s.Id == id);
         }
 
         public void Eliminar(Solicitud item)
@@ -75,15 +75,15 @@ namespace LogicaAccesoDatos.Repositorios
             return Context.SolicitudesMateriales.Include(sm => sm.Material).Where(sm => sm.IdSolicitud == id);
 
 
-           // Fachada fachada = new Fachada();
-           //IEnumerable<SolicitudMaterial> solicitudMateriales = Context.SolicitudesMateriales.Where(sm => sm.IdSolicitud == id);
-           // foreach (var soliMat in solicitudMateriales)
-           // {
-           //     soliMat.Material = fachada.BuscarMaterial(soliMat.IdMaterial);
-                
-           // }
+            // Fachada fachada = new Fachada();
+            //IEnumerable<SolicitudMaterial> solicitudMateriales = Context.SolicitudesMateriales.Where(sm => sm.IdSolicitud == id);
+            // foreach (var soliMat in solicitudMateriales)
+            // {
+            //     soliMat.Material = fachada.BuscarMaterial(soliMat.IdMaterial);
 
-           // return Context.SolicitudesMateriales.Where(sm => sm.IdSolicitud == id);
+            // }
+
+            // return Context.SolicitudesMateriales.Where(sm => sm.IdSolicitud == id);
 
             //return 
         }
@@ -97,26 +97,25 @@ namespace LogicaAccesoDatos.Repositorios
             return solicitud;
         }
 
-        internal void AsignarMat(SolicitudMaterial solicitudMaterial)
-        {
-            Fachada fachada = new Fachada();
-            if (solicitudMaterial != null)
-            {
-                solicitudMaterial.Material = fachada.BuscarMaterial(solicitudMaterial.IdMaterial);
-                Context.SaveChanges();
-            }
-        }
+        //internal void AsignarMat(SolicitudMaterial solicitudMaterial)
+        //{
+        //    Fachada fachada = new Fachada();
+        //    if (solicitudMaterial != null)
+        //    {
+        //        solicitudMaterial.Material = fachada.BuscarMaterial(solicitudMaterial.IdMaterial);
+        //        Context.SaveChanges();
+        //    }
+        //}
 
         internal IEnumerable<Solicitud> BuscarSolicitudesPendientes()
         {
-            Fachada fachada = new Fachada();
             IEnumerable<Solicitud> solicitudesPendientes = Context.Solicitudes.Where(sp => sp.Estado == Estado.Solicitado);
 
-            foreach (var soli in solicitudesPendientes)
-            {
-                soli.Obra = fachada.BuscarObra(soli.IdObra);
-                soli.Solicitante = fachada.BuscarUsuarioObra(soli.IdUsuario);
-            }
+            //foreach (Solicitud soli in solicitudesPendientes)
+            //{
+            //    soli.Obra = fachada.BuscarObra(soli.IdObra);
+            //    soli.Solicitante = fachada.BuscarUsuarioObra(soli.IdUsuario);
+            //}
 
             return solicitudesPendientes;
         }
@@ -134,6 +133,49 @@ namespace LogicaAccesoDatos.Repositorios
         internal IEnumerable<Solicitud> BuscarSolicitudesRecibido()
         {
             return Context.Solicitudes.Where(sp => sp.Estado == Estado.Rechazado);
+        }
+
+        internal void ConfigurarMaterial(IEnumerable<SolicitudMaterial> laSolicitudConMateriales, Dictionary<int, int> materialesSeleccionadosConCantidad)
+        {
+            try
+            {
+
+            foreach (SolicitudMaterial sol in laSolicitudConMateriales)
+            {
+                bool estaMaterial = false;
+                foreach (var mat in materialesSeleccionadosConCantidad)
+                {
+                    if (mat.Key == sol.IdMaterial)
+                    {
+                        sol.Cantidad = mat.Value;
+                        estaMaterial = true;
+                    }   
+                }
+                if (!estaMaterial)
+                {
+                    Context.SolicitudesMateriales.Remove(sol);
+                   // Context.SaveChanges();
+                }
+            }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        internal void AceptarSolicitud(Solicitud solicitud,UDeOficina aprobador )
+        {
+            solicitud.Aprovador = aprobador;
+            solicitud.Estado = Estado.Aprobado;
+            Context.SaveChanges() ;
+        }
+
+        internal void RechazarSolicitud(Solicitud solicitud, UDeOficina rechazador)
+        {
+            solicitud.Aprovador = rechazador;
+            solicitud.Estado = Estado.Rechazado;
+            Context.SaveChanges();
         }
     }
 }

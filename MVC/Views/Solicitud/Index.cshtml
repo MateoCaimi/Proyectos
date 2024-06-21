@@ -5,7 +5,12 @@
 }
 
 <h1>Index</h1>
-
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
+}
 <p>
     <a href="@Url.Action("Crear", new {idObra = ViewBag.IdObra})"> Crear Solicitud</a>
 </p>
@@ -49,7 +54,7 @@
                 @Html.DisplayFor(modelItem => item.Estado)
             </td>
             <td>
-                <a asp-action="Details" asp-route-id="@item.Id" asp-route-idObra="@ViewBag.IdObra">Details</a> |
+                    <a asp-action="Detalles" asp-route-id="@item.Id" asp-route-idObra="@ViewBag.IdObra">Detalles</a> |
             </td>
         </tr>
 }

@@ -16,7 +16,7 @@ namespace LogicaAccesoDatos.Repositorios
         RepositorioUsuario RepositorioUsuario { get; set; }
         RepositorioMaterial RepositorioMaterial { get; set; }
         RepositorioSolicitud RepositorioSolicitud { get; set; }
-        
+
 
         public Fachada()
         {
@@ -72,7 +72,7 @@ namespace LogicaAccesoDatos.Repositorios
         }
         public void AgregarObra(Obra item)
         {
-           RepositorioObra.Agregar(item);
+            RepositorioObra.Agregar(item);
         }
         public void EliminarObra(Obra item)
         {
@@ -136,7 +136,7 @@ namespace LogicaAccesoDatos.Repositorios
         }
 
         public IEnumerable<Usuario> ObtenerUsuarios()
-       {
+        {
             return RepositorioUsuario.TomarTodos();
         }
 
@@ -149,14 +149,14 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return (UDeObra)RepositorioUsuario.Buscar(idACargo);
         }
-        public void EliminarUsuario (Usuario usuario)
+        public void EliminarUsuario(Usuario usuario)
         {
             RepositorioUsuario.Eliminar(usuario);
         }
 
         public Usuario CastearUsuario(string nombre, string nomUsuario, string pass, string tipo)
         {
-            return RepositorioUsuario.CastearU( nombre,  nomUsuario,  pass,  tipo);
+            return RepositorioUsuario.CastearU(nombre, nomUsuario, pass, tipo);
         }
 
         public Usuario BuscarUsuario(int id)
@@ -209,7 +209,7 @@ namespace LogicaAccesoDatos.Repositorios
             RepositorioMaterial.Modificar(material);
         }
 
-        public IEnumerable <Material> MaterialesFiltrados(string nombre)
+        public IEnumerable<Material> MaterialesFiltrados(string nombre)
         {
             return RepositorioMaterial.MaterialesFiltados(nombre);
         }
@@ -259,24 +259,24 @@ namespace LogicaAccesoDatos.Repositorios
             return RepositorioSolicitud.CrearSolicitud(idObra, idSolicitante);
         }
 
+        public void ConfigurarSolicitud(IEnumerable<SolicitudMaterial> laSolicitudConMateriales, Dictionary<int, int> materialesSeleccionadosConCantidad)
+        {
+            RepositorioSolicitud.ConfigurarMaterial(laSolicitudConMateriales, materialesSeleccionadosConCantidad);
+        }
+
         public IEnumerable<Solicitud> BuscarSolicitudPendientes()
         {
             return RepositorioSolicitud.BuscarSolicitudesPendientes();
         }
 
-        public IEnumerable<Solicitud> BuscarSolicitudAprobadas()
+        public void AceptarSolicitud(Solicitud solicitud, UDeOficina aprobador)
         {
-            return RepositorioSolicitud.BuscarSolicitudesAprobadas();
+            RepositorioSolicitud.AceptarSolicitud(solicitud, aprobador);
         }
 
-        public IEnumerable<Solicitud> BuscarSolicitudRechazadas()
+        public void RechazarSolicitud(Solicitud solicitud,UDeOficina rechazador)
         {
-            return RepositorioSolicitud.BuscarSolicitudesRechazadas();
-        }
-
-        public IEnumerable<Solicitud> BuscarSolicitudRecibidas()
-        {
-            return RepositorioSolicitud.BuscarSolicitudesRecibido();
-        }
+            RepositorioSolicitud.RechazarSolicitud(solicitud,rechazador);
+                }
     }
 }

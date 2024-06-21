@@ -36,17 +36,17 @@
                 @foreach (var solicitud in Model)
                 {
                     <tr>
-                        <td>
+                        @* <td>
                             @solicitud.Obra.Nombre
                         </td>
                         <td>
                             @solicitud.Solicitante.Nombre
-                        </td>
+                        </td> *@
                         <td>
                             @solicitud.Estado
                         </td>
                         <td>
-                            <a href="@Url.Action("Details", "Solicitud", new { id = solicitud.Id, idObra = solicitud.IdObra})" target="_blank">Ver Solicitud</a>
+                            <a href="@Url.Action("Detalles", "Solicitud", new { id = solicitud.Id, idObra = solicitud.IdObra})">Ver Solicitud</a>
 
                         </td>
                     </tr>
