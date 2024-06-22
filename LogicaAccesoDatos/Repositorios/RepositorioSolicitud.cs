@@ -32,7 +32,7 @@ namespace LogicaAccesoDatos.Repositorios
 
         public Solicitud Buscar(int id)
         {
-            return Context.Solicitudes.Include(s => s.Solicitante).Include(s => s.Obra).FirstOrDefault(s => s.Id == id);
+            return Context.Solicitudes.Include(s => s.Solicitante).Include(s => s.Obra).Include(s => s.Aprovador).FirstOrDefault(s => s.Id == id);
         }
 
         public void Eliminar(Solicitud item)
@@ -109,7 +109,7 @@ namespace LogicaAccesoDatos.Repositorios
 
         internal IEnumerable<Solicitud> BuscarSolicitudesPendientes()
         {
-            IEnumerable<Solicitud> solicitudesPendientes = Context.Solicitudes.Where(sp => sp.Estado == Estado.Solicitado);
+            IEnumerable<Solicitud> solicitudesPendientes = Context.Solicitudes.Include(s => s.Obra).Include(s => s.Solicitante).Include(s => s.Aprovador).Where(sp => sp.Estado == Estado.Solicitado);
 
             //foreach (Solicitud soli in solicitudesPendientes)
             //{
@@ -166,14 +166,15 @@ namespace LogicaAccesoDatos.Repositorios
 
         internal void AceptarSolicitud(Solicitud solicitud,UDeOficina aprobador )
         {
-            solicitud.Aprovador = aprobador;
+            solicitud.IdUDeOficina = aprobador.Id;
             solicitud.Estado = Estado.Aprobado;
+
             Context.SaveChanges() ;
         }
 
         internal void RechazarSolicitud(Solicitud solicitud, UDeOficina rechazador)
         {
-            solicitud.Aprovador = rechazador;
+            solicitud.IdUDeOficina = rechazador.Id;
             solicitud.Estado = Estado.Rechazado;
             Context.SaveChanges();
         }

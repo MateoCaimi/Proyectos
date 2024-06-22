@@ -7,6 +7,10 @@ using Microsoft.CodeAnalysis;
 using Microsoft.Graph.Models;
 using Microsoft.Graph.Models.Security;
 using Newtonsoft.Json;
+using PdfSharp.Drawing;
+using PdfSharp.Pdf;
+using PdfSharp.Pdf.Advanced;
+using System.IO;
 
 namespace MVC.Controllers
 {
@@ -14,6 +18,7 @@ namespace MVC.Controllers
     {
 
         Fachada Fachada = new Fachada();
+        
         // GET: SolicitudController
         public ActionResult Index(int idObra)
         {
@@ -113,7 +118,7 @@ namespace MVC.Controllers
 
 
         [HttpPost]
-        public ActionResult Aprobar(int solicitudId, List<int> materialesSeleccionados, IFormCollection form)
+        public async Task<ActionResult> AprobarAsync(int solicitudId, List<int> materialesSeleccionados, IFormCollection form)
         {
             try
             {
@@ -137,6 +142,7 @@ namespace MVC.Controllers
                     //Dejar notificacion de solicitud aprovada al solicitante y tarea de confirmar que llegue el material
                     //hacer pdf orden de compra
                     //problema si el solicitante es el mismo que el aprobador
+                    return GenerarPdf(solicitud);
                     return RedirectToAction("Index", new { idObra = solicitud.IdObra });
                 }
                 else
@@ -180,5 +186,61 @@ namespace MVC.Controllers
             }
         }
 
+        private ActionResult GenerarPdf(Solicitud solicitud)
+        {
+            IEnumerable<SolicitudMaterial> materialesSolicitud = Fachada.BuscarMaterialesSolicitud(solicitud.Id);
+
+            PdfDocument document = new PdfDocument();
+            PdfPage page = document.AddPage();
+            XGraphics gfx = XGraphics.FromPdfPage(page);
+            XFont font = new XFont("Verdana", 20, XFontStyleEx.Bold);
+            XFont fontLineas = new XFont("Verdana", 12, XFontStyleEx.Regular);
+            XFont fontHeader = new XFont("Verdana", 15, XFontStyleEx.Italic);
+            XFont fontFooter = new XFont("Verdana", 12, XFontStyleEx.BoldItalic);
+            gfx.DrawString("Solicitud de materiales", font, XBrushes.Black,
+            new XRect(0, 0, page.Width, page.Height),
+            XStringFormat.TopCenter);
+            gfx.DrawString("Bodega&Piedrafita Arquitectos", fontHeader, XBrushes.Black,
+            new XRect(0, 25, page.Width, page.Height),
+            XStringFormat.TopCenter);
+            gfx.DrawString("Proveedor - " + "NombreProveedor" + " - " + "proveedor@mail.com", fontHeader, XBrushes.Black,
+            new XRect(0, 50, page.Width, page.Height),
+            XStringFormat.TopLeft);
+
+            XPen line = new XPen(XColors.Black, 2);
+            gfx.DrawLine(line, 0, 80, page.Width, 80);
+            
+            int i = 90;
+            foreach (SolicitudMaterial sm in materialesSolicitud)
+            {
+                gfx.DrawString(sm.Material.Nombre + " - " + sm.Cantidad + " - " + sm.Material.UnidadDeMedida, fontLineas, XBrushes.Black,
+                new XRect(0, i, page.Width, page.Height),
+                XStringFormat.TopLeft);
+                i += 25;
+            }
+
+            gfx.DrawLine(line, 0, 800, page.Width, 800);
+            gfx.DrawString("Teléfono: 2600 1150 - Dirección: Formentor 7096 - Bodega&Piedrafita Arquitectos", fontFooter, XBrushes.Black,
+            new XRect(0, 400, page.Width, page.Height),
+            XStringFormat.Center);
+
+            string filename = $"{solicitud.Obra.Nombre} - {solicitud.Solicitante.Nombre}.pdf";
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                document.Save(stream);
+                return File(stream.ToArray(), "application/pdf", "Solicitud.pdf");
+                /*Response.HttpContext.Response.Clear();
+                Response.HttpContext.Response.ContentType = "application/pdf";
+                Response.HttpContext.Response.Headers.Add("Content-Disposition", String.Format("attachment;filename={0}", filename));
+                Response.HttpContext.Response.Headers.Expires = DateTime.Now.AddDays(30).ToUniversalTime().ToString("ddd, dd MMM yyyy HH:mm:ss 'GMT'");
+                Response.HttpContext.Response.Headers.Add("content-length", stream.Length.ToString());
+                await Response.HttpContext.Response.Body.WriteAsync(stream.ToArray());
+                await Response.HttpContext.Response.Body.FlushAsync();*/
+            }
+            
+            
+
+        }
     }
 }

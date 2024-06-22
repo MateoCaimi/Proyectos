@@ -24,10 +24,10 @@
                 @Html.DisplayNameFor(model => model.Obra)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IdUsuario)
+                @Html.DisplayNameFor(model => model.Solicitante)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IdUDeOficina)
+                @Html.DisplayNameFor(model => model.Aprovador)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Estado)
@@ -45,10 +45,10 @@
                 @Html.DisplayFor(modelItem => item.Obra.Direccion)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdUsuario)
+                @Html.DisplayFor(modelItem => item.Solicitante.Nombre)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdUDeOficina)
+                @Html.DisplayFor(modelItem => item.Aprovador.Nombre)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Estado)
