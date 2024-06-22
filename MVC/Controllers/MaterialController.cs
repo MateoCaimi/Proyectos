@@ -43,6 +43,7 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Listado", "Usuario");
             }*/
+            
             try
             {
             IEnumerable<Material> materialesFiltrados = Fachada.MaterialesFiltrados(nombre);

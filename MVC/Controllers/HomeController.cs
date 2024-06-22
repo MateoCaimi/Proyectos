@@ -3,6 +3,8 @@ using LogicaNegocio.Entidades;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Models;
 using System.Diagnostics;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace MVC.Controllers
 {
@@ -34,12 +36,24 @@ namespace MVC.Controllers
 
             if(HttpContext.Session.GetString("UsuarioTipo") == "Usuario de oficina")
             {
-             IEnumerable<Solicitud> solicitudesPendientes = Fachada.BuscarSolicitudPendientes();
-                if(solicitudesPendientes != null)
+                List<Solicitud> solicitudesPendientes = Fachada.BuscarSolicitudPendientesLista();
+               
+
+                var opciones = new JsonSerializerOptions
+                {
+                    ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                    WriteIndented = true,
+
+                };
+
+                HttpContext.Session.SetString("SolicitudesPendientes", JsonSerializer.Serialize(solicitudesPendientes, opciones));
+
+                if (solicitudesPendientes != null)
                 {
                 return View(solicitudesPendientes);
                 }
             }
+
 
             /*Usuario usuarioTest = new UDeOficina("Federico Ruiz", "JorgeJorge123", "JorgeJorge123");
             Fachada.AgregarUsuario(usuarioTest);*/
