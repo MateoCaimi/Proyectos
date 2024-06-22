@@ -177,5 +177,10 @@ namespace LogicaAccesoDatos.Repositorios
             solicitud.Estado = Estado.Rechazado;
             Context.SaveChanges();
         }
+
+        internal List<Solicitud> BuscarSolicitudPendientesLista()
+        {
+            return Context.Solicitudes.Where(sp => sp.Estado == Estado.Solicitado).ToList(); ;
+        }
     }
 }

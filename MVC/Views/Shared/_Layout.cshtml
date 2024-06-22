@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -35,10 +37,11 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Plano" asp-action="Index">Plano</a>
                             </li>
-
+                            <partial name="_Notificaciones"/>
                         }
                         else if (Context.Session.GetString("UsuarioLogueado") != null && Context.Session.GetString("UsuarioTipo") == "Usuario administrador")
                         {
+                           
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Listado">Lista de Usuarios</a>
                             </li>

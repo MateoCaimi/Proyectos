@@ -278,5 +278,10 @@ namespace LogicaAccesoDatos.Repositorios
         {
             RepositorioSolicitud.RechazarSolicitud(solicitud,rechazador);
                 }
+
+        public List<Solicitud> BuscarSolicitudPendientesLista()
+        {
+            return RepositorioSolicitud.BuscarSolicitudPendientesLista();
+        }
     }
 }
