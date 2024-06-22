@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.Graph.Models;
 using Microsoft.Graph.Models.Security;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
 namespace MVC.Controllers
@@ -17,6 +19,15 @@ namespace MVC.Controllers
         // GET: SolicitudController
         public ActionResult Index(int idObra)
         {
+            List<Solicitud> solicitudesPendientes = Fachada.BuscarSolicitudPendientesLista();
+            var opciones = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                WriteIndented = true,
+
+            };
+            HttpContext.Session.SetString("SolicitudesPendientes", System.Text.Json.JsonSerializer.Serialize(solicitudesPendientes, opciones));
+
             IEnumerable<Solicitud> solicitudesObra = Fachada.SolicitudesDeObra(idObra);
             ViewBag.IdObra = idObra;
             return View(solicitudesObra);
@@ -30,6 +41,7 @@ namespace MVC.Controllers
             Solicitud solicitud = Fachada.BuscarSolicitud(id);
             ViewBag.Materiales = solicitudMateriales;
             ViewBag.IdObra = idObra;
+
             return View(solicitud);
 
         }

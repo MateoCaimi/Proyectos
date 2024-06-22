@@ -37,7 +37,7 @@ namespace MVC.Controllers
             if(HttpContext.Session.GetString("UsuarioTipo") == "Usuario de oficina")
             {
                 List<Solicitud> solicitudesPendientes = Fachada.BuscarSolicitudPendientesLista();
-                HttpContext.Session.SetInt32("cantSolicitudes",solicitudesPendientes.Count);
+               
 
                 var opciones = new JsonSerializerOptions
                 {
