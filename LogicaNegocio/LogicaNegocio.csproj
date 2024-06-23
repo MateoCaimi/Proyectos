@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.5" />
+    <PackageReference Include="PDFsharp" Version="6.1.0" />
     <PackageReference Include="ServiceStack.Interfaces" Version="8.2.2" />
   </ItemGroup>
 

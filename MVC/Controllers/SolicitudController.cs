@@ -13,6 +13,7 @@ using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.Advanced;
 using System.IO;
+using LogicaNegocio.Excepciones;
 
 namespace MVC.Controllers
 {
@@ -159,9 +160,9 @@ namespace MVC.Controllers
                 }
                 else
                 {
-                    ViewBag.Error("No se selecciono ningun material");
+                    ViewBag.Error = "No se ha seleccionado ningun material";
                     Solicitud solicitud = Fachada.BuscarSolicitud(solicitudId);
-                    return RedirectToAction("Index", new { idObra = solicitud.IdObra });
+                    return RedirectToAction("Detalles", new { id = solicitud.Id, idObra = solicitud.IdObra });
                 }
 
             }

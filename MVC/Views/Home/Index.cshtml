@@ -35,12 +35,12 @@
                 @foreach (var solicitud in Model)
                 {
                     <tr>
-                        @* <td>
+                        <td>
                             @solicitud.Obra.Nombre
                         </td>
                         <td>
-                            @solicitud.Solicitante.Nombre
-                        </td> *@
+                            Nombre de solicitante@*@solicitud.Solicitante.Nombre*@
+                        </td> 
                         <td>
                             @solicitud.Estado
                         </td>

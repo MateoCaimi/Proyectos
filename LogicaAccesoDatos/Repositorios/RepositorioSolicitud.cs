@@ -166,8 +166,17 @@ namespace LogicaAccesoDatos.Repositorios
 
         internal void AceptarSolicitud(Solicitud solicitud,UDeOficina aprobador )
         {
+            if (solicitud.Estado == Estado.Solicitado)
+            {
             solicitud.IdUDeOficina = aprobador.Id;
             solicitud.Estado = Estado.Aprobado;
+
+            }
+            else
+            {
+                throw new SolicitudException("No puede aceptar o rechazar una solicitud que ya fue aceptada o rechazada");
+            }
+
 
             Context.SaveChanges() ;
         }
@@ -216,7 +225,9 @@ namespace LogicaAccesoDatos.Repositorios
 
         internal List<Solicitud> BuscarSolicitudPendientesLista()
         {
-            return Context.Solicitudes.Where(sp => sp.Estado == Estado.Solicitado).ToList(); ;
+            return Context.Solicitudes.Include(s => s.Obra).Where(sp => sp.Estado == Estado.Solicitado).ToList();
+
+            //return Context.Solicitudes.Where(sp => sp.Estado == Estado.Solicitado).ToList(); ;
         }
     }
 }

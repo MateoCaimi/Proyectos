@@ -28,8 +28,8 @@
 
             @foreach(Solicitud soli in solicitudesList){
 
-            <li>
-                <a href="@Url.Action("Detalles", "Solicitud", new { id = soli.Id, idObra = soli.IdObra})">Solicitud de la obra: onmbreObra</a>
+            <li class="list-group">
+                <a class="list-group-item list-group-item-action" href="@Url.Action("Detalles", "Solicitud", new { id = soli.Id, idObra = soli.IdObra})">Solicitud de la obra: @soli.Obra.Nombre</a>
             </li>
             
             }

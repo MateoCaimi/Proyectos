@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogicaAccesoDatos.Migrations
 {
     [DbContext(typeof(ProyectoContext))]
-    [Migration("20240623143538_uno")]
-    partial class uno
+    [Migration("20240623193331_ew")]
+    partial class ew
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

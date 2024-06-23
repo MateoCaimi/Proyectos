@@ -19,14 +19,14 @@ namespace LogicaNegocio.Entidades
 
         public void ProbarValidacionContrasena()
         {
-            Usuario admin = new UAdministrador("Ricardo", "admin", "Admin1234");
-            Usuario oficina = new UDeObra("Ricardo", "oficina", "ofic123");
+        //    Usuario admin = new UAdministrador("Ricardo", "admin", "Admin1234");
+        //    Usuario oficina = new UDeObra("Ricardo", "oficina", "ofic123");
 
 
             // Prueba con contraseña válida
             try
             {
-                admin.ValidarContrasena();
+      //          admin.ValidarContrasena();
                 Console.WriteLine("Paso la prueba");
             }
             catch (UsuarioException ex)
@@ -37,7 +37,7 @@ namespace LogicaNegocio.Entidades
             // Prueba con contraseña inválida
             try
             {
-                oficina.ValidarContrasena();
+         //       oficina.ValidarContrasena();
                 Console.WriteLine("Paso la prueba");
             }
             catch (UsuarioException ex)

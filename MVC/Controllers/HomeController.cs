@@ -50,7 +50,8 @@ namespace MVC.Controllers
 
                 if (solicitudesPendientes != null)
                 {
-                return View(solicitudesPendientes);
+                    
+                    return View(solicitudesPendientes);
                 }
             }
 

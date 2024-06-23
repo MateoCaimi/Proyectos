@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LogicaNegocio.Excepciones;
 using LogicaNegocio.Interfaces;
+using System.Text.Json.Serialization;
 
 namespace LogicaNegocio.Entidades
 {
@@ -51,7 +52,6 @@ namespace LogicaNegocio.Entidades
             
         }
 
-        
 
         public void ValidarContrasena()
         {
