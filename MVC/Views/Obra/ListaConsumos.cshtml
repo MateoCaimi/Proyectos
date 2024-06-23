@@ -1,0 +1,9 @@
+﻿@model IEnumerable<LogicaNegocio.ViewModel.MaterialConsumoViewModel>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>@item.Material.Nombre</td>
+        <td>@item.Cantidad</td>
+    </tr>
+}

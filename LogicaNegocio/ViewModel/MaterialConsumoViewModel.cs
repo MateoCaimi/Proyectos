@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace LogicaNegocio.ViewModel
 {
-    public class SolicitudMaterialesViewModel
+    public class MaterialConsumoViewModel
     {
-        public List<SolicitudMaterial> MainMaterials { get; set; }
-        public List<SolicitudMaterial> TempMaterials { get; set; }
+        public Material Material { get; set; }
+        public int IdMaterial {  get; set; }
+        public int Cantidad {  get; set; }
     }
 }

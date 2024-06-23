@@ -2,6 +2,7 @@
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones;
 using LogicaNegocio.Interfaces;
+using LogicaNegocio.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -297,6 +298,30 @@ namespace LogicaAccesoDatos.Repositorios
         internal IEnumerable<ObraMaterial> MaterialesDeObra(Obra obra)
         {
             return Context.ObrasMateriales.Where(m => m.Obra.IdObra == obra.IdObra).Include(o => o.Material).Include(o => o.Obra);
+        }
+
+        internal bool ConsumirMateriales(List<MaterialConsumoViewModel>? item, Obra obra)
+        {
+            List<ObraMaterial> materialesObra = MaterialesDeObra(obra).ToList();
+            foreach (MaterialConsumoViewModel m in item)
+            {
+                foreach(ObraMaterial om in materialesObra)
+                {
+                    if(m.Material.Id == om.Material.Id)
+                    {
+                        if(m.Cantidad <= om.Stock)
+                        {
+                            om.Stock -= m.Cantidad;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+            Context.SaveChanges();
+            return true;
         }
     }
 }

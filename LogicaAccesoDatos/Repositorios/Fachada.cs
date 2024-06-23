@@ -1,5 +1,6 @@
 ﻿using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones;
+using LogicaNegocio.ViewModel;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -292,6 +293,11 @@ namespace LogicaAccesoDatos.Repositorios
         public IEnumerable<ObraMaterial> MaterialesDeObra(Obra obra)
         {
             return RepositorioObra.MaterialesDeObra(obra);
+        }
+
+        public bool ConsumirMateriales(List<MaterialConsumoViewModel>? item, Obra obra)
+        {
+            return RepositorioObra.ConsumirMateriales(item, obra);
         }
     }
 }

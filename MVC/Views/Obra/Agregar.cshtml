@@ -3,10 +3,10 @@
 @{
     ViewData["Title"] = "Agregar";
 }
-@if (ViewBag.Error != null)
+@if (TempData["Error"] != null)
 {
     <div class="alert alert-danger">
-        @ViewBag.Error
+        @TempData["Error"]
     </div>
 }
 

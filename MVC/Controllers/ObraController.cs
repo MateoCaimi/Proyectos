@@ -4,6 +4,7 @@ using LogicaNegocio.Excepciones;
 using LogicaNegocio.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Models;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Drawing;
 namespace MVC.Controllers
@@ -492,7 +493,88 @@ namespace MVC.Controllers
             }
 
 
+        // GET: ObraController/Consumo
+        public ActionResult Consumo(int idObra)
+        {
+            try
+            {
+                TempData["ListaActualConsumo"] = null;
+                if (!Fachada.BuscarObra(idObra).Finalizada)
+                {
+                    ViewBag.Materiales = Fachada.TodosLosMateriales();
+                    ViewBag.IdObra = idObra;
 
+                    List<MaterialConsumoViewModel> tempMaterials = new List<MaterialConsumoViewModel>();
+                    return View(tempMaterials);
+                }
+                else
+                {
+                    ViewBag.Error = "Esta obra está cerrada, no se pueden consumir materiales";
+                    return View();
+                }
+            }
+            catch (Exception e)
+            {
+                ViewBag.Error = e.Message;
+                ViewBag.IdObra = idObra;
+                return RedirectToAction(nameof(Index));
+            }
+
+        }
+
+        // POST: ObraController/Consumo
+        [HttpPost, ActionName("Consumo")]
+        [ValidateAntiForgeryToken]
+        public ActionResult ConsumoPost(int IdObra)
+        {
+            try
+            {
+                List<MaterialConsumoViewModel> item = JsonConvert.DeserializeObject<List<MaterialConsumoViewModel>>((string)TempData["ListaActualConsumo"]);
+                Obra obra = Fachada.BuscarObra(IdObra);
+                
+                if(Fachada.ConsumirMateriales(item, obra))
+                {
+                   return RedirectToAction("Index", new { idObra = IdObra });
+                }
+                else
+                {
+                    throw new ObraException("No se puede consumir más que el stock de un material en específico");
+                }
+               
+            }
+            catch (Exception e)
+            {
+                TempData["Error"] = e.Message;
+                return RedirectToAction("Consumo", new { idObra = IdObra });
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Consumir(MaterialConsumoViewModel consumo)
+        {
+            try
+            {
+                List<MaterialConsumoViewModel> lista;
+                if (TempData["ListaActualConsumo"] != null)
+                {
+                    lista = JsonConvert.DeserializeObject<List<MaterialConsumoViewModel>>((string)TempData["ListaActualConsumo"]);
+                }
+                else
+                {
+                    lista = new List<MaterialConsumoViewModel>();
+                }
+                Material material = Fachada.BuscarMaterial(consumo.IdMaterial);
+                consumo.Material = material;
+                lista.Add(consumo);
+                TempData["ListaActualConsumo"] = JsonConvert.SerializeObject(lista);
+                ViewBag.Materiales = Fachada.TodosLosMateriales();
+                return PartialView("ListaConsumos", lista); // Aquí se usa ListaMateriales
+            }
+            catch
+            {
+                return RedirectToAction("Index");
+            }
+        }
 
 
     }
