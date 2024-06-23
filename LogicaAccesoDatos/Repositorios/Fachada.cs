@@ -283,5 +283,15 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioSolicitud.BuscarSolicitudPendientesLista();
         }
+
+        public void ConfirmarSolicitud(Solicitud solicitud, Usuario logueado)
+        {
+            RepositorioSolicitud.ConfirmarSolicitud(solicitud, logueado);
+        }
+
+        public IEnumerable<ObraMaterial> MaterialesDeObra(Obra obra)
+        {
+            return RepositorioObra.MaterialesDeObra(obra);
+        }
     }
 }

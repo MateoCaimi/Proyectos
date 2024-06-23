@@ -23,12 +23,13 @@ namespace LogicaAccesoDatos.EF
         public DbSet<Dia> Dias { get; set; }
         public DbSet<ObraEmpleado> ObrasEmpleados { get; set; }
         public DbSet<SolicitudMaterial> SolicitudesMateriales { get; set; }
+        public DbSet<ObraMaterial> ObrasMateriales { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string cadenaConexion =
                 @"SERVER=(localdb)\MSsqlLocaldb;
-                DATABASE=ProyectoIntegradorI;
+                DATABASE=ProyectoIntegradorJ;
                 INTEGRATED SECURITY=TRUE;
                 ENCRYPT=False"; //Puede evitar problemas si no hay un certificado y se usa SSL
             optionsBuilder.UseSqlServer(cadenaConexion)
@@ -56,7 +57,12 @@ namespace LogicaAccesoDatos.EF
            .HasOne(s => s.Material)
            .WithMany()
            .OnDelete(DeleteBehavior.NoAction);
-           
+
+            modelBuilder.Entity<ObraMaterial>()
+            .HasOne(s => s.Material)
+            .WithMany()
+            .OnDelete(DeleteBehavior.NoAction);
+
 
             modelBuilder.Entity<Usuario>()
                 .HasDiscriminator<string>("Tipo")

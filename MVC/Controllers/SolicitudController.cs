@@ -130,7 +130,7 @@ namespace MVC.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> AprobarAsync(int solicitudId, List<int> materialesSeleccionados, IFormCollection form)
+        public async Task<ActionResult> Aprobar(int solicitudId, List<int> materialesSeleccionados, IFormCollection form)
         {
             try
             {
@@ -197,6 +197,33 @@ namespace MVC.Controllers
                 return RedirectToAction("Index", new { idObra = solicitud.IdObra });
             }
         }
+
+        [HttpPost]
+        public IActionResult Confirmar(int SolicitudId)
+        {
+            try
+            {
+                Solicitud solicitud = Fachada.BuscarSolicitud(SolicitudId);
+                if (solicitud == null)
+                {
+                    ViewBag.Error = "La solicitud no existe.";
+                    return View();
+                }
+                Usuario confirmador = Fachada.BuscarUsuarioXNombreU(HttpContext.Session.GetString("UsuarioLogueado"));
+                Fachada.ConfirmarSolicitud(solicitud, confirmador);
+                ViewBag.Mensaje = "Solicitud confirmada correctamente.";
+                //Dejar notificacion de solicitud confirmada al udeoficina 
+
+                return RedirectToAction("Index", new { idObra = solicitud.IdObra });
+            }
+            catch (Exception ex)
+            {
+                Solicitud solicitud = Fachada.BuscarSolicitud(SolicitudId);
+                ViewBag.Error = $"Error al procesar la solicitud: {ex.Message}";
+                return RedirectToAction("Index", new { idObra = solicitud.IdObra });
+            }
+        }
+
 
         private ActionResult GenerarPdf(Solicitud solicitud)
         {

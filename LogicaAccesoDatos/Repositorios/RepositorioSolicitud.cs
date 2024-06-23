@@ -178,6 +178,41 @@ namespace LogicaAccesoDatos.Repositorios
             solicitud.Estado = Estado.Rechazado;
             Context.SaveChanges();
         }
+        internal void ConfirmarSolicitud(Solicitud solicitud, Usuario logueado)
+        {
+            if(logueado.NombreUsuario == solicitud.Solicitante.NombreUsuario)
+            {
+                List<SolicitudMaterial> materialesSolicitud = MaterialesDeSolicitud(solicitud.Id).ToList();
+                foreach (SolicitudMaterial sm in materialesSolicitud)
+                {
+                    ObraMaterial obraMaterialExistente = ExisteMaterialEnObra(solicitud, sm);
+                    if (obraMaterialExistente != null)
+                    {
+                        obraMaterialExistente.Stock += sm.Cantidad;
+                    }
+                    else
+                    {
+                        ObraMaterial om = new ObraMaterial();
+                        om.IdMaterial = sm.IdMaterial;
+                        om.IdObra = solicitud.Obra.IdObra;
+                        om.Stock = sm.Cantidad;
+                        om.Validar();
+                        Context.ObrasMateriales.Add(om);
+                    }
+                }
+                solicitud.Estado = Estado.Recibido;
+                Context.SaveChanges();
+            }
+            else
+            {
+                throw new UsuarioException("El usuario que confirma la solicitud debe ser el mismo que el solicitante.");
+            }
+        }
+
+        private ObraMaterial ExisteMaterialEnObra(Solicitud solicitud, SolicitudMaterial sm)
+        {
+            return Context.ObrasMateriales.Where(o => o.IdMaterial == sm.IdMaterial && o.IdObra == solicitud.IdObra).FirstOrDefault();
+        }
 
         internal List<Solicitud> BuscarSolicitudPendientesLista()
         {

@@ -16,8 +16,10 @@ namespace LogicaNegocio.Entidades
     {
         [ForeignKey("Obra")]
         public int IdObra { get; set; }
+        public Obra Obra {  get; set; }
         [ForeignKey("Material")]
         public int IdMaterial { get; set; }
+        public Material Material {  get; set; }
         public int Stock { get; set; }
 
         

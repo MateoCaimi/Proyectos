@@ -170,6 +170,24 @@ namespace LogicaAccesoDatos.Migrations
                     b.ToTable("ObrasEmpleados");
                 });
 
+            modelBuilder.Entity("LogicaNegocio.Entidades.ObraMaterial", b =>
+                {
+                    b.Property<int>("IdObra")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdMaterial")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Stock")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdObra", "IdMaterial");
+
+                    b.HasIndex("IdMaterial");
+
+                    b.ToTable("ObrasMateriales");
+                });
+
             modelBuilder.Entity("LogicaNegocio.Entidades.Plano", b =>
                 {
                     b.Property<int>("Id")
@@ -441,6 +459,25 @@ namespace LogicaAccesoDatos.Migrations
                         .IsRequired();
 
                     b.Navigation("UsuarioACargo");
+                });
+
+            modelBuilder.Entity("LogicaNegocio.Entidades.ObraMaterial", b =>
+                {
+                    b.HasOne("LogicaNegocio.Entidades.Material", "Material")
+                        .WithMany()
+                        .HasForeignKey("IdMaterial")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("LogicaNegocio.Entidades.Obra", "Obra")
+                        .WithMany()
+                        .HasForeignKey("IdObra")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Material");
+
+                    b.Navigation("Obra");
                 });
 
             modelBuilder.Entity("LogicaNegocio.Entidades.Plano", b =>

@@ -293,5 +293,10 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return Context.Solicitudes.Where(s => s.Obra.IdObra == obra.IdObra && s.Estado == Estado.Solicitado).Any();
         }
+
+        internal IEnumerable<ObraMaterial> MaterialesDeObra(Obra obra)
+        {
+            return Context.ObrasMateriales.Where(m => m.Obra.IdObra == obra.IdObra).Include(o => o.Material).Include(o => o.Obra);
+        }
     }
 }

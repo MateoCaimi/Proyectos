@@ -4,6 +4,7 @@ using LogicaNegocio.Excepciones;
 using LogicaNegocio.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Models;
+using System.Collections.Generic;
 using System.Drawing;
 namespace MVC.Controllers
 {
@@ -378,6 +379,29 @@ namespace MVC.Controllers
             }
 
             return File(obra.Cronograma, obra.TipoCronograma, obra.NombreCronograma);
+        }
+
+        public IActionResult Materiales(int id)
+        {
+
+            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            //{
+            //    return RedirectToAction("Index", "Usuario");
+            //}
+            //else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            //{
+            //    return RedirectToAction("Listado", "Usuario");
+            //}
+            Obra obra = Fachada.BuscarObra(id);
+
+            if (obra == null)
+            {
+                return NotFound();
+            }
+
+            IEnumerable<ObraMaterial> materialesObra = Fachada.MaterialesDeObra(obra);
+
+            return View(materialesObra);
         }
 
 

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LogicaAccesoDatos.Migrations
 {
     /// <inheritdoc />
-    public partial class n : Migration
+    public partial class uno : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -248,6 +248,30 @@ namespace LogicaAccesoDatos.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ObrasMateriales",
+                columns: table => new
+                {
+                    IdObra = table.Column<int>(type: "int", nullable: false),
+                    IdMaterial = table.Column<int>(type: "int", nullable: false),
+                    Stock = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ObrasMateriales", x => new { x.IdObra, x.IdMaterial });
+                    table.ForeignKey(
+                        name: "FK_ObrasMateriales_Materiales_IdMaterial",
+                        column: x => x.IdMaterial,
+                        principalTable: "Materiales",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ObrasMateriales_Obras_IdObra",
+                        column: x => x.IdObra,
+                        principalTable: "Obras",
+                        principalColumn: "IdObra",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SolicitudesMateriales",
                 columns: table => new
                 {
@@ -262,8 +286,7 @@ namespace LogicaAccesoDatos.Migrations
                         name: "FK_SolicitudesMateriales_Materiales_IdMaterial",
                         column: x => x.IdMaterial,
                         principalTable: "Materiales",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_SolicitudesMateriales_Solicitudes_IdSolicitud",
                         column: x => x.IdSolicitud,
@@ -291,6 +314,11 @@ namespace LogicaAccesoDatos.Migrations
                 name: "IX_Obras_IdACargo",
                 table: "Obras",
                 column: "IdACargo");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ObrasMateriales_IdMaterial",
+                table: "ObrasMateriales",
+                column: "IdMaterial");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Planos_IdObra",
@@ -336,6 +364,9 @@ namespace LogicaAccesoDatos.Migrations
 
             migrationBuilder.DropTable(
                 name: "Empleados");
+
+            migrationBuilder.DropTable(
+                name: "ObrasMateriales");
 
             migrationBuilder.DropTable(
                 name: "Planos");

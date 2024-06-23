@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogicaAccesoDatos.Migrations
 {
     [DbContext(typeof(ProyectoContext))]
-    [Migration("20240618190137_m")]
-    partial class m
+    [Migration("20240623143538_uno")]
+    partial class uno
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -171,6 +171,24 @@ namespace LogicaAccesoDatos.Migrations
                     b.HasKey("IdObra", "IdEmpleado");
 
                     b.ToTable("ObrasEmpleados");
+                });
+
+            modelBuilder.Entity("LogicaNegocio.Entidades.ObraMaterial", b =>
+                {
+                    b.Property<int>("IdObra")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdMaterial")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Stock")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdObra", "IdMaterial");
+
+                    b.HasIndex("IdMaterial");
+
+                    b.ToTable("ObrasMateriales");
                 });
 
             modelBuilder.Entity("LogicaNegocio.Entidades.Plano", b =>
@@ -446,6 +464,25 @@ namespace LogicaAccesoDatos.Migrations
                     b.Navigation("UsuarioACargo");
                 });
 
+            modelBuilder.Entity("LogicaNegocio.Entidades.ObraMaterial", b =>
+                {
+                    b.HasOne("LogicaNegocio.Entidades.Material", "Material")
+                        .WithMany()
+                        .HasForeignKey("IdMaterial")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("LogicaNegocio.Entidades.Obra", "Obra")
+                        .WithMany()
+                        .HasForeignKey("IdObra")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Material");
+
+                    b.Navigation("Obra");
+                });
+
             modelBuilder.Entity("LogicaNegocio.Entidades.Plano", b =>
                 {
                     b.HasOne("LogicaNegocio.Entidades.Obra", "Obra")
@@ -502,7 +539,7 @@ namespace LogicaAccesoDatos.Migrations
                     b.HasOne("LogicaNegocio.Entidades.Material", "Material")
                         .WithMany()
                         .HasForeignKey("IdMaterial")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("LogicaNegocio.Entidades.Solicitud", "Solicitud")

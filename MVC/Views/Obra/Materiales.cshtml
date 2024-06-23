@@ -1,0 +1,37 @@
+﻿@model IEnumerable<LogicaNegocio.Entidades.ObraMaterial>
+
+@{
+    ViewData["Title"] = "Materiales de Obra";
+}
+
+<h1>Materiales de la Obra</h1>
+
+<p>
+    <a asp-action="Crear" asp-controller="Solicitud" asp-route-idobra="@Model.FirstOrDefault().IdObra">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Material.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Stock)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Material.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Stock)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
