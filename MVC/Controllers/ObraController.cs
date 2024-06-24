@@ -124,6 +124,11 @@ namespace MVC.Controllers
 
             try
             {
+                if (archivoImagen == null)
+                {
+                    throw new ObraException("Debe insertar un cronograma antes de crear la obra");
+                }
+
                 if (aIngresar == null || aIngresar.TipoCronograma != "application/pdf")
                 {
                     using (var memoryStream = new MemoryStream())
@@ -401,7 +406,7 @@ namespace MVC.Controllers
             }
 
             IEnumerable<ObraMaterial> materialesObra = Fachada.MaterialesDeObra(obra);
-
+            ViewBag.idObra = id;
             return View(materialesObra);
         }
 

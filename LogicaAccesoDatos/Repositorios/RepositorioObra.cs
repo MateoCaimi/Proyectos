@@ -297,6 +297,7 @@ namespace LogicaAccesoDatos.Repositorios
 
         internal IEnumerable<ObraMaterial> MaterialesDeObra(Obra obra)
         {
+
             return Context.ObrasMateriales.Where(m => m.Obra.IdObra == obra.IdObra).Include(o => o.Material).Include(o => o.Obra);
         }
 

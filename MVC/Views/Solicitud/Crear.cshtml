@@ -72,7 +72,7 @@ else
                 var nuevaCantidad = $("input[name='Cantidad']").val();
 
                 
-                if (nuevoMaterialId != null && nuevaCantidad != null ) {
+                if (nuevoMaterialId != null && nuevaCantidad <= 0 ) {
 
                     $.ajax({                        
                         url: '@Url.Action("Agregar", "Solicitud", Model.ToList())',
@@ -90,6 +90,8 @@ else
                             alert("Error al agregar el material. Inténtalo de nuevo.");
                         }
                     });
+                }else{
+                    alert("La cantidad no puede ser menor a 0");
                 }
             });
         });

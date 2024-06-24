@@ -126,8 +126,7 @@
     document.getElementById("btnConfirmar").addEventListener("click", function () {
      
         setTimeout(function () {
-            location.reload(); //Esto recarga la pag para q se oculten los botones
-             // window.location.href = '@Url.Action("Confirmar", "Solicitud", new { SolicitudId = @Model.Id })'; .//esto es prueba para redirigir a el confirmar q te tira para el index
+            window.location.href = '@Url.Action("Index", "Solicitud", new { idObra = @Model.IdObra })'; //esto es prueba para redirigir a el confirmar q te tira para el index
         }, 500); // 0.5 segundo de retraso
     });
 </script> 

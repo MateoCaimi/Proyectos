@@ -116,8 +116,13 @@ namespace MVC.Controllers
                 {
                     lista = new List<SolicitudMaterial>();
                 }
+
                 Material material = Fachada.BuscarMaterial(solicitudMaterial.IdMaterial);
                 solicitudMaterial.Material = material;
+                //if(solicitudMaterial.Cantidad <= 0)
+                //{
+                //    throw new SolicitudException("La cantidad solicitada debe ser mayor a 0");
+                //} aca no va pero es momento de catchear esto
                 lista.Add(solicitudMaterial);
                 TempData["ListaActual"] = JsonConvert.SerializeObject(lista);
                 ViewBag.Materiales = Fachada.TodosLosMateriales();
@@ -125,6 +130,7 @@ namespace MVC.Controllers
             }
             catch
             {
+               
                 return RedirectToAction("Index");
             }
         }

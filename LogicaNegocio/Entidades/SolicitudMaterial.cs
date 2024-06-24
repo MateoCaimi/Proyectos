@@ -42,7 +42,7 @@ namespace LogicaNegocio.Entidades
 
         public void Validar()
         {
-            if(Cantidad <= 0)
+            if(this.Cantidad <= 0)
             {
                 throw new MaterialException("No se puede solicitar una cantidad de materiales igual o menor a 0.");
             }

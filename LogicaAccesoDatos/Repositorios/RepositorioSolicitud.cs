@@ -25,9 +25,11 @@ namespace LogicaAccesoDatos.Repositorios
 
         public void Agregar(Solicitud item)
         {
+            
             item.Validar();
             Context.Solicitudes.Add(item);
             Context.SaveChanges();
+           
         }
 
         public Solicitud Buscar(int id)

@@ -3,6 +3,12 @@
 @{
     ViewData["Title"] = "Agregar";
 }
+
+
+<h1>Agregar</h1>
+
+<h4>Obra</h4>
+<hr />
 @if (TempData["Error"] != null)
 {
     <div class="alert alert-danger">
@@ -10,10 +16,13 @@
     </div>
 }
 
-<h1>Agregar</h1>
-
-<h4>Obra</h4>
-<hr />
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
+}
+<br />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Agregar" enctype="multipart/form-data">
@@ -58,16 +67,20 @@
                 </select>
                 <span asp-validation-for="IdACargo" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label for="archivoImagen">Subir Cronograma</label>
                 <input type="file" name="archivoImagen" id="archivoImagen" class="form-control" />
             </div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
+
+
 
 <div>
     <a asp-action="Index">Back to List</a>
