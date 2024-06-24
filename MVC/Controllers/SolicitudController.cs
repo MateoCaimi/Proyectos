@@ -107,6 +107,7 @@ namespace MVC.Controllers
         {
             try
             {
+                //solicitudMaterial.Validar();
                 List<SolicitudMaterial> lista;
                 if (TempData["ListaActual"] != null)
                 {
@@ -119,19 +120,14 @@ namespace MVC.Controllers
 
                 Material material = Fachada.BuscarMaterial(solicitudMaterial.IdMaterial);
                 solicitudMaterial.Material = material;
-                //if(solicitudMaterial.Cantidad <= 0)
-                //{
-                //    throw new SolicitudException("La cantidad solicitada debe ser mayor a 0");
-                //} aca no va pero es momento de catchear esto
                 lista.Add(solicitudMaterial);
                 TempData["ListaActual"] = JsonConvert.SerializeObject(lista);
                 ViewBag.Materiales = Fachada.TodosLosMateriales();
                 return PartialView("ListaMateriales", lista); // Aquí se usa ListaMateriales
             }
-            catch
+            catch (SolicitudException se)
             {
-               
-                return RedirectToAction("Index");
+                return View(se);
             }
         }
 
@@ -162,7 +158,7 @@ namespace MVC.Controllers
                     //hacer pdf orden de compra
                     //problema si el solicitante es el mismo que el aprobador
                     return GenerarPdf(solicitud);
-                    return RedirectToAction("Index", new { idObra = solicitud.IdObra });
+                    //return RedirectToAction("Index", new { idObra = solicitud.IdObra });
                 }
                 else
                 {

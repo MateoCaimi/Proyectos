@@ -53,13 +53,19 @@
                 @Html.DisplayFor(modelItem => item.Finalizada)
             </td> *@
             <td>
-                    @*   @if (item.TipoPdf == "application/pdf") *@
-                    <a href="@Url.Action("ObtenerCronograma", "Obra", new { id = item.IdObra })" target="_blank">Ver Cronograma</a>
+                    @if (item.Cronograma != null)
+                    {
+                        <a href="@Url.Action("ObtenerCronograma", "Obra", new { id = item.IdObra })" target="_blank">Ver Cronograma</a>
+
+                    }else
+                    {
+                        <p>No hay cronograma</p>
+                    }
 
 
     |       <td>
             <td>
-                <a asp-action="Detalles" asp-route-id="@item.IdObra">Detalles</a> |
+                <a asp-action="Detalles" asp-route-id="@item.IdObra">Detalles</a>
             </td>
         </tr>
 }

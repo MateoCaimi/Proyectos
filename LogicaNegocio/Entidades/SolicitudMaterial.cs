@@ -44,7 +44,7 @@ namespace LogicaNegocio.Entidades
         {
             if(this.Cantidad <= 0)
             {
-                throw new MaterialException("No se puede solicitar una cantidad de materiales igual o menor a 0.");
+                throw new SolicitudException("La cantidad no puede ser 0.");
             }
         }
 

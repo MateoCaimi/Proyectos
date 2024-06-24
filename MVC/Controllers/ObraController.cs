@@ -124,12 +124,8 @@ namespace MVC.Controllers
 
             try
             {
-                if (archivoImagen == null)
-                {
-                    throw new ObraException("Debe insertar un cronograma antes de crear la obra");
-                }
 
-                if (aIngresar == null || aIngresar.TipoCronograma != "application/pdf")
+                if (aIngresar == null || archivoImagen != null)
                 {
                     using (var memoryStream = new MemoryStream())
                     {
@@ -138,11 +134,6 @@ namespace MVC.Controllers
                         aIngresar.TipoCronograma = archivoImagen.ContentType;
                         aIngresar.Cronograma = memoryStream.ToArray();
                     }
-                }
-                else
-                {
-                    TempData["Error"] = "Debe proporcionar un archivo válido.";
-                    return View();
                 }
                 Fachada.AgregarObra(aIngresar);
                 return RedirectToAction(nameof(Index));

@@ -33,6 +33,7 @@ else
             </select>
             <label>Cantidad</label>
             <input type="number" name="Cantidad" class="form-control" />
+            <input type="hidden" name="idObra" value="@ViewBag.IdObra" />
             <button type="button" id="addItem" class="btn btn-primary">Agregar</button>
         </div>
 
@@ -72,7 +73,7 @@ else
                 var nuevaCantidad = $("input[name='Cantidad']").val();
 
                 
-                if (nuevoMaterialId != null && nuevaCantidad <= 0 ) {
+                if (nuevoMaterialId != null && nuevaCantidad > 0 ) {
 
                     $.ajax({                        
                         url: '@Url.Action("Agregar", "Solicitud", Model.ToList())',

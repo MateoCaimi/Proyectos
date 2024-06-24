@@ -5,6 +5,13 @@
 }
 
 <h1>Details</h1>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
+}   
 <div>
     <h4>Solicitud</h4>
     <hr />

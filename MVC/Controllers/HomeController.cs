@@ -54,10 +54,6 @@ namespace MVC.Controllers
                     return View(solicitudesPendientes);
                 }
             }
-
-
-            /*Usuario usuarioTest = new UDeOficina("Federico Ruiz", "JorgeJorge123", "JorgeJorge123");
-            Fachada.AgregarUsuario(usuarioTest);*/
             return View();
         }
 

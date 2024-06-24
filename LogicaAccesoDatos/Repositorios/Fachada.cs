@@ -278,7 +278,7 @@ namespace LogicaAccesoDatos.Repositorios
         public void RechazarSolicitud(Solicitud solicitud,UDeOficina rechazador)
         {
             RepositorioSolicitud.RechazarSolicitud(solicitud,rechazador);
-                }
+        }
 
         public List<Solicitud> BuscarSolicitudPendientesLista()
         {

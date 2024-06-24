@@ -25,11 +25,11 @@ namespace LogicaAccesoDatos.Repositorios
 
         public void Agregar(Solicitud item)
         {
-            
+
             item.Validar();
             Context.Solicitudes.Add(item);
             Context.SaveChanges();
-           
+
         }
 
         public Solicitud Buscar(int id)
@@ -142,45 +142,54 @@ namespace LogicaAccesoDatos.Repositorios
             try
             {
 
-            foreach (SolicitudMaterial sol in laSolicitudConMateriales)
-            {
-                bool estaMaterial = false;
-                foreach (var mat in materialesSeleccionadosConCantidad)
+                foreach (SolicitudMaterial sol in laSolicitudConMateriales)
                 {
-                    if (mat.Key == sol.IdMaterial)
+                    bool estaMaterial = false;
+                    foreach (var mat in materialesSeleccionadosConCantidad)
                     {
-                        sol.Cantidad = mat.Value;
-                        estaMaterial = true;
-                    }   
-                }
-                if (!estaMaterial)
-                {
-                    Context.SolicitudesMateriales.Remove(sol);
-                   // Context.SaveChanges();
+                        if (mat.Key == sol.IdMaterial)
+                        {
+                            sol.Cantidad = mat.Value;
+                            estaMaterial = true;
+                        }
+                    }
+                    if (!estaMaterial)
+                    {
+                        Context.SolicitudesMateriales.Remove(sol);
+                        // Context.SaveChanges();
+                    }
                 }
             }
-            }
-            catch (Exception e)
+            catch (SolicitudException se)
             {
-                throw new Exception(e.Message);
+                throw new SolicitudException(se.Message);
             }
         }
 
-        internal void AceptarSolicitud(Solicitud solicitud,UDeOficina aprobador )
+        internal void AceptarSolicitud(Solicitud solicitud, UDeOficina aprobador)
         {
-            if (solicitud.Estado == Estado.Solicitado)
+            try
             {
-            solicitud.IdUDeOficina = aprobador.Id;
-            solicitud.Estado = Estado.Aprobado;
+                if (solicitud.Estado == Estado.Solicitado)
+                {
+                    //solicitud.IdUDeOficina = aprobador.Id;
+                    solicitud.Estado = Estado.Aprobado;
+
+                }
+                else
+                {
+                    throw new SolicitudException("No puede aceptar o rechazar una solicitud que ya fue aceptada o rechazada");
+                }
 
             }
-            else
+            catch (SolicitudException se)
             {
-                throw new SolicitudException("No puede aceptar o rechazar una solicitud que ya fue aceptada o rechazada");
+                throw new SolicitudException(se.Message);
+
             }
 
 
-            Context.SaveChanges() ;
+            Context.SaveChanges();
         }
 
         internal void RechazarSolicitud(Solicitud solicitud, UDeOficina rechazador)
@@ -191,7 +200,7 @@ namespace LogicaAccesoDatos.Repositorios
         }
         internal void ConfirmarSolicitud(Solicitud solicitud, Usuario logueado)
         {
-            if(logueado.NombreUsuario == solicitud.Solicitante.NombreUsuario)
+            if (logueado.NombreUsuario == solicitud.Solicitante.NombreUsuario)
             {
                 List<SolicitudMaterial> materialesSolicitud = MaterialesDeSolicitud(solicitud.Id).ToList();
                 foreach (SolicitudMaterial sm in materialesSolicitud)

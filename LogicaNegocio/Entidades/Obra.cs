@@ -29,8 +29,8 @@ namespace LogicaNegocio.Entidades
         public bool Finalizada { get; set; }
         [ForeignKey("UsuarioACargo")] public int IdACargo { get; set; }
         public UDeObra UsuarioACargo { get; set; }
-        public string NombreCronograma { get; set; }
-        public string TipoCronograma { get; set; }
+        public string? NombreCronograma { get; set; }
+        public string? TipoCronograma { get; set; }
         public byte[]? Cronograma { get; set; }
         public byte[]? QR { get; set; }
 
