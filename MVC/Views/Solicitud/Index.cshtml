@@ -54,7 +54,14 @@
                 @Html.DisplayFor(modelItem => item.Estado)
             </td>
             <td>
-                    <a asp-action="Detalles" asp-route-id="@item.Id" asp-route-idObra="@ViewBag.IdObra">Detalles</a> |
+                @if (item.Estado == LogicaNegocio.Entidades.Estado.Solicitado)
+                    {
+                        <a asp-action="Detalles" asp-route-idSolicitud="@item.Id" >Detalles</a>
+                    }
+                    @if (item.Estado == LogicaNegocio.Entidades.Estado.Aprobado)
+                    {
+                        <a asp-action="Confirmar" asp-route-idSolicitud="@item.Id" >Confirmar</a>
+                    }
             </td>
         </tr>
 }

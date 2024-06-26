@@ -396,7 +396,7 @@ namespace MVC.Controllers
                 return NotFound();
             }
 
-            IEnumerable<ObraMaterial> materialesObra = Fachada.MaterialesDeObra(obra);
+            IEnumerable<ObraMaterial> materialesObra = Fachada.MaterialesDeObra(id);
             ViewBag.idObra = id;
             return View(materialesObra);
         }
@@ -497,7 +497,8 @@ namespace MVC.Controllers
                 TempData["ListaActualConsumo"] = null;
                 if (!Fachada.BuscarObra(idObra).Finalizada)
                 {
-                    ViewBag.Materiales = Fachada.TodosLosMateriales();
+                    IEnumerable<ObraMaterial> materiales = Fachada.MaterialesDeObra(idObra);
+                    ViewBag.Materiales = materiales;
                     ViewBag.IdObra = idObra;
 
                     List<MaterialConsumoViewModel> tempMaterials = new List<MaterialConsumoViewModel>();

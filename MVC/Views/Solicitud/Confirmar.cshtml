@@ -1,0 +1,75 @@
+﻿@model LogicaNegocio.Entidades.Solicitud
+
+@{
+    ViewData["Title"] = "Confirmar";
+}
+
+<h1>Confirmar</h1>
+
+<div>
+    <h4>Solicitud</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Proveedor)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Proveedor.Mail)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Obra)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Obra.Direccion)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Solicitante)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Solicitante.Contrasenia)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Aprovador)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Aprovador.Contrasenia)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Estado)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Estado)
+        </dd>
+    </dl>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Material</th>
+                <th>Cantidad</th>
+            </tr>
+        </thead>
+        <tbody id="materialList">
+            @if (Model != null)
+            {
+                foreach (var item in ViewBag.Materiales)
+                {
+                    <tr>
+                        <td>@item.Material.Nombre</td>
+                        <td>
+                            @item.Cantidad
+                            @item.Material.UnidadDeMedida
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    
+    <form asp-action="Confirmar">
+        <input type="hidden" name="idSolicitud" value="@Model.Id" />
+        <input type="submit" value="Confirmar" class="btn btn-primary" /> |
+        <a asp-action="Index" asp-route-idObra="@Model.IdObra">>Back to List</a>
+    </form>
+</div>

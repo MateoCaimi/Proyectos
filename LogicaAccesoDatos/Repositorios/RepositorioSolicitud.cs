@@ -76,18 +76,6 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return Context.SolicitudesMateriales.Include(sm => sm.Material).Where(sm => sm.IdSolicitud == id);
 
-
-            // Fachada fachada = new Fachada();
-            //IEnumerable<SolicitudMaterial> solicitudMateriales = Context.SolicitudesMateriales.Where(sm => sm.IdSolicitud == id);
-            // foreach (var soliMat in solicitudMateriales)
-            // {
-            //     soliMat.Material = fachada.BuscarMaterial(soliMat.IdMaterial);
-
-            // }
-
-            // return Context.SolicitudesMateriales.Where(sm => sm.IdSolicitud == id);
-
-            //return 
         }
 
         internal Solicitud CrearSolicitud(int idObra, int idSolicitante)
@@ -172,8 +160,9 @@ namespace LogicaAccesoDatos.Repositorios
             {
                 if (solicitud.Estado == Estado.Solicitado)
                 {
-                    //solicitud.IdUDeOficina = aprobador.Id;
+                    solicitud.IdUDeOficina = aprobador.Id;
                     solicitud.Estado = Estado.Aprobado;
+                    Context.SaveChanges();
 
                 }
                 else
@@ -187,9 +176,6 @@ namespace LogicaAccesoDatos.Repositorios
                 throw new SolicitudException(se.Message);
 
             }
-
-
-            Context.SaveChanges();
         }
 
         internal void RechazarSolicitud(Solicitud solicitud, UDeOficina rechazador)
@@ -214,7 +200,7 @@ namespace LogicaAccesoDatos.Repositorios
                     {
                         ObraMaterial om = new ObraMaterial();
                         om.IdMaterial = sm.IdMaterial;
-                        om.IdObra = solicitud.Obra.IdObra;
+                        om.IdObra = solicitud.IdObra;
                         om.Stock = sm.Cantidad;
                         om.Validar();
                         Context.ObrasMateriales.Add(om);
@@ -237,8 +223,6 @@ namespace LogicaAccesoDatos.Repositorios
         internal List<Solicitud> BuscarSolicitudPendientesLista()
         {
             return Context.Solicitudes.Include(s => s.Obra).Where(sp => sp.Estado == Estado.Solicitado).ToList();
-
-            //return Context.Solicitudes.Where(sp => sp.Estado == Estado.Solicitado).ToList(); ;
         }
     }
 }

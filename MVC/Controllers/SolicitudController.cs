@@ -40,13 +40,13 @@ namespace MVC.Controllers
         }
 
         // GET: SolicitudController/Details/5
-        public ActionResult Detalles(int id, int idObra)
+        public ActionResult Detalles(int idSolicitud)
         {
 
-            IEnumerable<SolicitudMaterial> solicitudMateriales = Fachada.BuscarMaterialesSolicitud(id);
-            Solicitud solicitud = Fachada.BuscarSolicitud(id);
+            IEnumerable<SolicitudMaterial> solicitudMateriales = Fachada.BuscarMaterialesSolicitud(idSolicitud);
+            Solicitud solicitud = Fachada.BuscarSolicitud(idSolicitud);
             ViewBag.Materiales = solicitudMateriales;
-            ViewBag.IdObra = idObra;
+            ViewBag.IdObra = solicitud.IdObra;
 
             return View(solicitud);
 
@@ -133,7 +133,7 @@ namespace MVC.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> Aprobar(int solicitudId, List<int> materialesSeleccionados, IFormCollection form)
+        public async Task<ActionResult> Aprobar(int idSolicitud, List<int> materialesSeleccionados, IFormCollection form)
         {
             try
             {
@@ -149,10 +149,10 @@ namespace MVC.Controllers
                     }
 
 
-                    IEnumerable<SolicitudMaterial> laSolicitudConMateriales = Fachada.BuscarMaterialesSolicitud(solicitudId);
+                    IEnumerable<SolicitudMaterial> laSolicitudConMateriales = Fachada.BuscarMaterialesSolicitud(idSolicitud);
                     Fachada.ConfigurarSolicitud(laSolicitudConMateriales, materialesSeleccionadosConCantidad);
                     Usuario aprobador = Fachada.BuscarUsuarioXNombreU(HttpContext.Session.GetString("UsuarioLogueado"));
-                    Solicitud solicitud = Fachada.BuscarSolicitud(solicitudId);
+                    Solicitud solicitud = Fachada.BuscarSolicitud(idSolicitud);
                     Fachada.AceptarSolicitud(solicitud, (UDeOficina)aprobador);
                     //Dejar notificacion de solicitud aprovada al solicitante y tarea de confirmar que llegue el material
                     //hacer pdf orden de compra
@@ -163,7 +163,7 @@ namespace MVC.Controllers
                 else
                 {
                     ViewBag.Error = "No se ha seleccionado ningun material";
-                    Solicitud solicitud = Fachada.BuscarSolicitud(solicitudId);
+                    Solicitud solicitud = Fachada.BuscarSolicitud(idSolicitud);
                     return RedirectToAction("Detalles", new { id = solicitud.Id, idObra = solicitud.IdObra });
                 }
 
@@ -176,11 +176,11 @@ namespace MVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult Rechazar(int SolicitudId)
+        public IActionResult Rechazar(int idSolicitud)
         {
             try
             {
-                Solicitud solicitud = Fachada.BuscarSolicitud(SolicitudId);
+                Solicitud solicitud = Fachada.BuscarSolicitud(idSolicitud);
                 if (solicitud == null)
                 {
                     ViewBag.Error = "La solicitud no existe.";
@@ -195,18 +195,28 @@ namespace MVC.Controllers
             }
             catch (Exception ex)
             {
-                Solicitud solicitud = Fachada.BuscarSolicitud(SolicitudId);
+                Solicitud solicitud = Fachada.BuscarSolicitud(idSolicitud);
                 ViewBag.Error = $"Error al procesar la solicitud: {ex.Message}";
                 return RedirectToAction("Index", new { idObra = solicitud.IdObra });
             }
         }
 
-        [HttpPost]
-        public IActionResult Confirmar(int SolicitudId)
+        public IActionResult Confirmar(int idSolicitud)
+        {
+            Solicitud solicitud = Fachada.BuscarSolicitud(idSolicitud);
+            IEnumerable<SolicitudMaterial> solicitudMateriales = Fachada.BuscarMaterialesSolicitud(idSolicitud);
+            ViewBag.Materiales = solicitudMateriales;
+            return View(solicitud);
+        }
+
+
+        [HttpPost, ActionName("Confirmar")]
+        [ValidateAntiForgeryToken]
+        public IActionResult ConfirmarPost(int idSolicitud)
         {
             try
             {
-                Solicitud solicitud = Fachada.BuscarSolicitud(SolicitudId);
+                Solicitud solicitud = Fachada.BuscarSolicitud(idSolicitud);
                 if (solicitud == null)
                 {
                     ViewBag.Error = "La solicitud no existe.";
@@ -221,7 +231,7 @@ namespace MVC.Controllers
             }
             catch (Exception ex)
             {
-                Solicitud solicitud = Fachada.BuscarSolicitud(SolicitudId);
+                Solicitud solicitud = Fachada.BuscarSolicitud(idSolicitud);
                 ViewBag.Error = $"Error al procesar la solicitud: {ex.Message}";
                 return RedirectToAction("Index", new { idObra = solicitud.IdObra });
             }

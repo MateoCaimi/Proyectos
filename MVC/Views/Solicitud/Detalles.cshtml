@@ -11,7 +11,13 @@
     <div class="alert alert-danger">
         @ViewBag.Error
     </div>
-}   
+}
+@if (ViewBag.Mensaje != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Mensaje
+    </div>
+}
 <div>
     <h4>Solicitud</h4>
     <hr />
@@ -48,10 +54,10 @@
         </dd>
     </dl>
 </div>
-    @if(Model.Estado == LogicaNegocio.Entidades.Estado.Solicitado)
+@if (Model.Estado == LogicaNegocio.Entidades.Estado.Solicitado)
+{
+    @using (Html.BeginForm("Aprobar", "Solicitud", FormMethod.Post))
     {
-        @using (Html.BeginForm("Aprobar", "Solicitud", FormMethod.Post))
-        {
         <table class="table">
             <thead>
                 <tr>
@@ -83,44 +89,20 @@
 
         <br />
 
-        @if (ViewBag.Error != null)
-        {
-            <div class="alert alert-danger">
-                @ViewBag.Error
-            </div>
-        }
-        @if (ViewBag.Mensaje != null)
-        {
-            <div class="alert alert-danger">
-                @ViewBag.Mensaje
-            </div>
-        }
 
-
-        <input type="hidden" name="SolicitudId" value="@Model.Id" />
+        <input type="hidden" name="idSolicitud" value="@Model.Id" />
 
         <button class="btn btn-primary" id="btnConfirmar" type="submit">Aceptar solicitud</button>
 
-        }
+    }
     <br />
-       <div>
+    <div>
         <form method="post" action="@Url.Action("Rechazar", "Solicitud")">
-            <input type="hidden" name="SolicitudId" value="@Model.Id" />
+            <input type="hidden" name="idSolicitud" value="@Model.Id" />
             <button type="submit" class="btn btn-danger">Rechazar solicitud</button>
         </form>
     </div>
-    }
- 
-    @if (Model.Estado == LogicaNegocio.Entidades.Estado.Aprobado)
-{
-    <br />
-        <div>
-            <form method="post" action="@Url.Action("Confirmar", "Solicitud")">
-                <input type="hidden" name="SolicitudId" value="@Model.Id" />
-                <button type="submit" class="btn btn-info">Confirmar solicitud</button>
-            </form>
-        </div>
-    }
+}
 
 <div>
     <a asp-action="Index" asp-route-idObra="@ViewBag.IdObra">>Back to List</a>
@@ -131,9 +113,9 @@
 
 <script>
     document.getElementById("btnConfirmar").addEventListener("click", function () {
-     
+
         setTimeout(function () {
             window.location.href = '@Url.Action("Index", "Solicitud", new { idObra = @Model.IdObra })'; //esto es prueba para redirigir a el confirmar q te tira para el index
         }, 500); // 0.5 segundo de retraso
     });
-</script> 
+</script>

@@ -295,15 +295,15 @@ namespace LogicaAccesoDatos.Repositorios
             return Context.Solicitudes.Where(s => s.Obra.IdObra == obra.IdObra && s.Estado == Estado.Solicitado).Any();
         }
 
-        internal IEnumerable<ObraMaterial> MaterialesDeObra(Obra obra)
+        internal IEnumerable<ObraMaterial> MaterialesDeObra(int idObra)
         {
 
-            return Context.ObrasMateriales.Where(m => m.Obra.IdObra == obra.IdObra).Include(o => o.Material).Include(o => o.Obra);
+            return Context.ObrasMateriales.Where(m => m.Obra.IdObra == idObra).Include(o => o.Material).Include(o => o.Obra);
         }
 
         internal bool ConsumirMateriales(List<MaterialConsumoViewModel>? item, Obra obra)
         {
-            List<ObraMaterial> materialesObra = MaterialesDeObra(obra).ToList();
+            List<ObraMaterial> materialesObra = MaterialesDeObra(obra.IdObra).ToList();
             foreach (MaterialConsumoViewModel m in item)
             {
                 foreach(ObraMaterial om in materialesObra)

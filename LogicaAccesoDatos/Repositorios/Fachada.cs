@@ -290,9 +290,9 @@ namespace LogicaAccesoDatos.Repositorios
             RepositorioSolicitud.ConfirmarSolicitud(solicitud, logueado);
         }
 
-        public IEnumerable<ObraMaterial> MaterialesDeObra(Obra obra)
+        public IEnumerable<ObraMaterial> MaterialesDeObra(int idObra)
         {
-            return RepositorioObra.MaterialesDeObra(obra);
+            return RepositorioObra.MaterialesDeObra(idObra);
         }
 
         public bool ConsumirMateriales(List<MaterialConsumoViewModel>? item, Obra obra)
