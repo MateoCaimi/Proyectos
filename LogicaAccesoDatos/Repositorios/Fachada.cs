@@ -17,7 +17,7 @@ namespace LogicaAccesoDatos.Repositorios
         RepositorioUsuario RepositorioUsuario { get; set; }
         RepositorioMaterial RepositorioMaterial { get; set; }
         RepositorioSolicitud RepositorioSolicitud { get; set; }
-
+        RepositorioEmpleado RepositorioEmpleado { get; set; }
 
         public Fachada()
         {
@@ -26,6 +26,7 @@ namespace LogicaAccesoDatos.Repositorios
             RepositorioUsuario = new RepositorioUsuario();
             RepositorioMaterial = new RepositorioMaterial();
             RepositorioSolicitud = new RepositorioSolicitud();
+            RepositorioEmpleado = new RepositorioEmpleado();
         }
         public Obra ObraPorDireccion(string direccion)
         {
@@ -298,6 +299,26 @@ namespace LogicaAccesoDatos.Repositorios
         public bool ConsumirMateriales(List<MaterialConsumoViewModel>? item, Obra obra)
         {
             return RepositorioObra.ConsumirMateriales(item, obra);
+        }
+
+        public IEnumerable<Empleado> TomarTodosEmpleados()
+        {
+            return RepositorioEmpleado.TomarTodos();
+        }
+
+        public Empleado BuscarEmpleado(int id)
+        {
+            return RepositorioEmpleado.Buscar(id);
+        }
+
+        public void ModificarEmpleado(Empleado nuevoEmpleado)
+        {
+            RepositorioEmpleado.Modificar(nuevoEmpleado);
+        }
+
+        public async Task<Task<string>> Liquidar()
+        {
+            return RepositorioEmpleado.Liquidar();
         }
     }
 }

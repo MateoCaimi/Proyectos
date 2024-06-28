@@ -107,38 +107,38 @@ namespace MVC.Controllers
         }
 
         // GET: MaterialController/Delete/5
-        public ActionResult Eliminar(int id)
-        {
-            try
-            {
-                Material material = Fachada.BuscarMaterial(id);
-                return View(material);
+        //public ActionResult Eliminar(int id)
+        //{
+        //    try
+        //    {
+        //        Material material = Fachada.BuscarMaterial(id);
+        //        return View(material);
 
-            }
-            catch (Exception e)
-            {
-                ViewBag.Error = e.Message;
-                return RedirectToAction("Index");
-            }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        ViewBag.Error = e.Message;
+        //        return RedirectToAction("Index");
+        //    }
                 
-        }
+        //}
 
-        // POST: MaterialController/Delete/5
-        [HttpPost, ActionName("Eliminar")]
-        [ValidateAntiForgeryToken]
-        public ActionResult EliminarConfirmado(int id)
-        {
-            try
-            {
-                Material material = Fachada.BuscarMaterial(id);
-                Fachada.EliminarMaterial(material);
-                return RedirectToAction(nameof(Index));
-            }
-            catch(MaterialException me)
-            {
-                ViewBag.Error = me.Message;
-                return RedirectToAction("Index");
-            }
-        }
+        //// POST: MaterialController/Delete/5
+        //[HttpPost, ActionName("Eliminar")]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult EliminarConfirmado(int id)
+        //{
+        //    try
+        //    {
+        //        Material material = Fachada.BuscarMaterial(id);
+        //        Fachada.EliminarMaterial(material);
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch(MaterialException me)
+        //    {
+        //        ViewBag.Error = me.Message;
+        //        return RedirectToAction("Index");
+        //    }
+        //}
     }
 }

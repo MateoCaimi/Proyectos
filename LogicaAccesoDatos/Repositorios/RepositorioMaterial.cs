@@ -55,7 +55,6 @@ namespace LogicaAccesoDatos.Repositorios
 
         public void Modificar(Material m)
         {
-
             Material material = this.Buscar(m.Id);
             if (material == null)
             {
@@ -67,8 +66,6 @@ namespace LogicaAccesoDatos.Repositorios
             material.Validar();
             Context.Materiales.Update(material);
             Context.SaveChanges();
-
-
         }
 
 
