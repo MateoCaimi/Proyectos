@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.ConstrainedExecution;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace LogicaAccesoDatos.EF
@@ -20,7 +21,7 @@ namespace LogicaAccesoDatos.EF
         public DbSet<TipoEmpleado> TiposEmpleados { get; set; }
         public DbSet<TipoPlano> TiposPlanos { get; set; }
         public DbSet<Solicitud> Solicitudes { get; set; }
-        public DbSet<Dia> Dias { get; set; }
+        public DbSet<Marca> Marcas { get; set; }
         public DbSet<ObraEmpleado> ObrasEmpleados { get; set; }
         public DbSet<SolicitudMaterial> SolicitudesMateriales { get; set; }
         public DbSet<ObraMaterial> ObrasMateriales { get; set; }
@@ -62,7 +63,6 @@ namespace LogicaAccesoDatos.EF
             .HasOne(s => s.Material)
             .WithMany()
             .OnDelete(DeleteBehavior.NoAction);
-
 
             modelBuilder.Entity<Usuario>()
                 .HasDiscriminator<string>("Tipo")

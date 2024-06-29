@@ -320,5 +320,25 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioEmpleado.Liquidar();
         }
+
+        public void AsignacionHorasLluvia(Obra obra, int horasLluvia, DateTime dia)
+        {
+            RepositorioObra.AsignacionHorasLluvia(obra, horasLluvia, dia);
+        }
+
+        public int HorasEmpleadoEnObra(ObraEmpleado oe, DateTime fechaDesde, DateTime fechaHasta)
+        {
+            return RepositorioObra.HorasEmpleadoEnObra(oe, fechaDesde, fechaHasta);
+        }
+
+        public int HorasLluviaEmpleadoEnObra(ObraEmpleado oe, DateTime fechaDesde, DateTime fechaHasta)
+        {
+            return RepositorioObra.HorasLluviaEmpleadoEnObra(oe, fechaDesde, fechaHasta);
+        }
+
+        public List<ObraEmpleado> GetEmpleadosObra(Obra obra)
+        {
+            return GetEmpleadosObra(obra);
+        }
     }
 }

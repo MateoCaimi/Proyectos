@@ -3,10 +3,12 @@ using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones;
 using LogicaNegocio.ViewModel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using MVC.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Drawing;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace MVC.Controllers
 {
     public class ObraController : Controller
@@ -573,6 +575,35 @@ namespace MVC.Controllers
             }
         }
 
+        public ActionResult HorasLluvia(int IdObra)
+        {
+            try
+            {
+                Obra obra = Fachada.BuscarObra(IdObra);
+                return View(obra);
+            }
+            catch
+            {
+                return RedirectToAction("Index");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult HorasLluvia(int IdObra, int horasLluvia, DateTime dia)
+        {
+            try
+            {
+                Obra obra = Fachada.BuscarObra(IdObra);
+                Fachada.AsignacionHorasLluvia(obra, horasLluvia, dia);
+                ViewBag.Mensaje = "Horas asignadas correctamente.";
+                return View(obra);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Index", new { idObra = IdObra });
+            }
+        }
 
     }
 }

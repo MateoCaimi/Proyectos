@@ -1,0 +1,43 @@
+﻿@model LogicaNegocio.Entidades.Obra
+
+@{
+    ViewData["Title"] = "Asignación de horas lluvia";
+}
+
+<h2>Asignación de horas lluvia</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+@if (ViewBag.Mensaje != null)
+{
+    <div class="alert alert-info">
+        @ViewBag.Mensaje
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="HorasLluvia" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="IdObra" />
+            <div>
+                <label>Cantidad de horas lluvia</label>
+                <input type="number" class="form-control" name="HorasLluvia" />
+            </div>
+            <div class="form-group">
+                <label for="Dia" class="control-label"></label>
+                <input for="Dia" class="form-control" type="date" name="Dia" />
+                <span for="Dia" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Asignar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>

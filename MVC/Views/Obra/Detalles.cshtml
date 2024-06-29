@@ -100,6 +100,8 @@
 
     <a asp-action="Materiales" asp-route-id="@Model?.Obra.IdObra">Materiales</a>|
 
+    <a href="@Url.Action("HorasLluvia", "Obra", new{idObra = Model?.Obra.IdObra})">Asignación de horas lluvia</a>|
+
     <a href="@Url.Action("Index","Solicitud", new{idObra = Model?.Obra.IdObra})">Ver solicitudes</a>|
 
     <a href="@Url.Action("Consumo","Obra", new{idObra = Model?.Obra.IdObra})">Consumir materiales</a>|

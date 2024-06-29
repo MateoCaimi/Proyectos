@@ -324,5 +324,65 @@ namespace LogicaAccesoDatos.Repositorios
             Context.SaveChanges();
             return true;
         }
+
+        public void AsignacionHorasLluvia(Obra obra, int horasLluvia, DateTime dia)
+        {
+            List<ObraEmpleado> empleadosObra = GetEmpleadosObra(obra);
+            foreach(ObraEmpleado oe in empleadosObra)
+            {
+                Marca m = MarcaDelDia(oe, dia);
+                if(m != null) //El empleado trabajó ese día
+                {
+                    m.HorasLluvia = horasLluvia;
+                }
+            }
+            Context.SaveChanges();
+        }
+
+        private Marca MarcaDelDia(ObraEmpleado oe, DateTime dia)
+        {
+            return Context.Marcas.Where(m => m.Entrada.Day == dia.Day && m.Salida.Day == dia.Day).FirstOrDefault();
+        }
+
+        public int HorasEmpleadoEnObra(ObraEmpleado oe, DateTime fechaDesde, DateTime fechaHasta)
+        {
+            int horas = 0;
+            List<Marca> marcasEmpleado = this.marcasEmpleado(oe, fechaDesde, fechaHasta);
+
+            foreach(Marca m in marcasEmpleado)
+            {
+                int marcaEnHoras = m.HorasTrabajadas();
+                horas += marcaEnHoras;
+            }
+
+            return horas;
+        }
+
+        public int HorasLluviaEmpleadoEnObra(ObraEmpleado oe, DateTime fechaDesde, DateTime fechaHasta)
+        {
+            int horas = 0;
+            List<Marca> marcasEmpleado = this.marcasEmpleado(oe, fechaDesde, fechaHasta);
+
+            foreach (Marca m in marcasEmpleado)
+            {
+                int marcaEnHoras = m.HorasLluvia;
+                horas += marcaEnHoras;
+            }
+
+            return horas;
+        }
+
+        private List<Marca> marcasEmpleado(ObraEmpleado oemp, DateTime fechaDesde, DateTime fechaHasta)
+        {
+            return Context.Marcas.Where(ma => ma.Empleado.IdObra == oemp.IdObra 
+            && ma.Empleado.IdEmpleado == oemp.IdEmpleado 
+            && ma.Entrada.Day == fechaDesde.Day
+            && ma.Salida.Day == fechaHasta.Day).ToList();
+        }
+
+        public List<ObraEmpleado> GetEmpleadosObra(Obra obra)
+        {
+            return Context.ObrasEmpleados.Where(oe => oe.IdObra == obra.IdObra).ToList();
+        }
     }
 }
