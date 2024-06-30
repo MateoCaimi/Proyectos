@@ -56,10 +56,9 @@
                 foreach (var item in ViewBag.Materiales)
                 {
                     <tr>
-                        <td>@item.Material.Nombre</td>
+                        <td>@item.Material.Nombre (@item.Material.UnidadDeMedida)</td>
                         <td>
                             @item.Cantidad
-                            @item.Material.UnidadDeMedida
                         </td>
                     </tr>
                 }

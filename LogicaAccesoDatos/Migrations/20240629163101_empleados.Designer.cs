@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogicaAccesoDatos.Migrations
 {
     [DbContext(typeof(ProyectoContext))]
-    [Migration("20240624152237_3clon")]
-    partial class _3clon
+    [Migration("20240629163101_empleados")]
+    partial class empleados
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,27 +25,6 @@ namespace LogicaAccesoDatos.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("LogicaNegocio.Entidades.Dia", b =>
-                {
-                    b.Property<DateTime>("Fecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Horas")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ObraEmpleadoIdEmpleado")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ObraEmpleadoIdObra")
-                        .HasColumnType("int");
-
-                    b.HasKey("Fecha");
-
-                    b.HasIndex("ObraEmpleadoIdObra", "ObraEmpleadoIdEmpleado");
-
-                    b.ToTable("Dias");
-                });
-
             modelBuilder.Entity("LogicaNegocio.Entidades.Empleado", b =>
                 {
                     b.Property<int>("Id")
@@ -55,6 +34,10 @@ namespace LogicaAccesoDatos.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Banco")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Cedula")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -77,6 +60,28 @@ namespace LogicaAccesoDatos.Migrations
                     b.HasIndex("IdEmpleado");
 
                     b.ToTable("Empleados");
+                });
+
+            modelBuilder.Entity("LogicaNegocio.Entidades.Marca", b =>
+                {
+                    b.Property<int>("IdObra")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdEmpleado")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Entrada")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("HorasLluvia")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Salida")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("IdObra", "IdEmpleado");
+
+                    b.ToTable("Marcas");
                 });
 
             modelBuilder.Entity("LogicaNegocio.Entidades.Material", b =>
@@ -137,14 +142,12 @@ namespace LogicaAccesoDatos.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NombreCronograma")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("QR")
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("TipoCronograma")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IdObra");
@@ -428,13 +431,6 @@ namespace LogicaAccesoDatos.Migrations
                     b.HasDiscriminator().HasValue("UNormal");
                 });
 
-            modelBuilder.Entity("LogicaNegocio.Entidades.Dia", b =>
-                {
-                    b.HasOne("LogicaNegocio.Entidades.ObraEmpleado", null)
-                        .WithMany("Dias")
-                        .HasForeignKey("ObraEmpleadoIdObra", "ObraEmpleadoIdEmpleado");
-                });
-
             modelBuilder.Entity("LogicaNegocio.Entidades.Empleado", b =>
                 {
                     b.HasOne("LogicaNegocio.Entidades.TipoEmpleado", "TipoEmpleado")
@@ -444,6 +440,17 @@ namespace LogicaAccesoDatos.Migrations
                         .IsRequired();
 
                     b.Navigation("TipoEmpleado");
+                });
+
+            modelBuilder.Entity("LogicaNegocio.Entidades.Marca", b =>
+                {
+                    b.HasOne("LogicaNegocio.Entidades.ObraEmpleado", "Empleado")
+                        .WithMany()
+                        .HasForeignKey("IdObra", "IdEmpleado")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Empleado");
                 });
 
             modelBuilder.Entity("LogicaNegocio.Entidades.Material", b =>
@@ -556,11 +563,6 @@ namespace LogicaAccesoDatos.Migrations
             modelBuilder.Entity("LogicaNegocio.Entidades.Obra", b =>
                 {
                     b.Navigation("Materiales");
-                });
-
-            modelBuilder.Entity("LogicaNegocio.Entidades.ObraEmpleado", b =>
-                {
-                    b.Navigation("Dias");
                 });
 #pragma warning restore 612, 618
         }

@@ -26,10 +26,10 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Material.Nombre)
+                    @item.Material.Nombre (@item.Material.UnidadDeMedida)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Stock)
+                    @item.Stock
                 </td>
             </tr>
         }

@@ -28,7 +28,7 @@ else
             <select id="Material" name="Material" class="form-control">
                 @foreach (var item in ViewBag.Materiales)
                 {
-                    <option value="@item.Id">@item.Nombre</option>
+                    <option value="@item.Id">@item.Nombre (@item.UnidadDeMedida)</option>
                 }
             </select>
             <label>Cantidad</label>

@@ -25,9 +25,15 @@ namespace LogicaAccesoDatos.Repositorios
         {
 
             nuevoMaterial.Validar();
-            if (this.MaterialPorNombre(nuevoMaterial.Nombre) != null)
+            
+            foreach (Material mat in Context.Materiales.ToList())
             {
-                throw new MaterialException("El nombre del material que esta queriendo ingresar ya se encuentra ingresado.");
+                 if (mat.Nombre == nuevoMaterial.Nombre && mat.UnidadDeMedida == nuevoMaterial.UnidadDeMedida)
+                {
+
+                    throw new MaterialException("Ya existe un material con ese nombre y esa unidad de medida.");
+                }
+
             }
 
             Context.Materiales.Add(nuevoMaterial);

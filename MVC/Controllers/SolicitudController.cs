@@ -120,6 +120,21 @@ namespace MVC.Controllers
 
                 Material material = Fachada.BuscarMaterial(solicitudMaterial.IdMaterial);
                 solicitudMaterial.Material = material;
+                if(lista != null)
+                {
+                foreach (SolicitudMaterial sm in lista)
+                {
+                   if(solicitudMaterial.IdMaterial == sm.IdMaterial)
+                        {
+                            sm.Cantidad += solicitudMaterial.Cantidad;
+                            TempData["ListaActual"] = JsonConvert.SerializeObject(lista);
+                            ViewBag.Materiales = Fachada.TodosLosMateriales();
+                            return PartialView("ListaMateriales", lista);
+
+                        }
+                }
+
+                }
                 lista.Add(solicitudMaterial);
                 TempData["ListaActual"] = JsonConvert.SerializeObject(lista);
                 ViewBag.Materiales = Fachada.TodosLosMateriales();

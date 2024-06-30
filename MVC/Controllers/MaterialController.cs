@@ -14,14 +14,14 @@ namespace MVC.Controllers
         public ActionResult Index()
         {
 
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
 
             IEnumerable<Material> materiales = Fachada.TomarTodosMateriales();
             return View(materiales);
@@ -35,15 +35,15 @@ namespace MVC.Controllers
         public ActionResult IndexFiltrado(string nombre)
         {
 
-            /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("Index", "Usuario");
             }
             else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
             {
                 return RedirectToAction("Listado", "Usuario");
-            }*/
-            
+            }
+
             try
             {
             IEnumerable<Material> materialesFiltrados = Fachada.MaterialesFiltrados(nombre);
@@ -70,6 +70,16 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Agregar(Material nuevoMaterial)
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+
             try
             {
                 Fachada.AgregarMaterial(nuevoMaterial);
@@ -94,6 +104,16 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Editar(Material material)
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+
             try
             {
                 Fachada.ModificarMaterial(material);

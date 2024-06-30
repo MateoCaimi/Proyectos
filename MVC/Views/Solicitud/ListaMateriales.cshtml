@@ -3,7 +3,7 @@
 @foreach (var item in Model)
 {
     <tr>
-        <td>@item.Material.Nombre</td>
+        <td>@item.Material.Nombre (@item.Material.UnidadDeMedida)</td>
         <td>@item.Cantidad</td>
     </tr>
 }
