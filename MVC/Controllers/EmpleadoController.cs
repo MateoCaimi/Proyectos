@@ -1,7 +1,9 @@
 ﻿using LogicaAccesoDatos.Repositorios;
 using LogicaNegocio.Entidades;
+using LogicaNegocio.Excepciones;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace MVC.Controllers
 {
@@ -15,6 +17,7 @@ namespace MVC.Controllers
         {
             IEnumerable<Empleado> empleados = Fachada.TomarTodosEmpleados();
             //Liquidar();
+            Fachada.AgregarEmpleadosAObra();
             return View(empleados);
         }
 
@@ -28,20 +31,76 @@ namespace MVC.Controllers
         // GET: EmpleadoController/Create
         public ActionResult Agregar()
         {
+            IEnumerable<TipoEmpleado> tipos = Fachada.BuscarTiposEmpleados();
+            ViewBag.Tipos = tipos;
             return View();
         }
 
         // POST: EmpleadoController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Agregar(IFormCollection collection)
+        public ActionResult Agregar(Empleado empleado)
         {
             try
             {
+                Fachada.AgregarEmpleado(empleado);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
+                IEnumerable<TipoEmpleado> tipos = Fachada.BuscarTiposEmpleados();
+                ViewBag.Tipos = tipos;
+                ViewBag.Error = e.Message;
+                return View();
+            }
+        }
+
+        public ActionResult Egreso(int IdEmpleado, int IdObra)
+        {
+            ObraEmpleado obraEmpleado = Fachada.BuscarEmpleadoObra(IdEmpleado, IdObra);
+            return View();
+        }
+
+        // POST: EmpleadoController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Egreso(ObraEmpleado obraEmpleado, DateTime dia)
+        {
+            try
+            {
+                Fachada.DarEgreso(obraEmpleado, dia);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+                ViewBag.Error = e.Message;
+                return View();
+            }
+        }
+
+        // GET: EmpleadoController/Create
+        public ActionResult AgregarTipo()
+        {
+            return View();
+        }
+
+        // POST: EmpleadoController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AgregarTipo(TipoEmpleado tipo)
+        {
+            try
+            {
+                if(tipo == null)
+                {
+                    throw new EmpleadoException("El tipo no puede ser nulo");
+                }
+                Fachada.AgregarTipoEmpleado(tipo);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
                 return View();
             }
         }

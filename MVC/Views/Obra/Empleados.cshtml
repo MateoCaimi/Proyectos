@@ -1,0 +1,69 @@
+﻿@model IEnumerable<LogicaNegocio.Entidades.ObraEmpleado>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Empleado.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Empleado.Cedula)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaIngreso)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaEgreso)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Empleado.TipoEmpleado.Categoría)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Empleado.CuentaBanco)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Empleado.Banco)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Empleado.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Empleado.Cedula)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaIngreso)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaEgreso)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Empleado.TipoEmpleado.Categoría)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Empleado.CuentaBanco)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Empleado.Banco)
+                </td>
+                <td>
+                    <a asp-action="Detalles" asp-controller="Empleado" asp-route-id="@item.Empleado.Id" >Details</a> |
+                    <a asp-action="Egreso" asp-controller="Empleado" asp-route-idempleado="@item.Empleado.Id" asp-route-idobra="@item.Obra.IdObra">Egreso</a> |
+                    <a asp-action="Delete" asp-controller="Empleado" asp-route-id="@item.Empleado.Id" >Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

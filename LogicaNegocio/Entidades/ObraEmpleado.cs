@@ -18,9 +18,11 @@ namespace LogicaNegocio.Entidades
         public int IdObra { get; set; }
         [ForeignKey("Empleado")]
         public int IdEmpleado { get; set; }
+        public Obra Obra { get; set; }
+        public Empleado Empleado { get; set; }
         [Required(ErrorMessage = "Ingrese una fecha")]
         public DateTime FechaIngreso { get; set; }
-        public DateTime FechaEgreso { get; set; }
+        public DateTime? FechaEgreso { get; set; }
 
         public ObraEmpleado()
         {

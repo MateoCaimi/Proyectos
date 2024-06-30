@@ -1,0 +1,51 @@
+﻿@model LogicaNegocio.Entidades.ObraEmpleado
+
+@{
+    ViewData["Title"] = "AgregarEmpleado";
+}
+
+<h1>AgregarEmpleado</h1>
+
+<h4>ObraEmpleado</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AgregarEmpleado" asp-controller="Obra">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div>
+                <label>Obra</label>
+                <select id="IdObra" name="IdObra" class="form-control">
+                    @foreach (var item in ViewBag.Obras)
+                    {
+                        <option value="@item.IdObra">@item.Nombre</option>
+                    }
+                </select>
+            </div>
+            <div>
+                <label>Empleado</label>
+                <select id="IdEmpleado" name="IdEmpleado" class="form-control">
+                    @foreach (var item in ViewBag.Empleados)
+                    {
+                        <option value="@item.Id">@item.Nombre</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaIngreso" class="control-label"></label>
+                <input asp-for="FechaIngreso" class="form-control" />
+                <span asp-validation-for="FechaIngreso" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

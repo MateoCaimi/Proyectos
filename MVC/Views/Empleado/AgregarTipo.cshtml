@@ -1,0 +1,55 @@
+﻿@model LogicaNegocio.Entidades.TipoEmpleado
+
+@{
+    ViewData["Title"] = "AgregarTipo";
+}
+
+<h1>AgregarTipo</h1>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
+}
+
+<h4>TipoEmpleado</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AgregarTipo">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Categoría" class="control-label"></label>
+                <input asp-for="Categoría" class="form-control" />
+                <span asp-validation-for="Categoría" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ValorHora" class="control-label"></label>
+                <input asp-for="ValorHora" class="form-control" />
+                <span asp-validation-for="ValorHora" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Presentismo" class="control-label"></label>
+                <input asp-for="Presentismo" class="form-control" />
+                <span asp-validation-for="Presentismo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Compensacion" class="control-label"></label>
+                <input asp-for="Compensacion" class="form-control" />
+                <span asp-validation-for="Compensacion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

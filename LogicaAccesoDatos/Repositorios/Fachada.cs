@@ -338,7 +338,42 @@ namespace LogicaAccesoDatos.Repositorios
 
         public List<ObraEmpleado> GetEmpleadosObra(Obra obra)
         {
-            return GetEmpleadosObra(obra);
+            return RepositorioObra.GetEmpleadosObra(obra);
+        }
+
+        public void AgregarEmpleadosAObra()
+        {
+            RepositorioEmpleado.AgregarEmpleadosAObra();
+        }
+
+        public void AgregarTipoEmpleado(TipoEmpleado tipo)
+        {
+            RepositorioEmpleado.AgregarTipo(tipo);
+        }
+
+        public IEnumerable<TipoEmpleado> BuscarTiposEmpleados()
+        {
+            return RepositorioEmpleado.BuscarTipos();
+        }
+
+        public void AgregarEmpleado(Empleado empleado)
+        {
+            RepositorioEmpleado.Agregar(empleado);
+        }
+
+        public void DarEgreso(ObraEmpleado empleado, DateTime fecha)
+        {
+            RepositorioObra.DarEgreso(empleado, fecha);
+        }
+
+        public ObraEmpleado BuscarEmpleadoObra(int idEmpleado, int idObra)
+        {
+            return RepositorioObra.EmpleadoObra(idEmpleado, idObra);
+        }
+
+        public void AgregarEmpleadoAObra(ObraEmpleado oe)
+        {
+            RepositorioEmpleado.AgregarEmpleado(oe);
         }
     }
 }

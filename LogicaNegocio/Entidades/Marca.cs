@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LogicaNegocio.Entidades
 {
-    [PrimaryKey(nameof(IdObra), nameof(IdEmpleado))]
+    [PrimaryKey(nameof(IdObra), nameof(IdEmpleado), nameof(Entrada), nameof(Salida))]
     public class Marca
     {
         public int IdObra { get; set; }

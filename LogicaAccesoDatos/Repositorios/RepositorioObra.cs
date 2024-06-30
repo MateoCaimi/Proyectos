@@ -327,6 +327,15 @@ namespace LogicaAccesoDatos.Repositorios
 
         public void AsignacionHorasLluvia(Obra obra, int horasLluvia, DateTime dia)
         {
+            if(horasLluvia < 0)
+            {
+                throw new ObraException("No se puede añadir una cantidad negativa de horas lluvia.");
+            }
+            TimeSpan diff = dia - DateTime.Today;
+            if (diff.Days >= 0)
+            {
+                throw new ObraException("No se pueden modificar las horas lluvia de un día que no ha sucedido.");
+            }
             List<ObraEmpleado> empleadosObra = GetEmpleadosObra(obra);
             foreach(ObraEmpleado oe in empleadosObra)
             {
@@ -341,7 +350,7 @@ namespace LogicaAccesoDatos.Repositorios
 
         private Marca MarcaDelDia(ObraEmpleado oe, DateTime dia)
         {
-            return Context.Marcas.Where(m => m.Entrada.Day == dia.Day && m.Salida.Day == dia.Day).FirstOrDefault();
+            return Context.Marcas.Where(m => m.Entrada.Day == dia.Day && m.Salida.Day == dia.Day && m.IdEmpleado == oe.IdEmpleado).FirstOrDefault();
         }
 
         public int HorasEmpleadoEnObra(ObraEmpleado oe, DateTime fechaDesde, DateTime fechaHasta)
@@ -382,7 +391,31 @@ namespace LogicaAccesoDatos.Repositorios
 
         public List<ObraEmpleado> GetEmpleadosObra(Obra obra)
         {
-            return Context.ObrasEmpleados.Where(oe => oe.IdObra == obra.IdObra).ToList();
+            return Context.ObrasEmpleados.Where(oe => oe.IdObra == obra.IdObra).Include(oe => oe.Empleado).Include(oe => oe.Empleado.TipoEmpleado).Include(oe => oe.Obra).ToList();
+        }
+
+        internal ObraEmpleado EmpleadoObra(int idEmpleado, int idObra)
+        {
+            return Context.ObrasEmpleados.Where(oe => oe.IdObra == idObra && oe.IdEmpleado == idEmpleado).FirstOrDefault();
+        }
+
+        public void DarEgreso(ObraEmpleado empleado, DateTime fecha)
+        {
+            try
+            {
+                empleado = this.EmpleadoObra(empleado.IdEmpleado, empleado.IdObra);
+                empleado.FechaEgreso = fecha;
+                Context.SaveChanges();
+            }
+            catch (EmpleadoException ee)
+            {
+                throw new EmpleadoException(ee.Message);
+            }
+        }
+
+        private bool ExisteEmpleadoEnObra(ObraEmpleado oe)
+        {
+            return Context.ObrasEmpleados.Where(e => e.IdObra == oe.IdObra && e.IdEmpleado == oe.IdEmpleado).Any();
         }
     }
 }

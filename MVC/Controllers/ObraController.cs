@@ -51,8 +51,43 @@ namespace MVC.Controllers
             IEnumerable<Obra> listadoObras = Fachada.ObrasFiltradas(nombre, direccion, finalizada);
             return View(listadoObras);
         }
+        public ActionResult Empleados(int IdObra)
+        {
+            Obra obra = Fachada.BuscarObra(IdObra);
+            IEnumerable<ObraEmpleado> empleados = Fachada.GetEmpleadosObra(obra);
+            return View(empleados);
+        }
 
-       // GET: ObraController/Details/5
+        public ActionResult AgregarEmpleado()
+        {
+            IEnumerable<Obra> obra = Fachada.TomarTodasObras();
+            IEnumerable<Empleado> empleados = Fachada.TomarTodosEmpleados();
+            ViewBag.Obras = obra;
+            ViewBag.Empleados = empleados;
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AgregarEmpleado(ObraEmpleado oe)
+        {
+            try
+            {
+                Fachada.AgregarEmpleadoAObra(oe);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+                IEnumerable<Obra> obra = Fachada.TomarTodasObras();
+                IEnumerable<Empleado> empleados = Fachada.TomarTodosEmpleados();
+                ViewBag.Obras = obra;
+                ViewBag.Empleados = empleados;
+                ViewBag.Error = e.Message;
+                return View();
+            }
+        }
+
+        // GET: ObraController/Details/5
         public ActionResult Detalles(int id)
         {
             //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
@@ -601,7 +636,8 @@ namespace MVC.Controllers
             catch (Exception ex)
             {
                 TempData["Error"] = ex.Message;
-                return RedirectToAction("Index", new { idObra = IdObra });
+                Obra obra = Fachada.BuscarObra(IdObra);
+                return View();
             }
         }
 
