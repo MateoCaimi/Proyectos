@@ -167,13 +167,85 @@ namespace LogicaAccesoDatos.Repositorios
                         m.IdEmpleado = this.BuscarPorNombreYCedula(empleadoNom, empleadoCed).Id;
                         m.IdObra = this.ObraPorNombre(nombreObra).IdObra;
                         m.HorasLluvia = 0;
-                        this.AgregarMarca(m);
+                        if (!this.ExisteMarca(m))
+                        {
+                            this.AgregarMarca(m);
+                        }
+                        
                         incremento += 2;
                     }
                 }
 
                 //El resto de variables las modifican manualmente.
             }
+        }
+
+        public double LiquidacionEmpleado(ObraEmpleado oe, DateTime desde, DateTime hasta)
+        {
+            double liquidacionNominal = 0;
+            int horasTotales = 0;
+            int horasLluvia = 0;
+            int horasExtra = 0;
+
+            List<Marca> marcasEmpRango = this.MarcasEmpRango(oe, desde, hasta);
+            foreach(Marca m in marcasEmpRango)
+            {
+                horasTotales += m.HorasTrabajadas() - m.HorasLluvia;
+                horasLluvia += m.HorasLluvia;
+                horasExtra += m.HorasExtra;
+            }
+            liquidacionNominal = ((horasTotales) + (horasLluvia * 2) + (horasExtra * 4)) 
+                * ((oe.Empleado.TipoEmpleado.ValorHora + oe.Empleado.TipoEmpleado.Compensacion) * oe.Empleado.TipoEmpleado.Presentismo);
+
+            return liquidacionNominal;
+        }
+
+        public double LiquidacionObra(Obra obra, DateTime desde, DateTime hasta)
+        {
+            double liquidacionNominal = 0;
+            List<ObraEmpleado> empleadosObra = this.GetEmpleadosObra(obra); //Repetición de métodos entre repositorios. Que los repos se llamen está mal, pero no sé como organizarlo todavía
+            
+            foreach(ObraEmpleado oe in empleadosObra)
+            {
+                liquidacionNominal += this.LiquidacionEmpleado(oe, desde, hasta);
+            }
+            return liquidacionNominal;
+        }
+
+        public double LiquidacionTotal(DateTime desde, DateTime hasta)
+        {
+            double liquidacionNominal = 0;
+            List<Obra> obras = this.GetObras(); //Repetición de métodos entre repositorios. Que los repos se llamen está mal, pero no sé como organizarlo todavía
+
+            foreach (Obra o in obras)
+            {
+                liquidacionNominal += this.LiquidacionObra(o, desde, hasta);
+            }
+            return liquidacionNominal;
+        }
+
+        private List<Obra> GetObras()
+        {
+            return Context.Obras.ToList();   
+        }
+
+        private List<ObraEmpleado> GetEmpleadosObra(Obra obra)
+        {
+            return Context.ObrasEmpleados.Where(oe => oe.IdObra == obra.IdObra).Include(oe => oe.Empleado).Include(oe => oe.Empleado.TipoEmpleado).Include(oe => oe.Obra).ToList();
+        }
+
+        private List<Marca> MarcasEmpRango(ObraEmpleado oe, DateTime desde, DateTime hasta)
+        {
+            return Context.Marcas.Where(marc => marc.Entrada.Day == desde.Day 
+            && marc.Salida.Day == hasta.Day && marc.IdObra == oe.IdObra 
+            && marc.IdEmpleado == oe.IdEmpleado).ToList();
+        }
+
+        private bool ExisteMarca(Marca m)
+        {
+            return Context.Marcas.Where(mar => mar.Entrada == m.Entrada 
+            && mar.Salida == m.Salida && mar.IdObra == m.IdObra 
+            && mar.IdEmpleado == m.IdEmpleado).Any();
         }
 
         private void AgregarMarca(Marca m)

@@ -323,7 +323,12 @@ namespace LogicaAccesoDatos.Repositorios
 
         public void AsignacionHorasLluvia(Obra obra, int horasLluvia, DateTime dia)
         {
-            RepositorioObra.AsignacionHorasLluvia(obra, horasLluvia, dia);
+            RepositorioObra.AsignacionHorasLluviaOExtra(obra, horasLluvia, dia, false);
+        }
+
+        public void AsignacionHorasExtra(Obra obra, int horasExtra, DateTime dia)
+        {
+            RepositorioObra.AsignacionHorasLluviaOExtra(obra, horasExtra, dia, true);
         }
 
         public int HorasEmpleadoEnObra(ObraEmpleado oe, DateTime fechaDesde, DateTime fechaHasta)

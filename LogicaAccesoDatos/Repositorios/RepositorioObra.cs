@@ -325,16 +325,16 @@ namespace LogicaAccesoDatos.Repositorios
             return true;
         }
 
-        public void AsignacionHorasLluvia(Obra obra, int horasLluvia, DateTime dia)
+        public void AsignacionHorasLluviaOExtra(Obra obra, int horas, DateTime dia, bool sonExtra)
         {
-            if(horasLluvia < 0)
+            if(horas < 0)
             {
-                throw new ObraException("No se puede añadir una cantidad negativa de horas lluvia.");
+                throw new ObraException("No se puede añadir una cantidad negativa de horas lluvia o extra.");
             }
             TimeSpan diff = dia - DateTime.Today;
             if (diff.Days >= 0)
             {
-                throw new ObraException("No se pueden modificar las horas lluvia de un día que no ha sucedido.");
+                throw new ObraException("No se pueden modificar las horas lluvia o extra de un día que no ha sucedido.");
             }
             List<ObraEmpleado> empleadosObra = GetEmpleadosObra(obra);
             foreach(ObraEmpleado oe in empleadosObra)
@@ -342,7 +342,15 @@ namespace LogicaAccesoDatos.Repositorios
                 Marca m = MarcaDelDia(oe, dia);
                 if(m != null) //El empleado trabajó ese día
                 {
-                    m.HorasLluvia = horasLluvia;
+                    if (sonExtra)
+                    {
+                        m.HorasExtra = horas; 
+                    }
+                    else
+                    {
+                        m.HorasLluvia = horas;
+                    }
+                    
                 }
             }
             Context.SaveChanges();

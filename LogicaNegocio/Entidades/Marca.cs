@@ -19,6 +19,7 @@ namespace LogicaNegocio.Entidades
         public DateTime Entrada { get; set; }
         public DateTime Salida { get; set; }
         public int HorasLluvia { get; set; }
+        public int HorasExtra { get; set; }
 
         public int HorasTrabajadas()
         {
