@@ -285,6 +285,15 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioSolicitud.BuscarSolicitudPendientesLista();
         }
+        public List<Solicitud> BuscarSolicitudAprobadasParaUnUObra(string? nomObrero)
+        {
+           return RepositorioSolicitud.BuscarSolicitudesAprobadasParaUnUObra(nomObrero);
+        }
+
+        public List<Solicitud> BuscarSolicitudConfirmadasLista()
+        {
+            return RepositorioSolicitud.BuscarSolicitudConfirmada();
+        }
 
         public void ConfirmarSolicitud(Solicitud solicitud, Usuario logueado)
         {
@@ -380,5 +389,6 @@ namespace LogicaAccesoDatos.Repositorios
         {
             RepositorioEmpleado.AgregarEmpleado(oe);
         }
+
     }
 }

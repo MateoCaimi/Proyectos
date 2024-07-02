@@ -6,25 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LogicaAccesoDatos.Migrations
 {
     /// <inheritdoc />
-    public partial class empleados : Migration
+    public partial class nuevoClon : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "ObrasEmpleados",
-                columns: table => new
-                {
-                    IdObra = table.Column<int>(type: "int", nullable: false),
-                    IdEmpleado = table.Column<int>(type: "int", nullable: false),
-                    FechaIngreso = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaEgreso = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ObrasEmpleados", x => new { x.IdObra, x.IdEmpleado });
-                });
-
             migrationBuilder.CreateTable(
                 name: "Proveedores",
                 columns: table => new
@@ -87,27 +73,6 @@ namespace LogicaAccesoDatos.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Usuarios", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Marcas",
-                columns: table => new
-                {
-                    IdObra = table.Column<int>(type: "int", nullable: false),
-                    IdEmpleado = table.Column<int>(type: "int", nullable: false),
-                    Entrada = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Salida = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    HorasLluvia = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Marcas", x => new { x.IdObra, x.IdEmpleado });
-                    table.ForeignKey(
-                        name: "FK_Marcas_ObrasEmpleados_IdObra_IdEmpleado",
-                        columns: x => new { x.IdObra, x.IdEmpleado },
-                        principalTable: "ObrasEmpleados",
-                        principalColumns: new[] { "IdObra", "IdEmpleado" },
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -179,6 +144,32 @@ namespace LogicaAccesoDatos.Migrations
                         column: x => x.ObraIdObra,
                         principalTable: "Obras",
                         principalColumn: "IdObra");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ObrasEmpleados",
+                columns: table => new
+                {
+                    IdObra = table.Column<int>(type: "int", nullable: false),
+                    IdEmpleado = table.Column<int>(type: "int", nullable: false),
+                    FechaIngreso = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaEgreso = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ObrasEmpleados", x => new { x.IdObra, x.IdEmpleado });
+                    table.ForeignKey(
+                        name: "FK_ObrasEmpleados_Empleados_IdEmpleado",
+                        column: x => x.IdEmpleado,
+                        principalTable: "Empleados",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ObrasEmpleados_Obras_IdObra",
+                        column: x => x.IdObra,
+                        principalTable: "Obras",
+                        principalColumn: "IdObra",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -275,6 +266,28 @@ namespace LogicaAccesoDatos.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Marcas",
+                columns: table => new
+                {
+                    IdObra = table.Column<int>(type: "int", nullable: false),
+                    IdEmpleado = table.Column<int>(type: "int", nullable: false),
+                    Entrada = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Salida = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    HorasLluvia = table.Column<int>(type: "int", nullable: false),
+                    HorasExtra = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Marcas", x => new { x.IdObra, x.IdEmpleado, x.Entrada, x.Salida });
+                    table.ForeignKey(
+                        name: "FK_Marcas_ObrasEmpleados_IdObra_IdEmpleado",
+                        columns: x => new { x.IdObra, x.IdEmpleado },
+                        principalTable: "ObrasEmpleados",
+                        principalColumns: new[] { "IdObra", "IdEmpleado" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SolicitudesMateriales",
                 columns: table => new
                 {
@@ -312,6 +325,11 @@ namespace LogicaAccesoDatos.Migrations
                 name: "IX_Obras_IdACargo",
                 table: "Obras",
                 column: "IdACargo");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ObrasEmpleados_IdEmpleado",
+                table: "ObrasEmpleados",
+                column: "IdEmpleado");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ObrasMateriales_IdMaterial",
@@ -358,9 +376,6 @@ namespace LogicaAccesoDatos.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Empleados");
-
-            migrationBuilder.DropTable(
                 name: "Marcas");
 
             migrationBuilder.DropTable(
@@ -371,9 +386,6 @@ namespace LogicaAccesoDatos.Migrations
 
             migrationBuilder.DropTable(
                 name: "SolicitudesMateriales");
-
-            migrationBuilder.DropTable(
-                name: "TiposEmpleados");
 
             migrationBuilder.DropTable(
                 name: "ObrasEmpleados");
@@ -388,10 +400,16 @@ namespace LogicaAccesoDatos.Migrations
                 name: "Solicitudes");
 
             migrationBuilder.DropTable(
+                name: "Empleados");
+
+            migrationBuilder.DropTable(
                 name: "Obras");
 
             migrationBuilder.DropTable(
                 name: "Proveedores");
+
+            migrationBuilder.DropTable(
+                name: "TiposEmpleados");
 
             migrationBuilder.DropTable(
                 name: "Usuarios");

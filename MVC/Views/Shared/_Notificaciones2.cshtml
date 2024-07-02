@@ -1,0 +1,137 @@
+﻿@using System.Text.Json;
+@using Microsoft.AspNetCore.Http;
+@using LogicaNegocio.Entidades;
+
+@{
+    string solicitudes = Context.Session.GetString("SolicitudesPendientes");
+    string solicitudesAprob = Context.Session.GetString("SolicitudesAprobadas");
+    string solicitudesConfirmadas = Context.Session.GetString("SolicitudesConfirmadas");
+
+
+
+    if (Context.Session.GetString("UsuarioTipo") == "Usuario de oficina")
+    {
+        
+    if(solicitudes != null){
+    List<Solicitud> solicitudesList = JsonSerializer.Deserialize<List<Solicitud>>(solicitudes);
+    int cantSoli = solicitudesList.Count();
+
+
+        <div class="dropdown">
+            <button class="btn btn-Primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Solicitudes pendientes
+                @*Aca iria la Campanita*@
+            </button>
+
+            <span class="badge bg-primary rounded-pill">
+                @cantSoli
+            </span>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+
+
+
+                @foreach (Solicitud soli in solicitudesList)
+                {
+
+                    <li class="list-group">
+                        <a class="list-group-item list-group-item-action" href="@Url.Action("Detalles", "Solicitud", new { id = soli.Id, idObra = soli.IdObra})">Solicitud de la obra: @soli.Obra.Nombre</a>
+                    </li>
+
+                }
+               
+
+
+            </ul>
+        </div>
+
+
+    
+
+
+    if (solicitudesConfirmadas != null)
+    {
+        List<Solicitud> solicitudesListConf = JsonSerializer.Deserialize<List<Solicitud>>(solicitudesConfirmadas);
+        int cantSoli2 = solicitudesListConf.Count();
+
+
+            <div class="dropdown">
+            <button class="btn btn-Primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Solicitudes confirmadas
+                @*Aca iria la Campanita*@
+            </button>
+
+            <span class="badge bg-primary rounded-pill">
+                @cantSoli2
+            </span>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+
+
+
+                @foreach (Solicitud soli in solicitudesListConf)
+                {
+
+                    <li class="list-group">
+                        <a class="list-group-item list-group-item-action" href="@Url.Action("Detalles", "Solicitud", new { id = soli.Id, idObra = soli.IdObra})">Se confirmo la solicitud de la obra: @soli.Obra.Nombre</a>
+                    </li>
+
+                }
+
+
+            </ul>
+            </div>
+
+        }
+
+    }
+    }
+
+
+
+    if (Context.Session.GetString("UsuarioTipo") == "Usuario de obra")
+    {
+        
+    if (solicitudesAprob != null)
+    {
+        List<Solicitud> solicitudesListApro = JsonSerializer.Deserialize<List<Solicitud>>(solicitudesAprob);
+        int cantSoli3 = solicitudesListApro.Count();
+
+
+        <div class="dropdown">
+            <button class="btn btn-Primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Solicitudes aprobadas
+                @*Aca iria la Campanita*@
+            </button>
+
+            <span class="badge bg-primary rounded-pill">
+                @cantSoli3
+            </span>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+
+
+
+                @foreach (Solicitud soli in solicitudesListApro)
+                {
+
+                    <li class="list-group">
+                        <a class="list-group-item list-group-item-action" href="@Url.Action("Detalles", "Solicitud", new { id = soli.Id, idObra = soli.IdObra})">Se aprobo la solicitud de: @soli.Obra.Nombre</a>
+                    </li>
+
+                }
+
+
+            </ul>
+        </div>
+
+    }
+
+    }
+    
+
+
+
+
+}
+
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@

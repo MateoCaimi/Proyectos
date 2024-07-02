@@ -37,7 +37,9 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Plano" asp-action="Index">Plano</a>
                             </li>
-                            <partial name="_Notificaciones"/>
+
+                            <partial name="_Notificaciones2"/>
+                           
                         }
                         else if (Context.Session.GetString("UsuarioLogueado") != null && Context.Session.GetString("UsuarioTipo") == "Usuario administrador")
                         {

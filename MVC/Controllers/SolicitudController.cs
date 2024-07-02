@@ -25,7 +25,12 @@ namespace MVC.Controllers
         // GET: SolicitudController
         public ActionResult Index(int idObra)
         {
-            List<Solicitud> solicitudesPendientes = Fachada.BuscarSolicitudPendientesLista();
+
+            if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario de oficina")
+            {
+
+
+                List<Solicitud> solicitudesPendientes = Fachada.BuscarSolicitudPendientesLista();
             var opciones = new JsonSerializerOptions
             {
                 ReferenceHandler = ReferenceHandler.IgnoreCycles,
@@ -33,6 +38,38 @@ namespace MVC.Controllers
 
             };
             HttpContext.Session.SetString("SolicitudesPendientes", System.Text.Json.JsonSerializer.Serialize(solicitudesPendientes, opciones));
+
+
+
+
+            List<Solicitud> solicitudesConfirmadas = Fachada.BuscarSolicitudConfirmadasLista();
+            var opciones2 = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                WriteIndented = true,
+
+            };
+            HttpContext.Session.SetString("SolicitudesConfirmadas", System.Text.Json.JsonSerializer.Serialize(solicitudesConfirmadas, opciones2));
+
+            }
+
+
+
+            if(HttpContext.Session.GetString("UsuarioTipo") == "Usuario de obra")
+            {
+                string nomObrero = HttpContext.Session.GetString("UsuarioLogueado");
+            List<Solicitud> solicitudesAprobadas = Fachada.BuscarSolicitudAprobadasParaUnUObra(nomObrero);
+            var opciones3 = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                WriteIndented = true,
+
+            };
+            HttpContext.Session.SetString("SolicitudesAprobadas", System.Text.Json.JsonSerializer.Serialize(solicitudesAprobadas, opciones3));
+            }
+
+
+
 
             IEnumerable<Solicitud> solicitudesObra = Fachada.SolicitudesDeObra(idObra);
             ViewBag.IdObra = idObra;

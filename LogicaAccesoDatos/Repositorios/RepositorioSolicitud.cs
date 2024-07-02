@@ -220,9 +220,24 @@ namespace LogicaAccesoDatos.Repositorios
             return Context.ObrasMateriales.Where(o => o.IdMaterial == sm.IdMaterial && o.IdObra == solicitud.IdObra).FirstOrDefault();
         }
 
+
         internal List<Solicitud> BuscarSolicitudPendientesLista()
         {
             return Context.Solicitudes.Include(s => s.Obra).Where(sp => sp.Estado == Estado.Solicitado).ToList();
+        }
+
+        internal List<Solicitud> BuscarSolicitudesAprobadasParaUnUObra(string? nomObrero)
+        {
+            Fachada f = new Fachada();
+
+            Usuario u = f.BuscarUsuarioXNombreU(nomObrero);
+
+            return Context.Solicitudes.Include(s => s.Obra).Where(sp => sp.Estado == Estado.Aprobado && sp.Obra.IdACargo == u.Id).ToList();
+        }
+
+        internal List<Solicitud> BuscarSolicitudConfirmada()
+        {
+            return Context.Solicitudes.Include(s => s.Obra).Where(sp => sp.Estado == Estado.Recibido).ToList();
         }
     }
 }
