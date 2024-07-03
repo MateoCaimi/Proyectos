@@ -21,7 +21,7 @@ namespace LogicaNegocio.Entidades
         public Obra Obra { get; set; }
         public Empleado Empleado { get; set; }
         [Required(ErrorMessage = "Ingrese una fecha")]
-        public DateTime FechaIngreso { get; set; }
+        public DateTime? FechaIngreso { get; set; }
         public DateTime? FechaEgreso { get; set; }
 
         public ObraEmpleado()

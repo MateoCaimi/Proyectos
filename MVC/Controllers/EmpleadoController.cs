@@ -15,10 +15,63 @@ namespace MVC.Controllers
         // GET: EmpleadoController
         public ActionResult Index()
         {
+
             IEnumerable<Empleado> empleados = Fachada.TomarTodosEmpleados();
+            
             //Liquidar();
-            Fachada.AgregarEmpleadosAObra();
+            //Fachada.AgregarEmpleadosAObra();
+            ViewBag.Obras = Fachada.TomarTodasObras();
             return View(empleados);
+        }
+
+        // GET: EmpleadoController
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(int IdObra)
+        {
+            IEnumerable<Empleado> empleados;
+            if (IdObra != 0)
+            {
+                Obra obra = Fachada.BuscarObra(IdObra);
+                empleados = Fachada.TomarEmpleadosDeObra(obra);
+            }
+            else
+            {
+                empleados = Fachada.TomarTodosEmpleados();
+            }
+            //Liquidar();
+            //Fachada.AgregarEmpleadosAObra();
+            ViewBag.Obras = Fachada.TomarTodasObras();
+            return View(empleados);
+        }
+
+        public ActionResult Marcas(int id)
+        {
+            ViewBag.Obras = Fachada.TomarTodasObras();
+            Empleado empleado = Fachada.BuscarEmpleado(id);
+            IEnumerable<Marca> marcasEmp = new List<Marca>(); //No mostrar nada hasta filtrar. Son muchos registros.
+            ViewBag.IdEmp = empleado.Id;
+            return View(marcasEmp);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Marcas(int id, int IdObra, DateTime desde, DateTime hasta)
+        {
+            Empleado empleado = Fachada.BuscarEmpleado(id);
+            List<Marca> marcas = Fachada.TraerTodasMarcas(empleado);
+            if (IdObra != 0)
+            {
+                Obra obra = Fachada.BuscarObra(IdObra);
+                marcas = Fachada.MarcasDelEmpleadoEnLaObra(marcas, obra);
+            }
+            if(desde.Year != 0000 && hasta.Year != 0000)
+            {
+                marcas = Fachada.MarcasDelRangoDeFechas(marcas, desde, hasta);
+            }
+            ViewBag.Obras = Fachada.TomarTodasObras();
+            ViewBag.IdEmp = empleado.Id;
+            return View(marcas);
         }
 
         // GET: EmpleadoController/Details/5

@@ -342,7 +342,7 @@ namespace LogicaAccesoDatos.Repositorios
                 throw new ObraException("No se puede añadir una cantidad negativa de horas lluvia o extra.");
             }
             TimeSpan diff = dia - DateTime.Today;
-            if (diff.Days >= 0)
+            if (diff.Days > 0)
             {
                 throw new ObraException("No se pueden modificar las horas lluvia o extra de un día que no ha sucedido.");
             }

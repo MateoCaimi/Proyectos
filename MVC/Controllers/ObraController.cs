@@ -640,12 +640,12 @@ namespace MVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult HorasLluvia(int IdObra, int horasLluvia, DateTime dia)
+        public ActionResult HorasLluvia(int IdObra, int horasLluvia, DateTime dia, bool sonExtra)
         {
             try
             {
                 Obra obra = Fachada.BuscarObra(IdObra);
-                Fachada.AsignacionHorasLluvia(obra, horasLluvia, dia);
+                Fachada.AsignacionHoras(obra, horasLluvia, dia, sonExtra);
                 ViewBag.Mensaje = "Horas asignadas correctamente.";
                 return View(obra);
             }

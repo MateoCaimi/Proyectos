@@ -334,14 +334,9 @@ namespace LogicaAccesoDatos.Repositorios
             return RepositorioEmpleado.Liquidar();
         }
 
-        public void AsignacionHorasLluvia(Obra obra, int horasLluvia, DateTime dia)
+        public void AsignacionHoras(Obra obra, int horasLluvia, DateTime dia, bool sonExtra)
         {
-            RepositorioObra.AsignacionHorasLluviaOExtra(obra, horasLluvia, dia, false);
-        }
-
-        public void AsignacionHorasExtra(Obra obra, int horasExtra, DateTime dia)
-        {
-            RepositorioObra.AsignacionHorasLluviaOExtra(obra, horasExtra, dia, true);
+            RepositorioObra.AsignacionHorasLluviaOExtra(obra, horasLluvia, dia, sonExtra);
         }
 
         public int HorasEmpleadoEnObra(ObraEmpleado oe, DateTime fechaDesde, DateTime fechaHasta)
@@ -397,6 +392,26 @@ namespace LogicaAccesoDatos.Repositorios
         public void CambiarEstadoAVisto(Solicitud solicitud)
         {
             RepositorioSolicitud.CambiarEstadoAVisto(solicitud);
+        }
+
+        public List<Empleado> TomarEmpleadosDeObra(Obra obra)
+        {
+            return RepositorioEmpleado.TomarEmpleadosDeObra(obra);
+        }
+
+        public List<Marca> MarcasDelEmpleadoEnLaObra(List<Marca> marcas, Obra obra)
+        {
+            return RepositorioEmpleado.MarcasDelEmpleadoEnLaObra(marcas, obra);
+        }
+
+        public List<Marca> MarcasDelRangoDeFechas(List<Marca> marcas, DateTime desde, DateTime hasta)
+        {
+            return RepositorioEmpleado.MarcasDelRangoDeFecha(marcas, desde, hasta);
+        }
+
+        public List<Marca> TraerTodasMarcas(Empleado empleado)
+        {
+            return RepositorioEmpleado.TraerTodasMarcas(empleado);
         }
     }
 }
