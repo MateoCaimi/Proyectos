@@ -132,7 +132,7 @@
                 {
 
                     <li class="list-group">
-                            <a class="list-group-item list-group-item-action" href="@Url.Action("Detalles", "Solicitud", new { idSolicitud = soli.Id, idObra = soli.IdObra})">Se aprobo la solicitud de: @soli.Obra.Nombre</a>
+                            <a class="list-group-item list-group-item-action" href="@Url.Action("Confirmar", "Solicitud", new { idSolicitud = soli.Id })">Se aprobo la solicitud de: @soli.Obra.Nombre</a>
                     </li>
 
                 }

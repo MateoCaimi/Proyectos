@@ -88,19 +88,26 @@
 
         <br />
 
+        if (Context.Session.GetString("UsuarioTipo") == "Usuario de oficina")
+        {
 
         <input type="hidden" name="idSolicitud" value="@Model.Id" />
-
         <button class="btn btn-primary" id="btnConfirmar" type="submit">Aceptar solicitud</button>
+
+
+        }
 
     }
     <br />
-    <div>
-        <form method="post" action="@Url.Action("Rechazar", "Solicitud")">
-            <input type="hidden" name="idSolicitud" value="@Model.Id" />
-            <button type="submit" class="btn btn-danger">Rechazar solicitud</button>
-        </form>
-    </div>
+    if (Context.Session.GetString("UsuarioTipo") == "Usuario de oficina")
+    {
+        <div>
+            <form method="post" action="@Url.Action("Rechazar", "Solicitud")">
+                <input type="hidden" name="idSolicitud" value="@Model.Id" />
+                <button type="submit" class="btn btn-danger">Rechazar solicitud</button>
+            </form>
+        </div>
+    }
 }
 
 <div>
@@ -115,6 +122,6 @@
 
         setTimeout(function () {
             window.location.href = '@Url.Action("Index", "Solicitud", new { idObra = @Model.IdObra })'; //esto es prueba para redirigir a el confirmar q te tira para el index
-        }, 500); // 0.5 segundo de retraso
+        }, 1000); // 0.5 segundo de retraso
     });
 </script>

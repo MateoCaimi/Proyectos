@@ -394,6 +394,9 @@ namespace LogicaAccesoDatos.Repositorios
             RepositorioEmpleado.AgregarEmpleado(oe);
         }
 
-      
+        public void CambiarEstadoAVisto(Solicitud solicitud)
+        {
+            RepositorioSolicitud.CambiarEstadoAVisto(solicitud);
+        }
     }
 }

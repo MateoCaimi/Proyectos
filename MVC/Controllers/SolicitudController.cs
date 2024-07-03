@@ -14,6 +14,7 @@ using PdfSharp.Pdf;
 using PdfSharp.Pdf.Advanced;
 using System.IO;
 using LogicaNegocio.Excepciones;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace MVC.Controllers
 {
@@ -69,7 +70,7 @@ namespace MVC.Controllers
             }
 
 
-
+            
             
             IEnumerable<Solicitud> solicitudesObra = Fachada.SolicitudesDeObra(idObra);
             ViewBag.IdObra = idObra;
@@ -82,8 +83,18 @@ namespace MVC.Controllers
 
             IEnumerable<SolicitudMaterial> solicitudMateriales = Fachada.BuscarMaterialesSolicitud(idSolicitud);
             Solicitud solicitud = Fachada.BuscarSolicitud(idSolicitud);
+            if (solicitud.Estado == Estado.Recibido)
+            {
+                Fachada.CambiarEstadoAVisto(solicitud);
+                
+            }
             ViewBag.Materiales = solicitudMateriales;
             ViewBag.IdObra = solicitud.IdObra;
+
+            if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario de obra")
+            {
+                return RedirectToAction("Confirmar", new { idSolicitud = solicitud.Id});
+            }
 
             return View(solicitud);
 
@@ -187,7 +198,9 @@ namespace MVC.Controllers
         [HttpPost]
         public async Task<ActionResult> Aprobar(int idSolicitud, List<int> materialesSeleccionados, IFormCollection form)
         {
-            try
+
+            
+                try
             {
                 Dictionary<int, int> materialesSeleccionadosConCantidad = new Dictionary<int, int>();
 

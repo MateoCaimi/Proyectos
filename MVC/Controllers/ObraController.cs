@@ -251,12 +251,16 @@ namespace MVC.Controllers
             {
                 if (nuevaObra == null || nuevaObra.TipoCronograma != "application/pdf")
                 {
+                    if (archivoImagen != null)
+                    {
                     using (var memoryStream = new MemoryStream())
                     {
                         await archivoImagen.CopyToAsync(memoryStream);
                         nuevaObra.NombreCronograma = archivoImagen.FileName;
                         nuevaObra.TipoCronograma = archivoImagen.ContentType;
                         nuevaObra.Cronograma = memoryStream.ToArray();
+                    }
+
                     }
                 }
                 else
