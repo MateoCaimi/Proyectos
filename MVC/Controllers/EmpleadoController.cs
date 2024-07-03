@@ -65,7 +65,7 @@ namespace MVC.Controllers
                 Obra obra = Fachada.BuscarObra(IdObra);
                 marcas = Fachada.MarcasDelEmpleadoEnLaObra(marcas, obra);
             }
-            if(desde.Year != 0000 && hasta.Year != 0000)
+            if(desde.Year != 0001 && hasta.Year != 0001)
             {
                 marcas = Fachada.MarcasDelRangoDeFechas(marcas, desde, hasta);
             }

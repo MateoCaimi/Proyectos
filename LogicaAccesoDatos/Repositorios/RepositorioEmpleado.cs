@@ -44,7 +44,7 @@ namespace LogicaAccesoDatos.Repositorios
 
         public Empleado Buscar(int id)
         {
-            return Context.Empleados.Where(e => e.IdEmpleado == id).Include(e => e.TipoEmpleado).FirstOrDefault();
+            return Context.Empleados.Where(e => e.Id == id).Include(e => e.TipoEmpleado).FirstOrDefault();
         }
 
         public void Eliminar(Empleado item)
