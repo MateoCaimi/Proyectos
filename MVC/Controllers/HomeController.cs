@@ -34,26 +34,76 @@ namespace MVC.Controllers
                 return RedirectToAction("Listado", "Usuario");
             }
 
-            if(HttpContext.Session.GetString("UsuarioTipo") == "Usuario de oficina")
-            {
-                List<Solicitud> solicitudesPendientes = Fachada.BuscarSolicitudPendientesLista();
-               
 
+
+
+
+
+
+
+            if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario de oficina")
+            {
+
+
+                List<Solicitud> solicitudesPendientes = Fachada.BuscarSolicitudPendientesLista();
                 var opciones = new JsonSerializerOptions
                 {
                     ReferenceHandler = ReferenceHandler.IgnoreCycles,
                     WriteIndented = true,
 
                 };
+                HttpContext.Session.SetString("SolicitudesPendientes", System.Text.Json.JsonSerializer.Serialize(solicitudesPendientes, opciones));
 
-                HttpContext.Session.SetString("SolicitudesPendientes", JsonSerializer.Serialize(solicitudesPendientes, opciones));
 
-                if (solicitudesPendientes != null)
+
+
+                List<Solicitud> solicitudesConfirmadas = Fachada.BuscarSolicitudConfirmadasLista();
+                var opciones2 = new JsonSerializerOptions
                 {
-                    
-                    return View(solicitudesPendientes);
-                }
+                    ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                    WriteIndented = true,
+
+                };
+                HttpContext.Session.SetString("SolicitudesConfirmadas", System.Text.Json.JsonSerializer.Serialize(solicitudesConfirmadas, opciones2));
+
             }
+
+
+
+            if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario de obra")
+            {
+                string nomObrero = HttpContext.Session.GetString("UsuarioLogueado");
+                List<Solicitud> solicitudesAprobadas = Fachada.BuscarSolicitudAprobadasParaUnUObra(nomObrero);
+                var opciones3 = new JsonSerializerOptions
+                {
+                    ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                    WriteIndented = true,
+
+                };
+                HttpContext.Session.SetString("SolicitudesAprobadas", System.Text.Json.JsonSerializer.Serialize(solicitudesAprobadas, opciones3));
+            }
+
+
+            //if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario de oficina")
+            //{
+            //    List<Solicitud> solicitudesPendientes = Fachada.BuscarSolicitudPendientesLista();
+               
+
+            //    var opciones = new JsonSerializerOptions
+            //    {
+            //        ReferenceHandler = ReferenceHandler.IgnoreCycles,
+            //        WriteIndented = true,
+
+            //    };
+
+            //    HttpContext.Session.SetString("SolicitudesPendientes", JsonSerializer.Serialize(solicitudesPendientes, opciones));
+
+            //    if (solicitudesPendientes != null)
+            //    {
+                    
+            //        return View(solicitudesPendientes);
+            //    }
+            //}
             return View();
         }
 

@@ -18,18 +18,30 @@ namespace MVC.Controllers
         public ActionResult Index()
         {
 
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+
+            if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario de oficina")
+            {
+
+                IEnumerable<Obra> obras = Fachada.TomarTodasObras();
+                return View(obras);
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario de obra")
+            {
+                string nomUsuarioObra = HttpContext.Session.GetString("UsuarioLogueado");
+                IEnumerable<Obra> obrasDeUsuarioObra = Fachada.TomarObrasDeUnUsuarioObra(nomUsuarioObra);
+                return View(obrasDeUsuarioObra);
 
 
-            IEnumerable<Obra> obras = Fachada.TomarTodasObras();
-            return View(obras);
+            }
+            else return View();
         }
 
         [HttpPost]

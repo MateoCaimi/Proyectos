@@ -70,7 +70,7 @@ namespace MVC.Controllers
 
 
 
-
+            
             IEnumerable<Solicitud> solicitudesObra = Fachada.SolicitudesDeObra(idObra);
             ViewBag.IdObra = idObra;
             return View(solicitudesObra);

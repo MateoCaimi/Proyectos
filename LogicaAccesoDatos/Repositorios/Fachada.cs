@@ -92,6 +92,10 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioObra.TomarTodos();
         }
+        public IEnumerable<Obra> TomarObrasDeUnUsuarioObra(string? nomUsuarioObra)
+        {
+            return RepositorioObra.TomarObrasDeUnUsuarioObra(nomUsuarioObra);
+        }
         public IEnumerable<Plano> PlanosTotales(Obra obra)
         {
             return RepositorioPlano.PlanosTotales(obra);
@@ -390,5 +394,6 @@ namespace LogicaAccesoDatos.Repositorios
             RepositorioEmpleado.AgregarEmpleado(oe);
         }
 
+      
     }
 }

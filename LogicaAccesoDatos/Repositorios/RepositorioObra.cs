@@ -148,6 +148,16 @@ namespace LogicaAccesoDatos.Repositorios
             return Context.Obras.ToList();
         }
 
+        internal IEnumerable<Obra> TomarObrasDeUnUsuarioObra(string? nomUsuarioObra)
+        {
+
+            Fachada f = new Fachada();
+            Usuario u = f.BuscarUsuarioXNombreU(nomUsuarioObra);
+
+            return Context.Obras.Where(o => o.IdACargo == u.Id).ToList();
+
+        }
+
         public Obra Buscar(int id)
         {
             return Context.Obras.Find(id);
@@ -425,5 +435,6 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return Context.ObrasEmpleados.Where(e => e.IdObra == oe.IdObra && e.IdEmpleado == oe.IdEmpleado).Any();
         }
+
     }
 }
