@@ -12,8 +12,29 @@
     <div class="col-md-4">
         <form asp-action="Liquidar" asp-controller="Empleado">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="IdObra" />
-            <input type="hidden" asp-for="IdEmpleado" />
+
+            <div class="form-group">
+                <input type="hidden" name="id" value="@ViewBag.IdEmp" />
+                <label>Filtrar por obra: </label>
+                <select id="IdObra" name="IdObra" class="form-control">
+                    @foreach (var item in ViewBag.Obras)
+                    {
+                        <option value="@item.IdObra">@item.Nombre</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <input type="hidden" name="id" value="@ViewBag.IdEmp" />
+                <label>Filtrar por empleado: </label>
+                <select id="IdEmpleado" name="IdEmpleado" class="form-control">
+                    @foreach (var item in ViewBag.Empleados)
+                    {
+                        <option value="@item.IdEmpleado">@item.Nombre</option>
+                    }
+                </select>
+            </div>
+
             <div class="form-group">
                 <label for="desde" class="control-label"></label>
                 <input for="desde" name="desde" type="date" class="form-control" />

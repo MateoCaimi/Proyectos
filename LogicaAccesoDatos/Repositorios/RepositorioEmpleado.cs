@@ -33,6 +33,7 @@ namespace LogicaAccesoDatos.Repositorios
         {
             try
             {
+                item.Validar();
                 Context.Empleados.Add(item);
                 Context.SaveChanges();
             }
@@ -57,11 +58,8 @@ namespace LogicaAccesoDatos.Repositorios
             Empleado empleado = this.Buscar(item.Id);
             if (empleado == null)
             {
-                throw new EmpleadoException("No se encontró el material para modificar.");
+                throw new EmpleadoException("No se encontró el empleado para modificar.");
             }
-
-            //empleado.Nombre = m.Nombre;
-            //empleado.UnidadDeMedida = m.UnidadDeMedida;
             empleado.Validar();
             Context.Empleados.Update(empleado);
             Context.SaveChanges();
@@ -106,7 +104,11 @@ namespace LogicaAccesoDatos.Repositorios
             int cantidadEmpleados = (int)root["cantidadEmpleados"];
 
             for (int i = 0; i < cantidadEmpleados; i++)
-            { //si el empleado no tiene marcas rompe
+            {
+                if (root["empleados"][i]["marcas"].Count() == 0 )
+                {
+                    continue; // Si no tiene marcas pasa al siguiente empleado
+                }
                 string empleadoNom = root["empleados"][i]["nombre"].ToString();
                 string empleadoCed = root["empleados"][i]["cedula"].ToString();
                 string nombreObra = root["empleados"][i]["marcas"][0]["nombreLector"].ToString(); //Saco del lector. Nunca será null.
@@ -131,6 +133,7 @@ namespace LogicaAccesoDatos.Repositorios
                 ObraEmpleado oe = new ObraEmpleado();
                 oe.IdEmpleado = empleado.Id;
                 oe.IdObra = obra.IdObra;
+                oe.FechaIngreso = DateTime.Today; // ver esto luego
                 oe.Validar();
                 Context.ObrasEmpleados.Add(oe);
                 Context.SaveChanges();
@@ -148,15 +151,17 @@ namespace LogicaAccesoDatos.Repositorios
             int cantidadEmpleados = (int)root["cantidadEmpleados"];
             bool flag = false;
             for (int i = 0; i < cantidadEmpleados && !flag; i++)
-            {// Si el empleado no tiene marcas se rompe el nombreObra
+            {
+                if (root["empleados"][i]["marcas"][0] == null)
+                {
+                    continue; // Si no tiene marcas pasa al siguiente empleado
+                }
                 string empleadoNom = root["empleados"][i]["nombre"].ToString();
                 string empleadoCed = root["empleados"][i]["cedula"].ToString();
                 string nombreObra = root["empleados"][i]["marcas"][0]["nombreLector"].ToString(); //Saco del lector. Nunca será null.
                 if (empleadoObra.Empleado.Cedula == empleadoCed && empleadoObra.Obra.Nombre == nombreObra)
                 {
                     flag = true;
-                    //int incremento = 0;
-                    //var marca = root["empleados"][i]["marcas"][incremento];
                     int num = 0;
                     foreach (var marca in root["empleados"][i]["marcas"])
                     {
@@ -165,41 +170,96 @@ namespace LogicaAccesoDatos.Repositorios
                             Marca m = new Marca();
                             m.Entrada = (DateTime)marca.First; //horaMarcaje: Se asume 2 marcas por día. 
                             m.Salida = (DateTime)marca.Next.First; //horaMarcaje
-                            m.IdEmpleado = this.BuscarPorNombreYCedula(empleadoNom, empleadoCed).Id;
-                            m.IdObra = this.ObraPorNombre(nombreObra).IdObra;
+                            m.IdEmpleado = empleadoObra.IdEmpleado;
+                            m.IdObra = empleadoObra.IdObra;
                             m.HorasLluvia = 0;
                             if (!this.ExisteMarca(m))
                             {
                                 this.AgregarMarca(m);
                             }
-
                         }
                         num++;
                     }
                 }
-
-                //El resto de variables las modifican manualmente.
             }
         }
 
-        public double LiquidacionEmpleado(ObraEmpleado oe, DateTime desde, DateTime hasta)
+        public double Liquidar(DateTime desde, DateTime hasta, Obra? obra, Empleado? empleado)
         {
-            double liquidacionNominal = 0;
-            int horasTotales = 0;
-            int horasLluvia = 0;
-            int horasExtra = 0;
+            double liquidacionNominal;
+            if (obra != null && empleado !=null)
+            {
+                ObraEmpleado oe = this.GetEmpleadoObra(empleado.Id, obra.IdObra);
+                liquidacionNominal = LiquidacionObraEmpleado(oe, desde, hasta);
+                return liquidacionNominal;
+            }
 
-            List<Marca> marcasEmpRango = this.MarcasEmpRango(oe, desde, hasta);
+            if (empleado != null)
+            {
+                liquidacionNominal = LiquidacionEmpleado(empleado,desde,hasta);
+                return liquidacionNominal;
+            }
+            if (obra != null)
+            {
+                liquidacionNominal = LiquidacionObra(obra,desde,hasta);
+                return liquidacionNominal;
+            }
+             return LiquidacionTotal(desde,hasta);
+
+        }
+
+        private double LiquidacionEmpleado(Empleado empleado, DateTime desde, DateTime hasta)
+        {
+            double liquidacionNominal;
+            int horasTotales = 0;
+            //int horasLluvia = 0;
+            //int horasExtra = 0;
+
+            List<Marca> marcasEmpRango = this.MarcasEmpleadoRango(empleado, desde, hasta);
             foreach (Marca m in marcasEmpRango)
             {
-                horasTotales += m.HorasTrabajadas() - m.HorasLluvia;
-                horasLluvia += m.HorasLluvia;
-                horasExtra += m.HorasExtra;
+                horasTotales += m.HorasTrabajadas(); // Para los bonos(Forma de pago de la mepresa) solo se utilizan horas trabajadas
+                //horasLluvia += m.HorasLluvia;
+                //horasExtra += m.HorasExtra;
             }
-            liquidacionNominal = ((horasTotales) + (horasLluvia * 2) + (horasExtra * 4))
-                * ((oe.Empleado.TipoEmpleado.ValorHora + oe.Empleado.TipoEmpleado.Compensacion) * oe.Empleado.TipoEmpleado.Presentismo);
-
+            liquidacionNominal = CalcularNominal(empleado, horasTotales);
             return liquidacionNominal;
+        }
+
+        private List<Marca> MarcasEmpleadoRango(Empleado empleado, DateTime desde, DateTime hasta)
+        {
+            return Context.Marcas.Where(marc => marc.Entrada.Day == desde.Day
+                        && marc.Salida.Day == hasta.Day 
+                        && marc.IdEmpleado == empleado.IdEmpleado).ToList();
+        }
+
+        public double LiquidacionObraEmpleado(ObraEmpleado oe, DateTime desde, DateTime hasta)
+        {
+            double liquidacionNominal;
+            int horasTotales = 0;
+            //int horasLluvia = 0;
+            //int horasExtra = 0;
+
+            List<Marca> marcasEmpRango = this.MarcasEmpObraRango(oe, desde, hasta);
+            foreach (Marca m in marcasEmpRango)
+            {
+                horasTotales += m.HorasTrabajadas(); // Para los bonos(Forma de pago de la mepresa) solo se utilizan horas trabajadas
+                //horasLluvia += m.HorasLluvia;
+                //horasExtra += m.HorasExtra;
+            }
+            liquidacionNominal = CalcularNominal(oe.Empleado, horasTotales);
+            return liquidacionNominal;
+        }
+
+        private double CalcularNominal(Empleado empleado, int horasTotales)
+        {
+            // Lo separo en otro metodo por ser importante, preguntar regla de negocio de pagos.
+            double valorHora = empleado.TipoEmpleado.ValorHora;
+            double compensacion = empleado.TipoEmpleado.Compensacion;
+            double presentismo = empleado.TipoEmpleado.Presentismo;
+            double nominal = horasTotales*valorHora;
+            return nominal;
+
         }
 
         public double LiquidacionObra(Obra obra, DateTime desde, DateTime hasta)
@@ -209,7 +269,7 @@ namespace LogicaAccesoDatos.Repositorios
 
             foreach (ObraEmpleado oe in empleadosObra)
             {
-                liquidacionNominal += this.LiquidacionEmpleado(oe, desde, hasta);
+                liquidacionNominal += this.LiquidacionObraEmpleado(oe, desde, hasta);
             }
             return liquidacionNominal;
         }
@@ -236,10 +296,10 @@ namespace LogicaAccesoDatos.Repositorios
             return Context.ObrasEmpleados.Where(oe => oe.IdObra == obra.IdObra).Include(oe => oe.Empleado).Include(oe => oe.Empleado.TipoEmpleado).Include(oe => oe.Obra).ToList();
         }
 
-        private List<Marca> MarcasEmpRango(ObraEmpleado oe, DateTime desde, DateTime hasta)
+        private List<Marca> MarcasEmpObraRango(ObraEmpleado oe, DateTime desde, DateTime hasta)
         {
-            return Context.Marcas.Where(marc => marc.Entrada.Day == desde.Day
-            && marc.Salida.Day == hasta.Day && marc.IdObra == oe.IdObra
+            return Context.Marcas.Where(marc => marc.Entrada.Day >= desde.Day
+            && marc.Salida.Day <= hasta.Day && marc.IdObra == oe.IdObra
             && marc.IdEmpleado == oe.IdEmpleado).ToList();
         }
 
@@ -329,9 +389,10 @@ namespace LogicaAccesoDatos.Repositorios
             return Context.Marcas.Where(mar => mar.IdEmpleado == empleado.Id).ToList();
         }
 
-
-        //  CabaniaModel[] cabanias = JsonConvert.DeserializeObject<CabaniaModel[]>(response.Result);
-
+        internal ObraEmpleado GetEmpleadoObra(int idEmpleado, int idObra)
+        {
+            return Context.ObrasEmpleados.Where(oe => oe.IdObra == idObra && oe.IdEmpleado == idEmpleado).Include(oe => oe.Empleado).Include(oe => oe.Obra).FirstOrDefault();
+        }
     }
 }
 

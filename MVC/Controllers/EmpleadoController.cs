@@ -41,8 +41,6 @@ namespace MVC.Controllers
             {
                 empleados = Fachada.TomarTodosEmpleados();
             }
-            //Liquidar();
-            //Fachada.AgregarEmpleadosAObra();
             ViewBag.Obras = Fachada.TomarTodasObras();
             return View(empleados);
         }
@@ -246,11 +244,13 @@ namespace MVC.Controllers
         }
         public ActionResult Liquidar()
         {
+            ViewBag.Obras = Fachada.TomarTodasObras();
+            ViewBag.Empleados = Fachada.TomarTodosEmpleados();
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Liquidar(DateTime desde, DateTime hasta)
+        public async Task<IActionResult> Liquidar(int IdObra, int IdEmpleado,DateTime desde, DateTime hasta)
         {
             //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             //{
@@ -267,11 +267,14 @@ namespace MVC.Controllers
 
             try
             {
-                Task<string> responseData = await Fachada.LlamadaClodtimes(desde, hasta);
-                RespuestaApiModel datosApi = JsonConvert.DeserializeObject<RespuestaApiModel>(await responseData);
-                Fachada.AgregarEmpleadosAObra();
-                ObraEmpleado obraEmpleado = Fachada.BuscarEmpleadoObra(12, 2);
-                Fachada.conseguirMarcasEmpleado(obraEmpleado);
+                //Task<string> responseData = await Fachada.LlamadaClodtimes(desde, hasta);
+                //RespuestaApiModel datosApi = JsonConvert.DeserializeObject<RespuestaApiModel>(await responseData);
+                //Fachada.AgregarEmpleadosAObra();
+                //ObraEmpleado obraEmpleado = Fachada.BuscarEmpleadoObra(2, 2);
+                //Fachada.conseguirMarcasEmpleado(obraEmpleado);
+                Empleado empleado = Fachada.BuscarEmpleado(IdEmpleado);
+                Obra obra = Fachada.BuscarObra(IdObra);
+                Fachada.Liquidar(desde,hasta,obra,empleado);
                 return Ok();
             }
             catch (HttpRequestException e)
@@ -279,16 +282,5 @@ namespace MVC.Controllers
                 return StatusCode(500, e.Message);
             }
         }
-
-
-        public ActionResult MostrarMarcas(DateTime desde, DateTime hasta)
-        {
-           // Fachada.
-            return View();
-        }
-
-
-
-
     }
 }

@@ -414,5 +414,10 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioEmpleado.TraerTodasMarcas(empleado);
         }
+
+        public void Liquidar(DateTime desde, DateTime hasta, Obra? obra, Empleado? empleado)
+        {
+            RepositorioEmpleado.Liquidar(desde,hasta,obra,empleado);
+        }
     }
 }
