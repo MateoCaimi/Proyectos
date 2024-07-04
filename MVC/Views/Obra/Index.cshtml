@@ -6,10 +6,12 @@
 
 <h1>Obras</h1>
 
-
+@if(Context.Session.GetString("UsuarioTipo") == "Usuario de oficina")
+{
 <p>
-    <a asp-action="Agregar">Create New</a>
+    <a asp-action="Agregar">Agregar obra nueva</a>
 </p>
+}
 <table class="table">
     <thead>
         <tr>

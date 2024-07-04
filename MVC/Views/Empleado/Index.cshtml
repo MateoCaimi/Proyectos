@@ -9,6 +9,21 @@
 <p>
     <a asp-action="Agregar">Create New</a>
     <a asp-action="AgregarTipo">Crear Tipo</a>
+    <form method="post">
+        <div class="form-group">
+            <label>Filtrar por obra: </label>
+            <select id="IdObra" name="IdObra" class="form-control">
+                @foreach (var item in ViewBag.Obras)
+                {
+                    <option value="@item.IdObra">@item.Nombre</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-success">Filtrar</button>
+        </div>
+    </form>
+
 </p>
 <table class="table">
     <thead>

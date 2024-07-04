@@ -93,6 +93,10 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioObra.TomarTodos();
         }
+        public IEnumerable<Obra> TomarObrasDeUnUsuarioObra(string? nomUsuarioObra)
+        {
+            return RepositorioObra.TomarObrasDeUnUsuarioObra(nomUsuarioObra);
+        }
         public IEnumerable<Plano> PlanosTotales(Obra obra)
         {
             return RepositorioPlano.PlanosTotales(obra);
@@ -286,6 +290,15 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioSolicitud.BuscarSolicitudPendientesLista();
         }
+        public List<Solicitud> BuscarSolicitudAprobadasParaUnUObra(string? nomObrero)
+        {
+           return RepositorioSolicitud.BuscarSolicitudesAprobadasParaUnUObra(nomObrero);
+        }
+
+        public List<Solicitud> BuscarSolicitudConfirmadasLista()
+        {
+            return RepositorioSolicitud.BuscarSolicitudConfirmada();
+        }
 
         public void ConfirmarSolicitud(Solicitud solicitud, Usuario logueado)
         {
@@ -322,14 +335,9 @@ namespace LogicaAccesoDatos.Repositorios
             return RepositorioEmpleado.LlamadaCloudtimes(inicio, fin);
         }
 
-        public void AsignacionHorasLluvia(Obra obra, int horasLluvia, DateTime dia)
+        public void AsignacionHoras(Obra obra, int horasLluvia, DateTime dia, bool sonExtra)
         {
-            RepositorioObra.AsignacionHorasLluviaOExtra(obra, horasLluvia, dia, false);
-        }
-
-        public void AsignacionHorasExtra(Obra obra, int horasExtra, DateTime dia)
-        {
-            RepositorioObra.AsignacionHorasLluviaOExtra(obra, horasExtra, dia, true);
+            RepositorioObra.AsignacionHorasLluviaOExtra(obra, horasLluvia, dia, sonExtra);
         }
 
         public int HorasEmpleadoEnObra(ObraEmpleado oe, DateTime fechaDesde, DateTime fechaHasta)
@@ -382,9 +390,29 @@ namespace LogicaAccesoDatos.Repositorios
            RepositorioEmpleado.ConseguirMarcasDelEmpleado(oe);
         }
 
-        //public void AgregarEmpleadoAObra(ObraEmpleado oe)
-        //{
-        //    RepositorioEmpleado.AgregarEmpleado(oe);
-        //}
+        public void CambiarEstadoAVisto(Solicitud solicitud)
+        {
+            RepositorioSolicitud.CambiarEstadoAVisto(solicitud);
+        }
+
+        public List<Empleado> TomarEmpleadosDeObra(Obra obra)
+        {
+            return RepositorioEmpleado.TomarEmpleadosDeObra(obra);
+        }
+
+        public List<Marca> MarcasDelEmpleadoEnLaObra(List<Marca> marcas, Obra obra)
+        {
+            return RepositorioEmpleado.MarcasDelEmpleadoEnLaObra(marcas, obra);
+        }
+
+        public List<Marca> MarcasDelRangoDeFechas(List<Marca> marcas, DateTime desde, DateTime hasta)
+        {
+            return RepositorioEmpleado.MarcasDelRangoDeFecha(marcas, desde, hasta);
+        }
+
+        public List<Marca> TraerTodasMarcas(Empleado empleado)
+        {
+            return RepositorioEmpleado.TraerTodasMarcas(empleado);
+        }
     }
 }

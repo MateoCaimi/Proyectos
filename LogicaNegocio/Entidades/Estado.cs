@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LogicaNegocio.Entidades
 {
-    public enum Estado { Solicitado, Aprobado, Rechazado, Recibido }
+    public enum Estado { Solicitado, Aprobado, Rechazado, Recibido, Visto }
 
     
 }

@@ -18,18 +18,30 @@ namespace MVC.Controllers
         public ActionResult Index()
         {
 
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+
+            if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario de oficina")
+            {
+
+                IEnumerable<Obra> obras = Fachada.TomarTodasObras();
+                return View(obras);
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario de obra")
+            {
+                string nomUsuarioObra = HttpContext.Session.GetString("UsuarioLogueado");
+                IEnumerable<Obra> obrasDeUsuarioObra = Fachada.TomarObrasDeUnUsuarioObra(nomUsuarioObra);
+                return View(obrasDeUsuarioObra);
 
 
-            IEnumerable<Obra> obras = Fachada.TomarTodasObras();
-            return View(obras);
+            }
+            else return View();
         }
 
         [HttpPost]
@@ -239,12 +251,16 @@ namespace MVC.Controllers
             {
                 if (nuevaObra == null || nuevaObra.TipoCronograma != null)
                 {
+                    if (archivoImagen != null)
+                    {
                     using (var memoryStream = new MemoryStream())
                     {
                         await archivoImagen.CopyToAsync(memoryStream);
                         nuevaObra.NombreCronograma = archivoImagen.FileName;
                         nuevaObra.TipoCronograma = archivoImagen.ContentType;
                         nuevaObra.Cronograma = memoryStream.ToArray();
+                    }
+
                     }
                 }
                 else
@@ -624,12 +640,12 @@ namespace MVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult HorasLluvia(int IdObra, int horasLluvia, DateTime dia)
+        public ActionResult HorasLluvia(int IdObra, int horasLluvia, DateTime dia, bool sonExtra)
         {
             try
             {
                 Obra obra = Fachada.BuscarObra(IdObra);
-                Fachada.AsignacionHorasLluvia(obra, horasLluvia, dia);
+                Fachada.AsignacionHoras(obra, horasLluvia, dia, sonExtra);
                 ViewBag.Mensaje = "Horas asignadas correctamente.";
                 return View(obra);
             }

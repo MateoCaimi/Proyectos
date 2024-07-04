@@ -26,8 +26,12 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="IdObra" />
             <div>
-                <label>Cantidad de horas lluvia</label>
+                <label>Cantidad de horas</label>
                 <input type="number" class="form-control" name="HorasLluvia" />
+            </div>
+            <div>
+                <label>Extra / Lluvia (S / N)</label>
+                <input type="checkbox" value="true" name="sonExtra" />
             </div>
             <div class="form-group">
                 <label for="Dia" class="control-label"></label>

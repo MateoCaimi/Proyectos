@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogicaAccesoDatos.Migrations
 {
     [DbContext(typeof(ProyectoContext))]
-    [Migration("20240629163101_empleados")]
-    partial class empleados
+    [Migration("20240701210617_nuevoClon")]
+    partial class nuevoClon
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -73,13 +73,16 @@ namespace LogicaAccesoDatos.Migrations
                     b.Property<DateTime>("Entrada")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("HorasLluvia")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("Salida")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("IdObra", "IdEmpleado");
+                    b.Property<int>("HorasExtra")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HorasLluvia")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdObra", "IdEmpleado", "Entrada", "Salida");
 
                     b.ToTable("Marcas");
                 });
@@ -165,13 +168,15 @@ namespace LogicaAccesoDatos.Migrations
                     b.Property<int>("IdEmpleado")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("FechaEgreso")
+                    b.Property<DateTime?>("FechaEgreso")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("FechaIngreso")
                         .HasColumnType("datetime2");
 
                     b.HasKey("IdObra", "IdEmpleado");
+
+                    b.HasIndex("IdEmpleado");
 
                     b.ToTable("ObrasEmpleados");
                 });
@@ -469,6 +474,25 @@ namespace LogicaAccesoDatos.Migrations
                         .IsRequired();
 
                     b.Navigation("UsuarioACargo");
+                });
+
+            modelBuilder.Entity("LogicaNegocio.Entidades.ObraEmpleado", b =>
+                {
+                    b.HasOne("LogicaNegocio.Entidades.Empleado", "Empleado")
+                        .WithMany()
+                        .HasForeignKey("IdEmpleado")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LogicaNegocio.Entidades.Obra", "Obra")
+                        .WithMany()
+                        .HasForeignKey("IdObra")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Empleado");
+
+                    b.Navigation("Obra");
                 });
 
             modelBuilder.Entity("LogicaNegocio.Entidades.ObraMaterial", b =>

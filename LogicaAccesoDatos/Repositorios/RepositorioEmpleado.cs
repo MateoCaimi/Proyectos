@@ -113,10 +113,10 @@ namespace LogicaAccesoDatos.Repositorios
                 Empleado empleado = this.BuscarPorNombreYCedula(empleadoNom, empleadoCed);
                 if (empleado == null) //Si no fue añadido ya añadilo.
                 {
-                    Empleado nuevoEmp = new Empleado();
-                    nuevoEmp.Nombre = empleadoNom;
-                    nuevoEmp.Cedula = empleadoCed;
-                    this.Agregar(nuevoEmp);
+                    empleado = new Empleado();
+                    empleado.Nombre = empleadoNom;
+                    empleado.Cedula = empleadoCed;
+                    this.Agregar(empleado);
                 }
                 Obra obra = ObraPorNombre(nombreObra);
                 AgregarEmpleado(empleado, obra);
@@ -302,6 +302,36 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return Context.TiposEmpleados;
         }
+
+        internal List<Empleado> TomarEmpleadosDeObra(Obra obra)
+        {
+            List<ObraEmpleado> oEmps = this.GetEmpleadosObra(obra);
+            List<Empleado> emps = new List<Empleado>();
+            foreach (ObraEmpleado oe in oEmps)
+            {
+                emps.Add(oe.Empleado);
+            }
+            return emps;
+        }
+
+        internal List<Marca> MarcasDelEmpleadoEnLaObra(List<Marca> marcas, Obra obra)
+        {
+            return marcas.Where(mar => mar.IdObra == obra.IdObra).ToList();
+        }
+
+        internal List<Marca> MarcasDelRangoDeFecha(List<Marca> marcas, DateTime desde, DateTime hasta)
+        {
+            return marcas.Where(mar => mar.Entrada.Date.Day >= desde.Day && mar.Entrada.Date.Day <= hasta.Day).ToList();
+        }
+
+        internal List<Marca> TraerTodasMarcas(Empleado empleado)
+        {
+            return Context.Marcas.Where(mar => mar.IdEmpleado == empleado.Id).ToList();
+        }
+
+
+        //  CabaniaModel[] cabanias = JsonConvert.DeserializeObject<CabaniaModel[]>(response.Result);
+
     }
 }
 

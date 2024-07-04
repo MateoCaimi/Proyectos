@@ -14,6 +14,7 @@ using PdfSharp.Pdf;
 using PdfSharp.Pdf.Advanced;
 using System.IO;
 using LogicaNegocio.Excepciones;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace MVC.Controllers
 {
@@ -25,7 +26,12 @@ namespace MVC.Controllers
         // GET: SolicitudController
         public ActionResult Index(int idObra)
         {
-            List<Solicitud> solicitudesPendientes = Fachada.BuscarSolicitudPendientesLista();
+
+            if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario de oficina")
+            {
+
+
+                List<Solicitud> solicitudesPendientes = Fachada.BuscarSolicitudPendientesLista();
             var opciones = new JsonSerializerOptions
             {
                 ReferenceHandler = ReferenceHandler.IgnoreCycles,
@@ -34,6 +40,38 @@ namespace MVC.Controllers
             };
             HttpContext.Session.SetString("SolicitudesPendientes", System.Text.Json.JsonSerializer.Serialize(solicitudesPendientes, opciones));
 
+
+
+
+            List<Solicitud> solicitudesConfirmadas = Fachada.BuscarSolicitudConfirmadasLista();
+            var opciones2 = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                WriteIndented = true,
+
+            };
+            HttpContext.Session.SetString("SolicitudesConfirmadas", System.Text.Json.JsonSerializer.Serialize(solicitudesConfirmadas, opciones2));
+
+            }
+
+
+
+            if(HttpContext.Session.GetString("UsuarioTipo") == "Usuario de obra")
+            {
+                string nomObrero = HttpContext.Session.GetString("UsuarioLogueado");
+            List<Solicitud> solicitudesAprobadas = Fachada.BuscarSolicitudAprobadasParaUnUObra(nomObrero);
+            var opciones3 = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                WriteIndented = true,
+
+            };
+            HttpContext.Session.SetString("SolicitudesAprobadas", System.Text.Json.JsonSerializer.Serialize(solicitudesAprobadas, opciones3));
+            }
+
+
+            
+            
             IEnumerable<Solicitud> solicitudesObra = Fachada.SolicitudesDeObra(idObra);
             ViewBag.IdObra = idObra;
             return View(solicitudesObra);
@@ -45,8 +83,18 @@ namespace MVC.Controllers
 
             IEnumerable<SolicitudMaterial> solicitudMateriales = Fachada.BuscarMaterialesSolicitud(idSolicitud);
             Solicitud solicitud = Fachada.BuscarSolicitud(idSolicitud);
+            if (solicitud.Estado == Estado.Recibido)
+            {
+                Fachada.CambiarEstadoAVisto(solicitud);
+                
+            }
             ViewBag.Materiales = solicitudMateriales;
             ViewBag.IdObra = solicitud.IdObra;
+
+            if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario de obra")
+            {
+                return RedirectToAction("Confirmar", new { idSolicitud = solicitud.Id});
+            }
 
             return View(solicitud);
 
@@ -150,7 +198,9 @@ namespace MVC.Controllers
         [HttpPost]
         public async Task<ActionResult> Aprobar(int idSolicitud, List<int> materialesSeleccionados, IFormCollection form)
         {
-            try
+
+            
+                try
             {
                 Dictionary<int, int> materialesSeleccionadosConCantidad = new Dictionary<int, int>();
 

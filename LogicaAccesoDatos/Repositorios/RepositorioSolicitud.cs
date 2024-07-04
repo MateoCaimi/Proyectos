@@ -186,8 +186,7 @@ namespace LogicaAccesoDatos.Repositorios
         }
         internal void ConfirmarSolicitud(Solicitud solicitud, Usuario logueado)
         {
-            if (logueado.NombreUsuario == solicitud.Solicitante.NombreUsuario)
-            {
+           
                 List<SolicitudMaterial> materialesSolicitud = MaterialesDeSolicitud(solicitud.Id).ToList();
                 foreach (SolicitudMaterial sm in materialesSolicitud)
                 {
@@ -208,11 +207,7 @@ namespace LogicaAccesoDatos.Repositorios
                 }
                 solicitud.Estado = Estado.Recibido;
                 Context.SaveChanges();
-            }
-            else
-            {
-                throw new UsuarioException("El usuario que confirma la solicitud debe ser el mismo que el solicitante.");
-            }
+           
         }
 
         private ObraMaterial ExisteMaterialEnObra(Solicitud solicitud, SolicitudMaterial sm)
@@ -220,9 +215,30 @@ namespace LogicaAccesoDatos.Repositorios
             return Context.ObrasMateriales.Where(o => o.IdMaterial == sm.IdMaterial && o.IdObra == solicitud.IdObra).FirstOrDefault();
         }
 
+
         internal List<Solicitud> BuscarSolicitudPendientesLista()
         {
             return Context.Solicitudes.Include(s => s.Obra).Where(sp => sp.Estado == Estado.Solicitado).ToList();
+        }
+
+        internal List<Solicitud> BuscarSolicitudesAprobadasParaUnUObra(string? nomObrero)
+        {
+            Fachada f = new Fachada();
+
+            Usuario u = f.BuscarUsuarioXNombreU(nomObrero);
+
+            return Context.Solicitudes.Include(s => s.Obra).Where(sp => sp.Estado == Estado.Aprobado && sp.Obra.IdACargo == u.Id).ToList();
+        }
+
+        internal List<Solicitud> BuscarSolicitudConfirmada()
+        {
+            return Context.Solicitudes.Include(s => s.Obra).Where(sp => sp.Estado == Estado.Recibido).ToList();
+        }
+
+        internal void CambiarEstadoAVisto(Solicitud solicitud)
+        {
+            solicitud.Estado = Estado.Visto;
+            Context.SaveChanges();
         }
     }
 }

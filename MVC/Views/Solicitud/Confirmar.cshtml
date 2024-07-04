@@ -65,10 +65,14 @@
             }
         </tbody>
     </table>
-    
+    @if(Model.Estado == LogicaNegocio.Entidades.Estado.Aprobado)
+    {
+        
     <form asp-action="Confirmar">
         <input type="hidden" name="idSolicitud" value="@Model.Id" />
         <input type="submit" value="Confirmar" class="btn btn-primary" /> |
         <a asp-action="Index" asp-route-idObra="@Model.IdObra">>Back to List</a>
     </form>
+    }
+    <a asp-action="Index" asp-route-idObra="@Model.IdObra">>Back to List</a>
 </div>
