@@ -404,7 +404,7 @@ namespace LogicaAccesoDatos.Repositorios
 
         internal ObraEmpleado EmpleadoObra(int idEmpleado, int idObra)
         {
-            return Context.ObrasEmpleados.Where(oe => oe.IdObra == idObra && oe.IdEmpleado == idEmpleado).FirstOrDefault();
+            return Context.ObrasEmpleados.Where(oe => oe.IdObra == idObra && oe.IdEmpleado == idEmpleado).Include(oe=>oe.Empleado).Include(oe=>oe.Obra).FirstOrDefault();
         }
 
         public void DarEgreso(ObraEmpleado empleado, DateTime fecha)

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace LogicaAccesoDatos.Repositorios
 {
@@ -276,9 +277,9 @@ namespace LogicaAccesoDatos.Repositorios
             RepositorioSolicitud.AceptarSolicitud(solicitud, aprobador);
         }
 
-        public void RechazarSolicitud(Solicitud solicitud,UDeOficina rechazador)
+        public void RechazarSolicitud(Solicitud solicitud, UDeOficina rechazador)
         {
-            RepositorioSolicitud.RechazarSolicitud(solicitud,rechazador);
+            RepositorioSolicitud.RechazarSolicitud(solicitud, rechazador);
         }
 
         public List<Solicitud> BuscarSolicitudPendientesLista()
@@ -316,9 +317,9 @@ namespace LogicaAccesoDatos.Repositorios
             RepositorioEmpleado.Modificar(nuevoEmpleado);
         }
 
-        public async Task<Task<string>> Liquidar()
+        public async Task<Task<string>> LlamadaClodtimes(DateTime inicio, DateTime fin)
         {
-            return RepositorioEmpleado.Liquidar();
+            return RepositorioEmpleado.LlamadaCloudtimes(inicio, fin);
         }
 
         public void AsignacionHorasLluvia(Obra obra, int horasLluvia, DateTime dia)
@@ -376,9 +377,14 @@ namespace LogicaAccesoDatos.Repositorios
             return RepositorioObra.EmpleadoObra(idEmpleado, idObra);
         }
 
-        public void AgregarEmpleadoAObra(ObraEmpleado oe)
+        public void conseguirMarcasEmpleado(ObraEmpleado oe)
         {
-            RepositorioEmpleado.AgregarEmpleado(oe);
+           RepositorioEmpleado.ConseguirMarcasDelEmpleado(oe);
         }
+
+        //public void AgregarEmpleadoAObra(ObraEmpleado oe)
+        //{
+        //    RepositorioEmpleado.AgregarEmpleado(oe);
+        //}
     }
 }

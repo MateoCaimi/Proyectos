@@ -21,10 +21,8 @@ namespace LogicaNegocio.Entidades
         [Required(ErrorMessage = "Ingrese un valor por hora")]
         [Range(0,double.MaxValue)]
         public double ValorHora { get; set; }
-        [Required(ErrorMessage = "Ingrese un presentismo")]
         [Range(0,double.MaxValue)]
         public double Presentismo { get; set; }
-        [Required(ErrorMessage = "Ingrese una compensacion")]
         [Range(0,double.MaxValue)]
         public double Compensacion { get; set; }
 

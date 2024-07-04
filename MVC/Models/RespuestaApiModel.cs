@@ -1,9 +1,10 @@
-﻿namespace MVC.Models
+﻿using LogicaNegocio.Entidades;
+
+namespace MVC.Models
 {
     public class RespuestaApiModel
     {
-        public string Id { get; set; }
-        public string Status { get; set; }
-        public string ErrCode { get; set; }
+        public int cantidadEmpleados { get; set; }
+        public List<EmpleadoModel> empleados { get; set; }
     }
 }

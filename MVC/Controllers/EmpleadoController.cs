@@ -3,6 +3,8 @@ using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MVC.Models;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace MVC.Controllers
@@ -17,7 +19,8 @@ namespace MVC.Controllers
         {
             IEnumerable<Empleado> empleados = Fachada.TomarTodosEmpleados();
             //Liquidar();
-            Fachada.AgregarEmpleadosAObra();
+            //Fachada.AgregarEmpleadosAObra();
+
             return View(empleados);
         }
 
@@ -42,18 +45,18 @@ namespace MVC.Controllers
         public ActionResult Agregar(Empleado empleado)
         {
 
-            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            {
-                return RedirectToAction("Index", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Administrador")
-            {
-                return RedirectToAction("Listado", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Obra")
-            {
-                return RedirectToAction("Listado", "Usuario");
-            }
+            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            //{
+            //    return RedirectToAction("Index", "Usuario");
+            //}
+            //else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Administrador")
+            //{
+            //    return RedirectToAction("Listado", "Usuario");
+            //}
+            //else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Obra")
+            //{
+            //    return RedirectToAction("Listado", "Usuario");
+            //}
 
             try
             {
@@ -92,32 +95,32 @@ namespace MVC.Controllers
             }
         }
 
-        // GET: EmpleadoController/Create
-        public ActionResult AgregarTipo()
-        {
-            return View();
-        }
+        //// GET: EmpleadoController/Create
+        //public ActionResult AgregarTipo()
+        //{
+        //    return View();
+        //}
 
-        // POST: EmpleadoController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult AgregarTipo(TipoEmpleado tipo)
-        {
-            try
-            {
-                if(tipo == null)
-                {
-                    throw new EmpleadoException("El tipo no puede ser nulo");
-                }
-                Fachada.AgregarTipoEmpleado(tipo);
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Error = ex.Message;
-                return View();
-            }
-        }
+        //// POST: EmpleadoController/Create
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult AgregarTipo(TipoEmpleado tipo)
+        //{
+        //    try
+        //    {
+        //        if(tipo == null)
+        //        {
+        //            throw new EmpleadoException("El tipo no puede ser nulo");
+        //        }
+        //        Fachada.AgregarTipoEmpleado(tipo);
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ViewBag.Error = ex.Message;
+        //        return View();
+        //    }
+        //}
 
         // GET: EmpleadoController/Edit/5
         public ActionResult Editar(int id)
@@ -131,18 +134,18 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Editar(Empleado nuevoEmpleado)
         {
-            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            {
-                return RedirectToAction("Index", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Administrador")
-            {
-                return RedirectToAction("Listado", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Obra")
-            {
-                return RedirectToAction("Listado", "Usuario");
-            }
+            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            //{
+            //    return RedirectToAction("Index", "Usuario");
+            //}
+            //else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Administrador")
+            //{
+            //    return RedirectToAction("Listado", "Usuario");
+            //}
+            //else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Obra")
+            //{
+            //    return RedirectToAction("Listado", "Usuario");
+            //}
 
             try
             {
@@ -167,18 +170,18 @@ namespace MVC.Controllers
         public ActionResult Delete(int id, IFormCollection collection)
         {
 
-            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            {
-                return RedirectToAction("Index", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Administrador")
-            {
-                return RedirectToAction("Listado", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Obra")
-            {
-                return RedirectToAction("Listado", "Usuario");
-            }
+            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            //{
+            //    return RedirectToAction("Index", "Usuario");
+            //}
+            //else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Administrador")
+            //{
+            //    return RedirectToAction("Listado", "Usuario");
+            //}
+            //else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Obra")
+            //{
+            //    return RedirectToAction("Listado", "Usuario");
+            //}
 
             try
             {
@@ -189,33 +192,50 @@ namespace MVC.Controllers
                 return View();
             }
         }
-
-        public async Task<IActionResult> Liquidar()
+        public ActionResult Liquidar()
         {
-            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            {
-                return RedirectToAction("Index", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Administrador")
-            {
-                return RedirectToAction("Listado", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Obra")
-            {
-                return RedirectToAction("Listado", "Usuario");
-            }
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Liquidar(DateTime desde, DateTime hasta)
+        {
+            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            //{
+            //    return RedirectToAction("Index", "Usuario");
+            //}
+            //else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Administrador")
+            //{
+            //    return RedirectToAction("Listado", "Usuario");
+            //}
+            //else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Obra")
+            //{
+            //    return RedirectToAction("Listado", "Usuario");
+            //}
 
             try
             {
-                var responseData = await Fachada.Liquidar();
-                
-                return Ok(responseData);
+                Task<string> responseData = await Fachada.LlamadaClodtimes(desde, hasta);
+                RespuestaApiModel datosApi = JsonConvert.DeserializeObject<RespuestaApiModel>(await responseData);
+                Fachada.AgregarEmpleadosAObra();
+                ObraEmpleado obraEmpleado = Fachada.BuscarEmpleadoObra(12, 2);
+                Fachada.conseguirMarcasEmpleado(obraEmpleado);
+                return Ok();
             }
             catch (HttpRequestException e)
             {
                 return StatusCode(500, e.Message);
             }
         }
+
+
+        public ActionResult MostrarMarcas(DateTime desde, DateTime hasta)
+        {
+           // Fachada.
+            return View();
+        }
+
+
 
 
     }

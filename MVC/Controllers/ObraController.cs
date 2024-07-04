@@ -58,34 +58,34 @@ namespace MVC.Controllers
             return View(empleados);
         }
 
-        public ActionResult AgregarEmpleado()
-        {
-            IEnumerable<Obra> obra = Fachada.TomarTodasObras();
-            IEnumerable<Empleado> empleados = Fachada.TomarTodosEmpleados();
-            ViewBag.Obras = obra;
-            ViewBag.Empleados = empleados;
-            return View();
-        }
+        //public ActionResult AgregarEmpleado()
+        //{
+        //    IEnumerable<Obra> obra = Fachada.TomarTodasObras();
+        //    IEnumerable<Empleado> empleados = Fachada.TomarTodosEmpleados();
+        //    ViewBag.Obras = obra;
+        //    ViewBag.Empleados = empleados;
+        //    return View();
+        //}
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult AgregarEmpleado(ObraEmpleado oe)
-        {
-            try
-            {
-                Fachada.AgregarEmpleadoAObra(oe);
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception e)
-            {
-                IEnumerable<Obra> obra = Fachada.TomarTodasObras();
-                IEnumerable<Empleado> empleados = Fachada.TomarTodosEmpleados();
-                ViewBag.Obras = obra;
-                ViewBag.Empleados = empleados;
-                ViewBag.Error = e.Message;
-                return View();
-            }
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult AgregarEmpleado(ObraEmpleado oe)
+        //{
+        //    try
+        //    {
+        //        Fachada.AgregarEmpleadoAObra(oe);
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        IEnumerable<Obra> obra = Fachada.TomarTodasObras();
+        //        IEnumerable<Empleado> empleados = Fachada.TomarTodosEmpleados();
+        //        ViewBag.Obras = obra;
+        //        ViewBag.Empleados = empleados;
+        //        ViewBag.Error = e.Message;
+        //        return View();
+        //    }
+        //}
 
         // GET: ObraController/Details/5
         public ActionResult Detalles(int id)
@@ -237,7 +237,7 @@ namespace MVC.Controllers
 
             try
             {
-                if (nuevaObra == null || nuevaObra.TipoCronograma != "application/pdf")
+                if (nuevaObra == null || nuevaObra.TipoCronograma != null)
                 {
                     using (var memoryStream = new MemoryStream())
                     {
