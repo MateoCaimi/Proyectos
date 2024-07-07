@@ -360,6 +360,11 @@ namespace LogicaAccesoDatos.Repositorios
             RepositorioEmpleado.AgregarEmpleadosAObra();
         }
 
+        public void AgregarEmpleadosAObraDTO()
+        {
+            RepositorioEmpleado.AgregarEmpleadosAObraDTO();
+        }
+
         public void AgregarTipoEmpleado(TipoEmpleado tipo)
         {
             RepositorioEmpleado.AgregarTipo(tipo);
@@ -415,9 +420,29 @@ namespace LogicaAccesoDatos.Repositorios
             return RepositorioEmpleado.TraerTodasMarcas(empleado);
         }
 
-        public void Liquidar(DateTime desde, DateTime hasta, Obra? obra, Empleado? empleado)
+        /*public void Liquidar(DateTime desde, DateTime hasta, Obra? obra, Empleado? empleado)
         {
             RepositorioEmpleado.Liquidar(desde,hasta,obra,empleado);
+        }*/
+
+        public Dictionary<ObraEmpleado, double> LiquidacionTotal(DateTime desde, DateTime hasta)
+        {
+            return RepositorioEmpleado.LiquidacionTotal(desde, hasta);
+        }
+
+        public Dictionary<ObraEmpleado, double> LiquidarEmpleadoObra(Empleado empleado, Obra obra, DateTime desde, DateTime hasta)
+        {
+            return RepositorioEmpleado.LiquidacionObraEmpleado(empleado, obra, desde, hasta);
+        }
+
+        public Dictionary<ObraEmpleado, double> LiquidarEmpleado(Empleado empleado, DateTime desde, DateTime hasta)
+        {
+            return RepositorioEmpleado.LiquidacionEmpleado(empleado, desde, hasta);
+        }
+
+        public Dictionary<ObraEmpleado, double> LiquidarObra(Obra obra, DateTime desde, DateTime hasta)
+        {
+            return RepositorioEmpleado.LiquidacionObra(obra, desde, hasta);
         }
     }
 }

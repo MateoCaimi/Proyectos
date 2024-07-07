@@ -1,5 +1,7 @@
-﻿using LogicaAccesoDatos.EF;
+﻿using Azure;
+using LogicaAccesoDatos.EF;
 using LogicaNegocio.Entidades;
+using LogicaNegocio.Entidades.DTOs;
 using LogicaNegocio.Excepciones;
 using LogicaNegocio.Interfaces;
 using LogicaNegocio.ViewModel;
@@ -15,6 +17,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection.Metadata;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -95,6 +98,33 @@ namespace LogicaAccesoDatos.Repositorios
             }
         }
 
+        public void AgregarEmpleadosAObraDTO()
+        {
+            DateTime desde = new DateTime(2024, 04, 01);
+            DateTime hasta = new DateTime(2024, 04, 02);
+            string response = LlamadaCloudtimes(desde, hasta).Result; //Formatear la respuesta cloudtimes.
+            ListadoEmpleadosDTO listado = JsonConvert.DeserializeObject<ListadoEmpleadosDTO>(response);
+
+            foreach(EmpleadoDTO emp in listado.Empleados)
+            {
+                if(emp.Marcas.Count() == 0)
+                {
+                    continue;
+                }
+                Empleado empleado = this.BuscarPorNombreYCedula(emp.Nombre, emp.Cedula);
+                string nombreObra = emp.Marcas.First().NombreLector;
+                if(empleado == null)
+                {
+                    empleado = new Empleado();
+                    empleado.Nombre = emp.Nombre;
+                    empleado.Cedula = emp.Cedula;
+                    this.Agregar(empleado);
+                }
+                Obra obra = ObraPorNombre(nombreObra);
+                AgregarEmpleado(empleado, obra);
+            }
+        }
+
         public void AgregarEmpleadosAObra()
         {
             DateTime desde = new DateTime(2024, 04, 01);
@@ -137,6 +167,40 @@ namespace LogicaAccesoDatos.Repositorios
                 oe.Validar();
                 Context.ObrasEmpleados.Add(oe);
                 Context.SaveChanges();
+            }
+        }
+
+        public async void ConseguirMarcasDelEmpleadoDTO(ObraEmpleado empleadoObra)
+        {
+            DateTime desde = new DateTime(2024, 04, 01);
+            DateTime hasta = new DateTime(2024, 04, 02);
+
+            string response = LlamadaCloudtimes(desde, hasta).Result; //Formatear la respuesta cloudtimes.
+            ListadoEmpleadosDTO listado = JsonConvert.DeserializeObject<ListadoEmpleadosDTO>(response);
+            bool flag = false;
+            foreach(EmpleadoDTO emp in listado.Empleados)
+            {
+                if(emp.Marcas.Count() == 0)
+                {
+                    continue; //Si no tiene marcas pasa al siguiente empleado
+                }
+                if(empleadoObra.Empleado.Cedula == emp.Cedula && empleadoObra.Obra.Nombre == emp.Marcas.First().NombreLector)
+                {
+                    flag = true;
+                    for(int i = 0; i < emp.Marcas.Count(); i = i+2) {
+                        Marca m = new Marca();
+                        m.Entrada = emp.Marcas.ElementAt(i).HoraMarcaje; //horaMarcaje: Se asume 2 marcas por día. 
+                        m.Salida = emp.Marcas.ElementAt(i+1).HoraMarcaje; //horaMarcaje
+                        m.IdEmpleado = empleadoObra.IdEmpleado;
+                        m.IdObra = empleadoObra.IdObra;
+                        m.HorasLluvia = 0;
+                        if (!this.ExisteMarca(m))
+                        {
+                            this.AgregarMarca(m);
+                        }
+
+                    }
+                }
             }
         }
 
@@ -184,9 +248,9 @@ namespace LogicaAccesoDatos.Repositorios
             }
         }
 
-        public double Liquidar(DateTime desde, DateTime hasta, Obra? obra, Empleado? empleado)
+        /*public Dictionary<ObraEmpleado, double> Liquidar(DateTime desde, DateTime hasta, Obra? obra, Empleado? empleado)
         {
-            double liquidacionNominal;
+            Dictionary<ObraEmpleado, double> liquidacionNominal = new Dictionary<ObraEmpleado, double>();
             if (obra != null && empleado !=null)
             {
                 ObraEmpleado oe = this.GetEmpleadoObra(empleado.Id, obra.IdObra);
@@ -206,12 +270,15 @@ namespace LogicaAccesoDatos.Repositorios
             }
              return LiquidacionTotal(desde,hasta);
 
-        }
+        }*/
 
-        private double LiquidacionEmpleado(Empleado empleado, DateTime desde, DateTime hasta)
+        public Dictionary<ObraEmpleado, double> LiquidacionEmpleado(Empleado empleado, DateTime desde, DateTime hasta)
         {
             double liquidacionNominal;
             int horasTotales = 0;
+            ObraEmpleado oe = new ObraEmpleado();
+            oe.Empleado = empleado;
+            Dictionary<ObraEmpleado, double> ret = new Dictionary<ObraEmpleado, double>();
             //int horasLluvia = 0;
             //int horasExtra = 0;
 
@@ -222,8 +289,9 @@ namespace LogicaAccesoDatos.Repositorios
                 //horasLluvia += m.HorasLluvia;
                 //horasExtra += m.HorasExtra;
             }
-            liquidacionNominal = CalcularNominal(empleado, horasTotales);
-            return liquidacionNominal;
+            liquidacionNominal = CalcularNominal(oe.Empleado, horasTotales);
+            ret.Add(oe, liquidacionNominal);
+            return ret;
         }
 
         private List<Marca> MarcasEmpleadoRango(Empleado empleado, DateTime desde, DateTime hasta)
@@ -233,8 +301,10 @@ namespace LogicaAccesoDatos.Repositorios
                         && marc.IdEmpleado == empleado.IdEmpleado).ToList();
         }
 
-        public double LiquidacionObraEmpleado(ObraEmpleado oe, DateTime desde, DateTime hasta)
+        public Dictionary<ObraEmpleado, double> LiquidacionObraEmpleado(Empleado empleado, Obra obra, DateTime desde, DateTime hasta)
         {
+            ObraEmpleado oe = this.GetEmpleadoObra(empleado.Id, obra.IdObra);
+            Dictionary<ObraEmpleado, double> ret = new Dictionary<ObraEmpleado, double>();
             double liquidacionNominal;
             int horasTotales = 0;
             //int horasLluvia = 0;
@@ -248,7 +318,28 @@ namespace LogicaAccesoDatos.Repositorios
                 //horasExtra += m.HorasExtra;
             }
             liquidacionNominal = CalcularNominal(oe.Empleado, horasTotales);
-            return liquidacionNominal;
+            ret.Add(oe, liquidacionNominal);
+            return ret;
+        }
+
+        public Dictionary<ObraEmpleado, double> LiquidacionObraEmpleado(ObraEmpleado oe, DateTime desde, DateTime hasta) //Dos firmas, para el manejo desde controller y desde repo
+        {
+            double liquidacionNominal;
+            Dictionary<ObraEmpleado, double> ret = new Dictionary<ObraEmpleado, double>();
+            int horasTotales = 0;
+            //int horasLluvia = 0;
+            //int horasExtra = 0;
+
+            List<Marca> marcasEmpRango = this.MarcasEmpObraRango(oe, desde, hasta);
+            foreach (Marca m in marcasEmpRango)
+            {
+                horasTotales += m.HorasTrabajadas(); // Para los bonos(Forma de pago de la mepresa) solo se utilizan horas trabajadas
+                //horasLluvia += m.HorasLluvia;
+                //horasExtra += m.HorasExtra;
+            }
+            liquidacionNominal = CalcularNominal(oe.Empleado, horasTotales);
+            ret.Add(oe, liquidacionNominal);
+            return ret;
         }
 
         private double CalcularNominal(Empleado empleado, int horasTotales)
@@ -262,28 +353,39 @@ namespace LogicaAccesoDatos.Repositorios
 
         }
 
-        public double LiquidacionObra(Obra obra, DateTime desde, DateTime hasta)
+        public Dictionary<ObraEmpleado, double> LiquidacionObra(Obra obra, DateTime desde, DateTime hasta)
         {
-            double liquidacionNominal = 0;
             List<ObraEmpleado> empleadosObra = this.GetEmpleadosObra(obra); //Repetición de métodos entre repositorios. Que los repos se llamen está mal, pero no sé como organizarlo todavía
-
+            Dictionary<ObraEmpleado, double> liqPorEmp = new Dictionary<ObraEmpleado, double>();
             foreach (ObraEmpleado oe in empleadosObra)
             {
-                liquidacionNominal += this.LiquidacionObraEmpleado(oe, desde, hasta);
+                liqPorEmp.Concat(this.LiquidacionObraEmpleado(oe, desde, hasta));
             }
-            return liquidacionNominal;
+            return liqPorEmp;
         }
 
-        public double LiquidacionTotal(DateTime desde, DateTime hasta)
+        public Dictionary<ObraEmpleado, double> LiquidacionObraTotal(Obra obra, DateTime desde, DateTime hasta)
         {
-            double liquidacionNominal = 0;
+            Dictionary<ObraEmpleado, double> liqPorObra = new Dictionary<ObraEmpleado, double>();
+            List<ObraEmpleado> empleadosObra = this.GetEmpleadosObra(obra); //Repetición de métodos entre repositorios. Que los repos se llamen está mal, pero no sé como organizarlo todavía
+    
+            foreach (ObraEmpleado oe in empleadosObra)
+            {
+                liqPorObra.Concat(this.LiquidacionObraEmpleado(oe, desde, hasta));
+            }
+            return liqPorObra;
+        }
+
+        public Dictionary<ObraEmpleado, double> LiquidacionTotal(DateTime desde, DateTime hasta)
+        {
+            Dictionary<ObraEmpleado, double> liqPorObras = new Dictionary<ObraEmpleado,double>();
             List<Obra> obras = this.GetObras(); //Repetición de métodos entre repositorios. Que los repos se llamen está mal, pero no sé como organizarlo todavía
 
             foreach (Obra o in obras)
             {
-                liquidacionNominal += this.LiquidacionObra(o, desde, hasta);
+                liqPorObras.Concat(this.LiquidacionObraTotal(o, desde, hasta));
             }
-            return liquidacionNominal;
+            return liqPorObras;
         }
 
         private List<Obra> GetObras()

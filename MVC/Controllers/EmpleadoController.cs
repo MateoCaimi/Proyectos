@@ -1,6 +1,7 @@
 ﻿using LogicaAccesoDatos.Repositorios;
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones;
+using LogicaNegocio.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Models;
@@ -19,7 +20,7 @@ namespace MVC.Controllers
         {
 
             IEnumerable<Empleado> empleados = Fachada.TomarTodosEmpleados();
-            
+            Fachada.AgregarEmpleadosAObraDTO();
             //Liquidar();
             //Fachada.AgregarEmpleadosAObra();
             ViewBag.Obras = Fachada.TomarTodasObras();
@@ -246,7 +247,8 @@ namespace MVC.Controllers
         {
             ViewBag.Obras = Fachada.TomarTodasObras();
             ViewBag.Empleados = Fachada.TomarTodosEmpleados();
-            return View();
+            List<ObraEmpleadoLiquidacionViewModel> vm = new List<ObraEmpleadoLiquidacionViewModel>();
+            return View(vm);
         }
 
         [HttpPost]
@@ -274,8 +276,32 @@ namespace MVC.Controllers
                 //Fachada.conseguirMarcasEmpleado(obraEmpleado);
                 Empleado empleado = Fachada.BuscarEmpleado(IdEmpleado);
                 Obra obra = Fachada.BuscarObra(IdObra);
-                Fachada.Liquidar(desde,hasta,obra,empleado);
-                return Ok();
+                List<ObraEmpleadoLiquidacionViewModel> vm = new List<ObraEmpleadoLiquidacionViewModel>();
+                Dictionary<ObraEmpleado, double> dic;
+                if (obra != null && empleado != null)
+                {
+                    dic = Fachada.LiquidarEmpleadoObra(empleado, obra, desde, hasta);
+                }
+                else if (empleado != null)
+                {
+                    dic = Fachada.LiquidarEmpleado(empleado, desde, hasta);
+                }
+                else if (obra != null)
+                {
+                    dic = Fachada.LiquidarObra(obra, desde, hasta);
+                }
+                else
+                {
+                    dic = Fachada.LiquidacionTotal(desde, hasta);
+                }
+                
+                foreach(KeyValuePair<ObraEmpleado, double> kv in dic) //No es lógica de negocio, es formateo de vista, entonces entiendo que es válido.
+                {
+                    vm.Add(new ObraEmpleadoLiquidacionViewModel(kv.Key, kv.Value));
+                }
+                ViewBag.Obras = Fachada.TomarTodasObras();
+                ViewBag.Empleados = Fachada.TomarTodosEmpleados();
+                return View(vm);
             }
             catch (HttpRequestException e)
             {

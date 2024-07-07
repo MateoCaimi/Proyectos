@@ -1,4 +1,4 @@
-﻿@model LogicaNegocio.Entidades.ObraEmpleado
+﻿@model IEnumerable<LogicaNegocio.ViewModel.ObraEmpleadoLiquidacionViewModel>
 
 @{
     ViewData["Title"] = "Liquidar";
@@ -50,7 +50,53 @@
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ObraEmpleado.Empleado.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ObraEmpleado.Empleado.Cedula)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ObraEmpleado.Empleado.TipoEmpleado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ObraEmpleado.Empleado.CuentaBanco)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ObraEmpleado.Empleado.Banco)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Liquidacion)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ObraEmpleado.Empleado.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ObraEmpleado.Empleado.Cedula)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ObraEmpleado.Empleado.TipoEmpleado.Categoría)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ObraEmpleado.Empleado.CuentaBanco)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ObraEmpleado.Empleado.Banco)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Liquidacion)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 

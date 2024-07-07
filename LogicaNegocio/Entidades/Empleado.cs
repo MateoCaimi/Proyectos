@@ -58,11 +58,11 @@ namespace LogicaNegocio.Entidades
             }
 
             // Factores para la multiplicación
-            int[] factores = { 2, 9, 8, 7, 6, 3 };
+            int[] factores = { 2, 9, 8, 7, 6, 3, 4 };
 
             // Calcular la suma de los productos
             int suma = 0;
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 7; i++)
             {
                 int digito;
                 if (!int.TryParse(numCedula[i].ToString(), out digito))
