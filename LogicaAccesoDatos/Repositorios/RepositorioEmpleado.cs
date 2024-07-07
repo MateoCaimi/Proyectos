@@ -36,7 +36,7 @@ namespace LogicaAccesoDatos.Repositorios
         {
             try
             {
-                item.Validar();
+               // item.Validar();
                 Context.Empleados.Add(item);
                 Context.SaveChanges();
             }
@@ -135,7 +135,7 @@ namespace LogicaAccesoDatos.Repositorios
 
             for (int i = 0; i < cantidadEmpleados; i++)
             {
-                if (root["empleados"][i]["marcas"].Count() == 0 )
+                if (!root["empleados"][i]["marcas"].HasValues)//PROBAR
                 {
                     continue; // Si no tiene marcas pasa al siguiente empleado
                 }
