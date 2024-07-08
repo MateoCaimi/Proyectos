@@ -41,7 +41,7 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioObra.ObrasFiltradas(nombre, direccion, finalizada);
         }
-        public IEnumerable<Obra> BuscarPorNombre(string nombre)
+        public Obra BuscarPorNombre(string nombre)
         {
             return RepositorioObra.BuscarPorNombre(nombre);
         }
@@ -389,7 +389,7 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioObra.EmpleadoObra(idEmpleado, idObra);
         }
-
+        
         public void conseguirMarcasEmpleado(ObraEmpleado oe)
         {
            RepositorioEmpleado.ConseguirMarcasDelEmpleado(oe);
@@ -443,6 +443,16 @@ namespace LogicaAccesoDatos.Repositorios
         public Dictionary<ObraEmpleado, double> LiquidarObra(Obra obra, DateTime desde, DateTime hasta)
         {
             return RepositorioEmpleado.LiquidacionObra(obra, desde, hasta);
+        }
+
+        public void AgregarTodasLasMarcasPorIdEmpleado(int idEmpleado)
+        {
+             RepositorioEmpleado.AgregarTodasLasMarcasPorIdEmpleado(idEmpleado);
+        }
+
+        public Obra BuscarObraPorNombre(string nombreObra)
+        {
+            return RepositorioObra.BuscarPorNombre(nombreObra);
         }
     }
 }

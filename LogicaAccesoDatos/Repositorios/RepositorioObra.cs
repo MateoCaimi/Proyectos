@@ -55,9 +55,9 @@ namespace LogicaAccesoDatos.Repositorios
             return Retorno;
         }
 
-        public IEnumerable<Obra> BuscarPorNombre(string nombre)
+        public Obra BuscarPorNombre(string nombre)
         {
-            var Retorno = Context.Obras.Where(o => o.Nombre == nombre).ToList();
+            var Retorno = Context.Obras.Where(o => o.Nombre == nombre).FirstOrDefault();
             return Retorno;
         }
 

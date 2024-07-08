@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LogicaAccesoDatos.Migrations
 {
     /// <inheritdoc />
-    public partial class nuevoClon : Migration
+    public partial class lol : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -83,10 +83,10 @@ namespace LogicaAccesoDatos.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Cedula = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FechaIngreso = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaIngreso = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IdEmpleado = table.Column<int>(type: "int", nullable: false),
-                    CuentaBanco = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Banco = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    CuentaBanco = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Banco = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {

@@ -21,6 +21,7 @@ namespace MVC.Controllers
 
             IEnumerable<Empleado> empleados = Fachada.TomarTodosEmpleados();
             Fachada.AgregarEmpleadosAObraDTO();
+            //Fachada.AgregarTodasLasMarcasPorIdEmpleado(44);
             //Liquidar();
             //Fachada.AgregarEmpleadosAObra();
             ViewBag.Obras = Fachada.TomarTodasObras();

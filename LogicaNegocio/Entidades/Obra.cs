@@ -51,6 +51,17 @@ namespace LogicaNegocio.Entidades
             Finalizada = finalizada;
         }
 
+        public Obra(int idObra, DateTime fechaInicio, DateTime fechaFinalizacion, string nombre, string direccion, bool finalizada, int idUACargo)
+        {
+            IdObra = idObra;
+            FechaInicio = fechaInicio;
+            FechaFinalizacion = fechaFinalizacion;
+            Nombre = nombre;
+            Direccion = direccion;
+            Finalizada = finalizada;
+            IdACargo = idUACargo;
+        }
+
         public void Validar()
         {
             ValidarFechaFinal();

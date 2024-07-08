@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogicaAccesoDatos.Migrations
 {
     [DbContext(typeof(ProyectoContext))]
-    [Migration("20240701210617_nuevoClon")]
-    partial class nuevoClon
+    [Migration("20240707185117_lols")]
+    partial class lols
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,7 +34,6 @@ namespace LogicaAccesoDatos.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Banco")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Cedula")
@@ -42,13 +41,13 @@ namespace LogicaAccesoDatos.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CuentaBanco")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("FechaIngreso")
+                    b.Property<DateTime?>("FechaIngreso")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("IdEmpleado")
+                    b.Property<int?>("IdEmpleado")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Nombre")
@@ -171,7 +170,8 @@ namespace LogicaAccesoDatos.Migrations
                     b.Property<DateTime?>("FechaEgreso")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaIngreso")
+                    b.Property<DateTime?>("FechaIngreso")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.HasKey("IdObra", "IdEmpleado");
