@@ -525,7 +525,7 @@ namespace LogicaAccesoDatos.Repositorios
 
             Fachada f = new Fachada();
 
-            Empleado emp = f.BuscarEmpleado(idEmpleado);
+            Empleado empl = f.BuscarEmpleado(idEmpleado);
             DateTime desde = new DateTime(2024, 06, 01);
             DateTime hasta = new DateTime(2024, 06, 30);
 
@@ -541,6 +541,15 @@ namespace LogicaAccesoDatos.Repositorios
                 }
 
                 Obra obra = f.BuscarObraPorNombre(empDTO.Marcas.First().NombreLector);
+
+                foreach(Empleado emp in Context.Empleados)
+                {
+
+
+
+
+                
+
                 if (emp.Cedula == empDTO.Cedula)
                 {
                     flag = true;
@@ -565,7 +574,7 @@ namespace LogicaAccesoDatos.Repositorios
 
 
 
-
+            }
 
 
 
