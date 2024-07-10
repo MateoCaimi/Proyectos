@@ -355,14 +355,19 @@ namespace LogicaAccesoDatos.Repositorios
             return RepositorioObra.GetEmpleadosObra(obra);
         }
 
-        public void AgregarEmpleadosAObra()
-        {
-            RepositorioEmpleado.AgregarEmpleadosAObra();
-        }
+        //public void AgregarEmpleadosAObra()
+        //{
+        //    RepositorioEmpleado.AgregarEmpleadosAObra();
+        //}
 
         public void AgregarEmpleadosAObraDTO()
         {
             RepositorioEmpleado.AgregarEmpleadosAObraDTO();
+        }
+
+        public void AgregarTodasLasMarcasDTO()
+        {
+            RepositorioEmpleado.ConseguirTodasLasMarcas();
         }
 
         public void AgregarTipoEmpleado(TipoEmpleado tipo)
@@ -390,10 +395,10 @@ namespace LogicaAccesoDatos.Repositorios
             return RepositorioObra.EmpleadoObra(idEmpleado, idObra);
         }
         
-        public void conseguirMarcasEmpleado(ObraEmpleado oe)
-        {
-           RepositorioEmpleado.ConseguirMarcasDelEmpleado(oe);
-        }
+        //public void conseguirMarcasEmpleado(ObraEmpleado oe)
+        //{
+        //   RepositorioEmpleado.ConseguirMarcasDelEmpleado(oe);
+        //}
 
         public void CambiarEstadoAVisto(Solicitud solicitud)
         {
@@ -420,30 +425,30 @@ namespace LogicaAccesoDatos.Repositorios
             return RepositorioEmpleado.TraerTodasMarcas(empleado);
         }
 
-        /*public void Liquidar(DateTime desde, DateTime hasta, Obra? obra, Empleado? empleado)
+        public Dictionary<ObraEmpleado, double> Liquidar(DateTime desde, DateTime hasta, Obra? obra, Empleado? empleado)
         {
-            RepositorioEmpleado.Liquidar(desde,hasta,obra,empleado);
-        }*/
-
-        public Dictionary<ObraEmpleado, double> LiquidacionTotal(DateTime desde, DateTime hasta)
-        {
-            return RepositorioEmpleado.LiquidacionTotal(desde, hasta);
+            return RepositorioEmpleado.Liquidar(desde, hasta, obra, empleado);
         }
 
-        public Dictionary<ObraEmpleado, double> LiquidarEmpleadoObra(Empleado empleado, Obra obra, DateTime desde, DateTime hasta)
-        {
-            return RepositorioEmpleado.LiquidacionObraEmpleado(empleado, obra, desde, hasta);
-        }
+        //public Dictionary<ObraEmpleado, double> LiquidacionTotal(DateTime desde, DateTime hasta)
+        //{
+        //    return RepositorioEmpleado.LiquidacionTotal(desde, hasta);
+        //}
 
-        public Dictionary<ObraEmpleado, double> LiquidarEmpleado(Empleado empleado, DateTime desde, DateTime hasta)
-        {
-            return RepositorioEmpleado.LiquidacionEmpleado(empleado, desde, hasta);
-        }
+        //public Dictionary<ObraEmpleado, double> LiquidarEmpleadoObra(ObraEmpleado oe, DateTime desde, DateTime hasta)
+        //{
+        //    return RepositorioEmpleado.LiquidacionObraEmpleado(oe, desde, hasta);
+        //}
 
-        public Dictionary<ObraEmpleado, double> LiquidarObra(Obra obra, DateTime desde, DateTime hasta)
-        {
-            return RepositorioEmpleado.LiquidacionObra(obra, desde, hasta);
-        }
+        //public Dictionary<ObraEmpleado, double> LiquidarEmpleado(Empleado empleado, DateTime desde, DateTime hasta)
+        //{
+        //    return RepositorioEmpleado.LiquidacionEmpleado(empleado, desde, hasta);
+        //}
+
+        //public Dictionary<ObraEmpleado, double> LiquidarObra(Obra obra, DateTime desde, DateTime hasta)
+        //{
+        //    return RepositorioEmpleado.LiquidacionObra(obra, desde, hasta);
+        //}
 
         public void AgregarTodasLasMarcasPorIdEmpleado(int idEmpleado)
         {

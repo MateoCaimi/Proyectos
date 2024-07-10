@@ -17,6 +17,8 @@
                 <input type="hidden" name="id" value="@ViewBag.IdEmp" />
                 <label>Filtrar por obra: </label>
                 <select id="IdObra" name="IdObra" class="form-control">
+                    <option value=null>Todas</option>
+
                     @foreach (var item in ViewBag.Obras)
                     {
                         <option value="@item.IdObra">@item.Nombre</option>
@@ -28,6 +30,8 @@
                 <input type="hidden" name="id" value="@ViewBag.IdEmp" />
                 <label>Filtrar por empleado: </label>
                 <select id="IdEmpleado" name="IdEmpleado" class="form-control">
+                    <option value=null>Todos</option>
+
                     @foreach (var item in ViewBag.Empleados)
                     {
                         <option value="@item.Id">@item.Nombre</option>

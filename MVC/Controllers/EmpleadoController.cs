@@ -19,9 +19,11 @@ namespace MVC.Controllers
         public ActionResult Index()
         {
 
+            
             IEnumerable<Empleado> empleados = Fachada.TomarTodosEmpleados();
-            Fachada.AgregarEmpleadosAObraDTO();
+            //Fachada.AgregarEmpleadosAObraDTO();
             //Fachada.AgregarTodasLasMarcasPorIdEmpleado(44);
+            //Fachada.AgregarTodasLasMarcasDTO();
             //Liquidar();
             //Fachada.AgregarEmpleadosAObra();
             ViewBag.Obras = Fachada.TomarTodasObras();
@@ -270,32 +272,11 @@ namespace MVC.Controllers
 
             try
             {
-                //Task<string> responseData = await Fachada.LlamadaClodtimes(desde, hasta);
-                //RespuestaApiModel datosApi = JsonConvert.DeserializeObject<RespuestaApiModel>(await responseData);
-                //Fachada.AgregarEmpleadosAObra();
-                //ObraEmpleado obraEmpleado = Fachada.BuscarEmpleadoObra(2, 2);
-                //Fachada.conseguirMarcasEmpleado(obraEmpleado);
                 Empleado empleado = Fachada.BuscarEmpleado(IdEmpleado);
                 Obra obra = Fachada.BuscarObra(IdObra);
                 List<ObraEmpleadoLiquidacionViewModel> vm = new List<ObraEmpleadoLiquidacionViewModel>();
                 Dictionary<ObraEmpleado, double> dic;
-                if (obra != null && empleado != null)
-                {
-                    dic = Fachada.LiquidarEmpleadoObra(empleado, obra, desde, hasta);
-                }
-                else if (empleado != null)
-                {
-                    dic = Fachada.LiquidarEmpleado(empleado, desde, hasta);
-                }
-                else if (obra != null)
-                {
-                    dic = Fachada.LiquidarObra(obra, desde, hasta);
-                }
-                else
-                {
-                    dic = Fachada.LiquidacionTotal(desde, hasta);
-                }
-                
+                dic = Fachada.Liquidar(desde, hasta, obra, empleado); 
                 foreach(KeyValuePair<ObraEmpleado, double> kv in dic) //No es lógica de negocio, es formateo de vista, entonces entiendo que es válido.
                 {
                     vm.Add(new ObraEmpleadoLiquidacionViewModel(kv.Key, kv.Value));
