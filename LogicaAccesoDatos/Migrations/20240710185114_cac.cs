@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LogicaAccesoDatos.Migrations
 {
     /// <inheritdoc />
-    public partial class lol : Migration
+    public partial class cac : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -84,16 +84,17 @@ namespace LogicaAccesoDatos.Migrations
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Cedula = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FechaIngreso = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IdEmpleado = table.Column<int>(type: "int", nullable: false),
+                    IdTipoEmpleado = table.Column<int>(type: "int", nullable: false),
                     CuentaBanco = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Banco = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Banco = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IncentivoXHora = table.Column<double>(type: "float", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Empleados", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Empleados_TiposEmpleados_IdEmpleado",
-                        column: x => x.IdEmpleado,
+                        name: "FK_Empleados_TiposEmpleados_IdTipoEmpleado",
+                        column: x => x.IdTipoEmpleado,
                         principalTable: "TiposEmpleados",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -312,9 +313,9 @@ namespace LogicaAccesoDatos.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Empleados_IdEmpleado",
+                name: "IX_Empleados_IdTipoEmpleado",
                 table: "Empleados",
-                column: "IdEmpleado");
+                column: "IdTipoEmpleado");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Materiales_ObraIdObra",

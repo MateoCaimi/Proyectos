@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogicaAccesoDatos.Migrations
 {
     [DbContext(typeof(ProyectoContext))]
-    [Migration("20240707185117_lols")]
-    partial class lols
+    [Migration("20240710185114_cac")]
+    partial class cac
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -46,9 +46,12 @@ namespace LogicaAccesoDatos.Migrations
                     b.Property<DateTime?>("FechaIngreso")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("IdEmpleado")
+                    b.Property<int?>("IdTipoEmpleado")
                         .IsRequired()
                         .HasColumnType("int");
+
+                    b.Property<double?>("IncentivoXHora")
+                        .HasColumnType("float");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -56,7 +59,7 @@ namespace LogicaAccesoDatos.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdEmpleado");
+                    b.HasIndex("IdTipoEmpleado");
 
                     b.ToTable("Empleados");
                 });
@@ -440,7 +443,7 @@ namespace LogicaAccesoDatos.Migrations
                 {
                     b.HasOne("LogicaNegocio.Entidades.TipoEmpleado", "TipoEmpleado")
                         .WithMany()
-                        .HasForeignKey("IdEmpleado")
+                        .HasForeignKey("IdTipoEmpleado")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

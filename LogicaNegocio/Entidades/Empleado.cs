@@ -25,6 +25,8 @@ namespace LogicaNegocio.Entidades
         public TipoEmpleado TipoEmpleado { get; set; }
         public string? CuentaBanco { get; set; }
         public string? Banco { get; set; }
+        public double? IncentivoXHora { get; set; }
+
 
         public Empleado()
         {

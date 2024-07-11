@@ -100,8 +100,8 @@ namespace LogicaAccesoDatos.Repositorios
 
         public void AgregarEmpleadosAObraDTO()
         {
-            DateTime desde = new DateTime(2024, 04, 01);
-            DateTime hasta = new DateTime(2024, 04, 02);
+            DateTime desde = new DateTime(2024, 06, 01);
+            DateTime hasta = new DateTime(2024, 07, 01);
             string response = LlamadaCloudtimes(desde, hasta).Result; //Formatear la respuesta cloudtimes.
             ListadoEmpleadosDTO listado = JsonConvert.DeserializeObject<ListadoEmpleadosDTO>(response);
 
@@ -185,9 +185,9 @@ namespace LogicaAccesoDatos.Repositorios
         }
 
         public async void ConseguirTodasLasMarcas()
-        {
-            DateTime desde = new DateTime(2024, 04, 01);
-            DateTime hasta = new DateTime(2024, 04, 02);
+         {
+            DateTime desde = new DateTime(2024, 06, 01);
+            DateTime hasta = new DateTime(2024, 07, 09);
 
             string response = LlamadaCloudtimes(desde, hasta).Result; //Formatear la respuesta cloudtimes.
             ListadoEmpleadosDTO listado = JsonConvert.DeserializeObject<ListadoEmpleadosDTO>(response);
@@ -200,14 +200,29 @@ namespace LogicaAccesoDatos.Repositorios
                 Empleado empleado = BuscarPorNombreYCedula(emp.Nombre, emp.Cedula);
                 for (int i = 0; i < emp.Marcas.Count(); i = i + 2)
                 {
-                    Obra obra = GetObraPorNombre(emp.Marcas.First().NombreLector);
+                    Obra obra;
+                    if(emp.Marcas.First().NombreLector != null)
+                    {
+                        obra = GetObraPorNombre(emp.Marcas.First().NombreLector);
+
+                    }
+                    else
+                    {
+                        obra = GetObraPorNombre(emp.Marcas.First().Comentario);
+                        continue;
+
+                    }
                     Marca m = new Marca();
                     m.Entrada = emp.Marcas.ElementAt(i).HoraMarcaje; //horaMarcaje: Se asume 2 marcas por día. 
+                    if (i < emp.Marcas.Count())
+                    {
                     m.Salida = emp.Marcas.ElementAt(i + 1).HoraMarcaje; //horaMarcaje
+
+                    }
                     m.IdEmpleado = empleado.Id;
                     m.IdObra = obra.IdObra;
                     m.HorasLluvia = 0;
-                    if (!this.ExisteMarca(m) && m.IdEmpleado < 1000)
+                    if (!this.ExisteMarca(m))
                     {
                         this.AgregarMarca(m);
                     }

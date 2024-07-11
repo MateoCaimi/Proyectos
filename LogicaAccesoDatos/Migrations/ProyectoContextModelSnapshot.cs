@@ -47,6 +47,9 @@ namespace LogicaAccesoDatos.Migrations
                         .IsRequired()
                         .HasColumnType("int");
 
+                    b.Property<double?>("IncentivoXHora")
+                        .HasColumnType("float");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

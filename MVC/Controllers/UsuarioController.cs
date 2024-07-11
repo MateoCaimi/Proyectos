@@ -56,8 +56,8 @@ namespace MVC.Controllers
                 return View();
             }
 
-            Fachada.AgregarEmpleadosAObraDTO();
-            Fachada.AgregarTodasLasMarcasPorIdEmpleado(44);
+            //Fachada.AgregarEmpleadosAObraDTO();
+            //Fachada.AgregarTodasLasMarcasPorIdEmpleado(44);
 
             return RedirectToAction("Index", "Home");
         }
