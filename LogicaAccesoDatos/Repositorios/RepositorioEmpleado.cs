@@ -499,9 +499,30 @@ namespace LogicaAccesoDatos.Repositorios
             }
         }
 
+        public void ModificarTipo(TipoEmpleado tipo)
+        {
+            TipoEmpleado tipoEmpleado = this.BuscarTipo(tipo.Id);
+            if (tipoEmpleado == null)
+            {
+                throw new EmpleadoException("No se encontró el tipo de empleado para modificar.");
+            }
+            tipoEmpleado.Validar();
+            //Context.TiposEmpleados.Update(tipo);
+            tipoEmpleado.Categoría = tipo.Categoría;
+            tipoEmpleado.ValorHora = tipo.ValorHora;
+            tipoEmpleado.Compensacion = tipo.Compensacion;
+            tipoEmpleado.Presentismo = tipoEmpleado.Presentismo;
+            Context.SaveChanges();
+        }
+
         internal IEnumerable<TipoEmpleado> BuscarTipos()
         {
             return Context.TiposEmpleados;
+        }
+
+        internal TipoEmpleado BuscarTipo(int id)
+        {
+            return Context.TiposEmpleados.Find(id);
         }
 
         internal List<Empleado> TomarEmpleadosDeObra(Obra obra)

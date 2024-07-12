@@ -21,9 +21,9 @@ namespace MVC.Controllers
 
             
             IEnumerable<Empleado> empleados = Fachada.TomarTodosEmpleados();
-            Fachada.AgregarEmpleadosAObraDTO();
+            //Fachada.AgregarEmpleadosAObraDTO();
             //Fachada.AgregarTodasLasMarcasPorIdEmpleado(44);
-            Fachada.AgregarTodasLasMarcasDTO();
+            //Fachada.AgregarTodasLasMarcasDTO();
             //Liquidar();
             //Fachada.AgregarEmpleadosAObra();
             ViewBag.Obras = Fachada.TomarTodasObras();
@@ -47,6 +47,20 @@ namespace MVC.Controllers
             }
             ViewBag.Obras = Fachada.TomarTodasObras();
             return View(empleados);
+        }
+
+        // GET: EmpleadoController
+        public ActionResult ListaTipos()
+        {
+
+
+            IEnumerable<TipoEmpleado> tipoEmpleados = Fachada.TomarTodosTipoEmpleados();
+            //Fachada.AgregarEmpleadosAObraDTO();
+            //Fachada.AgregarTodasLasMarcasPorIdEmpleado(44);
+            //Fachada.AgregarTodasLasMarcasDTO();
+            //Liquidar();
+            //Fachada.AgregarEmpleadosAObra();
+            return View(tipoEmpleados);
         }
 
         public ActionResult Marcas(int id)
@@ -149,32 +163,32 @@ namespace MVC.Controllers
             }
         }
 
-        //// GET: EmpleadoController/Create
-        //public ActionResult AgregarTipo()
-        //{
-        //    return View();
-        //}
+        // GET: EmpleadoController/Create
+        public ActionResult AgregarTipo()
+        {
+            return View();
+        }
 
-        //// POST: EmpleadoController/Create
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult AgregarTipo(TipoEmpleado tipo)
-        //{
-        //    try
-        //    {
-        //        if(tipo == null)
-        //        {
-        //            throw new EmpleadoException("El tipo no puede ser nulo");
-        //        }
-        //        Fachada.AgregarTipoEmpleado(tipo);
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        ViewBag.Error = ex.Message;
-        //        return View();
-        //    }
-        //}
+        // POST: EmpleadoController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AgregarTipo(TipoEmpleado tipo)
+        {
+            try
+            {
+                if(tipo == null)
+                {
+                    throw new EmpleadoException("El tipo no puede ser nulo");
+                }
+                Fachada.AgregarTipoEmpleado(tipo);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View();
+            }
+        }
 
         // GET: EmpleadoController/Edit/5
         public ActionResult Editar(int id)
@@ -288,6 +302,42 @@ namespace MVC.Controllers
             catch (HttpRequestException e)
             {
                 return StatusCode(500, e.Message);
+            }
+        }
+
+        // GET: EmpleadoController/Edit/5
+        public ActionResult ModificarTipo(int id)
+        {
+            TipoEmpleado tipoEmpleado = Fachada.BuscarTipo(id);
+            return View(tipoEmpleado);
+        }
+
+        // POST: EmpleadoController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ModificarTipo(TipoEmpleado nuevoTipoEmpleado)
+        {
+            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            //{
+            //    return RedirectToAction("Index", "Usuario");
+            //}
+            //else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Administrador")
+            //{
+            //    return RedirectToAction("Listado", "Usuario");
+            //}
+            //else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Obra")
+            //{
+            //    return RedirectToAction("Listado", "Usuario");
+            //}
+
+            try
+            {
+                Fachada.ModificarTipo(nuevoTipoEmpleado);
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
             }
         }
     }

@@ -459,5 +459,20 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioObra.BuscarPorNombre(nombreObra);
         }
+
+        public void ModificarTipo(TipoEmpleado tipo)
+        {
+            RepositorioEmpleado.ModificarTipo(tipo);
+        }
+
+        public IEnumerable<TipoEmpleado> TomarTodosTipoEmpleados()
+        {
+            return RepositorioEmpleado.BuscarTipos();
+        }
+
+        public TipoEmpleado BuscarTipo(int id)
+        {
+            return RepositorioEmpleado.BuscarTipo(id);
+        }
     }
 }

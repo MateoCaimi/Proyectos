@@ -1,0 +1,57 @@
+﻿@model IEnumerable<LogicaNegocio.Entidades.TipoEmpleado>
+
+@{
+    ViewData["Title"] = "ListaTipos";
+}
+
+<h1>ListaTipos</h1>
+
+<p>
+    <a asp-action="AgregarTipo">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Categoría)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ValorHora)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Presentismo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Compensacion)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Categoría)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ValorHora)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Presentismo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Compensacion)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "ModificarTipo", new { id=item.Id/* id=item.PrimaryKey */ }) |
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
