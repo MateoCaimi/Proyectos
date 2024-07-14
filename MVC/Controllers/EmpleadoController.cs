@@ -89,6 +89,7 @@ namespace MVC.Controllers
             }
             ViewBag.Obras = Fachada.TomarTodasObras();
             ViewBag.IdEmp = empleado.Id;
+            ViewBag.HorasTotales = Fachada.HorasTotales(marcas);
             return View(marcas);
         }
 
@@ -194,6 +195,8 @@ namespace MVC.Controllers
         public ActionResult Editar(int id)
         {
             Empleado empleado = Fachada.BuscarEmpleado(id);
+            IEnumerable<TipoEmpleado> tipos = Fachada.BuscarTiposEmpleados();
+            ViewBag.Tipos = tipos;
             return View(empleado);
         }
 

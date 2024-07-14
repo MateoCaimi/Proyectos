@@ -323,6 +323,10 @@ namespace LogicaAccesoDatos.Repositorios
                         if(m.Cantidad <= om.Stock)
                         {
                             om.Stock -= m.Cantidad;
+                            if(om.Stock < om.Material.BarreraDeStock)
+                            {
+                                this.AlertarStock(om);
+                            }
                         }
                         else
                         {
@@ -333,6 +337,11 @@ namespace LogicaAccesoDatos.Repositorios
             }
             Context.SaveChanges();
             return true;
+        }
+
+        private void AlertarStock(ObraMaterial om)
+        {
+            throw new NotImplementedException();
         }
 
         public void AsignacionHorasLluviaOExtra(Obra obra, int horas, DateTime dia, bool sonExtra)

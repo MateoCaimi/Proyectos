@@ -474,5 +474,10 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioEmpleado.BuscarTipo(id);
         }
+
+        public int HorasTotales(List<Marca> marcas)
+        {
+            return RepositorioEmpleado.HorasTotales(marcas);
+        }
     }
 }

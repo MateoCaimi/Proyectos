@@ -63,8 +63,13 @@ namespace LogicaAccesoDatos.Repositorios
             {
                 throw new EmpleadoException("No se encontró el empleado para modificar.");
             }
-            empleado.Validar();
-            Context.Empleados.Update(empleado);
+            item.Validar(); //Seria item validar no empleado validar porque valida los datos viejos sino
+            empleado.CuentaBanco = item.CuentaBanco;
+            empleado.Banco = item.Banco;
+            empleado.FechaIngreso = item.FechaIngreso;
+            empleado.IdTipoEmpleado = item.IdTipoEmpleado;
+            empleado.Nombre = item.Nombre;
+            empleado.Cedula = item.Cedula;
             Context.SaveChanges();
         }
 
@@ -676,6 +681,16 @@ namespace LogicaAccesoDatos.Repositorios
             //}
 
 
+        }
+
+        internal int HorasTotales(List<Marca> marcas)
+        {
+            int total = 0;
+            foreach(Marca m in marcas)
+            {
+                total += m.HorasTrabajadas();
+            }
+            return total;
         }
     }
 }

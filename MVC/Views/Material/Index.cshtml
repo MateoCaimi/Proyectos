@@ -39,6 +39,10 @@
             <th>
                 @Html.DisplayNameFor(model => model.UnidadDeMedida)
             </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.BarreraDeStock)
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -51,6 +55,10 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => mat.UnidadDeMedida)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => mat.BarreraDeStock)
                 </td>
 
                 <td>

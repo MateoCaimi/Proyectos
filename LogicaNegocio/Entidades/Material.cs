@@ -18,6 +18,7 @@ namespace LogicaNegocio.Entidades
         public string Nombre { get; set; }
         [Required(ErrorMessage = "Ingrese una unidad de medida")]
         public string UnidadDeMedida { get; set; }
+        public int BarreraDeStock { get; set; }
 
     
         public Material(string nom, int stock, string unidadDeMedida)

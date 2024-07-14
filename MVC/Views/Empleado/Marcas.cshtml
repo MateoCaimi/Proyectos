@@ -50,6 +50,13 @@
         </tr>
     </thead>
     <tbody>
+        @if (Model.Any())
+        {
+            <div class="form-group">
+                <label>Horas totales:</label>
+                <p>@ViewBag.HorasTotales</p>
+            </div>
+        }
         @foreach (var item in Model)
         {
             <tr>
