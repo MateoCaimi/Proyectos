@@ -6,7 +6,7 @@
     string solicitudes = Context.Session.GetString("SolicitudesPendientes");
     string solicitudesAprob = Context.Session.GetString("SolicitudesAprobadas");
     string solicitudesConfirmadas = Context.Session.GetString("SolicitudesConfirmadas");
-
+    string alertasDeStock = Context.Session.GetString("MaterialesAlertar");
 
 
     if (Context.Session.GetString("UsuarioTipo") == "Usuario de oficina")
@@ -100,8 +100,31 @@
             }
             </div>
 
+        <div class="dropdown">
+            <button class="btn btn-Primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Alertas de stock en obra
+                @*Aca iria la Campanita*@
+            </button>
+            @if (alertasDeStock != null)
+            {
+                List<ObraMaterial> materialesAlertar = JsonSerializer.Deserialize<List<ObraMaterial>>(alertasDeStock);
+                int cantMaterial = materialesAlertar.Count();
+                <span class="badge bg-primary rounded-pill">
+                    @cantMaterial
+                </span>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                @foreach (ObraMaterial om in materialesAlertar)
+                {
 
-    
+                    <li class="list-group">
+                            <a class="list-group-item list-group-item-action" href="@Url.Action("Materiales", "Obra", new { id = om.Obra.IdObra })">En la obra @om.Obra.Nombre el stock de @om.Material.Nombre bajó de la barrera definida</a>
+                    </li>
+
+                }
+                </ul>
+            }
+            
+        </div>
     }
 
 

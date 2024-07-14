@@ -223,11 +223,14 @@ namespace LogicaAccesoDatos.Repositorios
 
         internal List<Solicitud> BuscarSolicitudesAprobadasParaUnUObra(string? nomObrero)
         {
-            Fachada f = new Fachada();
-
-            Usuario u = f.BuscarUsuarioXNombreU(nomObrero);
+            Usuario u = this.BuscarUsuarioXNombreU(nomObrero);
 
             return Context.Solicitudes.Include(s => s.Obra).Where(sp => sp.Estado == Estado.Aprobado && sp.Obra.IdACargo == u.Id).ToList();
+        }
+
+        private Usuario BuscarUsuarioXNombreU(string? nomObrero)
+        {
+            return Context.Usuarios.Where(u => u.NombreUsuario == nomObrero).FirstOrDefault();
         }
 
         internal List<Solicitud> BuscarSolicitudConfirmada()

@@ -66,6 +66,9 @@ namespace MVC.Controllers
                 };
                 HttpContext.Session.SetString("SolicitudesConfirmadas", System.Text.Json.JsonSerializer.Serialize(solicitudesConfirmadas, opciones2));
 
+                List<ObraMaterial> alertasDeStock = Fachada.AlertarStockDeMaterialesTodasObras();
+                HttpContext.Session.SetString("MaterialesAlertar", System.Text.Json.JsonSerializer.Serialize(alertasDeStock, opciones));
+
             }
 
 
@@ -81,6 +84,8 @@ namespace MVC.Controllers
 
                 };
                 HttpContext.Session.SetString("SolicitudesAprobadas", System.Text.Json.JsonSerializer.Serialize(solicitudesAprobadas, opciones3));
+                List<ObraMaterial> alertasDeStock = Fachada.AlertarStockDeMaterialesTodasObrasACargo(nomObrero);
+                HttpContext.Session.SetString("MaterialesAlertar", System.Text.Json.JsonSerializer.Serialize(alertasDeStock, opciones3));
             }
 
 

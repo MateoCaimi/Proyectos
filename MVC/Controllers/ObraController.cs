@@ -8,7 +8,10 @@ using MVC.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.AspNetCore.Http;
 namespace MVC.Controllers
 {
     public class ObraController : Controller
@@ -581,16 +584,32 @@ namespace MVC.Controllers
             {
                 List<MaterialConsumoViewModel> item = JsonConvert.DeserializeObject<List<MaterialConsumoViewModel>>((string)TempData["ListaActualConsumo"]);
                 Obra obra = Fachada.BuscarObra(IdObra);
-                
-                if(Fachada.ConsumirMateriales(item, obra))
-                {
-                   return RedirectToAction("Index", new { idObra = IdObra });
-                }
-                else
+                if(Fachada.MaterialesCheckStock(item, obra))
                 {
                     throw new ObraException("No se puede consumir más que el stock de un material en específico");
                 }
-               
+                Fachada.ConsumirMateriales(item, obra);
+                List<ObraMaterial> materialesAlertar;
+                if (HttpContext.Session.GetString("UsuarioTipo") == "UDeObra")
+                {
+                    materialesAlertar = Fachada.AlertarStockDeMaterialesTodasObrasACargo(HttpContext.Session.GetString("UsuarioLogueado"));
+                }
+                else
+                {
+                    materialesAlertar = Fachada.AlertarStockDeMaterialesTodasObras();
+                }
+                if (materialesAlertar.Count > 0)
+                {
+                    var opciones = new JsonSerializerOptions
+                    {
+                        ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                        WriteIndented = true,
+
+                    };
+                    HttpContext.Session.SetString("MaterialesAlertar", System.Text.Json.JsonSerializer.Serialize(materialesAlertar, opciones)); //Uso el distinct para no repetir alertas. Ej: se baja de la barrera, y se consume de vuelta
+                }
+                return RedirectToAction("Index", new { idObra = IdObra });
+                
             }
             catch (Exception e)
             {

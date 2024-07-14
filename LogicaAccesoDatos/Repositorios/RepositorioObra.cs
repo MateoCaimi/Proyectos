@@ -150,12 +150,14 @@ namespace LogicaAccesoDatos.Repositorios
 
         internal IEnumerable<Obra> TomarObrasDeUnUsuarioObra(string? nomUsuarioObra)
         {
-
-            Fachada f = new Fachada();
-            Usuario u = f.BuscarUsuarioXNombreU(nomUsuarioObra);
+            Usuario u = this.BuscarUsuarioXNombreU(nomUsuarioObra);
 
             return Context.Obras.Where(o => o.IdACargo == u.Id).ToList();
 
+        }
+        private Usuario BuscarUsuarioXNombreU(string? nomObrero)
+        {
+            return Context.Usuarios.Where(u => u.NombreUsuario == nomObrero).FirstOrDefault();
         }
 
         public Obra Buscar(int id)
@@ -311,9 +313,10 @@ namespace LogicaAccesoDatos.Repositorios
             return Context.ObrasMateriales.Where(m => m.Obra.IdObra == idObra).Include(o => o.Material).Include(o => o.Obra);
         }
 
-        internal bool ConsumirMateriales(List<MaterialConsumoViewModel>? item, Obra obra)
+        internal void ConsumirMateriales(List<MaterialConsumoViewModel>? item, Obra obra)
         {
             List<ObraMaterial> materialesObra = MaterialesDeObra(obra.IdObra).ToList();
+            
             foreach (MaterialConsumoViewModel m in item)
             {
                 foreach(ObraMaterial om in materialesObra)
@@ -323,26 +326,67 @@ namespace LogicaAccesoDatos.Repositorios
                         if(m.Cantidad <= om.Stock)
                         {
                             om.Stock -= m.Cantidad;
-                            if(om.Stock < om.Material.BarreraDeStock)
-                            {
-                                this.AlertarStock(om);
-                            }
-                        }
-                        else
-                        {
-                            return false;
                         }
                     }
                 }
             }
             Context.SaveChanges();
-            return true;
+        }
+        internal List<ObraMaterial> AlertarStockDeMaterialesEnObra(Obra obra)
+        {
+            List<ObraMaterial> materialesAlertar = new List<ObraMaterial>();
+            List<ObraMaterial> materialesObra = MaterialesDeObra(obra.IdObra).ToList();
+            foreach (ObraMaterial om in materialesObra)
+            {
+                if (om.Material.BarreraDeStock > om.Stock)
+                {
+                    materialesAlertar.Add(om);
+                }
+
+            }
+            return materialesAlertar;
+        }
+        internal List<ObraMaterial> AlertarStockDeMaterialesTodasObras()
+        {
+            List<ObraMaterial> materialesAlertar = new List<ObraMaterial>();
+            List<Obra> obras = this.TomarTodos().ToList();
+            foreach(Obra o in obras)
+            {
+                materialesAlertar.AddRange(this.AlertarStockDeMaterialesEnObra(o));
+            }
+            return materialesAlertar;
+        }
+        internal List<ObraMaterial> AlertarStockDeMaterialesTodasObrasACargo(string? nomObrero)
+        {
+            List<ObraMaterial> materialesAlertar = new List<ObraMaterial>();
+            List<Obra> obras = this.TomarObrasDeUnUsuarioObra(nomObrero).ToList();
+            foreach (Obra o in obras)
+            {
+                materialesAlertar.AddRange(this.AlertarStockDeMaterialesEnObra(o));
+            }
+            return materialesAlertar;
         }
 
-        private void AlertarStock(ObraMaterial om)
+        internal bool MaterialesCheckStock(List<MaterialConsumoViewModel>? item, Obra obra)
         {
-            throw new NotImplementedException();
+            List<ObraMaterial> materialesObra = MaterialesDeObra(obra.IdObra).ToList();
+            foreach (MaterialConsumoViewModel m in item)
+            {
+                foreach (ObraMaterial om in materialesObra)
+                {
+                    if (m.Material.Id == om.Material.Id)
+                    {
+                        if (m.Cantidad > om.Stock)
+                        {
+                            return true;
+                        }
+
+                    }
+                }
+            }
+            return false;
         }
+
 
         public void AsignacionHorasLluviaOExtra(Obra obra, int horas, DateTime dia, bool sonExtra)
         {
@@ -444,6 +488,7 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return Context.ObrasEmpleados.Where(e => e.IdObra == oe.IdObra && e.IdEmpleado == oe.IdEmpleado).Any();
         }
+
 
     }
 }

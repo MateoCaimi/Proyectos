@@ -310,9 +310,9 @@ namespace LogicaAccesoDatos.Repositorios
             return RepositorioObra.MaterialesDeObra(idObra);
         }
 
-        public bool ConsumirMateriales(List<MaterialConsumoViewModel>? item, Obra obra)
+        public void ConsumirMateriales(List<MaterialConsumoViewModel>? item, Obra obra)
         {
-            return RepositorioObra.ConsumirMateriales(item, obra);
+            RepositorioObra.ConsumirMateriales(item, obra);
         }
 
         public IEnumerable<Empleado> TomarTodosEmpleados()
@@ -478,6 +478,21 @@ namespace LogicaAccesoDatos.Repositorios
         public int HorasTotales(List<Marca> marcas)
         {
             return RepositorioEmpleado.HorasTotales(marcas);
+        }
+
+        public bool MaterialesCheckStock(List<MaterialConsumoViewModel>? item, Obra obra)
+        {
+            return RepositorioObra.MaterialesCheckStock(item, obra);
+        }
+
+        public List<ObraMaterial> AlertarStockDeMaterialesTodasObras()
+        {
+            return RepositorioObra.AlertarStockDeMaterialesTodasObras();
+        }
+
+        public List<ObraMaterial> AlertarStockDeMaterialesTodasObrasACargo(string? nom)
+        {
+            return RepositorioObra.AlertarStockDeMaterialesTodasObrasACargo(nom);
         }
     }
 }
