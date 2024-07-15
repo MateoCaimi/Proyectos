@@ -360,14 +360,14 @@ namespace LogicaAccesoDatos.Repositorios
         //    RepositorioEmpleado.AgregarEmpleadosAObra();
         //}
 
-        public void AgregarEmpleadosAObraDTO()
+        public void AgregarEmpleadosAObraDTO(DateTime desde, DateTime hasta)
         {
-            RepositorioEmpleado.AgregarEmpleadosAObraDTO();
+            RepositorioEmpleado.AgregarEmpleadosAObraDTO(desde, hasta);
         }
 
-        public void AgregarTodasLasMarcasDTO()
+        public void AgregarTodasLasMarcasDTO(DateTime desde, DateTime hasta)
         {
-            RepositorioEmpleado.ConseguirTodasLasMarcas();
+            RepositorioEmpleado.ConseguirTodasLasMarcas(desde, hasta);
         }
 
         public void AgregarTipoEmpleado(TipoEmpleado tipo)

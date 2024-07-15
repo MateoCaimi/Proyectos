@@ -103,11 +103,20 @@ namespace LogicaAccesoDatos.Repositorios
             }
         }
 
-        public void AgregarEmpleadosAObraDTO()
+        public void AgregarEmpleadosAObraDTO(DateTime desde, DateTime hasta)
         {
-            DateTime desde = new DateTime(2024, 06, 01);
-            DateTime hasta = new DateTime(2024, 07, 01);
-            string response = LlamadaCloudtimes(desde, hasta).Result; //Formatear la respuesta cloudtimes.
+            DateTime hastaDato = new DateTime();
+            hastaDato = DateTime.Now;
+
+            DateTime desdeDato = new DateTime(hastaDato.Year, hastaDato.Month, hastaDato.Day - 7); // esto solo sirve si la semana es post 7 de cada mes
+
+            if (desde.Year != 0001 && hasta.Year != 0001)
+            {
+                desdeDato = desde;
+                hastaDato = hasta;
+            }
+
+            string response = LlamadaCloudtimes(desdeDato, hastaDato).Result; //Formatear la respuesta cloudtimes.
             ListadoEmpleadosDTO listado = JsonConvert.DeserializeObject<ListadoEmpleadosDTO>(response);
 
             foreach (EmpleadoDTO emp in listado.Empleados)
@@ -125,7 +134,7 @@ namespace LogicaAccesoDatos.Repositorios
                     empleado.Cedula = emp.Cedula;
                     empleado.IdTipoEmpleado = 1;
                     this.Agregar(empleado);
-                }   
+                }
                 Obra obra = ObraPorNombre(nombreObra);
                 if (nombreObra == null) { continue; }
                 if (obra == null)
@@ -139,9 +148,16 @@ namespace LogicaAccesoDatos.Repositorios
                     obraNueva.IdACargo = 4;
                     f.AgregarObra(obraNueva);
                 }
-                AgregarEmpleado(empleado, obra);
+                AgregarEmpleado(empleado, obra); //SI EL EMPLEADO CAMBIA DE OBRA NO SE AGREGA EL OBRA EMPLEADO NUEVAMENTE. ESO PROVOCA QUE EL METODO DE MARCAS ROMPA. NO EXISTE UN OBRAEMPLEADO NUEVO
             }
         }
+
+
+
+
+
+
+
 
         //public void AgregarEmpleadosAObra()
         //{
@@ -173,6 +189,14 @@ namespace LogicaAccesoDatos.Repositorios
         //        //El resto de variables las modifican manualmente.
         //    }
         //}
+
+
+
+
+
+
+
+
         public void AgregarEmpleado(Empleado empleado, Obra obra)
         {
 
@@ -189,12 +213,29 @@ namespace LogicaAccesoDatos.Repositorios
             }
         }
 
-        public async void ConseguirTodasLasMarcas()
-         {
-            DateTime desde = new DateTime(2024, 06, 01);
-            DateTime hasta = new DateTime(2024, 07, 09);
 
-            string response = LlamadaCloudtimes(desde, hasta).Result; //Formatear la respuesta cloudtimes.
+
+
+
+
+
+
+
+        public async void ConseguirTodasLasMarcas(DateTime desde, DateTime hasta) // SI EXISTE SOLO UNA MARCA DEL DIA LA MARCA DE ESE DIA QUEDA DESFAZADA.
+        {
+            
+            DateTime hastaDato = new DateTime();
+            hastaDato = DateTime.Now;
+
+            DateTime desdeDato = new DateTime(hastaDato.Year, hastaDato.Month, hastaDato.Day - 7); // esto solo sirve si la semana es post 7 de cada mes
+
+            if (desde.Year != 0001 && hasta.Year != 0001)
+            {
+                desdeDato = desde;
+                hastaDato = hasta;
+            }
+
+            string response = LlamadaCloudtimes(desdeDato, hastaDato).Result; //Formatear la respuesta cloudtimes.
             ListadoEmpleadosDTO listado = JsonConvert.DeserializeObject<ListadoEmpleadosDTO>(response);
             foreach (EmpleadoDTO emp in listado.Empleados)
             {
@@ -203,33 +244,106 @@ namespace LogicaAccesoDatos.Repositorios
                     continue; //Si no tiene marcas pasa al siguiente empleado
                 }
                 Empleado empleado = BuscarPorNombreYCedula(emp.Nombre, emp.Cedula);
-                for (int i = 0; i < emp.Marcas.Count(); i = i + 2)
+
+                int marcasPorDia = 1;
+
+                for (int i = 0; i < emp.Marcas.Count(); i = i + 1)
                 {
-                    Obra obra;
-                    if(emp.Marcas.First().NombreLector != null)
+
+
+                    Obra obra = new Obra();
+
+                    if (emp.Marcas.First().NombreLector != null)
                     {
                         obra = GetObraPorNombre(emp.Marcas.First().NombreLector);
 
                     }
                     else
                     {
-                        obra = GetObraPorNombre(emp.Marcas.First().Comentario);
-                        continue;
+                       bool encontroObra = false;
+                       string comentario = emp.Marcas.First().Comentario;
 
+                        
+                        foreach (var o in TomarTodasLasObras())
+                        {
+                            comentario = comentario.ToLower();
+                         
+                            if (comentario.Contains(o.Nombre.ToLower()))
+                            {
+                                obra = GetObraPorNombre(o.Nombre);
+                                encontroObra = true;
+                                break;
+                            }
+                        }
+
+                        if (!encontroObra)
+                        {
+                            continue; // SI EL COMENTARIO NO TIENE LA OBRA NO SE AGREGA ESA MARCA
+                        }
                     }
+
                     Marca m = new Marca();
-                    m.Entrada = emp.Marcas.ElementAt(i).HoraMarcaje; //horaMarcaje: Se asume 2 marcas por día. 
-                    if (i < emp.Marcas.Count())
+
+                    if (i > 0)
                     {
-                    m.Salida = emp.Marcas.ElementAt(i + 1).HoraMarcaje; //horaMarcaje
+                        if (emp.Marcas[i].HoraMarcaje.Day == emp.Marcas[i - 1].HoraMarcaje.Day)
+                        {
+                            marcasPorDia++;
+                        }
+                        else
+                        {
+                            marcasPorDia = 1;
+                        }
+
+
+
+                        if (marcasPorDia > 2)
+                        {
+                            m.Entrada = emp.Marcas[i - marcasPorDia + 1].HoraMarcaje; 
+                            m.Salida = emp.Marcas[i].HoraMarcaje;
+
+
+                            m.IdEmpleado = empleado.Id;
+                            m.IdObra = obra.IdObra;
+                            m.HorasLluvia = 0;
+                           
+
+                        }
+                        else
+                        {
+
+                            m.Entrada = emp.Marcas.ElementAt(i - 1).HoraMarcaje; 
+                            m.Salida = emp.Marcas.ElementAt(i).HoraMarcaje;
+
+
+                            m.IdEmpleado = empleado.Id;
+                            m.IdObra = obra.IdObra;
+                            m.HorasLluvia = 0;
+                            
+
+                        }
+                    }
+                    else
+                    {
+                        m.Entrada = emp.Marcas.ElementAt(i).HoraMarcaje; //Primera marca que trae la api
 
                     }
-                    m.IdEmpleado = empleado.Id;
-                    m.IdObra = obra.IdObra;
-                    m.HorasLluvia = 0;
-                    if (!this.ExisteMarca(m))
+                    if (i != emp.Marcas.Count() - 1) // si no se llego al ultimo dia que entre a agregar en caso que el dia haya cambiado
                     {
-                        this.AgregarMarca(m);
+
+                        if (!this.ExisteMarca(m) && emp.Marcas.ElementAt(i).HoraMarcaje.Day != emp.Marcas.ElementAt(i + 1).HoraMarcaje.Day)
+                        {
+                            this.AgregarMarca(m);
+                        }
+
+                    }
+                    else
+                        {
+                        if (!this.ExisteMarca(m))
+                        {
+
+                        this.AgregarMarca(m); // Pasa solo 1 vez. Ultima marca 
+                        }
                     }
 
                 }
@@ -237,6 +351,14 @@ namespace LogicaAccesoDatos.Repositorios
             }
 
         }
+
+
+
+        public IEnumerable<Obra> TomarTodasLasObras()
+        {
+            return Context.Obras.ToList();
+        }
+
 
         private Obra GetObraPorNombre(string nombreLector)
         {
@@ -432,7 +554,7 @@ namespace LogicaAccesoDatos.Repositorios
             return liqPorObras;
         }
 
-        private List<Obra> GetObras()   
+        private List<Obra> GetObras()
         {
             return Context.Obras.ToList();
         }
@@ -583,33 +705,33 @@ namespace LogicaAccesoDatos.Repositorios
 
                 Obra obra = f.BuscarObraPorNombre(empDTO.Marcas.First().NombreLector);
 
-                foreach(Empleado emp in Context.Empleados)
+                foreach (Empleado emp in Context.Empleados)
                 {
 
 
 
 
-                
 
-                if (emp.Cedula == empDTO.Cedula)
-                {
-                    flag = true;
-                    for (int i = 0; i < empDTO.Marcas.Count(); i = i + 2)
+
+                    if (emp.Cedula == empDTO.Cedula)
                     {
-                        Marca m = new Marca();
-                        m.Entrada = empDTO.Marcas.ElementAt(i).HoraMarcaje; //horaMarcaje: Se asume 2 marcas por día. 
-                        m.Salida = empDTO.Marcas.ElementAt(i + 1).HoraMarcaje; //horaMarcaje
-                        m.IdEmpleado = emp.Id;
-                        m.IdObra = obra.IdObra;
-                        m.HorasLluvia = 0;
-                        if (!this.ExisteMarca(m))
+                        flag = true;
+                        for (int i = 0; i < empDTO.Marcas.Count(); i = i + 2)
                         {
-                            this.AgregarMarca(m);
-                        }
+                            Marca m = new Marca();
+                            m.Entrada = empDTO.Marcas.ElementAt(i).HoraMarcaje; //horaMarcaje: Se asume 2 marcas por día. 
+                            m.Salida = empDTO.Marcas.ElementAt(i + 1).HoraMarcaje; //horaMarcaje
+                            m.IdEmpleado = emp.Id;
+                            m.IdObra = obra.IdObra;
+                            m.HorasLluvia = 0;
+                            if (!this.ExisteMarca(m))
+                            {
+                                this.AgregarMarca(m);
+                            }
 
+                        }
                     }
                 }
-            }
 
 
 

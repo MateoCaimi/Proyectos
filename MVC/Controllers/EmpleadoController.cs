@@ -19,13 +19,17 @@ namespace MVC.Controllers
         public ActionResult Index()
         {
 
-            
+            DateTime desde = new DateTime();
+            DateTime hasta = new DateTime();
+
             IEnumerable<Empleado> empleados = Fachada.TomarTodosEmpleados();
-            //Fachada.AgregarEmpleadosAObraDTO();
+            Fachada.AgregarEmpleadosAObraDTO(desde, hasta);
+            Fachada.AgregarTodasLasMarcasDTO(desde, hasta); // aca es 0 el dia asi q se precarga la ultima semana
+          
             //Fachada.AgregarTodasLasMarcasPorIdEmpleado(44);
-            //Fachada.AgregarTodasLasMarcasDTO();
             //Liquidar();
             //Fachada.AgregarEmpleadosAObra();
+            
             ViewBag.Obras = Fachada.TomarTodasObras();
             return View(empleados);
         }
