@@ -216,26 +216,31 @@ namespace LogicaAccesoDatos.Repositorios
 
 
 
-
-
-
-
-
-        public async void ConseguirTodasLasMarcas(DateTime desde, DateTime hasta) // SI EXISTE SOLO UNA MARCA DEL DIA LA MARCA DE ESE DIA QUEDA DESFAZADA.
+        public DateTime SetHoraA0(DateTime fecha)
         {
-            
-            DateTime hastaDato = new DateTime();
-            hastaDato = DateTime.Now;
+            return new DateTime(fecha.Year, fecha.Month, fecha.Day, 0, 0, 0);
+        }
 
-            DateTime desdeDato = new DateTime(hastaDato.Year, hastaDato.Month, hastaDato.Day - 7); // esto solo sirve si la semana es post 7 de cada mes
+
+        public async void ConseguirTodasLasMarcas(DateTime desde, DateTime hasta) 
+            // SI EXISTE SOLO UNA MARCA DEL DIA LA MARCA DE ESE DIA QUEDA DESFAZADA.
+        {
+            DateTime fechaActual = new DateTime();
+            
+            DateTime hastaDato = new DateTime(fechaActual.Year, fechaActual.Month, fechaActual.Day, 0, 0, 0);
+            DateTime desdeDato = new DateTime(fechaActual.Year, fechaActual.Month, 1, 0, 0, 0);
+            
 
             if (desde.Year != 0001 && hasta.Year != 0001)
             {
-                desdeDato = desde;
-                hastaDato = hasta;
+
+                desdeDato = SetHoraA0(desde);
+                hastaDato = SetHoraA0(hasta);
+            
             }
 
             string response = LlamadaCloudtimes(desdeDato, hastaDato).Result; //Formatear la respuesta cloudtimes.
+
             ListadoEmpleadosDTO listado = JsonConvert.DeserializeObject<ListadoEmpleadosDTO>(response);
             foreach (EmpleadoDTO emp in listado.Empleados)
             {
