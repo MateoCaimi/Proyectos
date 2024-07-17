@@ -18,7 +18,7 @@ namespace MVC.Controllers
         // GET: UsuarioController
         public ActionResult Index()
         {
-
+            Fachada.Precarga();
 
             if (HttpContext.Session.GetString("UsuarioLogueado") != null)
             {

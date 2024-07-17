@@ -18,6 +18,7 @@ namespace MVC.Controllers
         // GET: EmpleadoController
         public ActionResult Index()
         {
+            Fachada.Precarga();
 
             DateTime desde = new DateTime();
             DateTime hasta = new DateTime();

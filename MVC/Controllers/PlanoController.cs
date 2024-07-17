@@ -33,7 +33,7 @@ namespace MVC.Controllers
         // GET: PlanoController
         public ActionResult Index(int idObra)
         {
-
+            Fachada.Precarga();
             /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("Index", "Usuario");

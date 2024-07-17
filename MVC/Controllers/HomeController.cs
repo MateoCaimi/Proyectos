@@ -13,6 +13,7 @@ namespace MVC.Controllers
         private readonly ILogger<HomeController> _logger;
         private Fachada Fachada = new Fachada();
 
+
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
@@ -23,7 +24,7 @@ namespace MVC.Controllers
 
         public IActionResult Index()
         {
-            
+            Fachada.Precarga();
             if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
 

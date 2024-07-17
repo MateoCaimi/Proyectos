@@ -103,18 +103,53 @@ namespace LogicaAccesoDatos.Repositorios
             }
         }
 
+        public void Precarga()
+        {
+            if(this.GetObras().Count == 0 && this.GetTipos().Count == 0)
+            {
+                TipoEmpleado tipoGenerico = new TipoEmpleado();
+                tipoGenerico.Compensacion = 0;
+                tipoGenerico.Categoría = "<<A INGRESAR>>";
+                tipoGenerico.Presentismo = 0;
+                tipoGenerico.ValorHora = 0;
+
+                Context.TiposEmpleados.Add(tipoGenerico);
+
+                UDeObra capatazGenerico = new UDeObra();
+                capatazGenerico.Nombre = "<<A INGRESAR>>";
+                capatazGenerico.Contrasenia = "ContraseniaGenerica123456";
+                capatazGenerico.IntentosFallidos = 0;
+                capatazGenerico.NombreUsuario = "CapatazGenerico123";
+                capatazGenerico.CambioContrasenia = false;
+
+                Context.Usuarios.Add(capatazGenerico);
+
+                Context.SaveChanges();
+            }
+        }
+
+        private List<TipoEmpleado> GetTipos()
+        {
+            return Context.TiposEmpleados.ToList();
+        }
+
         public void AgregarEmpleadosAObraDTO(DateTime desde, DateTime hasta)
         {
-            DateTime hastaDato = new DateTime();
-            hastaDato = DateTime.Now;
+            DateTime hastaDato;
+            DateTime desdeDato;
 
-            DateTime desdeDato = new DateTime(hastaDato.Year, hastaDato.Month, hastaDato.Day - 7); // esto solo sirve si la semana es post 7 de cada mes
-
-            if (desde.Year != 0001 && hasta.Year != 0001)
+            if (desde.Year == 0001 || hasta.Year == 0001)
             {
-                desdeDato = desde;
-                hastaDato = hasta;
+                hastaDato = DateTime.Now;
+
+                desdeDato = new DateTime(hastaDato.Year, hastaDato.Month, hastaDato.Day - 7); // esto solo sirve si la semana es post 7 de cada mes
             }
+            else
+            {
+                hastaDato = SetHoraA0(hasta);
+                desdeDato = SetHoraA0(desde);
+            }
+            
 
             string response = LlamadaCloudtimes(desdeDato, hastaDato).Result; //Formatear la respuesta cloudtimes.
             ListadoEmpleadosDTO listado = JsonConvert.DeserializeObject<ListadoEmpleadosDTO>(response);
@@ -132,30 +167,28 @@ namespace LogicaAccesoDatos.Repositorios
                     empleado = new Empleado();
                     empleado.Nombre = emp.Nombre;
                     empleado.Cedula = emp.Cedula;
-                    empleado.IdTipoEmpleado = 1;
+                    empleado.Banco = "<<A INGRESAR>>";
+                    empleado.CuentaBanco = "<<A INGRESAR>>";
+                    empleado.IdTipoEmpleado = 1; //Tenemos que tener una precarga con TipoEmpleado genérico
                     this.Agregar(empleado);
                 }
-                Obra obra = ObraPorNombre(nombreObra);
                 if (nombreObra == null) { continue; }
+                Obra obra = ObraPorNombre(nombreObra);
                 if (obra == null)
                 {
                     Fachada f = new Fachada();
                     Obra obraNueva = new Obra();
                     obraNueva.Nombre = nombreObra;
-                    obraNueva.Direccion = "dire 111";
-                    obraNueva.FechaInicio = new DateTime(2000, 01, 01);
+                    obraNueva.Direccion = "<<A INGRESAR>>";
+                    obraNueva.FechaInicio = new DateTime(0001, 01, 01);
                     obraNueva.Finalizada = false;
-                    obraNueva.IdACargo = 4;
+                    obraNueva.NombreCronograma = "<<A INGRESAR>>"; 
+                    obraNueva.IdACargo = 1; //Tenemos que tener una precarga con un usuario de obra genérico    
                     f.AgregarObra(obraNueva);
                 }
                 AgregarEmpleado(empleado, obra); //SI EL EMPLEADO CAMBIA DE OBRA NO SE AGREGA EL OBRA EMPLEADO NUEVAMENTE. ESO PROVOCA QUE EL METODO DE MARCAS ROMPA. NO EXISTE UN OBRAEMPLEADO NUEVO
             }
         }
-
-
-
-
-
 
 
 
@@ -225,18 +258,19 @@ namespace LogicaAccesoDatos.Repositorios
         public async void ConseguirTodasLasMarcas(DateTime desde, DateTime hasta) 
             // SI EXISTE SOLO UNA MARCA DEL DIA LA MARCA DE ESE DIA QUEDA DESFAZADA.
         {
-            DateTime fechaActual = new DateTime();
-            
-            DateTime hastaDato = new DateTime(fechaActual.Year, fechaActual.Month, fechaActual.Day, 0, 0, 0);
-            DateTime desdeDato = new DateTime(fechaActual.Year, fechaActual.Month, 1, 0, 0, 0);
-            
+            DateTime hastaDato;
+            DateTime desdeDato;
 
-            if (desde.Year != 0001 && hasta.Year != 0001)
+            if (desde.Year == 0001 || hasta.Year == 0001)
             {
+                hastaDato = DateTime.Now;
 
-                desdeDato = SetHoraA0(desde);
+                desdeDato = new DateTime(hastaDato.Year, hastaDato.Month, hastaDato.Day - 7); // esto solo sirve si la semana es post 7 de cada mes
+            }
+            else
+            {
                 hastaDato = SetHoraA0(hasta);
-            
+                desdeDato = SetHoraA0(desde);
             }
 
             string response = LlamadaCloudtimes(desdeDato, hastaDato).Result; //Formatear la respuesta cloudtimes.

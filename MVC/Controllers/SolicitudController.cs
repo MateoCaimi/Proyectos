@@ -26,7 +26,7 @@ namespace MVC.Controllers
         // GET: SolicitudController
         public ActionResult Index(int idObra)
         {
-
+            Fachada.Precarga();
             if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario de oficina")
             {
 

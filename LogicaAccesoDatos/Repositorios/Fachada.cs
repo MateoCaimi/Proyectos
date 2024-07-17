@@ -365,6 +365,11 @@ namespace LogicaAccesoDatos.Repositorios
             RepositorioEmpleado.AgregarEmpleadosAObraDTO(desde, hasta);
         }
 
+        public void Precarga()
+        {
+            RepositorioEmpleado.Precarga();
+        }
+
         public void AgregarTodasLasMarcasDTO(DateTime desde, DateTime hasta)
         {
             RepositorioEmpleado.ConseguirTodasLasMarcas(desde, hasta);

@@ -20,7 +20,7 @@ namespace MVC.Controllers
         // GET: ObraController
         public ActionResult Index()
         {
-
+            Fachada.Precarga();
             if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("Index", "Usuario");
