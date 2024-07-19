@@ -105,7 +105,8 @@ namespace LogicaAccesoDatos.Repositorios
 
         public void Precarga()
         {
-            if(this.GetObras().Count == 0 && this.GetTipos().Count == 0)
+            int cantTipos = this.GetTipos().Count;
+            if (cantTipos == 0)
             {
                 TipoEmpleado tipoGenerico = new TipoEmpleado();
                 tipoGenerico.Compensacion = 0;
@@ -114,7 +115,10 @@ namespace LogicaAccesoDatos.Repositorios
                 tipoGenerico.ValorHora = 0;
 
                 Context.TiposEmpleados.Add(tipoGenerico);
-
+            }
+            int cantCapataces = this.GetUsuariosObra().Count;
+            if (cantCapataces == 0)
+            {
                 UDeObra capatazGenerico = new UDeObra();
                 capatazGenerico.Nombre = "<<A INGRESAR>>";
                 capatazGenerico.Contrasenia = "ContraseniaGenerica123456";
@@ -126,6 +130,14 @@ namespace LogicaAccesoDatos.Repositorios
 
                 Context.SaveChanges();
             }
+
+            
+        }
+
+        private List<Usuario> GetUsuariosObra()
+        {
+            List<Usuario> usuarios = Context.Usuarios.Where(u => u is UDeObra).ToList();
+            return usuarios;
         }
 
         private List<TipoEmpleado> GetTipos()
@@ -133,10 +145,11 @@ namespace LogicaAccesoDatos.Repositorios
             return Context.TiposEmpleados.ToList();
         }
 
-        public void AgregarEmpleadosAObraDTO(DateTime desde, DateTime hasta)
+        public bool AgregarEmpleadosAObraDTO(DateTime desde, DateTime hasta)
         {
             DateTime hastaDato;
             DateTime desdeDato;
+            bool anomalias = false;
 
             if (desde.Year == 0001 || hasta.Year == 0001)
             {
@@ -161,7 +174,41 @@ namespace LogicaAccesoDatos.Repositorios
                     continue;
                 }
                 Empleado empleado = this.BuscarPorNombreYCedula(emp.Nombre, emp.Cedula);
+                Obra obra = null;
                 string nombreObra = emp.Marcas.First().NombreLector;
+                if (emp.Marcas.First().NombreLector != null)
+                {
+                    obra = GetObraPorNombre(emp.Marcas.First().NombreLector);
+
+                }
+                else
+                {
+                    bool encontroObra = false;
+                    string comentario = emp.Marcas.First().Comentario;
+                    if(comentario == null)
+                    {
+                        anomalias = true;
+                        continue; //si no hay comentario ni nombre lector continuar sin grabar
+                    }
+
+                    foreach (var o in TomarTodasLasObras())
+                    {
+                        comentario = comentario.ToLower();
+
+                        if (comentario.Contains(o.Nombre.ToLower()))
+                        {
+                            obra = GetObraPorNombre(o.Nombre);
+                            encontroObra = true;
+                            break;
+                        }
+                    }
+
+                    if (!encontroObra)
+                    {
+                        anomalias = true;
+                        continue; // SI EL COMENTARIO NO TIENE LA OBRA NO SE AGREGA ESA MARCA
+                    }
+                }
                 if (empleado == null)
                 {
                     empleado = new Empleado();
@@ -172,22 +219,21 @@ namespace LogicaAccesoDatos.Repositorios
                     empleado.IdTipoEmpleado = 1; //Tenemos que tener una precarga con TipoEmpleado genérico
                     this.Agregar(empleado);
                 }
-                if (nombreObra == null) { continue; }
-                Obra obra = ObraPorNombre(nombreObra);
                 if (obra == null)
                 {
                     Fachada f = new Fachada();
-                    Obra obraNueva = new Obra();
-                    obraNueva.Nombre = nombreObra;
-                    obraNueva.Direccion = "<<A INGRESAR>>";
-                    obraNueva.FechaInicio = new DateTime(0001, 01, 01);
-                    obraNueva.Finalizada = false;
-                    obraNueva.NombreCronograma = "<<A INGRESAR>>"; 
-                    obraNueva.IdACargo = 1; //Tenemos que tener una precarga con un usuario de obra genérico    
-                    f.AgregarObra(obraNueva);
+                    obra = new Obra();
+                    obra.Nombre = nombreObra;
+                    obra.Direccion = "<<A INGRESAR>>";
+                    obra.FechaInicio = new DateTime(0001, 01, 01);
+                    obra.Finalizada = false;
+                    obra.NombreCronograma = "<<A INGRESAR>>";
+                    obra.IdACargo = 1; //Tenemos que tener una precarga con un usuario de obra genérico    
+                    f.AgregarObra(obra);
                 }
                 AgregarEmpleado(empleado, obra); //SI EL EMPLEADO CAMBIA DE OBRA NO SE AGREGA EL OBRA EMPLEADO NUEVAMENTE. ESO PROVOCA QUE EL METODO DE MARCAS ROMPA. NO EXISTE UN OBRAEMPLEADO NUEVO
             }
+            return anomalias;
         }
 
 
@@ -255,16 +301,16 @@ namespace LogicaAccesoDatos.Repositorios
         }
 
 
-        public async void ConseguirTodasLasMarcas(DateTime desde, DateTime hasta) 
+        public async Task<bool> ConseguirTodasLasMarcas(DateTime desde, DateTime hasta) 
             // SI EXISTE SOLO UNA MARCA DEL DIA LA MARCA DE ESE DIA QUEDA DESFAZADA.
         {
             DateTime hastaDato;
             DateTime desdeDato;
+            bool anomalias = false;
 
             if (desde.Year == 0001 || hasta.Year == 0001)
             {
                 hastaDato = DateTime.Now;
-
                 desdeDato = new DateTime(hastaDato.Year, hastaDato.Month, hastaDato.Day - 7); // esto solo sirve si la semana es post 7 de cada mes
             }
             else
@@ -372,7 +418,21 @@ namespace LogicaAccesoDatos.Repositorios
 
                         if (!this.ExisteMarca(m) && emp.Marcas.ElementAt(i).HoraMarcaje.Day != emp.Marcas.ElementAt(i + 1).HoraMarcaje.Day)
                         {
-                            this.AgregarMarca(m);
+                            Empleado empTest = this.Buscar(m.IdEmpleado);
+                            Obra obraTest = this.GetObra(m.IdObra);
+                            m.Empleado = this.GetEmpleadoObra(m.IdEmpleado, m.IdObra);
+                            if(m.Empleado != null)
+                            {
+                                this.AgregarMarca(m);
+                            }
+                            else
+                            {
+                                anomalias = true;
+                                if(m.Salida.Year == 0001)
+                                {
+                                    m.Salida = new DateTime(m.Entrada.Year, m.Entrada.Month, m.Entrada.Day, m.Entrada.Hour + 1, 0, 0);
+                                }
+                            }
                         }
 
                     }
@@ -380,18 +440,35 @@ namespace LogicaAccesoDatos.Repositorios
                         {
                         if (!this.ExisteMarca(m))
                         {
-
-                        this.AgregarMarca(m); // Pasa solo 1 vez. Ultima marca 
+                            Empleado empTest = this.Buscar(m.IdEmpleado);
+                            Obra obraTest = this.GetObra(m.IdObra);
+                            m.Empleado = this.GetEmpleadoObra(m.IdEmpleado, m.IdObra);
+                            if (empTest != null && obraTest != null && m.Empleado != null)
+                            {
+                                this.AgregarMarca(m);
+                            }
+                            else
+                            {
+                                anomalias = true;
+                                if (m.Salida.Year == 0001)
+                                {
+                                    m.Salida = new DateTime(m.Entrada.Year, m.Entrada.Month, m.Entrada.Day, m.Entrada.Hour + 1, 0, 0);
+                                }
+                            }
                         }
                     }
 
                 }
 
             }
+            return anomalias;
 
         }
 
-
+        private Obra GetObra(int idObra)
+        {
+            return Context.Obras.Where(o => o.IdObra == idObra).FirstOrDefault();
+        }
 
         public IEnumerable<Obra> TomarTodasLasObras()
         {

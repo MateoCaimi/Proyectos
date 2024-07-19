@@ -360,9 +360,9 @@ namespace LogicaAccesoDatos.Repositorios
         //    RepositorioEmpleado.AgregarEmpleadosAObra();
         //}
 
-        public void AgregarEmpleadosAObraDTO(DateTime desde, DateTime hasta)
+        public bool AgregarEmpleadosAObraDTO(DateTime desde, DateTime hasta)
         {
-            RepositorioEmpleado.AgregarEmpleadosAObraDTO(desde, hasta);
+            return RepositorioEmpleado.AgregarEmpleadosAObraDTO(desde, hasta);
         }
 
         public void Precarga()
@@ -370,9 +370,9 @@ namespace LogicaAccesoDatos.Repositorios
             RepositorioEmpleado.Precarga();
         }
 
-        public void AgregarTodasLasMarcasDTO(DateTime desde, DateTime hasta)
+        public bool AgregarTodasLasMarcasDTO(DateTime desde, DateTime hasta)
         {
-            RepositorioEmpleado.ConseguirTodasLasMarcas(desde, hasta);
+            return RepositorioEmpleado.ConseguirTodasLasMarcas(desde, hasta).Result;
         }
 
         public void AgregarTipoEmpleado(TipoEmpleado tipo)

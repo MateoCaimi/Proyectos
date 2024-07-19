@@ -4,6 +4,7 @@ using LogicaNegocio.Excepciones;
 using LogicaNegocio.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Graph.Models;
 using MVC.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -19,13 +20,21 @@ namespace MVC.Controllers
         public ActionResult Index()
         {
             Fachada.Precarga();
+            TempData["Anomalia"] = "";
 
             DateTime desde = new DateTime();
             DateTime hasta = new DateTime();
 
             IEnumerable<Empleado> empleados = Fachada.TomarTodosEmpleados();
-            Fachada.AgregarEmpleadosAObraDTO(desde, hasta);
-            Fachada.AgregarTodasLasMarcasDTO(desde, hasta); // aca es 0 el dia asi q se precarga la ultima semana
+            if (!Fachada.AgregarEmpleadosAObraDTO(desde, hasta))
+            {
+                TempData["Anomalia"] = "Se encontraron anomalías generando a los empleados en obra en el sistema. Revisar las marcas de la última semana.";
+            }
+            
+            if(!Fachada.AgregarTodasLasMarcasDTO(desde, hasta))
+            {
+                TempData["Anomalia"] = "Se generaron marcas anómalas en el sistema. Revisar las marcas de la última semana.";
+            } // aca es 0 el dia asi q se precarga la ultima semana
           
             //Fachada.AgregarTodasLasMarcasPorIdEmpleado(44);
             //Liquidar();

@@ -45,6 +45,10 @@ namespace LogicaAccesoDatos.Repositorios
 
         public Obra ObraPorDireccion(string direccion)
         {
+            if(direccion == "<<A INGRESAR>>")
+            {
+                return null;
+            }
             var Retorno = Context.Obras.Where(o => o.Direccion == direccion).FirstOrDefault();
             return Retorno;
         }
