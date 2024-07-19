@@ -1,0 +1,32 @@
+﻿@model IEnumerable<LogicaNegocio.Entidades.Marca>
+
+@{
+    ViewData["Title"] = "Generación de marcas";
+}
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
+}
+
+@if (TempData["Anomalia"] != "" && TempData["Anomalia"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Anomalia"]
+    </div>
+}
+
+<h1>Listado de marcas</h1>
+
+<form method="post">
+    <div class="form-group">
+        <label>Seleccionar rango de fechas: (Rango máximo: 45 días) </label>
+        <input for="Desde" class="form-control" type="date" name="Desde" />
+        <input for="Hasta" class="form-control" type="date" name="Hasta" />
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-success">Generar</button>
+    </div>
+</form>

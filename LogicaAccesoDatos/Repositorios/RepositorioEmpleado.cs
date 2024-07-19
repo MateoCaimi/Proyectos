@@ -162,9 +162,24 @@ namespace LogicaAccesoDatos.Repositorios
                 hastaDato = SetHoraA0(hasta);
                 desdeDato = SetHoraA0(desde);
             }
-            
+            if(this.DiferenciaDias(desde, hasta) > 45)
+            {
+                throw new EmpleadoException("Debe ingresar un rango de días menor a 45.");
+            }
+            string response = "";
+            try
+            {
+                response = LlamadaCloudtimes(desdeDato, hastaDato).Result; //Formatear la respuesta cloudtimes.
+                if (response.Contains("IP"))
+                {
+                    throw new EmpleadoException("No se pueden generar marcas ahora mismo, intentar en unos minutos.");
+                }
+            }
+            catch (Exception e)
+            {
+                throw new EmpleadoException("No se pueden generar marcas ahora mismo, intentar en unos minutos.");
+            }
 
-            string response = LlamadaCloudtimes(desdeDato, hastaDato).Result; //Formatear la respuesta cloudtimes.
             ListadoEmpleadosDTO listado = JsonConvert.DeserializeObject<ListadoEmpleadosDTO>(response);
 
             foreach (EmpleadoDTO emp in listado.Empleados)
@@ -234,6 +249,11 @@ namespace LogicaAccesoDatos.Repositorios
                 AgregarEmpleado(empleado, obra); //SI EL EMPLEADO CAMBIA DE OBRA NO SE AGREGA EL OBRA EMPLEADO NUEVAMENTE. ESO PROVOCA QUE EL METODO DE MARCAS ROMPA. NO EXISTE UN OBRAEMPLEADO NUEVO
             }
             return anomalias;
+        }
+
+        private int DiferenciaDias(DateTime desde, DateTime hasta)
+        {
+            return (int)(hasta - desde).TotalDays;
         }
 
 
@@ -318,8 +338,20 @@ namespace LogicaAccesoDatos.Repositorios
                 hastaDato = SetHoraA0(hasta);
                 desdeDato = SetHoraA0(desde);
             }
+            string response;
+            try
+            {
+                response = LlamadaCloudtimes(desdeDato, hastaDato).Result; //Formatear la respuesta cloudtimes.
+                if (response.Contains("IP"))
+                {
+                    throw new EmpleadoException("No se pueden generar marcas ahora mismo, intentar en unos minutos.");
+                }
+            }
+            catch(Exception e)
+            {
+                throw new EmpleadoException("No se pueden generar marcas ahora mismo, intentar en unos minutos.");
+            }
 
-            string response = LlamadaCloudtimes(desdeDato, hastaDato).Result; //Formatear la respuesta cloudtimes.
 
             ListadoEmpleadosDTO listado = JsonConvert.DeserializeObject<ListadoEmpleadosDTO>(response);
             foreach (EmpleadoDTO emp in listado.Empleados)
@@ -363,6 +395,7 @@ namespace LogicaAccesoDatos.Repositorios
 
                         if (!encontroObra)
                         {
+                            anomalias = true;
                             continue; // SI EL COMENTARIO NO TIENE LA OBRA NO SE AGREGA ESA MARCA
                         }
                     }
@@ -421,17 +454,14 @@ namespace LogicaAccesoDatos.Repositorios
                             Empleado empTest = this.Buscar(m.IdEmpleado);
                             Obra obraTest = this.GetObra(m.IdObra);
                             m.Empleado = this.GetEmpleadoObra(m.IdEmpleado, m.IdObra);
-                            if(m.Empleado != null)
-                            {
-                                this.AgregarMarca(m);
-                            }
-                            else
+                            if (m.Salida.Year == 0001 || m.Entrada.Year == 0001)
                             {
                                 anomalias = true;
-                                if(m.Salida.Year == 0001)
-                                {
-                                    m.Salida = new DateTime(m.Entrada.Year, m.Entrada.Month, m.Entrada.Day, m.Entrada.Hour + 1, 0, 0);
-                                }
+                                continue;
+                            }
+                            if (m.Empleado != null)
+                            {
+                                this.AgregarMarca(m);
                             }
                         }
 

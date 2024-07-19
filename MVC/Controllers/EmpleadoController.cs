@@ -19,29 +19,26 @@ namespace MVC.Controllers
         // GET: EmpleadoController
         public ActionResult Index()
         {
-            Fachada.Precarga();
-            TempData["Anomalia"] = "";
-
-            DateTime desde = new DateTime();
-            DateTime hasta = new DateTime();
-
             IEnumerable<Empleado> empleados = Fachada.TomarTodosEmpleados();
-            if (!Fachada.AgregarEmpleadosAObraDTO(desde, hasta))
+            ViewBag.Obras = Fachada.TomarTodasObras();
+            try
             {
-                TempData["Anomalia"] = "Se encontraron anomalías generando a los empleados en obra en el sistema. Revisar las marcas de la última semana.";
+                Fachada.Precarga();
+                // aca es 0 el dia asi q se precarga la ultima semana
+
+                //Fachada.AgregarTodasLasMarcasPorIdEmpleado(44);
+                //Liquidar();
+                //Fachada.AgregarEmpleadosAObra();
+
+                
+                return View(empleados);
+            }
+            catch (Exception e)
+            {
+                ViewBag.Error = e.Message;
+                return View(empleados);
             }
             
-            if(!Fachada.AgregarTodasLasMarcasDTO(desde, hasta))
-            {
-                TempData["Anomalia"] = "Se generaron marcas anómalas en el sistema. Revisar las marcas de la última semana.";
-            } // aca es 0 el dia asi q se precarga la ultima semana
-          
-            //Fachada.AgregarTodasLasMarcasPorIdEmpleado(44);
-            //Liquidar();
-            //Fachada.AgregarEmpleadosAObra();
-            
-            ViewBag.Obras = Fachada.TomarTodasObras();
-            return View(empleados);
         }
 
         // GET: EmpleadoController
@@ -105,6 +102,37 @@ namespace MVC.Controllers
             ViewBag.IdEmp = empleado.Id;
             ViewBag.HorasTotales = Fachada.HorasTotales(marcas);
             return View(marcas);
+        }
+
+        public ActionResult GenerarMarcas()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult GenerarMarcas(DateTime desde, DateTime hasta)
+        {
+            try
+            {
+                Fachada.Precarga();
+                TempData["Anomalia"] = "";
+                if (!Fachada.AgregarEmpleadosAObraDTO(desde, hasta))
+                {
+                    TempData["Anomalia"] = "Se encontraron anomalías generando a los empleados en obra en el sistema. Revisar las marcas del rango especificado.";
+                }
+
+                if (!Fachada.AgregarTodasLasMarcasDTO(desde, hasta))
+                {
+                    TempData["Anomalia"] = "Se generaron marcas anómalas en el sistema. Revisar las marcas del rango especificado.";
+                }
+                return View();
+            }
+            catch(Exception e)
+            {
+                ViewBag.Error = e.Message;
+                return View();
+            }
         }
 
         // GET: EmpleadoController/Details/5

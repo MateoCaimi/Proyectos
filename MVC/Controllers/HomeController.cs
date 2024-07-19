@@ -44,7 +44,21 @@ namespace MVC.Controllers
 
             if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario de oficina")
             {
+                TempData["Anomalia"] = "";
 
+                DateTime desde = new DateTime();
+                DateTime hasta = new DateTime();
+
+
+                if (!Fachada.AgregarEmpleadosAObraDTO(desde, hasta))
+                {
+                    TempData["Anomalia"] = "Se encontraron anomalías generando a los empleados en obra en el sistema. Revisar las marcas de la última semana.";
+                }
+
+                if (!Fachada.AgregarTodasLasMarcasDTO(desde, hasta))
+                {
+                    TempData["Anomalia"] = "Se generaron marcas anómalas en el sistema. Revisar las marcas de la última semana.";
+                }
 
                 List<Solicitud> solicitudesPendientes = Fachada.BuscarSolicitudPendientesLista();
                 var opciones = new JsonSerializerOptions

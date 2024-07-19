@@ -13,6 +13,13 @@
     </div>
 }
 
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
+}
+
 <p>
     <a asp-action="Agregar">Create New</a>
     <a asp-action="AgregarTipo">Crear Tipo</a>

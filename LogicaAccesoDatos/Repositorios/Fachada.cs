@@ -4,6 +4,7 @@ using LogicaNegocio.ViewModel;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -362,7 +363,18 @@ namespace LogicaAccesoDatos.Repositorios
 
         public bool AgregarEmpleadosAObraDTO(DateTime desde, DateTime hasta)
         {
-            return RepositorioEmpleado.AgregarEmpleadosAObraDTO(desde, hasta);
+            try
+            {
+                return RepositorioEmpleado.AgregarEmpleadosAObraDTO(desde, hasta);
+            }
+            catch(EmpleadoException e)
+            {
+                throw new EmpleadoException(e.Message);
+            }
+            catch (AggregateException err)
+            {
+                throw new EmpleadoException(err.InnerException.Message);
+            }
         }
 
         public void Precarga()
@@ -372,7 +384,18 @@ namespace LogicaAccesoDatos.Repositorios
 
         public bool AgregarTodasLasMarcasDTO(DateTime desde, DateTime hasta)
         {
-            return RepositorioEmpleado.ConseguirTodasLasMarcas(desde, hasta).Result;
+            try
+            {
+                return RepositorioEmpleado.ConseguirTodasLasMarcas(desde, hasta).Result;
+            }
+            catch (EmpleadoException e)
+            {
+                throw new EmpleadoException(e.Message);
+            }
+            catch (AggregateException err)
+            {
+                throw new EmpleadoException(err.InnerException.Message);
+            }
         }
 
         public void AgregarTipoEmpleado(TipoEmpleado tipo)
