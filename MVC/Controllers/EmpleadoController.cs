@@ -183,29 +183,6 @@ namespace MVC.Controllers
             }
         }
 
-        public ActionResult Egreso(int IdEmpleado, int IdObra)
-        {
-            ObraEmpleado obraEmpleado = Fachada.BuscarEmpleadoObra(IdEmpleado, IdObra);
-            return View();
-        }
-
-        // POST: EmpleadoController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Egreso(ObraEmpleado obraEmpleado, DateTime dia)
-        {
-            try
-            {
-                Fachada.DarEgreso(obraEmpleado, dia);
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception e)
-            {
-                ViewBag.Error = e.Message;
-                return View();
-            }
-        }
-
         // GET: EmpleadoController/Create
         public ActionResult AgregarTipo()
         {
@@ -348,6 +325,13 @@ namespace MVC.Controllers
             {
                 return StatusCode(500, e.Message);
             }
+        }
+
+        public ActionResult CambiarListadoLiquidacion(int idObra)
+        {
+            Obra obra = Fachada.BuscarObra(idObra);
+            List<Empleado> empleadosObra = Fachada.TomarEmpleadosDeObra(obra);
+            return PartialView("CambiarListadoLiquidacion", empleadosObra);
         }
 
         // GET: EmpleadoController/Edit/5

@@ -59,9 +59,8 @@
                     @Html.DisplayFor(modelItem => item.Empleado.Banco)
                 </td>
                 <td>
-                    <a asp-action="Detalles" asp-controller="Empleado" asp-route-id="@item.Empleado.Id" >Details</a> |
-                    <a asp-action="Egreso" asp-controller="Empleado" asp-route-idempleado="@item.Empleado.Id" asp-route-idobra="@item.Obra.IdObra">Egreso</a> |
-                    <a asp-action="Delete" asp-controller="Empleado" asp-route-id="@item.Empleado.Id" >Delete</a>
+                    <a asp-action="Detalles" asp-controller="ObraEmpleado" asp-route-idempleado="@item.Empleado.Id" asp-route-idobra="@item.Obra.IdObra">Detalles</a>
+                    <a asp-action="Editar" asp-controller="ObraEmpleado" asp-route-idempleado="@item.Empleado.Id" asp-route-idobra="@item.Obra.IdObra">Editar</a>||
                 </td>
             </tr>
         }

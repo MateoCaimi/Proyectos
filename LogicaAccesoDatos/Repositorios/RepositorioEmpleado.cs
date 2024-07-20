@@ -184,46 +184,9 @@ namespace LogicaAccesoDatos.Repositorios
 
             foreach (EmpleadoDTO emp in listado.Empleados)
             {
-                if (emp.Marcas.Count() == 0)
-                {
-                    continue;
-                }
                 Empleado empleado = this.BuscarPorNombreYCedula(emp.Nombre, emp.Cedula);
                 Obra obra = null;
-                string nombreObra = emp.Marcas.First().NombreLector;
-                if (emp.Marcas.First().NombreLector != null)
-                {
-                    obra = GetObraPorNombre(emp.Marcas.First().NombreLector);
-
-                }
-                else
-                {
-                    bool encontroObra = false;
-                    string comentario = emp.Marcas.First().Comentario;
-                    if(comentario == null)
-                    {
-                        anomalias = true;
-                        continue; //si no hay comentario ni nombre lector continuar sin grabar
-                    }
-
-                    foreach (var o in TomarTodasLasObras())
-                    {
-                        comentario = comentario.ToLower();
-
-                        if (comentario.Contains(o.Nombre.ToLower()))
-                        {
-                            obra = GetObraPorNombre(o.Nombre);
-                            encontroObra = true;
-                            break;
-                        }
-                    }
-
-                    if (!encontroObra)
-                    {
-                        anomalias = true;
-                        continue; // SI EL COMENTARIO NO TIENE LA OBRA NO SE AGREGA ESA MARCA
-                    }
-                }
+                string nombreObra = "";
                 if (empleado == null)
                 {
                     empleado = new Empleado();
@@ -234,7 +197,43 @@ namespace LogicaAccesoDatos.Repositorios
                     empleado.IdTipoEmpleado = 1; //Tenemos que tener una precarga con TipoEmpleado genérico
                     this.Agregar(empleado);
                 }
-                if (obra == null)
+                if (emp.Marcas.Count() > 0)
+                {
+                    if (emp.Marcas.First().NombreLector != null)
+                    {
+                        nombreObra = emp.Marcas.First().NombreLector;
+                        obra = GetObraPorNombre(emp.Marcas.First().NombreLector);
+                    }
+                    else
+                    {
+                        bool encontroObra = false;
+                        string comentario = emp.Marcas.First().Comentario;
+                        if (comentario == null)
+                        {
+                            anomalias = true;
+                            continue; //si no hay comentario ni nombre lector continuar sin grabar
+                        }
+
+                        foreach (var o in TomarTodasLasObras())
+                        {
+                            comentario = comentario.ToLower();
+
+                            if (comentario.Contains(o.Nombre.ToLower()))
+                            {
+                                obra = GetObraPorNombre(o.Nombre);
+                                encontroObra = true;
+                                break;
+                            }
+                        }
+
+                        if (!encontroObra)
+                        {
+                            anomalias = true;
+                            continue; // SI EL COMENTARIO NO TIENE LA OBRA NO SE AGREGA ESA MARCA
+                        }
+                    }
+                }
+                if (obra == null && nombreObra != "")
                 {
                     Fachada f = new Fachada();
                     obra = new Obra();
@@ -254,6 +253,20 @@ namespace LogicaAccesoDatos.Repositorios
         private int DiferenciaDias(DateTime desde, DateTime hasta)
         {
             return (int)(hasta - desde).TotalDays;
+        }
+
+        private bool MarcasEnFecha(Empleado emp, DateTime dia)
+        {
+            DateTime diaHoraCero = this.SetHoraA0(dia);
+            List<Marca> marcasEmpleado = this.MarcasEmpleadoRango(emp, dia, new DateTime(dia.Year, dia.Month, dia.Day + 1, 0, 0, 0));
+            if(marcasEmpleado != null && marcasEmpleado.Count != 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
 
@@ -459,7 +472,7 @@ namespace LogicaAccesoDatos.Repositorios
                                 anomalias = true;
                                 continue;
                             }
-                            if (m.Empleado != null)
+                            if (m.Empleado != null && !this.MarcasEnFecha(m.Empleado.Empleado, m.Entrada))
                             {
                                 this.AgregarMarca(m);
                             }
@@ -661,7 +674,7 @@ namespace LogicaAccesoDatos.Repositorios
         private double CalcularNominal(Empleado empleado, int horasTotales)
         {
             // Lo separo en otro metodo por ser importante, preguntar regla de negocio de pagos.
-            double valorHora = empleado.TipoEmpleado.ValorHora;
+            double valorHora = empleado.TipoEmpleado.ValorHora + empleado.IncentivoXHora;
             double compensacion = empleado.TipoEmpleado.Compensacion;
             double presentismo = empleado.TipoEmpleado.Presentismo;
             double nominal = horasTotales * valorHora;
@@ -779,7 +792,7 @@ namespace LogicaAccesoDatos.Repositorios
             {
                 throw new EmpleadoException("No se encontró el tipo de empleado para modificar.");
             }
-            tipoEmpleado.Validar();
+            tipo.Validar();
             //Context.TiposEmpleados.Update(tipo);
             tipoEmpleado.Categoría = tipo.Categoría;
             tipoEmpleado.ValorHora = tipo.ValorHora;
@@ -959,6 +972,28 @@ namespace LogicaAccesoDatos.Repositorios
                 total += m.HorasTrabajadas();
             }
             return total;
+        }
+
+        internal void ModificarObraEmpleado(ObraEmpleado obraEmpleadoNuevo)
+        {
+            try
+            {
+                ObraEmpleado obraEmpleado = this.GetEmpleadoObra(obraEmpleadoNuevo.IdEmpleado, obraEmpleadoNuevo.IdObra);
+                if (obraEmpleado == null)
+                {
+                    throw new EmpleadoException("No se encontró el empleado en la obra para modificar.");
+                }
+                obraEmpleadoNuevo.Validar(); //Seria item validar no empleado validar porque valida los datos viejos sino
+
+                obraEmpleado.FechaIngreso = obraEmpleadoNuevo.FechaIngreso;
+                obraEmpleado.FechaEgreso = obraEmpleadoNuevo.FechaEgreso;
+                Context.SaveChanges();
+            }
+            catch(EmpleadoException ee)
+            {
+                throw new EmpleadoException(ee.Message);
+            }
+
         }
     }
 }

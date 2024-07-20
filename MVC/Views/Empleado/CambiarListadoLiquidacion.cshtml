@@ -1,0 +1,10 @@
+﻿@model IEnumerable<LogicaNegocio.Entidades.Empleado>
+
+<select id="IdEmpleado" name="IdEmpleado" class="form-control">
+    <option value=null>Todos</option>
+
+    @foreach (var item in Model)
+    {
+        <option value="@item.Id">@item.Nombre</option>
+    }
+</select>

@@ -33,6 +33,7 @@ namespace MVC.Controllers
         // GET: PlanoController
         public ActionResult Index(int idObra)
         {
+            DriveItem carpeta = this.ObtenerCarpeta().Result;
             Fachada.Precarga();
             /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
@@ -313,104 +314,105 @@ namespace MVC.Controllers
                 return RedirectToAction("Index", new { idObra = IdObra });
             }
         }
-    }
+        private async Task<string> ObtenerTokenDeAccesoGraph()
+        {
+            var clientId = "dbde2b1a-6c38-46c7-9465-e8f4c3fa7961";
+            var clientSecret = "72D8Q~vHtGdsR-kcRd~rd4BIPgOpVDHfN6bv6a4.";
+            var tenantId = "d79720cd-d8c0-4d0c-a404-2dcd025f01e3";
+            var authority = $"https://login.microsoftonline.com/{tenantId}";
 
+            var app = ConfidentialClientApplicationBuilder.Create(clientId)
+                .WithClientSecret(clientSecret)
+                .WithAuthority(new Uri(authority))
+                .Build();
+
+            string[] scopes = { "https://graph.microsoft.com/.default" };
+
+            AuthenticationResult result = await app.AcquireTokenForClient(scopes).ExecuteAsync();
+            string accessToken = result.AccessToken;
+            return accessToken;
+        }
+
+        private async Task SubirATeams(Plano aIngresar)
+        {
+            string tokenAcceso = ObtenerTokenDeAccesoGraph().Result;
+            string groupId = "66f0d73d-1cad-4e6a-9291-c31f775b4937";
+            MemoryStream aSubir = new MemoryStream(aIngresar.Pdf);
+            using (HttpClient httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenAcceso);
+
+
+                var content = new StreamContent(aSubir);
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+
+                var uploadUrl = $"https://graph.microsoft.com/v1.0/groups/{groupId}/drive/items/root:/{aIngresar.NombrePdf}:/content";
+
+                HttpResponseMessage response = await httpClient.PutAsync(uploadUrl, content);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    string errorResponse = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Error: {response.StatusCode}");
+                    Console.WriteLine(errorResponse);
+                }
+                response.EnsureSuccessStatusCode();
+
+                string responseBody = await response.Content.ReadAsStringAsync();
+                JObject jsonResponse = JObject.Parse(responseBody);
+
+                Console.WriteLine("File uploaded successfully!");
+                Console.WriteLine(jsonResponse.ToString());
+
+            }
+        }
+
+        public async Task<DriveItem> ObtenerCarpeta()
+        {
+
+            try
+            {
+                string tokenAcceso = ObtenerTokenDeAccesoGraph().Result;
+
+                var scopes = new[] { "https://graph.microsoft.com/.default" };
+
+                // Multi-tenant apps can use "common",
+                // single-tenant apps must use the tenant ID from the Azure portal
+                var tenantId = "d79720cd-d8c0-4d0c-a404-2dcd025f01e3";
+
+                // Value from app registration
+                var clientId = "dbde2b1a-6c38-46c7-9465-e8f4c3fa7961";
+
+                var clientSecret = "72D8Q~vHtGdsR-kcRd~rd4BIPgOpVDHfN6bv6a4.";
+
+                var clientSecretCredential = new ClientSecretCredential(tenantId, clientId, clientSecret);
+
+                var graphClient = new GraphServiceClient(clientSecretCredential, scopes);
+
+                var result = await graphClient.Drives.GetAsync();
+
+                /*using (HttpClient httpClient = new HttpClient())
+                {
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenAcceso);
+                    HttpResponseMessage response = await httpClient.GetAsync($"https://graph.microsoft.com/v1.0/me/drive/recent");
+
+                    
+                    return null;
+                }*/
+
+                return null;
+
+            }
+            catch (ServiceException ex)
+            {
+                Console.WriteLine($"Error getting folder: {ex.Message}");
+                throw;
+            }
+        }
+    }
 }
 
 
-        //private async Task<string> ObtenerTokenDeAccesoGraph()
-        //{
-        //    var clientId = "dbde2b1a-6c38-46c7-9465-e8f4c3fa7961";
-        //    var clientSecret = "72D8Q~vHtGdsR-kcRd~rd4BIPgOpVDHfN6bv6a4.";
-        //    var tenantId = "d79720cd-d8c0-4d0c-a404-2dcd025f01e3";
-        //    var authority = $"https://login.microsoftonline.com/{tenantId}";
-
-        //    var app = ConfidentialClientApplicationBuilder.Create(clientId)
-        //        .WithClientSecret(clientSecret)
-        //        .WithAuthority(new Uri(authority))
-        //        .Build();
-
-        //    string[] scopes = { "https://graph.microsoft.com/.default" };
-
-        //    AuthenticationResult result = await app.AcquireTokenForClient(scopes).ExecuteAsync();
-        //    string accessToken = result.AccessToken;
-        //    return accessToken;
-        //}
-
-        //private async Task SubirATeams(Plano aIngresar)
-        //{
-        //    string tokenAcceso = ObtenerTokenDeAccesoGraph().Result;
-        //    string groupId = "66f0d73d-1cad-4e6a-9291-c31f775b4937";
-        //    MemoryStream aSubir = new MemoryStream(aIngresar.Pdf);
-        //    using (HttpClient httpClient = new HttpClient())
-        //    {
-        //        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenAcceso);
 
 
-        //        var content = new StreamContent(aSubir);
-        //        content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-
-        //        var uploadUrl = $"https://graph.microsoft.com/v1.0/groups/{groupId}/drive/items/root:/{aIngresar.NombrePdf}:/content";
-
-        //        HttpResponseMessage response = await httpClient.PutAsync(uploadUrl, content);
-
-        //        if (!response.IsSuccessStatusCode)
-        //        {
-        //            string errorResponse = await response.Content.ReadAsStringAsync();
-        //            Console.WriteLine($"Error: {response.StatusCode}");
-        //            Console.WriteLine(errorResponse);
-        //        }
-        //        response.EnsureSuccessStatusCode();
-
-        //        string responseBody = await response.Content.ReadAsStringAsync();
-        //        JObject jsonResponse = JObject.Parse(responseBody);
-
-        //        Console.WriteLine("File uploaded successfully!");
-        //        Console.WriteLine(jsonResponse.ToString());
-
-        //    }
-        //}
-
-        //public async Task<DriveItem> ObtenerCarpeta()
-        //{
-
-        //    try
-        //    {
-        //        string tokenAcceso = ObtenerTokenDeAccesoGraph().Result;
-                
-        //        var scopes = new[] { "https://graph.microsoft.com/.default" };
-
-        //        // Multi-tenant apps can use "common",
-        //        // single-tenant apps must use the tenant ID from the Azure portal
-        //        var tenantId = "d79720cd-d8c0-4d0c-a404-2dcd025f01e3";
-
-        //        // Value from app registration
-        //        var clientId = "dbde2b1a-6c38-46c7-9465-e8f4c3fa7961";
-
-        //        var clientSecret = "72D8Q~vHtGdsR-kcRd~rd4BIPgOpVDHfN6bv6a4.";
-
-        //        var clientSecretCredential = new ClientSecretCredential(tenantId, clientId, clientSecret);
-
-        //        var graphClient = new GraphServiceClient(clientSecretCredential, scopes);
-
-        //        var result = await graphClient.Drives.GetAsync();
-
-        //        /*using (HttpClient httpClient = new HttpClient())
-        //        {
-        //            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenAcceso);
-        //            HttpResponseMessage response = await httpClient.GetAsync($"https://graph.microsoft.com/v1.0/me/drive/recent");
-
-                    
-        //            return null;
-        //        }*/
-
-        //        return null;
-
-        //    }
-        //    catch (ServiceException ex)
-        //    {
-        //        Console.WriteLine($"Error getting folder: {ex.Message}");
-        //        throw;
-        //    }
-        //}
 

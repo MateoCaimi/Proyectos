@@ -315,7 +315,7 @@ namespace LogicaAccesoDatos.Repositorios
         {
             RepositorioObra.ConsumirMateriales(item, obra);
         }
-
+        
         public IEnumerable<Empleado> TomarTodosEmpleados()
         {
             return RepositorioEmpleado.TomarTodos();
@@ -521,6 +521,11 @@ namespace LogicaAccesoDatos.Repositorios
         public List<ObraMaterial> AlertarStockDeMaterialesTodasObrasACargo(string? nom)
         {
             return RepositorioObra.AlertarStockDeMaterialesTodasObrasACargo(nom);
+        }
+
+        public void ModificarObraEmpleado(ObraEmpleado obraEmpleadoNuevo)
+        {
+            RepositorioEmpleado.ModificarObraEmpleado(obraEmpleadoNuevo);
         }
     }
 }
