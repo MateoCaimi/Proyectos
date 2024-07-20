@@ -3,7 +3,6 @@
 
 
 
-<h1>Bienvenido</h1>
 @if (ViewBag.Error != null)
 {
     <div class="alert alert-danger" role="alert">
@@ -15,7 +14,9 @@
 
 <br>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-4 container" >
+
+        <h1>Bienvenido</h1>
         <form asp-action="Index">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <br>
