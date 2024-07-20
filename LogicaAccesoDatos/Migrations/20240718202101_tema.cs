@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LogicaAccesoDatos.Migrations
 {
     /// <inheritdoc />
-    public partial class finemp : Migration
+    public partial class tema : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -135,6 +135,7 @@ namespace LogicaAccesoDatos.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UnidadDeMedida = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BarreraDeStock = table.Column<int>(type: "int", nullable: false),
                     ObraIdObra = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>

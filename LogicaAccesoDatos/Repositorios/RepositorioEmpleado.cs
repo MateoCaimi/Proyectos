@@ -155,7 +155,8 @@ namespace LogicaAccesoDatos.Repositorios
             {
                 hastaDato = DateTime.Now;
 
-                desdeDato = new DateTime(hastaDato.Year, hastaDato.Month, hastaDato.Day - 7); // esto solo sirve si la semana es post 7 de cada mes
+                desdeDato = new DateTime(hastaDato.Year, hastaDato.Month, hastaDato.Day - hastaDato.Day + 1);
+
             }
             else
             {
@@ -344,7 +345,9 @@ namespace LogicaAccesoDatos.Repositorios
             if (desde.Year == 0001 || hasta.Year == 0001)
             {
                 hastaDato = DateTime.Now;
-                desdeDato = new DateTime(hastaDato.Year, hastaDato.Month, hastaDato.Day - 7); // esto solo sirve si la semana es post 7 de cada mes
+
+                desdeDato = new DateTime(hastaDato.Year, hastaDato.Month, hastaDato.Day - hastaDato.Day + 1); 
+
             }
             else
             {
