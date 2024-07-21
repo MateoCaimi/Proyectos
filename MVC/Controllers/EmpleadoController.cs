@@ -284,6 +284,21 @@ namespace MVC.Controllers
         }
         public ActionResult Liquidar()
         {
+
+            DateTime desde = new DateTime();
+            DateTime hasta = new DateTime();
+
+
+            if (!Fachada.AgregarEmpleadosAObraDTO(desde, hasta))
+            {
+                TempData["Anomalia"] = "Se encontraron anomalías generando a los empleados en obra en el sistema. Revisar las marcas de la última semana.";
+            }
+
+            if (!Fachada.AgregarTodasLasMarcasDTO(desde, hasta))
+            {
+                TempData["Anomalia"] = "Se generaron marcas anómalas en el sistema. Revisar las marcas de la última semana.";
+            }
+
             ViewBag.Obras = Fachada.TomarTodasObras();
             ViewBag.Empleados = Fachada.TomarTodosEmpleados();
             List<ObraEmpleadoLiquidacionViewModel> vm = new List<ObraEmpleadoLiquidacionViewModel>();
@@ -346,18 +361,18 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ModificarTipo(TipoEmpleado nuevoTipoEmpleado)
         {
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Administrador")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Obra")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Obra")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
 
             try
             {
