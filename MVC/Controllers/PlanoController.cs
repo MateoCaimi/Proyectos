@@ -33,16 +33,16 @@ namespace MVC.Controllers
         // GET: PlanoController
         public ActionResult Index(int idObra)
         {
-            DriveItem carpeta = this.ObtenerCarpeta().Result;
+            //DriveItem carpeta = this.ObtenerCarpeta().Result;
             Fachada.Precarga();
-            /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
-                return RedirectToAction("Index", "Usuario");
+                return RedirectToAction("LoginQR", "Usuario", new {id = idObra});
             }
             else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
             {
                 return RedirectToAction("Listado", "Usuario");
-            }*/
+            }
             //Dictionary<string, int> carpetas = Fachada.CarpetasConCantidad();
             try
             {

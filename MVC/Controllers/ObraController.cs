@@ -471,7 +471,7 @@ namespace MVC.Controllers
 
 
 
-            string data = $"HOLAMUNDO"; 
+            string data = $"https://localhost:7289/Plano?idObra={id}"; //Se cambia el link una vez hecho el deploy, pero la idea sería esta.
             string url = $"https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&qzone=30&data={data}";
 
             using (HttpClient cliente = new HttpClient())

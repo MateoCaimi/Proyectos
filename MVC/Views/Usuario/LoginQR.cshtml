@@ -1,0 +1,70 @@
+﻿@using LogicaNegocio.Entidades
+@model LogicaNegocio.Entidades.Usuario
+
+<h1>Bienvenido</h1>
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger" role="alert">
+        <p>@ViewBag.Error</p>
+    </div>
+
+}
+
+
+
+<br>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="LoginQR">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <br>
+            <input type="text" class="form-control" value="@ViewBag.IdObra" name="idObra" hidden="true" />
+            <br>
+            <div class="form-group">
+                <label asp-for="NombreUsuario" class="control-label"></label>
+                <input asp-for="NombreUsuario" class="form-control" />
+                <span asp-validation-for="NombreUsuario" class="text-danger"></span>
+            </div>
+            <br>
+            <div class="form-group">
+                <label asp-for="Contrasenia" class="control-label"></label>
+                <input asp-for="Contrasenia" class="form-control" />
+                <span asp-validation-for="Contrasenia" class="text-danger"></span>
+            </div>
+            <br>
+            <div class="form-group">
+                <input type="submit" value="Iniciar sesion" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+@*
+<form action="/Usuario/Index" method="post">
+
+    <label for="NombreUsuario" class="form-label">Nombre de Usuario:</label>
+    <input type="text" id="NombreUsuario" class="form-control" name="NombreUsuario" />
+
+    <label for="Contrasenia" class="form-label">Contraseña:</label>
+    <input type="password" id="Contrasenia" class="form-control" name="Contrasenia" />
+    <br>
+    <button type="submit" class="btn btn-primary btn-block mb-4">Iniciar Sesion</button>
+    <br>
+
+
+     <td>@Html.ActionLink("Precargar Datos", "PrecargaDatos", "Usuario")</td>
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            <p>@ViewBag.Error</p>
+        </div>
+
+    }
+</form> *@
+
+
+

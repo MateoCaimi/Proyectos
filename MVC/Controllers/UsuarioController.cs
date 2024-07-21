@@ -15,6 +15,57 @@ namespace MVC.Controllers
     {
 
         private Fachada Fachada = new Fachada();
+
+        // GET: UsuarioController/LoginQR/1
+        public ActionResult LoginQR(int id)
+        {
+            Fachada.Precarga();
+
+            if(HttpContext.Session.GetString("UsuarioLogueado") != null)
+            {
+                return RedirectToAction("Index", "Plano", new {idObra = id});
+            }
+            ViewBag.IdObra = id;
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult LoginQR(int idObra, string NombreUsuario, string Contrasenia)
+        {
+
+            try
+            {
+                Usuario u = Fachada.InicioSesion(NombreUsuario, Contrasenia);
+                if (HttpContext.Session.GetString("UsuarioLogueado") != null)
+                {
+                    return RedirectToAction("Index", "Plano", new { idObra = idObra });
+                }
+                if (u.CambioContrasenia)
+                {
+                    return RedirectToAction("CambiarPass", "Usuario", new { nomU = NombreUsuario });
+                }
+
+
+                HttpContext.Session.SetString("UsuarioLogueado", u.NombreUsuario);
+                HttpContext.Session.SetString("UsuarioTipo", u.Tipo);
+                Obra obra = Fachada.BuscarObra(idObra);
+                if(obra != null)
+                {
+                    return RedirectToAction("Index", "Plano", new { idObra = idObra });
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Obra");
+                }
+            }
+            catch (Exception e)
+            {
+                ViewBag.Error = e.Message;
+                return View();
+            }
+            
+        }
+
         // GET: UsuarioController
         public ActionResult Index()
         {
