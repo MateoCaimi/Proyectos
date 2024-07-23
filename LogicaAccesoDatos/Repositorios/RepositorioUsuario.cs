@@ -110,8 +110,7 @@ namespace LogicaAccesoDatos.Repositorios
 
         public void Modificar(Usuario item)
         {
-            try
-            {
+           
                 item.Validar();
                 Usuario usuario = this.Buscar(item.Id);
                 if (usuario == null)
@@ -129,11 +128,8 @@ namespace LogicaAccesoDatos.Repositorios
                 usuario.CambioContrasenia = true;
                 Context.Entry(usuario).State = EntityState.Modified;
                 Context.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                throw new UsuarioException(ex.Message);
-            }
+            
+           
         }
 
         public void ModificarOpcionReinstanciar(Usuario item)
