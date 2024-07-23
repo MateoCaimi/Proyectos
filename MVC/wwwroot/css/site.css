@@ -27,54 +27,6 @@ body {
 */
 /*CSS AGUS*/
 
-.flex-container-column{
-    display:flex;
-    flex-wrap:wrap;
-    flex-direction:column;
-
-}
-
-#bienvenido {
-    font-family: 'Arial', sans-serif;
-    font-size: 60px; /* Tamaño de fuente más grande */
-    color: #000000; /* Color negro */
-    text-align: center;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    font-weight: bold;
-}
-
-.btn-login {
-    transition: transform 0.3s;
-}
-
-.btn-login :hover {
-    transform: scale(1.15);
-}
-
-.flex-container-row {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-}
-
-.control-label{
-    
-}
-.container {
-    text-align: center;
-    font-size: 110%;
-}
-
-
-
-
-
-
-
-
-
-
-
 
 
 
