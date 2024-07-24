@@ -22,7 +22,7 @@ namespace MVC.Controllers
     {
 
         Fachada Fachada = new Fachada();
-        
+
         // GET: SolicitudController
         public ActionResult Index(int idObra)
         {
@@ -32,46 +32,46 @@ namespace MVC.Controllers
 
 
                 List<Solicitud> solicitudesPendientes = Fachada.BuscarSolicitudPendientesLista();
-            var opciones = new JsonSerializerOptions
-            {
-                ReferenceHandler = ReferenceHandler.IgnoreCycles,
-                WriteIndented = true,
+                var opciones = new JsonSerializerOptions
+                {
+                    ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                    WriteIndented = true,
 
-            };
-            HttpContext.Session.SetString("SolicitudesPendientes", System.Text.Json.JsonSerializer.Serialize(solicitudesPendientes, opciones));
-
-
+                };
+                HttpContext.Session.SetString("SolicitudesPendientes", System.Text.Json.JsonSerializer.Serialize(solicitudesPendientes, opciones));
 
 
-            List<Solicitud> solicitudesConfirmadas = Fachada.BuscarSolicitudConfirmadasLista();
-            var opciones2 = new JsonSerializerOptions
-            {
-                ReferenceHandler = ReferenceHandler.IgnoreCycles,
-                WriteIndented = true,
 
-            };
-            HttpContext.Session.SetString("SolicitudesConfirmadas", System.Text.Json.JsonSerializer.Serialize(solicitudesConfirmadas, opciones2));
+
+                List<Solicitud> solicitudesConfirmadas = Fachada.BuscarSolicitudConfirmadasLista();
+                var opciones2 = new JsonSerializerOptions
+                {
+                    ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                    WriteIndented = true,
+
+                };
+                HttpContext.Session.SetString("SolicitudesConfirmadas", System.Text.Json.JsonSerializer.Serialize(solicitudesConfirmadas, opciones2));
 
             }
 
 
 
-            if(HttpContext.Session.GetString("UsuarioTipo") == "Usuario de obra")
+            if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario de obra")
             {
                 string nomObrero = HttpContext.Session.GetString("UsuarioLogueado");
-            List<Solicitud> solicitudesAprobadas = Fachada.BuscarSolicitudAprobadasParaUnUObra(nomObrero);
-            var opciones3 = new JsonSerializerOptions
-            {
-                ReferenceHandler = ReferenceHandler.IgnoreCycles,
-                WriteIndented = true,
+                List<Solicitud> solicitudesAprobadas = Fachada.BuscarSolicitudAprobadasParaUnUObra(nomObrero);
+                var opciones3 = new JsonSerializerOptions
+                {
+                    ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                    WriteIndented = true,
 
-            };
-            HttpContext.Session.SetString("SolicitudesAprobadas", System.Text.Json.JsonSerializer.Serialize(solicitudesAprobadas, opciones3));
+                };
+                HttpContext.Session.SetString("SolicitudesAprobadas", System.Text.Json.JsonSerializer.Serialize(solicitudesAprobadas, opciones3));
             }
 
 
-            
-            
+
+
             IEnumerable<Solicitud> solicitudesObra = Fachada.SolicitudesDeObra(idObra);
             ViewBag.IdObra = idObra;
             return View(solicitudesObra);
@@ -86,14 +86,14 @@ namespace MVC.Controllers
             if (solicitud.Estado == Estado.Recibido)
             {
                 Fachada.CambiarEstadoAVisto(solicitud);
-                
+
             }
             ViewBag.Materiales = solicitudMateriales;
             ViewBag.IdObra = solicitud.IdObra;
 
             if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario de obra")
             {
-                return RedirectToAction("Confirmar", new { idSolicitud = solicitud.Id});
+                return RedirectToAction("Confirmar", new { idSolicitud = solicitud.Id });
             }
 
             return View(solicitud);
@@ -136,6 +136,10 @@ namespace MVC.Controllers
         {
             try
             {
+                if (JsonConvert.DeserializeObject<List<SolicitudMaterial>>((string)TempData["ListaActual"]) == null)
+                {
+                    throw new SolicitudException("No se puede enviar una solicitud sin materiales");
+                }
                 List<SolicitudMaterial> item = JsonConvert.DeserializeObject<List<SolicitudMaterial>>((string)TempData["ListaActual"]);
                 Usuario solicitante = Fachada.BuscarUsuarioXNombreU(HttpContext.Session.GetString("UsuarioLogueado"));
                 Solicitud solicitud = Fachada.CrearSolicitud(IdObra, solicitante.Id);
@@ -168,11 +172,11 @@ namespace MVC.Controllers
 
                 Material material = Fachada.BuscarMaterial(solicitudMaterial.IdMaterial);
                 solicitudMaterial.Material = material;
-                if(lista != null)
+                if (lista != null)
                 {
-                foreach (SolicitudMaterial sm in lista)
-                {
-                   if(solicitudMaterial.IdMaterial == sm.IdMaterial)
+                    foreach (SolicitudMaterial sm in lista)
+                    {
+                        if (solicitudMaterial.IdMaterial == sm.IdMaterial)
                         {
                             sm.Cantidad += solicitudMaterial.Cantidad;
                             TempData["ListaActual"] = JsonConvert.SerializeObject(lista);
@@ -180,7 +184,7 @@ namespace MVC.Controllers
                             return PartialView("ListaMateriales", lista);
 
                         }
-                }
+                    }
 
                 }
                 lista.Add(solicitudMaterial);
@@ -198,9 +202,7 @@ namespace MVC.Controllers
         [HttpPost]
         public async Task<ActionResult> Aprobar(int idSolicitud, List<int> materialesSeleccionados, IFormCollection form)
         {
-
-            
-                try
+            try
             {
                 Dictionary<int, int> materialesSeleccionadosConCantidad = new Dictionary<int, int>();
 
@@ -214,28 +216,27 @@ namespace MVC.Controllers
                     }
 
 
+
                     IEnumerable<SolicitudMaterial> laSolicitudConMateriales = Fachada.BuscarMaterialesSolicitud(idSolicitud);
                     Fachada.ConfigurarSolicitud(laSolicitudConMateriales, materialesSeleccionadosConCantidad);
                     Usuario aprobador = Fachada.BuscarUsuarioXNombreU(HttpContext.Session.GetString("UsuarioLogueado"));
                     Solicitud solicitud = Fachada.BuscarSolicitud(idSolicitud);
                     Fachada.AceptarSolicitud(solicitud, (UDeOficina)aprobador);
-                    //Dejar notificacion de solicitud aprovada al solicitante y tarea de confirmar que llegue el material
-                    //hacer pdf orden de compra
-                    //problema si el solicitante es el mismo que el aprobador
                     return GenerarPdf(solicitud);
-                    //return RedirectToAction("Index", new { idObra = solicitud.IdObra });
                 }
                 else
                 {
                     ViewBag.Error = "No se ha seleccionado ningun material";
                     Solicitud solicitud = Fachada.BuscarSolicitud(idSolicitud);
-                    return RedirectToAction("Detalles", new { id = solicitud.Id, idObra = solicitud.IdObra });
+                    ViewBag.Materiales = Fachada.BuscarMaterialesSolicitud(idSolicitud);
+                    ViewBag.IdObra = solicitud.IdObra;
+                    return View("Detalles", solicitud);
                 }
 
             }
-            catch (Exception e)
+            catch (SolicitudException se)
             {
-                ViewBag.Error(e.Message);
+                ViewBag.Error(se.Message);
                 return View();
             }
         }
@@ -326,7 +327,7 @@ namespace MVC.Controllers
 
             XPen line = new XPen(XColors.Black, 2);
             gfx.DrawLine(line, 0, 80, page.Width, 80);
-            
+
             int i = 90;
             foreach (SolicitudMaterial sm in materialesSolicitud)
             {
@@ -355,8 +356,8 @@ namespace MVC.Controllers
                 await Response.HttpContext.Response.Body.WriteAsync(stream.ToArray());
                 await Response.HttpContext.Response.Body.FlushAsync();*/
             }
-            
-            
+
+
 
         }
     }

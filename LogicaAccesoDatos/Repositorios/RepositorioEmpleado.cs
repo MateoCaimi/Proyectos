@@ -36,7 +36,7 @@ namespace LogicaAccesoDatos.Repositorios
         {
             try
             {
-                // item.Validar();
+                item.Validar();
                 Context.Empleados.Add(item);
                 Context.SaveChanges();
             }

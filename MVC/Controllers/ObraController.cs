@@ -252,34 +252,32 @@ namespace MVC.Controllers
 
             try
             {
-                if (nuevaObra == null || nuevaObra.TipoCronograma != null)
+                if (nuevaObra != null)
                 {
                     if (archivoImagen != null)
                     {
-                    using (var memoryStream = new MemoryStream())
-                    {
-                        await archivoImagen.CopyToAsync(memoryStream);
-                        nuevaObra.NombreCronograma = archivoImagen.FileName;
-                        nuevaObra.TipoCronograma = archivoImagen.ContentType;
-                        nuevaObra.Cronograma = memoryStream.ToArray();
-                    }
-
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            await archivoImagen.CopyToAsync(memoryStream);
+                            nuevaObra.NombreCronograma = archivoImagen.FileName;
+                            nuevaObra.TipoCronograma = archivoImagen.ContentType;
+                            nuevaObra.Cronograma = memoryStream.ToArray();
+                        }
                     }
                 }
                 else
                 {
-                    TempData["Error"] = "Debe proporcionar un archivo válido.";
-                    return View();
+                    throw new ObraException("No se encuentra la obra a modificar");
                 }
+               
                 ViewBag.Usuarios = Fachada.ObtenerUsuariosDeObra();
                 Fachada.ModificarObra(nuevaObra);
                 return RedirectToAction(nameof(Index));
             }
             catch (ObraException e)
             {
-                ErrorViewModel errorModel = new ErrorViewModel();
-                errorModel.RequestId = e.Message;
-                return View("Error", errorModel); //usar shared hasta tener vistas de error para cada coso
+                ViewBag.Error = e.Message;
+                return View();
             }
         }
 

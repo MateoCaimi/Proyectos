@@ -106,11 +106,19 @@ namespace LogicaAccesoDatos.Repositorios
         {
             try
             {
-                //nuevaObra.Validar();
+                nuevaObra.Validar();
                 Obra obra = this.Buscar(nuevaObra.IdObra);
                 if (obra == null)
                 {
                     throw new ObraException("No se encontró la obra a modificar.");
+                }
+                if (this.ObraPorNombre(nuevaObra.Nombre) != null)
+                {
+                    throw new ObraException("El nombre de obra ingresado ya está en uso. Elegir otro.");
+                }
+                if (this.ObraPorDireccion(nuevaObra.Direccion) != null)
+                {
+                    throw new ObraException("La ubicación de obra ingresada coincide con una existente. Elegir otra.");
                 }
 
                 obra.Nombre = nuevaObra.Nombre;

@@ -174,11 +174,11 @@ namespace MVC.Controllers
                 Fachada.AgregarEmpleado(empleado);
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception e)
+            catch (EmpleadoException ee)
             {
                 IEnumerable<TipoEmpleado> tipos = Fachada.BuscarTiposEmpleados();
                 ViewBag.Tipos = tipos;
-                ViewBag.Error = e.Message;
+                ViewBag.Error = ee.Message;
                 return View();
             }
         }
@@ -242,9 +242,14 @@ namespace MVC.Controllers
                 Fachada.ModificarEmpleado(nuevoEmpleado);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (EmpleadoException ee)
             {
-                return View();
+                Empleado empleado = Fachada.BuscarEmpleado(nuevoEmpleado.Id);
+
+                IEnumerable<TipoEmpleado> tipos = Fachada.BuscarTiposEmpleados();
+                ViewBag.Tipos = tipos;
+                ViewBag.Error = ee.Message;
+                return View(empleado);
             }
         }
 
