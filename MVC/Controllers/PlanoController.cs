@@ -20,6 +20,11 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using Azure.Identity;
 using System.Net.Http;
 using Microsoft.Graph.Models.TermStore;
+using static System.Formats.Asn1.AsnWriter;
+using NuGet.Protocol;
+using ServiceStack.Web;
+using Newtonsoft.Json;
+using System.Security.Policy;
 
 
 namespace MVC.Controllers
@@ -35,6 +40,7 @@ namespace MVC.Controllers
         {
             //DriveItem carpeta = this.ObtenerCarpeta().Result;
             Fachada.Precarga();
+            ObtenerCarpetaOneDrive();
             if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("LoginQR", "Usuario", new {id = idObra});
@@ -316,9 +322,9 @@ namespace MVC.Controllers
         }
         private async Task<string> ObtenerTokenDeAccesoGraph()
         {
-            var clientId = "dbde2b1a-6c38-46c7-9465-e8f4c3fa7961";
-            var clientSecret = "72D8Q~vHtGdsR-kcRd~rd4BIPgOpVDHfN6bv6a4.";
-            var tenantId = "d79720cd-d8c0-4d0c-a404-2dcd025f01e3";
+            var clientId = "ed32de75-de3c-4053-bb7c-488659eda9ad";
+            var clientSecret = "ns.8Q~ulrwLxTPhDR8jHeBIs.PlB5m3LIHD3pdoY";
+            var tenantId = "20feb869-2f89-4be1-a7ed-fcc4d1579353";
             var authority = $"https://login.microsoftonline.com/{tenantId}";
 
             var app = ConfidentialClientApplicationBuilder.Create(clientId)
@@ -333,37 +339,46 @@ namespace MVC.Controllers
             return accessToken;
         }
 
-        private async Task SubirATeams(Plano aIngresar)
+        public async Task<DriveItem> ObtenerCarpetaOneDrive()
         {
-            string tokenAcceso = ObtenerTokenDeAccesoGraph().Result;
-            string groupId = "66f0d73d-1cad-4e6a-9291-c31f775b4937";
-            MemoryStream aSubir = new MemoryStream(aIngresar.Pdf);
-            using (HttpClient httpClient = new HttpClient())
+            try
             {
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenAcceso);
-
-
-                var content = new StreamContent(aSubir);
-                content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-
-                var uploadUrl = $"https://graph.microsoft.com/v1.0/groups/{groupId}/drive/items/root:/{aIngresar.NombrePdf}:/content";
-
-                HttpResponseMessage response = await httpClient.PutAsync(uploadUrl, content);
-
-                if (!response.IsSuccessStatusCode)
+                using (HttpClient httpClient = new HttpClient())
                 {
-                    string errorResponse = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine($"Error: {response.StatusCode}");
-                    Console.WriteLine(errorResponse);
+                    string tokenAcceso = ObtenerTokenDeAccesoGraph().Result;
+
+                    var scopes = new[] { "https://graph.microsoft.com/.default" };
+
+                    var tenantId = "20feb869-2f89-4be1-a7ed-fcc4d1579353";
+
+                    var clientId = "ed32de75-de3c-4053-bb7c-488659eda9ad";
+
+                    var clientSecret = "ns.8Q~ulrwLxTPhDR8jHeBIs.PlB5m3LIHD3pdoY";
+
+                    var clientSecretCredential = new ClientSecretCredential(tenantId, clientId, clientSecret);
+
+                    var organizationId = "20feb869-2f89-4be1-a7ed-fcc4d1579353";
+
+                    var driveId = "b!msuOPhxmpkacBgMQlPFHs0GBQhXAt9RDgmQl3jvMs1RdQUZNQ3BeQI8-0DOwkKAW";
+
+                    var graphClient = new GraphServiceClient(clientSecretCredential, scopes);
+
+                    var groups = await graphClient.Groups.GetAsync();
+                    var groupId = groups.Value.First().Id;
+
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenAcceso);
+                    var siteId1 = "b2c703f4-c46f-4fd6-b23a-6976859a82a9";
+                    var siteId2 = "150412ee-bfd0-4386-8d59-c7993571ccee";
+                    var getUrl = $"https://graph.microsoft.com/v1.0/sites/{siteId1}";
+                    HttpResponseMessage response = await httpClient.GetAsync(getUrl);
+                    var content = response.Content.ReadAsStringAsync();
+
                 }
-                response.EnsureSuccessStatusCode();
-
-                string responseBody = await response.Content.ReadAsStringAsync();
-                JObject jsonResponse = JObject.Parse(responseBody);
-
-                Console.WriteLine("File uploaded successfully!");
-                Console.WriteLine(jsonResponse.ToString());
-
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
             }
         }
 
@@ -378,18 +393,23 @@ namespace MVC.Controllers
 
                 // Multi-tenant apps can use "common",
                 // single-tenant apps must use the tenant ID from the Azure portal
-                var tenantId = "d79720cd-d8c0-4d0c-a404-2dcd025f01e3";
+                var tenantId = "20feb869-2f89-4be1-a7ed-fcc4d1579353";
 
                 // Value from app registration
-                var clientId = "dbde2b1a-6c38-46c7-9465-e8f4c3fa7961";
+                var clientId = "ed32de75-de3c-4053-bb7c-488659eda9ad";
 
-                var clientSecret = "72D8Q~vHtGdsR-kcRd~rd4BIPgOpVDHfN6bv6a4.";
+
+                var clientSecret = "ns.8Q~ulrwLxTPhDR8jHeBIs.PlB5m3LIHD3pdoY";
 
                 var clientSecretCredential = new ClientSecretCredential(tenantId, clientId, clientSecret);
 
                 var graphClient = new GraphServiceClient(clientSecretCredential, scopes);
 
-                var result = await graphClient.Drives.GetAsync();
+                var driveId = "b!msuOPhxmpkacBgMQlPFHs0GBQhXAt9RDgmQl3jvMs1RdQUZNQ3BeQI8-0DOwkKAW";
+
+                var result = await graphClient.Sites.GetAsync();
+                var resultDriveItemId = "01ZSIDSFV6Y2GOVW7725BZO354PWSELRRZ";
+                
 
                 /*using (HttpClient httpClient = new HttpClient())
                 {

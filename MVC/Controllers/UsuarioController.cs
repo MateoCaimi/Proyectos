@@ -222,14 +222,14 @@ namespace MVC.Controllers
         public ActionResult Editar(int id)
         {
 
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario administrador")
-            //{
-            //    return RedirectToAction("Index", "Home");
-            //}
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario administrador")
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
 
             Usuario usuario = Fachada.BuscarUsuario(id);
@@ -272,7 +272,7 @@ namespace MVC.Controllers
                 .Where(t => t.IsSubclassOf(typeof(Usuario)));
                 ViewBag.TipoUsuario = subclassTypes;
                 ViewBag.Error = ue.Message;
-                return RedirectToAction(nameof(Listado));
+                return View();
             }
         }
 

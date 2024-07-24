@@ -156,18 +156,18 @@ namespace MVC.Controllers
         public ActionResult Agregar(Empleado empleado)
         {
 
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Administrador")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Obra")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Obra")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
 
             try
             {
@@ -224,18 +224,18 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Editar(Empleado nuevoEmpleado)
         {
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Administrador")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Obra")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Obra")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
 
             try
             {
@@ -265,18 +265,18 @@ namespace MVC.Controllers
         public ActionResult Delete(int id, IFormCollection collection)
         {
 
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Administrador")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Obra")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Obra")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
 
             try
             {
@@ -313,18 +313,18 @@ namespace MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Liquidar(int IdObra, int IdEmpleado,DateTime desde, DateTime hasta)
         {
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Administrador")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Obra")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Obra")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
 
             try
             {

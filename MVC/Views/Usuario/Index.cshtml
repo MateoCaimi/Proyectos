@@ -1,22 +1,26 @@
 ﻿@using LogicaNegocio.Entidades
 @model LogicaNegocio.Entidades.Usuario
 
+<link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+@{
+    Layout = null;
+}
 
 
-@if (ViewBag.Error != null)
-{
-    <div class="alert alert-danger" role="alert">
-        <p>@ViewBag.Error</p>
-    </div>
+<div class="containerFlex">
 
-} 
+<div class="containerIzq">
 
+ Bodega & PiedraFita
+          
+    
+</div>
+<div class="containerDer">
+    <div class="col-md-4 formLogin" >
 
-<br>
-<div class="row">
-    <div class="col-md-4 container" >
-
-        <h1>Bienvenido</h1>
+        <h1 id="bienvenido">Bienvenido</h1>
         <form asp-action="Index">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <br>
@@ -32,14 +36,28 @@
                 <span asp-validation-for="Contrasenia" class="text-danger"></span>
             </div>
             <br>
-            <div class="form-group">
-                <input type="submit" value="Iniciar sesion" class="btn btn-primary" />
+                <div class="form-group" id="btn-login">
+                    <input type="submit" value="Iniciar sesion" class="btn btn-danger" />
             </div>
         </form>
-    </div>
+
+        <br /> 
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    <p>@ViewBag.Error</p>
+                </div>
+
+            }
+
+
+        </div>
+    
 </div>
 
 
+</div>
 
 
 
