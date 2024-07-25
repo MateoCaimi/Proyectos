@@ -19,6 +19,26 @@ namespace MVC.Controllers
         // GET: EmpleadoController
         public ActionResult Index()
         {
+
+
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             IEnumerable<Empleado> empleados = Fachada.TomarTodosEmpleados();
             ViewBag.Obras = Fachada.TomarTodasObras();
             try
@@ -46,6 +66,23 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Index(int IdObra)
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
+            }
             IEnumerable<Empleado> empleados;
             if (IdObra != 0)
             {
@@ -65,6 +102,23 @@ namespace MVC.Controllers
         {
 
 
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             IEnumerable<TipoEmpleado> tipoEmpleados = Fachada.TomarTodosTipoEmpleados();
             //Fachada.AgregarEmpleadosAObraDTO();
             //Fachada.AgregarTodasLasMarcasPorIdEmpleado(44);
@@ -76,6 +130,24 @@ namespace MVC.Controllers
 
         public ActionResult Marcas(int id)
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             ViewBag.Obras = Fachada.TomarTodasObras();
             Empleado empleado = Fachada.BuscarEmpleado(id);
             IEnumerable<Marca> marcasEmp = new List<Marca>(); //No mostrar nada hasta filtrar. Son muchos registros.
@@ -87,6 +159,24 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Marcas(int id, int IdObra, DateTime desde, DateTime hasta)
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             Empleado empleado = Fachada.BuscarEmpleado(id);
             List<Marca> marcas = Fachada.TraerTodasMarcas(empleado);
             if (IdObra != 0)
@@ -113,6 +203,24 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult GenerarMarcas(DateTime desde, DateTime hasta)
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             try
             {
                 Fachada.Precarga();
@@ -138,6 +246,24 @@ namespace MVC.Controllers
         // GET: EmpleadoController/Details/5
         public ActionResult Detalles(int id)
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             Empleado empleado = Fachada.BuscarEmpleado(id);
             return View(empleado);
         }
@@ -145,6 +271,24 @@ namespace MVC.Controllers
         // GET: EmpleadoController/Create
         public ActionResult Agregar()
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             IEnumerable<TipoEmpleado> tipos = Fachada.BuscarTiposEmpleados();
             ViewBag.Tipos = tipos;
             return View();
@@ -156,17 +300,22 @@ namespace MVC.Controllers
         public ActionResult Agregar(Empleado empleado)
         {
 
+
             if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("Index", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Administrador")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
             {
                 return RedirectToAction("Listado", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Obra")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
             {
-                return RedirectToAction("Listado", "Usuario");
+                return RedirectToAction("Index", "Plano");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
             }
 
             try
@@ -186,6 +335,24 @@ namespace MVC.Controllers
         // GET: EmpleadoController/Create
         public ActionResult AgregarTipo()
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             return View();
         }
 
@@ -194,6 +361,24 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AgregarTipo(TipoEmpleado tipo)
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             try
             {
                 if(tipo == null)
@@ -213,6 +398,23 @@ namespace MVC.Controllers
         // GET: EmpleadoController/Edit/5
         public ActionResult Editar(int id)
         {
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             Empleado empleado = Fachada.BuscarEmpleado(id);
             IEnumerable<TipoEmpleado> tipos = Fachada.BuscarTiposEmpleados();
             ViewBag.Tipos = tipos;
@@ -228,13 +430,17 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Administrador")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
             {
                 return RedirectToAction("Listado", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Obra")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
             {
-                return RedirectToAction("Listado", "Usuario");
+                return RedirectToAction("Index", "Plano");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
             }
 
             try
@@ -256,6 +462,23 @@ namespace MVC.Controllers
         // GET: EmpleadoController/Delete/5
         public ActionResult Delete(int id)
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 
@@ -265,17 +488,22 @@ namespace MVC.Controllers
         public ActionResult Delete(int id, IFormCollection collection)
         {
 
+
             if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("Index", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Administrador")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
             {
                 return RedirectToAction("Listado", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Obra")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
             {
-                return RedirectToAction("Listado", "Usuario");
+                return RedirectToAction("Index", "Plano");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
             }
 
             try
@@ -289,6 +517,23 @@ namespace MVC.Controllers
         }
         public ActionResult Liquidar()
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
             DateTime desde = new DateTime();
             DateTime hasta = new DateTime();
@@ -313,17 +558,22 @@ namespace MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Liquidar(int IdObra, int IdEmpleado,DateTime desde, DateTime hasta)
         {
+
             if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("Index", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Administrador")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
             {
                 return RedirectToAction("Listado", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Obra")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
             {
-                return RedirectToAction("Listado", "Usuario");
+                return RedirectToAction("Index", "Plano");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
             }
 
             try
@@ -349,6 +599,24 @@ namespace MVC.Controllers
 
         public ActionResult CambiarListadoLiquidacion(int idObra)
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             Obra obra = Fachada.BuscarObra(idObra);
             List<Empleado> empleadosObra = Fachada.TomarEmpleadosDeObra(obra);
             return PartialView("CambiarListadoLiquidacion", empleadosObra);
@@ -357,6 +625,7 @@ namespace MVC.Controllers
         // GET: EmpleadoController/Edit/5
         public ActionResult ModificarTipo(int id)
         {
+
             TipoEmpleado tipoEmpleado = Fachada.BuscarTipo(id);
             return View(tipoEmpleado);
         }
@@ -366,17 +635,22 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ModificarTipo(TipoEmpleado nuevoTipoEmpleado)
         {
+
             if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("Index", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Administrador")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
             {
                 return RedirectToAction("Listado", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario Obra")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
             {
-                return RedirectToAction("Listado", "Usuario");
+                return RedirectToAction("Index", "Plano");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
             }
 
             try

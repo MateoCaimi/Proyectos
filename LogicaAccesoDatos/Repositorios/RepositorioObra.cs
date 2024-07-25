@@ -108,11 +108,14 @@ namespace LogicaAccesoDatos.Repositorios
             {
                 nuevaObra.Validar();
                 Obra obra = this.Buscar(nuevaObra.IdObra);
+                Obra obraMismoNom; 
+                obraMismoNom = this.ObraPorNombre(nuevaObra.Nombre); //Para comparar id sino en caso de editar una obra y no editar el nombre tira nombre repetido igual
+
                 if (obra == null)
                 {
                     throw new ObraException("No se encontró la obra a modificar.");
                 }
-                if (this.ObraPorNombre(nuevaObra.Nombre) != null)
+                if (obraMismoNom != null && nuevaObra.IdObra != obraMismoNom.IdObra)
                 {
                     throw new ObraException("El nombre de obra ingresado ya está en uso. Elegir otro.");
                 }
@@ -402,14 +405,19 @@ namespace LogicaAccesoDatos.Repositorios
 
         public void AsignacionHorasLluviaOExtra(Obra obra, int horas, DateTime dia, bool sonExtra)
         {
-            if(horas < 0)
+            if(horas <= 0)
             {
-                throw new ObraException("No se puede añadir una cantidad negativa de horas lluvia o extra.");
+                throw new ObraException("Ingrese una cantidad de horas validas.");
             }
             TimeSpan diff = dia - DateTime.Today;
             if (diff.Days > 0)
             {
                 throw new ObraException("No se pueden modificar las horas lluvia o extra de un día que no ha sucedido.");
+            }
+            if(dia.Year< 1000)
+            {
+                throw new ObraException("Seleccione una fecha para asignar hora lluvia o extra");
+
             }
             List<ObraEmpleado> empleadosObra = GetEmpleadosObra(obra);
             foreach(ObraEmpleado oe in empleadosObra)

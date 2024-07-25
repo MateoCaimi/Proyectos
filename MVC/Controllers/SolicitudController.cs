@@ -80,6 +80,18 @@ namespace MVC.Controllers
         // GET: SolicitudController/Details/5
         public ActionResult Detalles(int idSolicitud)
         {
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
 
             IEnumerable<SolicitudMaterial> solicitudMateriales = Fachada.BuscarMaterialesSolicitud(idSolicitud);
             Solicitud solicitud = Fachada.BuscarSolicitud(idSolicitud);
@@ -103,6 +115,19 @@ namespace MVC.Controllers
         // GET: SolicitudController/Create
         public ActionResult Crear(int idObra)
         {
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
+
             try
             {
                 TempData["ListaActual"] = null;
@@ -120,7 +145,7 @@ namespace MVC.Controllers
                     return View();
                 }
             }
-            catch (Exception e)
+            catch (SolicitudException e)
             {
                 ViewBag.Error = e.Message;
                 ViewBag.IdObra = idObra;
@@ -134,11 +159,25 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CrearPost(int IdObra)
         {
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
+
             try
             {
-                if (JsonConvert.DeserializeObject<List<SolicitudMaterial>>((string)TempData["ListaActual"]) == null)
+                if (TempData["ListaActual"] == null)
                 {
-                    throw new SolicitudException("No se puede enviar una solicitud sin materiales");
+                    TempData["ErrorNoMateriales"] = "No se puede crear una solicitud sin materiales";  //Sin temp data dificil porque es un redirect no un return view. el view bag no funciona
+                    throw new SolicitudException("No se puede crear una solicitud sin materiales");
                 }
                 List<SolicitudMaterial> item = JsonConvert.DeserializeObject<List<SolicitudMaterial>>((string)TempData["ListaActual"]);
                 Usuario solicitante = Fachada.BuscarUsuarioXNombreU(HttpContext.Session.GetString("UsuarioLogueado"));
@@ -147,16 +186,29 @@ namespace MVC.Controllers
                 Fachada.AgregarSolicitudMateriales(solicitud, item);
                 return RedirectToAction("Index", new { idObra = IdObra });
             }
-            catch (Exception e)
+            catch (SolicitudException e)
             {
                 ViewBag.Error = e.Message;
-                return RedirectToAction("Index", new { idObra = IdObra });
+                return RedirectToAction("Crear", new { idObra = IdObra });
             }
         }
 
         [HttpPost]
         public ActionResult Agregar(SolicitudMaterial solicitudMaterial)
         {
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
+
             try
             {
                 //solicitudMaterial.Validar();
@@ -202,6 +254,23 @@ namespace MVC.Controllers
         [HttpPost]
         public async Task<ActionResult> Aprobar(int idSolicitud, List<int> materialesSeleccionados, IFormCollection form)
         {
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index");
+            }
+
             try
             {
                 Dictionary<int, int> materialesSeleccionadosConCantidad = new Dictionary<int, int>();
@@ -244,6 +313,23 @@ namespace MVC.Controllers
         [HttpPost]
         public IActionResult Rechazar(int idSolicitud)
         {
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index");
+            }
+
             try
             {
                 Solicitud solicitud = Fachada.BuscarSolicitud(idSolicitud);
@@ -269,6 +355,20 @@ namespace MVC.Controllers
 
         public IActionResult Confirmar(int idSolicitud)
         {
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
+            
+
             Solicitud solicitud = Fachada.BuscarSolicitud(idSolicitud);
             IEnumerable<SolicitudMaterial> solicitudMateriales = Fachada.BuscarMaterialesSolicitud(idSolicitud);
             ViewBag.Materiales = solicitudMateriales;
@@ -280,6 +380,20 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult ConfirmarPost(int idSolicitud)
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
+           
             try
             {
                 Solicitud solicitud = Fachada.BuscarSolicitud(idSolicitud);
@@ -306,6 +420,20 @@ namespace MVC.Controllers
 
         private ActionResult GenerarPdf(Solicitud solicitud)
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
+
             IEnumerable<SolicitudMaterial> materialesSolicitud = Fachada.BuscarMaterialesSolicitud(solicitud.Id);
 
             PdfDocument document = new PdfDocument();

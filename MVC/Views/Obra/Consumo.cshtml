@@ -71,7 +71,7 @@
                 var nuevaCantidad = $("input[name='Cantidad']").val();
 
 
-                if (nuevoMaterialId != null && nuevaCantidad != null) {
+                if (nuevoMaterialId != null && nuevaCantidad > 0) {
 
                     $.ajax({
                         url: '@Url.Action("Consumir", "Obra", Model.ToList())',
@@ -89,6 +89,8 @@
                             alert("Error al agregar el material a la lista de consumo. Inténtalo de nuevo.");
                         }
                     });
+                } else {
+                    alert("Agregue una cantidad valida");
                 }
             });
         });

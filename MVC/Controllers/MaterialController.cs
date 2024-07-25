@@ -22,7 +22,10 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Listado", "Usuario");
             }
-
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
             IEnumerable<Material> materiales = Fachada.TomarTodosMateriales();
             return View(materiales);
 
@@ -39,9 +42,13 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
             {
                 return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
             }
 
             try
@@ -75,9 +82,13 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
             {
                 return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
             }
 
             try
@@ -95,6 +106,20 @@ namespace MVC.Controllers
         // GET: MaterialController/Edit/5
         public ActionResult Editar(int id)
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
+
             Material material = Fachada.BuscarMaterial(id);
             return View(material);
         }
@@ -109,9 +134,13 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Usuario");
             }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
             {
                 return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
             }
 
             try

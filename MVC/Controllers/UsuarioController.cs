@@ -107,8 +107,6 @@ namespace MVC.Controllers
                 return View();
             }
 
-            //Fachada.AgregarEmpleadosAObraDTO();
-            //Fachada.AgregarTodasLasMarcasPorIdEmpleado(44);
 
             return RedirectToAction("Index", "Home");
         }
@@ -161,14 +159,14 @@ namespace MVC.Controllers
         {
 
 
-            /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("Index", "Usuario");
             }
             else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario administrador")
             {
                 return RedirectToAction("Index", "Obra");
-            }*/
+            }
 
 
             var subclassTypes = Assembly
@@ -186,14 +184,14 @@ namespace MVC.Controllers
         {
 
 
-            /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("Index", "Usuario");
             }
             else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario administrador")
             {
                 return RedirectToAction("Index", "Obra");
-            }*/
+            }
 
 
             try
@@ -272,6 +270,7 @@ namespace MVC.Controllers
                 .Where(t => t.IsSubclassOf(typeof(Usuario)));
                 ViewBag.TipoUsuario = subclassTypes;
                 ViewBag.Error = ue.Message;
+                ViewBag.pass = contrasenia;
                 return View();
             }
         }
@@ -280,14 +279,14 @@ namespace MVC.Controllers
         public ActionResult Eliminar(int id)
         {
 
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario administrador")
-            //{
-            //    return RedirectToAction("Index", "Home");
-            //}
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario administrador")
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
             try
             {
@@ -308,14 +307,14 @@ namespace MVC.Controllers
         public ActionResult EliminarConfirmado(int id)
         {
 
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario administrador")
-            //{
-            //    return RedirectToAction("Index", "Home");
-            //}
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario administrador")
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
 
             try
@@ -335,14 +334,14 @@ namespace MVC.Controllers
         public ActionResult Listado()
         {
 
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario administrador")
-            //{
-            //    return RedirectToAction("Index", "Home");
-            //}
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario administrador")
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
             IEnumerable<Usuario> usuarios = Fachada.ObtenerUsuarios();
             return View(usuarios);
