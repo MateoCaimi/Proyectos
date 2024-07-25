@@ -66,7 +66,9 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
+            var inactivos = item.Activo ? "" : "resaltar-rojo";
+
+        <tr class="@inactivos">
             <td>
                 @Html.DisplayFor(modelItem => item.Nombre)
             </td>
@@ -94,3 +96,10 @@
 }
     </tbody>
 </table>
+
+<style>
+    .resaltar-rojo {
+        color: red;
+    }
+</style>
+

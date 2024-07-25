@@ -4,6 +4,7 @@ using LogicaNegocio.Excepciones;
 using LogicaNegocio.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Graph.Models;
 using MVC.Models;
 using Newtonsoft.Json;
@@ -191,6 +192,7 @@ namespace MVC.Controllers
             ViewBag.Obras = Fachada.TomarTodasObras();
             ViewBag.IdEmp = empleado.Id;
             ViewBag.HorasTotales = Fachada.HorasTotales(marcas);
+            ViewBag.Dias = marcas.Count();
             return View(marcas);
         }
 
@@ -460,61 +462,6 @@ namespace MVC.Controllers
         }
 
         // GET: EmpleadoController/Delete/5
-        public ActionResult Delete(int id)
-        {
-
-            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            {
-                return RedirectToAction("Index", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
-            {
-                return RedirectToAction("Listado", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
-            {
-                return RedirectToAction("Index", "Plano");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            return View();
-        }
-
-        // POST: EmpleadoController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-
-
-            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            {
-                return RedirectToAction("Index", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
-            {
-                return RedirectToAction("Listado", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
-            {
-                return RedirectToAction("Index", "Plano");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
         public ActionResult Liquidar()
         {
 
@@ -578,6 +525,10 @@ namespace MVC.Controllers
 
             try
             {
+                if (desde.Year == 0001 || hasta.Year == 0001)
+                {
+                    throw new Exception("Seleccione fechas");
+                }
                 Empleado empleado = Fachada.BuscarEmpleado(IdEmpleado);
                 Obra obra = Fachada.BuscarObra(IdObra);
                 List<ObraEmpleadoLiquidacionViewModel> vm = new List<ObraEmpleadoLiquidacionViewModel>();
@@ -591,9 +542,13 @@ namespace MVC.Controllers
                 ViewBag.Empleados = Fachada.TomarTodosEmpleados();
                 return View(vm);
             }
-            catch (HttpRequestException e)
+            catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                ViewBag.Obras = Fachada.TomarTodasObras();
+                ViewBag.Empleados = Fachada.TomarTodosEmpleados();
+                ViewBag.Error = e.Message;
+                List<ObraEmpleadoLiquidacionViewModel> vm = new List<ObraEmpleadoLiquidacionViewModel>();
+                return View(vm);
             }
         }
 

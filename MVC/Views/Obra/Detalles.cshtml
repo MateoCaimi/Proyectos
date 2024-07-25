@@ -10,6 +10,13 @@
     </div>
 }
 
+@if (ViewBag.Mensaje != null)
+{
+    <div class="alert alert-info">
+        @ViewBag.Mensaje
+    </div>
+}
+
 <h1>Detalles</h1>
 
 <div>
@@ -22,12 +29,23 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Obra.FechaInicio)
         </dd>
+        @if (Model.Obra.Finalizada)
+        {
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Obra.Finalizada)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Obra.Finalizada)
+        </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Obra.FechaFinalizacion)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Obra.FechaFinalizacion)
         </dd>
+            
+        }
+
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Obra.Nombre)
         </dt>
@@ -40,14 +58,8 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Obra.Direccion)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Obra.Finalizada)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Obra.Finalizada)
-        </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Obra.UsuarioACargo.Nombre)
+            Usuario a cargo
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Obra.UsuarioACargo.Nombre)
@@ -87,9 +99,7 @@
 }
 
 <div>
-    <a asp-action="Editar" asp-route-id="@Model?.Obra.IdObra">Modificar</a> |
-    <a asp-action="Eliminar" asp-route-id="@Model?.Obra.IdObra">Eliminar</a>|
-    
+    <a asp-action="Editar" asp-route-id="@Model?.Obra.IdObra">Modificar</a> |    
     @if (!Model.Obra.Finalizada)
     {
         <a asp-action="Cerrar" asp-route-id="@Model?.Obra.IdObra">| Cerrar Obra</a>

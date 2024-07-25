@@ -19,6 +19,7 @@ namespace LogicaNegocio.Entidades
         public string Nombre { get; set; }
         [Required(ErrorMessage = "Ingrese una cedula")]
         public string Cedula { get; set; }
+        [DataType(DataType.Date)]
         public DateTime? FechaIngreso { get; set; }
         [ForeignKey("TipoEmpleado")] public int? IdTipoEmpleado { get; set; }
         [Required(ErrorMessage = "Ingrese un tipo de empleado")]
@@ -26,6 +27,8 @@ namespace LogicaNegocio.Entidades
         public string? CuentaBanco { get; set; }
         public string? Banco { get; set; }
         public double IncentivoXHora { get; set; }
+
+        public bool Activo {  get; set; }
 
 
         public Empleado()

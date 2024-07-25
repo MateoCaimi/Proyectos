@@ -38,7 +38,9 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
+     var finalizadas = item.Finalizada ? "resaltar-rojo" : "";
+        <tr class="@finalizadas">
+        
             @* <td>
                 @Html.DisplayFor(modelItem => item.FechaInicio)
             </td>
@@ -46,7 +48,7 @@
                 @Html.DisplayFor(modelItem => item.FechaFinalizacion)
             </td> *@
             <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
+                @Html.DisplayFor(modelItem => item.Nombre)  
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Direccion)
@@ -63,8 +65,6 @@
                     {
                         <p>No hay cronograma</p>
                     }
-
-
            <td>
             <td>
                 <a asp-action="Detalles" asp-route-id="@item.IdObra">Detalles</a>
@@ -73,4 +73,12 @@
 }
     </tbody>
 </table>
+
+<style>
+    .resaltar-rojo {
+        color: red;
+    }
+</style>
+
+
 

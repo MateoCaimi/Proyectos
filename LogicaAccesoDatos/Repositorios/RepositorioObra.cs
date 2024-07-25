@@ -26,7 +26,7 @@ namespace LogicaAccesoDatos.Repositorios
 
             item.Validar();
             if (this.ObraPorNombre(item.Nombre) != null)
-            {   
+            {
                 throw new ObraException("El nombre de obra ingresado ya está en uso. Elegir otro.");
             }
             if (this.ObraPorDireccion(item.Direccion) != null)
@@ -45,7 +45,7 @@ namespace LogicaAccesoDatos.Repositorios
 
         public Obra ObraPorDireccion(string direccion)
         {
-            if(direccion == "<<A INGRESAR>>")
+            if (direccion == "<<A INGRESAR>>")
             {
                 return null;
             }
@@ -67,7 +67,7 @@ namespace LogicaAccesoDatos.Repositorios
 
         public void Eliminar(Obra obra)
         {
-            if(obra == null)
+            if (obra == null)
             {
                 throw new ObraException("No se puede eliminar una obra nula.");
             }
@@ -100,7 +100,7 @@ namespace LogicaAccesoDatos.Repositorios
             }
         }
 
-      
+
 
         public void Modificar(Obra nuevaObra)
         {
@@ -108,7 +108,7 @@ namespace LogicaAccesoDatos.Repositorios
             {
                 nuevaObra.Validar();
                 Obra obra = this.Buscar(nuevaObra.IdObra);
-                Obra obraMismoNom; 
+                Obra obraMismoNom;
                 obraMismoNom = this.ObraPorNombre(nuevaObra.Nombre); //Para comparar id sino en caso de editar una obra y no editar el nombre tira nombre repetido igual
 
                 if (obra == null)
@@ -143,15 +143,15 @@ namespace LogicaAccesoDatos.Repositorios
         public IEnumerable<Obra> ObrasFiltradas(string? nombre, string? direccion, bool? finalizada)
         {
             IEnumerable<Obra> obras = this.TomarTodos();
-            if(nombre != null)
+            if (nombre != null)
             {
                 obras = obras.Where(o => o.Nombre.Contains(nombre));
             }
-            if(direccion != null)
+            if (direccion != null)
             {
                 obras = obras.Where(o => o.Nombre.Contains(nombre));
             }
-            if(finalizada != null)
+            if (finalizada != null)
             {
                 obras = obras.Where(o => o.Finalizada == finalizada);
             }
@@ -176,8 +176,8 @@ namespace LogicaAccesoDatos.Repositorios
         }
 
         public Obra Buscar(int id)
-        {
-            return Context.Obras.Find(id);
+        { 
+            return Context.Obras.Where(o=> o.IdObra == id).Include(o=>o.UsuarioACargo).FirstOrDefault();
         }
 
         public Material MaterialMasSolicitado(int IdObra)
@@ -200,7 +200,7 @@ namespace LogicaAccesoDatos.Repositorios
                     }
                 }
             }
-            if(retorno.Count > 0)
+            if (retorno.Count > 0)
             {
                 return retorno.Max().Key;
             }
@@ -249,7 +249,8 @@ namespace LogicaAccesoDatos.Repositorios
                 {
                     retorno.Add(BuscarProveedor((int)s.IdProveedor), 1);
                 }
-                else{
+                else
+                {
                     var = new KeyValuePair<Proveedor, int>(BuscarProveedor((int)s.IdProveedor), var.Value + 1);
                 }
             }
@@ -331,14 +332,14 @@ namespace LogicaAccesoDatos.Repositorios
         internal void ConsumirMateriales(List<MaterialConsumoViewModel>? item, Obra obra)
         {
             List<ObraMaterial> materialesObra = MaterialesDeObra(obra.IdObra).ToList();
-            
+
             foreach (MaterialConsumoViewModel m in item)
             {
-                foreach(ObraMaterial om in materialesObra)
+                foreach (ObraMaterial om in materialesObra)
                 {
-                    if(m.Material.Id == om.Material.Id)
+                    if (m.Material.Id == om.Material.Id)
                     {
-                        if(m.Cantidad <= om.Stock)
+                        if (m.Cantidad <= om.Stock)
                         {
                             om.Stock -= m.Cantidad;
                         }
@@ -365,7 +366,7 @@ namespace LogicaAccesoDatos.Repositorios
         {
             List<ObraMaterial> materialesAlertar = new List<ObraMaterial>();
             List<Obra> obras = this.TomarTodos().ToList();
-            foreach(Obra o in obras)
+            foreach (Obra o in obras)
             {
                 materialesAlertar.AddRange(this.AlertarStockDeMaterialesEnObra(o));
             }
@@ -403,37 +404,29 @@ namespace LogicaAccesoDatos.Repositorios
         }
 
 
-        public void AsignacionHorasLluviaOExtra(Obra obra, int horas, DateTime dia, bool sonExtra)
+        public void AsignacionHorasLluvia(Obra obra, int horas, DateTime dia)
         {
-            if(horas <= 0)
+            if (horas <= 0)
             {
-                throw new ObraException("Ingrese una cantidad de horas validas.");
+                throw new ObraException("Ingrese una cantidad de horas.");
             }
             TimeSpan diff = dia - DateTime.Today;
             if (diff.Days > 0)
             {
-                throw new ObraException("No se pueden modificar las horas lluvia o extra de un día que no ha sucedido.");
+                throw new ObraException("No se pueden asignar horas lluvia a un dia posterior a hoy.");
             }
-            if(dia.Year< 1000)
+            if (dia.Year < 1000)
             {
-                throw new ObraException("Seleccione una fecha para asignar hora lluvia o extra");
+                throw new ObraException("Seleccione una fecha.");
 
             }
             List<ObraEmpleado> empleadosObra = GetEmpleadosObra(obra);
-            foreach(ObraEmpleado oe in empleadosObra)
+            foreach (ObraEmpleado oe in empleadosObra)
             {
                 Marca m = MarcaDelDia(oe, dia);
-                if(m != null) //El empleado trabajó ese día
+                if (m != null) //El empleado trabajó ese día
                 {
-                    if (sonExtra)
-                    {
-                        m.HorasExtra = horas; 
-                    }
-                    else
-                    {
-                        m.HorasLluvia = horas;
-                    }
-                    
+                    m.HorasLluvia = horas;
                 }
             }
             Context.SaveChanges();
@@ -449,7 +442,7 @@ namespace LogicaAccesoDatos.Repositorios
             int horas = 0;
             List<Marca> marcasEmpleado = this.marcasEmpleado(oe, fechaDesde, fechaHasta);
 
-            foreach(Marca m in marcasEmpleado)
+            foreach (Marca m in marcasEmpleado)
             {
                 int marcaEnHoras = m.HorasTrabajadas();
                 horas += marcaEnHoras;
@@ -474,8 +467,8 @@ namespace LogicaAccesoDatos.Repositorios
 
         private List<Marca> marcasEmpleado(ObraEmpleado oemp, DateTime fechaDesde, DateTime fechaHasta)
         {
-            return Context.Marcas.Where(ma => ma.Empleado.IdObra == oemp.IdObra 
-            && ma.Empleado.IdEmpleado == oemp.IdEmpleado 
+            return Context.Marcas.Where(ma => ma.Empleado.IdObra == oemp.IdObra
+            && ma.Empleado.IdEmpleado == oemp.IdEmpleado
             && ma.Entrada.Day == fechaDesde.Day
             && ma.Salida.Day == fechaHasta.Day).ToList();
         }
@@ -487,7 +480,7 @@ namespace LogicaAccesoDatos.Repositorios
 
         internal ObraEmpleado EmpleadoObra(int idEmpleado, int idObra)
         {
-            return Context.ObrasEmpleados.Where(oe => oe.IdObra == idObra && oe.IdEmpleado == idEmpleado).Include(oe=>oe.Empleado).Include(oe=>oe.Obra).Include(oe=>oe.Empleado.TipoEmpleado).FirstOrDefault();
+            return Context.ObrasEmpleados.Where(oe => oe.IdObra == idObra && oe.IdEmpleado == idEmpleado).Include(oe => oe.Empleado).Include(oe => oe.Obra).Include(oe => oe.Empleado.TipoEmpleado).FirstOrDefault();
         }
 
         public void DarEgreso(ObraEmpleado empleado, DateTime fecha)

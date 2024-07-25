@@ -311,79 +311,79 @@ namespace MVC.Controllers
             }
         }
 
-        // GET: ObraController/Delete/5
-        public ActionResult Eliminar(int id)
-        {
+        //// GET: ObraController/Delete/5
+        //public ActionResult Eliminar(int id)
+        //{
 
-            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            {
-                return RedirectToAction("Index", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
-            {
-                return RedirectToAction("Listado", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
-            {
-                return RedirectToAction("Index", "Plano");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario de oficina")
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-
-
-            try
-            {
-                Obra obra = Fachada.BuscarObra(id);
-                return View(obra);
-            }
-            catch (ObraException e)
-            {
-                ErrorViewModel errorModel = new ErrorViewModel();
-                errorModel.RequestId = e.Message;
-                return View("Error", errorModel); //usar shared hasta tener vistas de error para cada coso
-            }
-        }
-
-        // POST: ObraController/Delete/5
-        [HttpPost, ActionName("Eliminar")]
-        [ValidateAntiForgeryToken]
-        public ActionResult EliminarConfirmado(int id)
-        {
-
-            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            {
-                return RedirectToAction("Index", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
-            {
-                return RedirectToAction("Listado", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
-            {
-                return RedirectToAction("Index", "Plano");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario de oficina")
-            {
-                return RedirectToAction("Index", "Home");
-            }
+        //    if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+        //    {
+        //        return RedirectToAction("Index", "Usuario");
+        //    }
+        //    else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+        //    {
+        //        return RedirectToAction("Listado", "Usuario");
+        //    }
+        //    else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+        //    {
+        //        return RedirectToAction("Index", "Plano");
+        //    }
+        //    else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario de oficina")
+        //    {
+        //        return RedirectToAction("Index", "Home");
+        //    }
 
 
-            try
-            {
-                Obra obraABorrar = Fachada.BuscarObra(id);
-                Fachada.EliminarObra(obraABorrar);
-                return RedirectToAction(nameof(Index));
-            }
-            catch (ObraException e)
-            {
-                ErrorViewModel errorModel = new ErrorViewModel();
-                errorModel.RequestId = e.Message;
-                return View("Error", errorModel); //usar shared hasta tener vistas de error para cada coso
-            }
-        }
+
+        //    try
+        //    {
+        //        Obra obra = Fachada.BuscarObra(id);
+        //        return View(obra);
+        //    }
+        //    catch (ObraException e)
+        //    {
+        //        ErrorViewModel errorModel = new ErrorViewModel();
+        //        errorModel.RequestId = e.Message;
+        //        return View("Error", errorModel); //usar shared hasta tener vistas de error para cada coso
+        //    }
+        //}
+
+        //// POST: ObraController/Delete/5
+        //[HttpPost, ActionName("Eliminar")]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult EliminarConfirmado(int id)
+        //{
+
+        //    if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+        //    {
+        //        return RedirectToAction("Index", "Usuario");
+        //    }
+        //    else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+        //    {
+        //        return RedirectToAction("Listado", "Usuario");
+        //    }
+        //    else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+        //    {
+        //        return RedirectToAction("Index", "Plano");
+        //    }
+        //    else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario de oficina")
+        //    {
+        //        return RedirectToAction("Index", "Home");
+        //    }
+
+
+        //    try
+        //    {
+        //        Obra obraABorrar = Fachada.BuscarObra(id);
+        //        Fachada.EliminarObra(obraABorrar);
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch (ObraException e)
+        //    {
+        //        ErrorViewModel errorModel = new ErrorViewModel();
+        //        errorModel.RequestId = e.Message;
+        //        return View("Error", errorModel); //usar shared hasta tener vistas de error para cada coso
+        //    }
+        //}
 
         // GET: ObraController/Cerrar/5
         public ActionResult Cerrar(int id)
@@ -640,6 +640,7 @@ namespace MVC.Controllers
                     IEnumerable<ObraMaterial> materiales = Fachada.MaterialesDeObra(idObra);
                     ViewBag.Materiales = materiales;
                     ViewBag.IdObra = idObra;
+                    ViewBag.NombreObra = Fachada.BuscarObra(idObra).Nombre;
 
                     List<MaterialConsumoViewModel> tempMaterials = new List<MaterialConsumoViewModel>();
                     return View(tempMaterials);
@@ -683,7 +684,7 @@ namespace MVC.Controllers
             {
                 if(TempData["ListaActualConsumo"] == null)
                 {
-                    throw new Exception("No se pudo consumir ningun material");
+                    throw new ObraException("No se pudo consumir ningun material");
                 }
                 List<MaterialConsumoViewModel> item = JsonConvert.DeserializeObject<List<MaterialConsumoViewModel>>((string)TempData["ListaActualConsumo"]);
                 Obra obra = Fachada.BuscarObra(IdObra);
@@ -711,7 +712,8 @@ namespace MVC.Controllers
                     };
                     HttpContext.Session.SetString("MaterialesAlertar", System.Text.Json.JsonSerializer.Serialize(materialesAlertar, opciones)); //Uso el distinct para no repetir alertas. Ej: se baja de la barrera, y se consume de vuelta
                 }
-                return RedirectToAction("Index", new { idObra = IdObra });
+                ViewBag.Mensaje ="Materiales consumidos con exito";
+                return RedirectToAction("Detalles", new { id = IdObra });
                 
             }
             catch (Exception e)
@@ -724,8 +726,6 @@ namespace MVC.Controllers
         [HttpPost]
         public ActionResult Consumir(MaterialConsumoViewModel consumo)
         {
-
-
             if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("Index", "Usuario");
@@ -738,7 +738,6 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Plano");
             }
-
 
             try
             {
@@ -755,31 +754,27 @@ namespace MVC.Controllers
                 Material material = Fachada.BuscarMaterial(consumo.IdMaterial);
                 consumo.Material = material;
 
-                if (lista != null)
+                var existingMaterial = lista.FirstOrDefault(mc => mc.IdMaterial == consumo.IdMaterial);
+                if (existingMaterial != null)
                 {
-                    foreach (MaterialConsumoViewModel mc in lista)
-                    {
-                        if (consumo.IdMaterial == mc.IdMaterial)
-                        {
-                            mc.Cantidad += consumo.Cantidad;
-                            TempData["ListaActualConsumo"] = JsonConvert.SerializeObject(lista);
-                            ViewBag.Materiales = Fachada.TodosLosMateriales();
-                            return PartialView("ListaMateriales", lista);
-
-                        }
-                    }
-
+                    existingMaterial.Cantidad += consumo.Cantidad;
                 }
-                lista.Add(consumo);
+                else
+                {
+                    lista.Add(consumo);
+                }
+
                 TempData["ListaActualConsumo"] = JsonConvert.SerializeObject(lista);
                 ViewBag.Materiales = Fachada.TodosLosMateriales();
-                return PartialView("ListaConsumos", lista); // Aquí se usa ListaMateriales
+
+                return PartialView("ListaConsumos", lista);
             }
             catch
             {
                 return RedirectToAction("Index");
             }
         }
+
 
         public ActionResult HorasLluvia(int IdObra)
         {
@@ -809,7 +804,7 @@ namespace MVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult HorasLluvia(int IdObra, int horasLluvia, DateTime dia, bool sonExtra)
+        public ActionResult HorasLluvia(int IdObra, int horasLluvia, DateTime dia)
         {
 
             if (HttpContext.Session.GetString("UsuarioLogueado") == null)
@@ -829,7 +824,7 @@ namespace MVC.Controllers
             try
             {
                 Obra obra = Fachada.BuscarObra(IdObra);
-                Fachada.AsignacionHoras(obra, horasLluvia, dia, sonExtra);
+                Fachada.AsignacionHoras(obra, horasLluvia, dia);
                 ViewBag.Mensaje = "Horas asignadas correctamente.";
                 return View(obra);
             }

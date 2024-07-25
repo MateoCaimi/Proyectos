@@ -39,9 +39,6 @@
                 @Html.DisplayNameFor(model => model.Salida)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Empleado.Obra.Nombre)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.HorasExtra)
             </th>
             <th>
@@ -56,6 +53,10 @@
                 <label>Horas totales:</label>
                 <p>@ViewBag.HorasTotales</p>
             </div>
+            <div class="form-group">
+                <label>Dias trabajados:</label>
+                <p>@ViewBag.Dias</p>
+            </div>
         }
         @foreach (var item in Model)
         {
@@ -65,9 +66,6 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Salida)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Empleado.Obra.Nombre)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.HorasExtra)

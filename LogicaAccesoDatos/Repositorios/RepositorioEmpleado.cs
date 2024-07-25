@@ -36,7 +36,8 @@ namespace LogicaAccesoDatos.Repositorios
         {
             try
             {
-                item.Validar();
+                //item.Validar();
+                item.Activo = true;
                 Context.Empleados.Add(item);
                 Context.SaveChanges();
             }
@@ -70,6 +71,8 @@ namespace LogicaAccesoDatos.Repositorios
             empleado.IdTipoEmpleado = item.IdTipoEmpleado;
             empleado.Nombre = item.Nombre;
             empleado.Cedula = item.Cedula;
+            empleado.Activo = item.Activo;
+            empleado.IncentivoXHora = item.IncentivoXHora;
             Context.SaveChanges();
         }
 
@@ -112,9 +115,10 @@ namespace LogicaAccesoDatos.Repositorios
                 tipoGenerico.Compensacion = 0;
                 tipoGenerico.Categoría = "<<A INGRESAR>>";
                 tipoGenerico.Presentismo = 0;
-                tipoGenerico.ValorHora = 0;
+                tipoGenerico.ValorHora = 120;
 
                 Context.TiposEmpleados.Add(tipoGenerico);
+                Context.SaveChanges();
             }
             int cantCapataces = this.GetUsuariosObra().Count;
             if (cantCapataces == 0)
@@ -195,7 +199,8 @@ namespace LogicaAccesoDatos.Repositorios
                     empleado.Cedula = emp.Cedula;
                     empleado.Banco = "<<A INGRESAR>>";
                     empleado.CuentaBanco = "<<A INGRESAR>>";
-                    empleado.IdTipoEmpleado = 1; //Tenemos que tener una precarga con TipoEmpleado genérico
+                    empleado.Activo = true;
+                    empleado.IdTipoEmpleado = BuscarTipoXNombre("<<A INGRESAR>>").Id; //Tenemos que tener una precarga con TipoEmpleado genérico
                     this.Agregar(empleado);
                 }
                 if (emp.Marcas.Count() > 0)
@@ -249,6 +254,11 @@ namespace LogicaAccesoDatos.Repositorios
                 AgregarEmpleado(empleado, obra); //SI EL EMPLEADO CAMBIA DE OBRA NO SE AGREGA EL OBRA EMPLEADO NUEVAMENTE. ESO PROVOCA QUE EL METODO DE MARCAS ROMPA. NO EXISTE UN OBRAEMPLEADO NUEVO
             }
             return anomalias;
+        }
+
+        private TipoEmpleado BuscarTipoXNombre(string nombre)
+        {
+            return Context.TiposEmpleados.Where(te => te.Categoría == nombre).FirstOrDefault();
         }
 
         private int DiferenciaDias(DateTime desde, DateTime hasta)

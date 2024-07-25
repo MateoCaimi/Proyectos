@@ -20,7 +20,9 @@ namespace LogicaNegocio.Entidades
         public int IdObra { get; set; }
 
         [Required(ErrorMessage = "Ingrese una fecha de inicio")]
+        [DataType(DataType.Date)]
         public DateTime FechaInicio { get; set; }
+        [DataType(DataType.Date)]
         public DateTime? FechaFinalizacion { get; set; }
         [Required(ErrorMessage = "Ingrese un nombre valido")]
         public string Nombre { get; set; }

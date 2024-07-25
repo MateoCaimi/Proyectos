@@ -4,77 +4,69 @@
     ViewData["Title"] = "Materiales de obra";
 }
 
-<h2>Materiales de obra</h2>
+<h2>Consumo de material</h2>
 
 @if (TempData["Error"] != null)
 {
-    <div class="alert alert-danger">
+    <div class="alert alert-danger" id="errorMensaje">
         @TempData["Error"]
     </div>
 }
+else
+{
+    <div class="alert alert-danger" id="errorMensaje" style="display:none;">
+    </div>
+}
 
-    @using (Html.BeginForm("Consumo", "Obra", FormMethod.Post))
-    {
-        @Html.AntiForgeryToken()
+@using (Html.BeginForm("Consumo", "Obra", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
 
-        <div>
-            <label>Nombre de la obra</label>
-            <input type="text" class="form-control" value="@ViewBag.IdObra" name="IdObra" readonly="readonly" />
-        </div>
+    <div>
+        <label>Nombre de la obra</label>
+        <input type="text" class="form-control" value="@ViewBag.NombreObra" name="IdObra" readonly="readonly" />
+    </div>
 
-        <div>
-            <label>Material</label>
-            <select id="Material" name="Material" class="form-control">
-                @foreach (var item in ViewBag.Materiales)
-                {
-                    <option value="@item.IdMaterial">@item.Material.Nombre  Stock= @item.Stock</option>
-                }
-            </select>
-            <label>Cantidad</label>
-            <input type="number" name="Cantidad" class="form-control" />
-            <button type="button" id="addItem" class="btn btn-primary">Consumir</button>
-        </div>
+    <div>
+        <label>Material</label>
+        <select id="Material" name="IdMaterial" class="form-control">
+            @foreach (var item in ViewBag.Materiales)
+            {
+                <option value="@item.IdMaterial">@item.Material.Nombre (@item.Material.UnidadDeMedida) Stock= @item.Stock</option>
+            }
+        </select>
+        <label>Cantidad</label>
+        <input type="number" name="Cantidad" class="form-control" />
+        <button type="button" id="addItem" class="btn btn-primary">Consumir</button>
+    </div>
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Material</th>
-                    <th>Cantidad</th>
-                </tr>
-            </thead>
-            <tbody id="materialList">
-                @if (Model != null)
-                {
-                    foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>@item.Material.Nombre</td>
-                            <td>@item.Cantidad</td>
-                        </tr>
-                    }
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Material</th>
+                <th>Cantidad</th>
+            </tr>
+        </thead>
+        <tbody id="materialList">
+            @Html.Partial("ListaConsumos", Model)
+        </tbody>
+    </table>
 
-                }
-            </tbody>
-        </table>
-
-        <button type="submit" class="btn btn-success">Enviar</button>
-    }
-
+    <button type="submit" class="btn btn-success">Enviar</button>
+}
 
 @section Scripts {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
             $("#addItem").click(function () {
-                var nuevoMaterialId = $("select[name='Material'] option:selected").val();
-                var nuevoMaterialTexto = $("select[name='Material'] option:selected").text();
-                var nuevaCantidad = $("input[name='Cantidad']").val();
-
+                var nuevoMaterialId = $("select[name='IdMaterial'] option:selected").val();
+                var nuevoMaterialTexto = $("select[name='IdMaterial'] option:selected").text();
+                var nuevaCantidad = parseFloat($("input[name='Cantidad']").val());
 
                 if (nuevoMaterialId != null && nuevaCantidad > 0) {
-
                     $.ajax({
-                        url: '@Url.Action("Consumir", "Obra", Model.ToList())',
+                        url: '@Url.Action("Consumir", "Obra")',
                         type: 'POST',
                         data: {
                             IdMaterial: nuevoMaterialId,
@@ -84,13 +76,16 @@
                         success: function (response) {
                             $("#materialList").html(response);
                             $("input[name='Cantidad']").val('');
+                            $("#errorMensaje").hide();
                         },
                         error: function () {
-                            alert("Error al agregar el material a la lista de consumo. Inténtalo de nuevo.");
+                            $("#errorMensaje").text("Error al agregar el material a la lista de consumo. Inténtalo de nuevo.");
+                            $("#errorMensaje").show();
                         }
                     });
                 } else {
-                    alert("Agregue una cantidad valida");
+                    $("#errorMensaje").text("Agregue una cantidad válida");
+                    $("#errorMensaje").show();
                 }
             });
         });

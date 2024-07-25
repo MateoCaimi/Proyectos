@@ -336,9 +336,9 @@ namespace LogicaAccesoDatos.Repositorios
             return RepositorioEmpleado.LlamadaCloudtimes(inicio, fin);
         }
 
-        public void AsignacionHoras(Obra obra, int horasLluvia, DateTime dia, bool sonExtra)
+        public void AsignacionHoras(Obra obra, int horasLluvia, DateTime dia)
         {
-            RepositorioObra.AsignacionHorasLluviaOExtra(obra, horasLluvia, dia, sonExtra);
+            RepositorioObra.AsignacionHorasLluvia(obra, horasLluvia, dia);
         }
 
         public int HorasEmpleadoEnObra(ObraEmpleado oe, DateTime fechaDesde, DateTime fechaHasta)
@@ -369,7 +369,7 @@ namespace LogicaAccesoDatos.Repositorios
             }
             catch(EmpleadoException e)
             {
-                throw new EmpleadoException(e.Message);
+                    throw new EmpleadoException(e.Message);
             }
             catch (AggregateException err)
             {

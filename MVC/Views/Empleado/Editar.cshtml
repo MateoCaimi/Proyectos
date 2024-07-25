@@ -55,6 +55,16 @@
                 <span asp-validation-for="Banco" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="IncentivoXHora" class="control-label"></label>
+                <input asp-for="IncentivoXHora" class="form-control" />
+                <span asp-validation-for="IncentivoXHora" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" id="Activo" asp-for="Activo" /> @Html.DisplayNameFor(model => model.Activo)
+                </label>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>

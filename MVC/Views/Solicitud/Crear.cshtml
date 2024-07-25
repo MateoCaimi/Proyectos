@@ -2,15 +2,15 @@
 
 @{
     ViewData["Title"] = "Solicitud de material";
-   
+
 }
 
 <h2>Solicitud de material</h2>
 @if (TempData["ErrorNoMateriales"] != null)
 {
-     <div class="alert alert-danger">
+    <div class="alert alert-danger">
         @TempData["ErrorNoMateriales"]
-       
+
     </div>
 }
 @if (ViewBag.Error != null)
@@ -61,7 +61,7 @@ else
                             <td>@item.Cantidad</td>
                         </tr>
                     }
-                    
+
                 }
             </tbody>
         </table>
@@ -79,10 +79,9 @@ else
                 var nuevoMaterialTexto = $("select[name='Material'] option:selected").text();
                 var nuevaCantidad = $("input[name='Cantidad']").val();
 
-                
-                if (nuevoMaterialId != null && nuevaCantidad > 0 ) {
+                if (nuevoMaterialId != null && nuevaCantidad > 0) {
 
-                    $.ajax({                        
+                    $.ajax({
                         url: '@Url.Action("Agregar", "Solicitud", Model.ToList())',
                         type: 'POST',
                         data: {
@@ -98,7 +97,7 @@ else
                             alert("Error al agregar el material. Inténtalo de nuevo.");
                         }
                     });
-                }else{
+                } else {
                     alert("La cantidad no puede ser menor a 0");
                 }
             });
