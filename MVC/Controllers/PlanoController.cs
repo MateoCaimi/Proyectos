@@ -369,7 +369,9 @@ namespace MVC.Controllers
                     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenAcceso);
                     var siteId1 = "b2c703f4-c46f-4fd6-b23a-6976859a82a9";
                     var siteId2 = "150412ee-bfd0-4386-8d59-c7993571ccee";
-                    var getUrl = $"https://graph.microsoft.com/v1.0/sites/{siteId1}";
+                    var userId = "27e25a40-12ac-4f7f-95b8-fef55f973bfb";
+                    //ESTE ES EL QUE TRAE ARCHIVOS. REVISAR CONTENT
+                    var getUrl = $"https://graph.microsoft.com/v1.0/users/{userId}/drive/root/children";
                     HttpResponseMessage response = await httpClient.GetAsync(getUrl);
                     var content = response.Content.ReadAsStringAsync();
 
