@@ -41,14 +41,14 @@ namespace MVC.Controllers
             //DriveItem carpeta = this.ObtenerCarpeta().Result;
             Fachada.Precarga();
             ObtenerCarpetaOneDrive();
-            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("LoginQR", "Usuario", new {id = idObra});
             }
             else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
             {
                 return RedirectToAction("Listado", "Usuario");
-            }
+            }*/
             //Dictionary<string, int> carpetas = Fachada.CarpetasConCantidad();
             try
             {
@@ -369,9 +369,11 @@ namespace MVC.Controllers
                     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenAcceso);
                     var siteId1 = "b2c703f4-c46f-4fd6-b23a-6976859a82a9";
                     var siteId2 = "150412ee-bfd0-4386-8d59-c7993571ccee";
-                    var getUrl = $"https://graph.microsoft.com/v1.0/sites/{siteId1}";
+                    var userId = "27e25a40-12ac-4f7f-95b8-fef55f973bfb";
+                    //ESTE ES EL QUE TRAE ARCHIVOS. REVISAR CONTENT
+                    var getUrl = $"https://graph.microsoft.com/v1.0/users/{userId}/drive/root/children";
                     HttpResponseMessage response = await httpClient.GetAsync(getUrl);
-                    var content = response.Content.ReadAsStringAsync();
+                    var content = response.Content.ReadAsStringAsync(); 
 
                 }
                 return null;
@@ -407,9 +409,9 @@ namespace MVC.Controllers
 
                 var driveId = "b!msuOPhxmpkacBgMQlPFHs0GBQhXAt9RDgmQl3jvMs1RdQUZNQ3BeQI8-0DOwkKAW";
 
-                var result = await graphClient.Sites.GetAsync();
-                var resultDriveItemId = "01ZSIDSFV6Y2GOVW7725BZO354PWSELRRZ";
-                
+                var userId = "27e25a40-12ac-4f7f-95b8-fef55f973bfb";
+                var resultado = await graphClient.Users[userId].Drive.GetAsync();
+
 
                 /*using (HttpClient httpClient = new HttpClient())
                 {
@@ -428,6 +430,33 @@ namespace MVC.Controllers
                 Console.WriteLine($"Error getting folder: {ex.Message}");
                 throw;
             }
+        }
+
+        private async Task<User> ConseguirDrives()
+        {
+            string tokenAcceso = ObtenerTokenDeAccesoGraph().Result;
+
+            var scopes = new[] { "https://graph.microsoft.com/.default" };
+
+            // Multi-tenant apps can use "common",
+            // single-tenant apps must use the tenant ID from the Azure portal
+            var tenantId = "20feb869-2f89-4be1-a7ed-fcc4d1579353";
+
+            // Value from app registration
+            var clientId = "ed32de75-de3c-4053-bb7c-488659eda9ad";
+
+
+            var clientSecret = "ns.8Q~ulrwLxTPhDR8jHeBIs.PlB5m3LIHD3pdoY";
+
+            var clientSecretCredential = new ClientSecretCredential(tenantId, clientId, clientSecret);
+
+            var graphClient = new GraphServiceClient(clientSecretCredential, scopes);
+
+            var driveId = "b!msuOPhxmpkacBgMQlPFHs0GBQhXAt9RDgmQl3jvMs1RdQUZNQ3BeQI8-0DOwkKAW";
+
+            var groupId = "01e5d1e0-29d9-440d-832b-0ac27bfc1c5f";
+
+            return await graphClient.Me.GetAsync();
         }
     }
 }
