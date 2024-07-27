@@ -82,7 +82,14 @@
                 @Html.DisplayNameFor(model => model.ObraEmpleado.Empleado.Banco)
             </th>
             <th>
+
                 @Html.DisplayNameFor(model => model.Liquidacion)
+                 @if (ViewBag.TotalLiquidacion != null){
+                <p>
+                     Total: @ViewBag.TotalLiquidacion
+                </p>
+                 }
+
             </th>
         </tr>
     </thead>

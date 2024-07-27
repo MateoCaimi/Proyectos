@@ -176,8 +176,18 @@ namespace LogicaAccesoDatos.Repositorios
         }
 
         public Obra Buscar(int id)
-        { 
-            return Context.Obras.Where(o=> o.IdObra == id).Include(o=>o.UsuarioACargo).FirstOrDefault();
+        {
+            Obra retorno = null;
+            foreach (Obra obra in Context.Obras)
+            {
+                if (obra.IdObra == id)
+                {
+                    retorno = obra; break;
+                }
+            }
+            return retorno;
+            //No estaba funcionando la consulta. Nose porque
+           // return Context.Obras.Where(o=> o.IdObra == id).Include(o=>o.UsuarioACargo).FirstOrDefault();
         }
 
         public Material MaterialMasSolicitado(int IdObra)
@@ -406,9 +416,9 @@ namespace LogicaAccesoDatos.Repositorios
 
         public void AsignacionHorasLluvia(Obra obra, int horas, DateTime dia)
         {
-            if (horas <= 0)
+            if (horas <= 0 || horas > 24)
             {
-                throw new ObraException("Ingrese una cantidad de horas.");
+                throw new ObraException("Ingrese una cantidad de horas valida.");
             }
             TimeSpan diff = dia - DateTime.Today;
             if (diff.Days > 0)
@@ -502,6 +512,16 @@ namespace LogicaAccesoDatos.Repositorios
             return Context.ObrasEmpleados.Where(e => e.IdObra == oe.IdObra && e.IdEmpleado == oe.IdEmpleado).Any();
         }
 
+        internal double CalcularTotalLiquidacion(List<ObraEmpleadoLiquidacionViewModel> vm)
+        {
+           double total = 0;
 
+            foreach (ObraEmpleadoLiquidacionViewModel emp in vm)
+            {
+                total += emp.Liquidacion;
+            }
+
+            return total;
+        }
     }
 }

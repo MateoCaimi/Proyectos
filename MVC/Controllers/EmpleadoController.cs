@@ -540,6 +540,7 @@ namespace MVC.Controllers
                 }
                 ViewBag.Obras = Fachada.TomarTodasObras();
                 ViewBag.Empleados = Fachada.TomarTodosEmpleados();
+                ViewBag.TotalLiquidacion = Fachada.TotalLiquidacion(vm);
                 return View(vm);
             }
             catch (Exception e)
