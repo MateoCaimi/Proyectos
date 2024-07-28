@@ -533,5 +533,10 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioObra.CalcularTotalLiquidacion(vm);
         }
+
+        public int TraerIdPorNombreObra(string name)
+        {
+            return RepositorioObra.TraerIdPorNombreObra(name);
+        }
     }
 }

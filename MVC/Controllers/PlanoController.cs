@@ -27,6 +27,7 @@ using Newtonsoft.Json;
 using System.Security.Policy;
 using LogicaNegocio.Entidades.DTOs;
 using ServiceStack;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 
 namespace MVC.Controllers
@@ -375,15 +376,17 @@ namespace MVC.Controllers
                     //ESTE ES EL QUE TRAE ARCHIVOS. REVISAR CONTENT
                     var getUrl = $"https://graph.microsoft.com/v1.0/users/{userId}/drive/root/children";
                     HttpResponseMessage response = await httpClient.GetAsync(getUrl);
+                    var folderAttachmentsId = "01TXBKQWRZF2PDJIHD7BD2NSNQDMK7T4RF";
                     var content = response.Content.ReadAsStringAsync();
-                    var contentJson = content.Result; //los values
-                    DriveDTO drive = JsonConvert.DeserializeObject<DriveDTO>(contentJson);
-                    DriveDTO driveFiltrado = this.FiltrarCarpetas(drive); //filtra por pdfs. ignora carpetas (arreglar)
+                    var archivosRoot = content.Result; //los values
+                    DriveDTO driveRoot = JsonConvert.DeserializeObject<DriveDTO>(archivosRoot);
+                    DriveDTO driveNuevo = await AgregaArchivosCarpetasAsync(driveRoot);
+                    DriveDTO driveFiltrado = this.FiltrarCarpetas(driveNuevo); //filtra por pdfs. ignora carpetas (arreglar)
                     foreach(ArchivoDTO archivo in driveFiltrado.value)
                     {
-                        var getUrl2 = $"https://graph.microsoft.com/v1.0/users/{userId}/drive/items/{archivo.Id}?select=id,@microsoft.graph.downloadUrl";
-                        HttpResponseMessage response2 = await httpClient.GetAsync(getUrl2);
-                        var download = response2.Content.ReadAsStringAsync().Result;
+                        var getUrl3 = $"https://graph.microsoft.com/v1.0/users/{userId}/drive/items/{archivo.Id}?select=id,@microsoft.graph.downloadUrl";
+                        HttpResponseMessage response3 = await httpClient.GetAsync(getUrl3);
+                        var download = response3.Content.ReadAsStringAsync().Result;
                         string pattern = "@microsoft\\.graph\\.downloadUrl\":\"([^\"]*)\"";
                         Match match = Regex.Match(download, pattern);
                         if (match.Success)
@@ -391,6 +394,7 @@ namespace MVC.Controllers
                             string link = match.Groups[1].Value; //El link de descarga
                             byte[] plano = await httpClient.GetByteArrayAsync(link);
                             string planoNombre = archivo.Name;
+                            int idObra = Fachada.TraerIdPorNombreObra(archivo.Name);
                             string tipo = "application/pdf";
                             Plano planoNuevo = new Plano();
                             planoNuevo.NombrePdf = planoNombre;
@@ -399,8 +403,12 @@ namespace MVC.Controllers
                             planoNuevo.FechaPublicado = DateTime.Now;
                             planoNuevo.IdTipoPlano = 1; //Tipo genérico
                             planoNuevo.Nombre = planoNombre;
-                            planoNuevo.IdObra = 1; //Obra genérica?
-                            Fachada.AgregarPlano(planoNuevo);
+                            planoNuevo.IdObra = idObra;
+                            if(idObra != 0) //Si no encuentra obra, no es un plano para agregar. Es o un pdf cualquiera o de una obra no subida
+                            {
+                                Fachada.AgregarPlano(planoNuevo);
+                            }
+
                         }
                     }
                     
@@ -414,8 +422,62 @@ namespace MVC.Controllers
             }
         }
 
+        private async Task<DriveDTO> AgregaArchivosCarpetasAsync(DriveDTO drive)
+        {
+            using (HttpClient httpClient = new HttpClient())
+            {
+                string tokenAcceso = ObtenerTokenDeAccesoGraph().Result;
+
+                var scopes = new[] { "https://graph.microsoft.com/.default" };
+
+                var tenantId = "20feb869-2f89-4be1-a7ed-fcc4d1579353";
+
+                var clientId = "ed32de75-de3c-4053-bb7c-488659eda9ad";
+
+                var clientSecret = "ns.8Q~ulrwLxTPhDR8jHeBIs.PlB5m3LIHD3pdoY";
+
+                var clientSecretCredential = new ClientSecretCredential(tenantId, clientId, clientSecret);
+
+                var organizationId = "20feb869-2f89-4be1-a7ed-fcc4d1579353";
+
+                var driveId = "b!msuOPhxmpkacBgMQlPFHs0GBQhXAt9RDgmQl3jvMs1RdQUZNQ3BeQI8-0DOwkKAW";
+
+                var graphClient = new GraphServiceClient(clientSecretCredential, scopes);
+
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenAcceso);
+
+                var userId = "27e25a40-12ac-4f7f-95b8-fef55f973bfb";
+
+                /* LA RECURSION QUE HAY QUE HACER. RECORRER CADA CARPETA INTERNA
+                 * 
+                 * 
+                 * DriveDTO nuevoDrive = new DriveDTO();
+                nuevoDrive.value.AddRange(drive.value);
+
+                foreach (ArchivoDTO posibleCarpeta in drive.value)
+                {
+                    if (posibleCarpeta.Folder.ChildCount != "0")
+                    {
+                        var getUrl2 = $"https://graph.microsoft.com/v1.0/users/{userId}/drive/items/{posibleCarpeta.Id}/children";
+                        HttpResponseMessage response2 = await httpClient.GetAsync(getUrl2);
+                        var content2 = response2.Content.ReadAsStringAsync();
+                        var archivosCarpeta = content2.Result; //los values
+                        DriveDTO driveCarpeta = JsonConvert.DeserializeObject<DriveDTO>(archivosCarpeta);
+                        nuevoDrive.value.AddRange(driveCarpeta.value);
+                        nuevoDrive.value = nuevoDrive.value.Distinct().ToList();
+                        nuevoDrive = await AgregaArchivosCarpetasAsync(nuevoDrive);
+                        nuevoDrive.value = nuevoDrive.value.Distinct().ToList();
+                    }
+                }
+
+                return nuevoDrive;*/
+            }
+
+        }
+
         private DriveDTO FiltrarCarpetas(DriveDTO? drive)
         {
+            var userId = "27e25a40-12ac-4f7f-95b8-fef55f973bfb";
             DriveDTO nuevo = new DriveDTO();
             nuevo.value = new List<ArchivoDTO>();
             foreach(ArchivoDTO archivo in drive.value)

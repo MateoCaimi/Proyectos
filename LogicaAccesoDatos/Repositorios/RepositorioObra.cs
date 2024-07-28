@@ -524,5 +524,34 @@ namespace LogicaAccesoDatos.Repositorios
 
             return total;
         }
+
+        internal int TraerIdPorNombreObra(string name)
+        {
+            Obra obra = Context.Obras.Where(o => o.Nombre.Contains(name)).FirstOrDefault();
+            if(obra == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return obra.IdObra;
+            }
+        }
+
+        internal void Precarga()
+        {
+            int cantObras = this.TomarTodos().Count();
+            if(cantObras == 0)
+            {
+                Obra obraGenerica = new Obra();
+                obraGenerica.Nombre = "<<A INGRESAR>>";
+                obraGenerica.Direccion = "<<A INGRESAR>>";
+                obraGenerica.FechaInicio = DateTime.Now;
+                obraGenerica.IdACargo = 1;
+                obraGenerica.Validar();
+                Context.Obras.Add(obraGenerica);
+                Context.SaveChanges();
+            }
+        }
     }
 }
