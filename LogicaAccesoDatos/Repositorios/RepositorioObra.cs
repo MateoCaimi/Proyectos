@@ -393,6 +393,7 @@ namespace LogicaAccesoDatos.Repositorios
             return materialesAlertar;
         }
 
+
         internal bool MaterialesCheckStock(List<MaterialConsumoViewModel>? item, Obra obra)
         {
             List<ObraMaterial> materialesObra = MaterialesDeObra(obra.IdObra).ToList();

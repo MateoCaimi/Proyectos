@@ -53,13 +53,13 @@ button.accept-policy {
     display: flex;
     flex-direction: column;
     top: 0;
-    left: -250px; 
+    left: -250px;
     height: 100%;
-    width: 250px; Esto/* tendria que ser responsive*/
-    background-color: #f8f9fa; 
+    width: 250px; /*Esto tendria que ser responsive*/
+    background-color: #f8f9fa;
     border-right: 1px solid #ddd;
     z-index: 1030;
-    transition: left 0.4s ease; 
+    transition: left 0.4s ease;
 }
 
 .navbar-left:hover {
@@ -90,5 +90,8 @@ a.btn {
 }
 .btnBurga{
     margin-left:300px;
+    background-color: aliceblue;
+    color:black;
+    border:none;
     
 }

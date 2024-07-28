@@ -437,42 +437,7 @@ namespace MVC.Controllers
 
             IEnumerable<SolicitudMaterial> materialesSolicitud = Fachada.BuscarMaterialesSolicitud(solicitud.Id);
 
-            //PdfDocument document = new PdfDocument();
-            //PdfPage page = document.AddPage();
-            //XGraphics gfx = XGraphics.FromPdfPage(page);
-            //XFont font = new XFont("Verdana", 20, XFontStyleEx.Bold);
-            //XFont fontLineas = new XFont("Verdana", 12, XFontStyleEx.Regular);
-            //XFont fontHeader = new XFont("Verdana", 15, XFontStyleEx.Italic);
-            //XFont fontFooter = new XFont("Verdana", 12, XFontStyleEx.BoldItalic);
-            //gfx.DrawString("Solicitud de materiales", font, XBrushes.Black,
-            //new XRect(0, 0, page.Width, page.Height),
-            //XStringFormat.TopCenter);
-            //gfx.DrawString("Bodega&Piedrafita Arquitectos", fontHeader, XBrushes.Black,
-            //new XRect(0, 25, page.Width, page.Height),
-            //XStringFormat.TopCenter);
-
-
-            //XPen line = new XPen(XColors.Black, 2);
-            //gfx.DrawLine(line, 0, 80, page.Width, 80);
-
-            //int i = 90;
-            //foreach (SolicitudMaterial sm in materialesSolicitud)
-            //{
-            //    gfx.DrawString(sm.Material.Nombre + " - " + sm.Cantidad + " - " + sm.Material.UnidadDeMedida, fontLineas, XBrushes.Black,
-            //    new XRect(0, i, page.Width, page.Height),
-            //    XStringFormat.TopLeft);
-            //    i += 25;
-            //}
-
-            //gfx.DrawLine(line, 0, 800, page.Width, 800);
-            //gfx.DrawString("Teléfono: 2600 1150 - Dirección: Formentor 7096 - Bodega&Piedrafita Arquitectos", fontFooter, XBrushes.Black,
-            //new XRect(0, 400, page.Width, page.Height),
-            //XStringFormat.Center);
-
-            //string filename = $"{solicitud.Obra.Nombre} - {solicitud.Solicitante.Nombre}.pdf";
-
-
-
+            
 
             PdfDocument document = new PdfDocument();
             PdfPage page = document.AddPage();
@@ -486,6 +451,7 @@ namespace MVC.Controllers
 
             double margin = 40;
             double yPos = margin;
+            double lineHeight = 20;
 
             // Título
             gfx.DrawString("Solicitud de materiales", fontTitle, XBrushes.Black,
@@ -510,10 +476,18 @@ namespace MVC.Controllers
             // Detalles de los materiales
             foreach (SolicitudMaterial sm in materialesSolicitud)
             {
-                gfx.DrawString($"{sm.Material.Nombre}: {sm.Cantidad} {sm.Material.UnidadDeMedida}", fontLineas, XBrushes.Black,
+                gfx.DrawString($"Material: {sm.Material.Nombre} Cantidad: {sm.Cantidad} {sm.Material.UnidadDeMedida}", fontLineas, XBrushes.Black,
                     new XRect(margin, yPos, page.Width - 2 * margin, page.Height),
                     XStringFormat.TopLeft);
-                yPos += 20;
+                yPos += 30;
+
+
+                if (yPos + lineHeight > page.Height - margin)
+                {
+                    page = document.AddPage();
+                    gfx = XGraphics.FromPdfPage(page);
+                    yPos = margin;
+                }
             }
 
             // Línea horizontal
@@ -545,17 +519,7 @@ namespace MVC.Controllers
                 XStringFormat.Center);
 
 
-            //gfx.DrawLine(line, 0, 800, page.Width, 800);
-
-            //gfx.DrawString("Teléfono: 2600 1150 - Dirección: Formentor 7096 - Bodega&Piedrafita Arquitectos", fontFooter, XBrushes.Black,
-            //new XRect(0, 400, page.Width, page.Height),
-            //XStringFormat.Center);
-
-
-            //gfx.DrawString("Teléfono: 2600 1150 - Dirección: Formentor 7096 - Bodega & Piedrafita Arquitectos", fontFooter, XBrushes.Black,
-            //new XRect(0, page.Height - margin, page.Width, page.Height), XStringFormat.BottomCenter);
-
-            // Guardar el documento
+           
             string filename = $"{solicitud.Obra.Nombre} - {solicitud.Solicitante.Nombre}.pdf";
            
 
