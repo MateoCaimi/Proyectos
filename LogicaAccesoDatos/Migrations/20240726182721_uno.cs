@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LogicaAccesoDatos.Migrations
 {
     /// <inheritdoc />
-    public partial class testDis : Migration
+    public partial class uno : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -87,7 +87,8 @@ namespace LogicaAccesoDatos.Migrations
                     IdTipoEmpleado = table.Column<int>(type: "int", nullable: false),
                     CuentaBanco = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Banco = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IncentivoXHora = table.Column<double>(type: "float", nullable: true)
+                    IncentivoXHora = table.Column<double>(type: "float", nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
