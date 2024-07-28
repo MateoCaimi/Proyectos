@@ -380,6 +380,7 @@ namespace LogicaAccesoDatos.Repositorios
         public void Precarga()
         {
             RepositorioEmpleado.Precarga();
+            RepositorioPlano.Precarga();
         }
 
         public bool AgregarTodasLasMarcasDTO(DateTime desde, DateTime hasta)

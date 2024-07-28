@@ -25,6 +25,8 @@ using NuGet.Protocol;
 using ServiceStack.Web;
 using Newtonsoft.Json;
 using System.Security.Policy;
+using LogicaNegocio.Entidades.DTOs;
+using ServiceStack;
 
 
 namespace MVC.Controllers
@@ -36,11 +38,11 @@ namespace MVC.Controllers
 
 
         // GET: PlanoController
-        public ActionResult Index(int idObra)
+        public async Task<ActionResult> Index(int idObra)
         {
             //DriveItem carpeta = this.ObtenerCarpeta().Result;
             Fachada.Precarga();
-            ObtenerCarpetaOneDrive();
+            await ObtenerCarpetaOneDrive();
             /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("LoginQR", "Usuario", new {id = idObra});
@@ -373,7 +375,35 @@ namespace MVC.Controllers
                     //ESTE ES EL QUE TRAE ARCHIVOS. REVISAR CONTENT
                     var getUrl = $"https://graph.microsoft.com/v1.0/users/{userId}/drive/root/children";
                     HttpResponseMessage response = await httpClient.GetAsync(getUrl);
-                    var content = response.Content.ReadAsStringAsync(); 
+                    var content = response.Content.ReadAsStringAsync();
+                    var contentJson = content.Result; //los values
+                    DriveDTO drive = JsonConvert.DeserializeObject<DriveDTO>(contentJson);
+                    DriveDTO driveFiltrado = this.FiltrarCarpetas(drive); //filtra por pdfs. ignora carpetas (arreglar)
+                    foreach(ArchivoDTO archivo in driveFiltrado.value)
+                    {
+                        var getUrl2 = $"https://graph.microsoft.com/v1.0/users/{userId}/drive/items/{archivo.Id}?select=id,@microsoft.graph.downloadUrl";
+                        HttpResponseMessage response2 = await httpClient.GetAsync(getUrl2);
+                        var download = response2.Content.ReadAsStringAsync().Result;
+                        string pattern = "@microsoft\\.graph\\.downloadUrl\":\"([^\"]*)\"";
+                        Match match = Regex.Match(download, pattern);
+                        if (match.Success)
+                        {
+                            string link = match.Groups[1].Value; //El link de descarga
+                            byte[] plano = await httpClient.GetByteArrayAsync(link);
+                            string planoNombre = archivo.Name;
+                            string tipo = "application/pdf";
+                            Plano planoNuevo = new Plano();
+                            planoNuevo.NombrePdf = planoNombre;
+                            planoNuevo.Pdf = plano;
+                            planoNuevo.TipoPdf = tipo;
+                            planoNuevo.FechaPublicado = DateTime.Now;
+                            planoNuevo.IdTipoPlano = 1; //Tipo genérico
+                            planoNuevo.Nombre = planoNombre;
+                            planoNuevo.IdObra = 1; //Obra genérica?
+                            Fachada.AgregarPlano(planoNuevo);
+                        }
+                    }
+                    
 
                 }
                 return null;
@@ -382,6 +412,20 @@ namespace MVC.Controllers
             {
                 return null;
             }
+        }
+
+        private DriveDTO FiltrarCarpetas(DriveDTO? drive)
+        {
+            DriveDTO nuevo = new DriveDTO();
+            nuevo.value = new List<ArchivoDTO>();
+            foreach(ArchivoDTO archivo in drive.value)
+            {
+                if (archivo.Name.EndsWith(".pdf"))
+                {
+                    nuevo.value.Add(archivo);
+                }
+            }
+            return nuevo;
         }
 
         public async Task<DriveItem> ObtenerCarpeta()

@@ -21,6 +21,25 @@ namespace LogicaAccesoDatos.Repositorios
         {
             this.Context = new ProyectoContext();
         }
+
+        public void Precarga()
+        {
+            int cantTipoPlano = this.TomarTodosTipos().Count();
+            if(cantTipoPlano == 0)
+            {
+                TipoPlano tipoGenerico = new TipoPlano();
+                tipoGenerico.Categoria = "<<A INGRESAR>>";
+                Context.TiposPlanos.Add(tipoGenerico);
+
+                Context.SaveChanges();
+            }
+        }
+
+        private IEnumerable<TipoPlano> TomarTodosTipos()
+        {
+            return Context.TiposPlanos;
+        }
+
         public void Agregar(Plano plano)
         {
             if (plano.IdObra == 0)
@@ -152,7 +171,7 @@ namespace LogicaAccesoDatos.Repositorios
         }
         public IEnumerable<Plano> TomarTodos()
         {
-            throw new NotImplementedException();
+            return Context.Planos;
         }
 
         public List<Plano> CrearPlanosMultiples(int idObra, int idTipoPlano, List<IFormFile> postedFiles)
