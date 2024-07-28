@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Liquidar";
+
 }
 
 <h1>Liquidar</h1>
@@ -63,6 +64,25 @@
     </div>
 </div>
 
+<br />
+
+
+<form asp-controller="Empleado" asp-action="DescargarPDF" method="post">
+    
+    <button type="submit" class="btn btn-primary">Descargar PDF</button>
+
+    @for (int i = 0; i < Model.Count(); i++)
+    {
+        <input type="hidden" name="ObraEmpleadoLiquidacionViewModelList[@i].ObraEmpleado.Empleado.Nombre" value="@Model.ElementAt(i).ObraEmpleado.Empleado.Nombre" />
+        <input type="hidden" name="ObraEmpleadoLiquidacionViewModelList[@i].ObraEmpleado.Empleado.Cedula" value="@Model.ElementAt(i).ObraEmpleado.Empleado.Cedula" />
+        <input type="hidden" name="ObraEmpleadoLiquidacionViewModelList[@i].ObraEmpleado.Empleado.Banco" value="@Model.ElementAt(i).ObraEmpleado.Empleado.Banco" />
+        <input type="hidden" name="ObraEmpleadoLiquidacionViewModelList[@i].ObraEmpleado.Empleado.CuentaBanco" value="@Model.ElementAt(i).ObraEmpleado.Empleado.CuentaBanco" />
+        <input type="hidden" name="ObraEmpleadoLiquidacionViewModelList[@i].Liquidacion" value="@Model.ElementAt(i).Liquidacion" />
+        <!-- Añadir otros campos aquí -->
+    }
+</form>
+
+
 <table class="table">
     <thead>
         <tr>
@@ -82,7 +102,14 @@
                 @Html.DisplayNameFor(model => model.ObraEmpleado.Empleado.Banco)
             </th>
             <th>
+
                 @Html.DisplayNameFor(model => model.Liquidacion)
+                 @if (ViewBag.TotalLiquidacion != null){
+                <p>
+                     Total: @ViewBag.TotalLiquidacion
+                </p>
+                 }
+
             </th>
         </tr>
     </thead>
@@ -115,6 +142,7 @@
 
 @section Scripts
 {
+
     <script>
         $(function () {
             $("#IdObra").on("change", function () {
@@ -136,6 +164,7 @@
                 });
             });
         });
+
 
     </script>
 }

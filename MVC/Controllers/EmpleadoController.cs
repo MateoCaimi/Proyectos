@@ -8,6 +8,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Graph.Models;
 using MVC.Models;
 using Newtonsoft.Json;
+using PdfSharp.Drawing;
+using PdfSharp.Pdf;
 using System.Collections.Generic;
 
 namespace MVC.Controllers
@@ -540,6 +542,8 @@ namespace MVC.Controllers
                 }
                 ViewBag.Obras = Fachada.TomarTodasObras();
                 ViewBag.Empleados = Fachada.TomarTodosEmpleados();
+                ViewBag.TotalLiquidacion = Fachada.TotalLiquidacion(vm);
+                
                 return View(vm);
             }
             catch (Exception e)
@@ -618,5 +622,133 @@ namespace MVC.Controllers
                 return View();
             }
         }
+
+        [HttpPost]
+        public ActionResult DescargarPDF(List<ObraEmpleadoLiquidacionViewModel> ObraEmpleadoLiquidacionViewModelList)
+        {
+            
+
+           
+                if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+                {
+                    return RedirectToAction("Index", "Usuario");
+                }
+                else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+                {
+                    return RedirectToAction("Listado", "Usuario");
+                }
+                else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+                {
+                    return RedirectToAction("Index", "Plano");
+                }
+                
+           
+
+            
+
+            PdfDocument document = new PdfDocument();
+            PdfPage page = document.AddPage();
+            XGraphics gfx = XGraphics.FromPdfPage(page);
+            XFont fontTitle = new XFont("Verdana", 20, XFontStyleEx.Bold);
+            XFont fontLineas = new XFont("Verdana", 10, XFontStyleEx.Regular);
+            XFont fontHeader = new XFont("Verdana", 15, XFontStyleEx.Italic);
+            XFont fontFooter = new XFont("Verdana", 12, XFontStyleEx.BoldItalic);
+
+
+            double margin = 40;
+            double yPos = margin;
+            double lineHeight = 20;
+
+            // Título
+            gfx.DrawString("Liquidacion", fontTitle, XBrushes.Black,
+                new XRect(0, yPos, page.Width, page.Height),
+                XStringFormat.TopCenter);
+
+            yPos += 30;  // Espacio después del título
+
+            // Subtítulo
+            gfx.DrawString("Bodega & Piedrafita Arquitectos", fontHeader, XBrushes.Black,
+                new XRect(0, yPos, page.Width, page.Height),
+                XStringFormat.TopCenter);
+
+            yPos += 20;  // Espacio después del subtítulo
+
+            // Línea horizontal
+            XPen line = new XPen(XColors.Black, 1);
+            gfx.DrawLine(line, margin, yPos, page.Width - margin, yPos);
+
+            yPos += 20;  // Espacio después de la línea
+
+            // Detalles de los materiales
+            int num = 0;
+            foreach (ObraEmpleadoLiquidacionViewModel oel in ObraEmpleadoLiquidacionViewModelList)
+            {
+                num++;
+                gfx.DrawString($"{num}- Nombre: {oel.ObraEmpleado.Empleado.Nombre} Cedula: {oel.ObraEmpleado.Empleado.Cedula} ", fontLineas, XBrushes.Black,
+                    new XRect(margin, yPos, page.Width - 2 * margin, page.Height),
+                    XStringFormat.TopLeft);
+
+                yPos += 20;
+
+                gfx.DrawString($"Banco:{oel.ObraEmpleado.Empleado.Banco} Cuenta:{oel.ObraEmpleado.Empleado.CuentaBanco} Total liquidacion: {oel.Liquidacion}", fontLineas, XBrushes.Black,
+                  new XRect(margin + 40, yPos, page.Width - 2 * margin, page.Height),
+                  XStringFormat.TopLeft);
+
+                yPos += 30;
+
+                gfx.DrawLine(line, margin, yPos, page.Width - margin, yPos);
+
+                yPos += lineHeight + 10;
+
+                if (yPos + lineHeight > page.Height - margin)
+                {
+                    page = document.AddPage();
+                    gfx = XGraphics.FromPdfPage(page);
+                    yPos = margin;
+                }
+
+            }
+
+            // Línea horizontal
+            gfx.DrawLine(line, margin, yPos, page.Width - margin, yPos);
+
+            yPos += 10;  // Espacio después de la línea
+
+
+
+            double footerHeight = 50;  // Altura del pie de página
+            double footerYPos = page.Height - margin - footerHeight;
+
+            gfx.DrawLine(new XPen(XColors.Black, 1), margin, footerYPos, page.Width - margin, footerYPos); // Línea superior del pie de página
+
+
+
+            //// Pie de página
+
+            gfx.DrawString("Teléfono: 2600 1150", fontFooter, XBrushes.Gray,
+                new XRect(0, footerYPos + 5, page.Width, footerHeight / 2),
+                XStringFormat.Center);
+
+            gfx.DrawString("Dirección: Formentor 7096", fontFooter, XBrushes.Gray,
+                new XRect(0, footerYPos + 20, page.Width, footerHeight / 2),
+                XStringFormat.Center);
+
+            gfx.DrawString("Bodega & Piedrafita Arquitectos", fontFooter, XBrushes.Gray,
+                new XRect(0, footerYPos + 35, page.Width, footerHeight / 2),
+                XStringFormat.Center);
+
+
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                document.Save(stream);
+                return File(stream.ToArray(), "application/pdf", "Liquidacion.pdf");
+
+            }
+
+
+        }
+
+
     }
 }

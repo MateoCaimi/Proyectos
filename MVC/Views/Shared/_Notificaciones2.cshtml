@@ -11,23 +11,30 @@
 
     if (Context.Session.GetString("UsuarioTipo") == "Usuario de oficina")
     {
-        
-   
 
-        <div class="dropdown">
+
+
+        <div class="dropend">
+
+
+            @if (solicitudes != null)
+            {
+                List<Solicitud> solicitudesList = JsonSerializer.Deserialize<List<Solicitud>>(solicitudes);
+                int cantSoli = solicitudesList.Count();
+
+                <span class="badge bg-primary rounded-pill">
+                    @cantSoli
+            </span>
+
+            }
             <button class="btn btn-Primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Solicitudes pendientes
                 @*Aca iria la Campanita*@
             </button>
+            @if (solicitudes != null)
+            {
 
-
-            @if(solicitudes != null){
-            List<Solicitud> solicitudesList = JsonSerializer.Deserialize<List<Solicitud>>(solicitudes);
-            int cantSoli = solicitudesList.Count();
-
-            <span class="badge bg-primary rounded-pill">
-                @cantSoli
-            </span>
+                List<Solicitud> solicitudesList = JsonSerializer.Deserialize<List<Solicitud>>(solicitudes);
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
 
 
@@ -53,26 +60,32 @@
         </div>
 
 
-    
 
 
- 
-            <div class="dropdown">
-            <button class="btn btn-Primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Solicitudes confirmadas
-                @*Aca iria la Campanita*@
-            </button>
 
+        <div class="dropend">
           @if(solicitudesConfirmadas != null)
          {
-        List<Solicitud> solicitudesListConf = JsonSerializer.Deserialize<List<Solicitud>>(solicitudesConfirmadas);
-        int cantSoli2 = solicitudesListConf.Count();
+                List<Solicitud> solicitudesListConf = JsonSerializer.Deserialize<List<Solicitud>>(solicitudesConfirmadas);
+
+                int cantSoli2 = solicitudesListConf.Count();
 
 
 
             <span class="badge bg-primary rounded-pill">
                 @cantSoli2
             </span>
+         }
+            <button class="btn btn-Primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Solicitudes confirmadas
+                @*Aca iria la Campanita*@
+            </button>
+
+
+                @if (solicitudes != null)
+                {
+                List<Solicitud> solicitudesListConf = JsonSerializer.Deserialize<List<Solicitud>>(solicitudesConfirmadas);
+
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
 
 
@@ -100,18 +113,24 @@
             }
             </div>
 
-        <div class="dropdown">
-            <button class="btn btn-Primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Alertas de stock en obra
-                @*Aca iria la Campanita*@
-            </button>
+        <div class="dropend">
             @if (alertasDeStock != null)
             {
                 List<ObraMaterial> materialesAlertar = JsonSerializer.Deserialize<List<ObraMaterial>>(alertasDeStock);
+
                 int cantMaterial = materialesAlertar.Count();
                 <span class="badge bg-primary rounded-pill">
                     @cantMaterial
                 </span>
+            }
+            <button class="btn btn-Primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Alertas de stock en obra
+                @*Aca iria la Campanita*@
+            </button>
+                @if (alertasDeStock != null)
+                {
+                List<ObraMaterial> materialesAlertar = JsonSerializer.Deserialize<List<ObraMaterial>>(alertasDeStock);
+
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                 @foreach (ObraMaterial om in materialesAlertar)
                 {
@@ -137,16 +156,19 @@
         List<Solicitud> solicitudesListApro = JsonSerializer.Deserialize<List<Solicitud>>(solicitudesAprob);
         int cantSoli3 = solicitudesListApro.Count();
 
+            <span class="badge bg-primary rounded-pill">
+                @cantSoli3
+            </span>
 
-        <div class="dropdown">
+          <div class="dropend">
+
             <button class="btn btn-Primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Solicitudes aprobadas
                 @*Aca iria la Campanita*@
             </button>
 
-            <span class="badge bg-primary rounded-pill">
-                @cantSoli3
-            </span>
+
+
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
 
 

@@ -528,5 +528,10 @@ namespace LogicaAccesoDatos.Repositorios
         {
             RepositorioEmpleado.ModificarObraEmpleado(obraEmpleadoNuevo);
         }
+
+        public double TotalLiquidacion(List<ObraEmpleadoLiquidacionViewModel> vm)
+        {
+            return RepositorioObra.CalcularTotalLiquidacion(vm);
+        }
     }
 }
