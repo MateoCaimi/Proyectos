@@ -8,6 +8,6 @@ namespace LogicaNegocio.Entidades.DTOs
 {
     public class FolderDTO
     {
-        public string ChildCount {  get; set; }
+        public string HostName {  get; set; }
     }
 }
