@@ -16,13 +16,13 @@ body {
 
     body::before {
         content: '';
-        position: fixed; /* Fijado para asegurar que cubra toda la pantalla */
+        position: fixed; 
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgb(0, 0, 0, 0,18); /* Capa semitransparente negra con opacidad */
-        z-index: 1; /* Asegura que la capa esté por encima de la imagen de fondo */
+        background-color: rgb(0, 0, 0, 0,2); 
+        z-index: 1;
         pointer-events: none; /* Permite hacer clic a través de la capa */
     }
 
@@ -56,17 +56,24 @@ body {
     padding: 0;
     margin: 0;
     color: aliceblue;
-    height: 100%; /* Ajustar para asegurar que ocupe toda la altura de la ventana */
+    height: 100%; 
 }
 
 .containerIzq {
-    height: 100%;
+
+    background-image: url('imagenes/logo blanco.png');
+    background-size: contain; 
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    height: 50%;
     width: 40%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    font-size: 40px;
+    font-size: 35px;
     font-family: "PT Serif", serif;
 }
 
@@ -74,8 +81,9 @@ body {
     width: 60%;
     height: 100%;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center; /* Centrar el formulario */
+    justify-content: center;
 }
 
 .formLogin {
@@ -89,11 +97,13 @@ body {
 
 @media(max-width :690px){
     .containerFlex {
-        flex-direction: column; /* En pantallas pequeñas, el contenedor principal está en columna */
+        flex-direction: column;
     }
 
     .containerIzq {
-        height: 20vh; /* Ajustar la altura del contenedor izquierdo */
+        background-image: url('imagenes/logotipo blanco.png');
+        background-size: contain;
+        height: 25vh;
         width: 100%;
         text-align: center;
         font-size: 40px;
@@ -105,14 +115,14 @@ body {
 
     .containerDer {
         width: 100%;
-        height: 60vh; /* Ajustar la altura del contenedor derecho */
+        height: 70vh; 
         display: flex;
         align-items: center;
-        justify-content: center; /* Centrar el formulario */
+        justify-content: center; 
     }
 
     .formLogin {
-        width: 70%; /* Ajustar el ancho del formulario para pantallas pequeñas */
+        width: 70%; 
     }
 }
 
