@@ -38,11 +38,12 @@ button.accept-policy {
 }
 
 .footer {
-  text-align:center;
-  margin-top:5%;
-  margin-bottom: 0px;
-  width: 100%;
-  line-height: 60px;
+    position: relative;
+    text-align: center;
+    bottom: 0;
+    width: 100%;
+    line-height: 60px;
+    z-index: -100;
 }
 
 
@@ -55,28 +56,28 @@ button.accept-policy {
     top: 0;
     left: -250px;
     height: 100%;
-    width: 250px; /*Esto tendria que ser responsive*/
+    width: 250px;
     background-color: #f8f9fa;
     border-right: 1px solid #ddd;
     z-index: 1030;
     transition: left 0.4s ease;
 }
-
+/*
 .navbar-left:hover {
       left: 0; 
       
-}
+}*/
 
 
 .main-content {
     margin-left: 50px; 
     transition: margin-left 0.3s ease; 
 }
-
+/*
 .navbar-left:hover ~ .main-content {
     margin-left: 250px; 
 }
-
+*/
 
 .btnLoginLogout {
    text-align:right;
@@ -94,4 +95,24 @@ a.btn {
     color:black;
     border:none;
     
+}
+
+#capaDeFondo {
+    position: absolute;
+    height: 100vh;
+    width: 100%;
+    opacity: 0;
+    z-index: -10;
+    background-color: black;
+}
+
+
+
+@media (min-width: 375px) and (max-width: 667px) {
+    .navbar-left {
+        position: fixed;
+        display: flex;
+        flex-direction: column;
+        top: 0;
+    }
 }
