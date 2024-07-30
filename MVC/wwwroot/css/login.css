@@ -1,63 +1,70 @@
-﻿
-@import url('https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden; /* Evita el desplazamiento */
+}
 
 body {
+    background-image: url('Imagenes/inicio Byp.jpg');
+    background-size: cover; /* Asegura que la imagen cubra todo el fondo */
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
 }
 
-.flex-container-column {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
-}
+    body::before {
+        content: '';
+        position: fixed; /* Fijado para asegurar que cubra toda la pantalla */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgb(0, 0, 0, 0,18); /* Capa semitransparente negra con opacidad */
+        z-index: 1; /* Asegura que la capa esté por encima de la imagen de fondo */
+        pointer-events: none; /* Permite hacer clic a través de la capa */
+    }
+
 
 #bienvenido {
-    display:block;
+    display: block;
     font-family: "PT Serif", serif;
     font-size: 50px; /* Tamaño de fuente más grande */
-    color: aliceblue; /* Color negro */
+    color: aliceblue; /* Color del texto */
     text-align: center;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.98);
 }
 
 #btn-login {
     transition: transform 0.3s;
 }
 
-#btn-login :hover {
-     transform: scale(1.15);
-}
+#btn-login:hover {
+       transform: scale(1.15);
 
-.flex-container-row {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-}
-
-.control-label {
 }
 
 .container {
     text-align: center;
-    
 }
 
 .containerFlex {
     display: flex;
     align-items: center;
     flex-direction: row;
-    padding: 0px;
-    margin: 0px;
-    color:aliceblue;
+    padding: 0;
+    margin: 0;
+    color: aliceblue;
+    height: 100%; /* Ajustar para asegurar que ocupe toda la altura de la ventana */
 }
 
 .containerIzq {
-    height: 110vh;
+    height: 100%;
     width: 40%;
-    background-color: #c00000;
-   display:flex;
-   justify-content:center;
-   align-items:center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-align: center;
     font-size: 40px;
     font-family: "PT Serif", serif;
@@ -65,36 +72,29 @@ body {
 
 .containerDer {
     width: 60%;
-    height: 110vh;
-    background-color: #2f2f2f;
+    height: 100%;
     display: flex;
-
-    
+    align-items: center;
+    justify-content: center; /* Centrar el formulario */
 }
 
 .formLogin {
-    padding:0px;
-    margin:auto;
-    align-content:center;
+    padding: 0;
+    margin: auto;
+    align-content: center;
     text-align: center;
     flex-direction: column;
-    width:50%;
+    width: 50%;
 }
 
-
-@media (min-width: 375px) and (max-width: 667px) {
-
+@media(max-width :690px){
     .containerFlex {
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-        height: 100vh;
+        flex-direction: column; /* En pantallas pequeñas, el contenedor principal está en columna */
     }
 
     .containerIzq {
-        height: 30vh;
+        height: 20vh; /* Ajustar la altura del contenedor izquierdo */
         width: 100%;
-        background-color: #30c44e;
         text-align: center;
         font-size: 40px;
         font-family: "PT Serif", serif;
@@ -103,12 +103,16 @@ body {
         align-items: center;
     }
 
-
-
     .containerDer {
         width: 100%;
-        height: 70vh;
-        background-color: #525252;
+        height: 60vh; /* Ajustar la altura del contenedor derecho */
         display: flex;
+        align-items: center;
+        justify-content: center; /* Centrar el formulario */
+    }
+
+    .formLogin {
+        width: 70%; /* Ajustar el ancho del formulario para pantallas pequeñas */
     }
 }
+

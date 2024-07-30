@@ -370,13 +370,18 @@ namespace MVC.Controllers
                     var groupId = groups.Value.First().Id;
 
                     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenAcceso);
-                    var siteId1 = "b2c703f4-c46f-4fd6-b23a-6976859a82a9";
-                    var siteId2 = "150412ee-bfd0-4386-8d59-c7993571ccee";
                     var userId = "27e25a40-12ac-4f7f-95b8-fef55f973bfb";
+                    var idXigna = "bodegapiedrafita.sharepoint.com,95552c4f-844e-44a0-b73d-7b7f3cda8e39,f5ebb529-4b04-4838-9fa8-73750fa93b26";
+                    var idListDocumentos = "0e38f59a-b64e-47df-8116-d6c9a8d2945d";
+                    var driveIdDocuments = "b!9APHsm_E1k - yOml2hZqCqe4SBBXQv4ZDjVnHmTVxzO5tRwh6gJMjTKJ5BiA3oFZM";
+                    var idAprobado = "01BAYPMGGZZP5UUSW6M5GLC3BZYEC7262A";
+                    var idproceso = "01BAYPMGHHW6XSAA3IUVB2BH6YXY3G4YHV";
                     //ESTE ES EL QUE TRAE ARCHIVOS. REVISAR CONTENT
-                    var getUrl = $"https://graph.microsoft.com/v1.0/users/{userId}/drive/root/children";
+                    //var getUrl = $"https://graph.microsoft.com/v1.0/users/{userId}/drive/root/children";  Se puede traer el site id con el noombre del site osea de la obra, usar esto mas adelnate para ver si funciona
+                    //var getUrl = $"https://graph.microsoft.com/v1.0/sites/{idXigna}/lists/{idListDocumentos}/items";
+                    var getUrl = $"https://graph.microsoft.com/v1.0/sites/{idXigna}/drive/root:/1.%20PROYECTO/02.APROBADO";
                     HttpResponseMessage response = await httpClient.GetAsync(getUrl);
-                    var folderAttachmentsId = "01TXBKQWRZF2PDJIHD7BD2NSNQDMK7T4RF";
+                   // var folderAttachmentsId = "01TXBKQWRZF2PDJIHD7BD2NSNQDMK7T4RF";
                     var content = response.Content.ReadAsStringAsync();
                     var archivosRoot = content.Result; //los values
                     DriveDTO driveRoot = JsonConvert.DeserializeObject<DriveDTO>(archivosRoot);
@@ -448,10 +453,10 @@ namespace MVC.Controllers
 
                 var userId = "27e25a40-12ac-4f7f-95b8-fef55f973bfb";
 
-                /* LA RECURSION QUE HAY QUE HACER. RECORRER CADA CARPETA INTERNA
-                 * 
-                 * 
-                 * DriveDTO nuevoDrive = new DriveDTO();
+                 //LA RECURSION QUE HAY QUE HACER. RECORRER CADA CARPETA INTERNA
+                 //* 
+                 //* 
+                 DriveDTO nuevoDrive = new DriveDTO();
                 nuevoDrive.value.AddRange(drive.value);
 
                 foreach (ArchivoDTO posibleCarpeta in drive.value)
@@ -470,7 +475,7 @@ namespace MVC.Controllers
                     }
                 }
 
-                return nuevoDrive;*/
+                return nuevoDrive;
             }
 
         }
