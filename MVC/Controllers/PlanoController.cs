@@ -360,14 +360,7 @@ namespace MVC.Controllers
 
                     var clientSecretCredential = new ClientSecretCredential(tenantId, clientId, clientSecret);
 
-                    var organizationId = "20feb869-2f89-4be1-a7ed-fcc4d1579353";
-
-                    var driveId = "b!msuOPhxmpkacBgMQlPFHs0GBQhXAt9RDgmQl3jvMs1RdQUZNQ3BeQI8-0DOwkKAW";
-
                     var graphClient = new GraphServiceClient(clientSecretCredential, scopes);
-
-                    var groups = await graphClient.Groups.GetAsync();
-                    var groupId = groups.Value.First().Id;
 
                     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenAcceso);
                     var userId = "27e25a40-12ac-4f7f-95b8-fef55f973bfb";
@@ -385,13 +378,19 @@ namespace MVC.Controllers
                     var content = response.Content.ReadAsStringAsync();
                     var archivosRoot = content.Result; //los values
                     DriveDTO driveRoot = JsonConvert.DeserializeObject<DriveDTO>(archivosRoot);
-                    DriveDTO driveNuevo = await AgregaArchivosCarpetasAsync(driveRoot);
-                    DriveDTO driveFiltrado = this.FiltrarCarpetas(driveNuevo); //filtra por pdfs. ignora carpetas (arreglar)
-                    foreach(ArchivoDTO archivo in driveFiltrado.value)
+                    ArchivoDTO archivo1 = driveRoot.value.First(); //El primer sitio va a traer lo mismo que los demás.
+                    string driveId = "b!8nhpxotooUOpTxumD-yUZZftdxCsZtRDrtbWUXMo4Wtrc_pqCXxFQb6jFYOVPZwf"; //Es el mismo para cada sitio. Con hardcodear uno alcanza.
+                    var getUrl3 = $"https://graph.microsoft.com/v1.0/sites/{archivo1.Id}/drives/{driveId}/root/search(q='')";
+                    HttpResponseMessage response3 = await httpClient.GetAsync(getUrl3);
+                    var download = response3.Content.ReadAsStringAsync().Result;
+                    //DriveDTO driveNuevo = await AgregaArchivosCarpetasAsync(driveRoot); 
+                    //DriveDTO driveFiltrado = this.FiltrarCarpetas(driveRoot); //filtra por pdfs. ignora carpetas (arreglar)
+                    foreach (ArchivoDTO archivo in driveRoot.value)
                     {
-                        var getUrl3 = $"https://graph.microsoft.com/v1.0/users/{userId}/drive/items/{archivo.Id}?select=id,@microsoft.graph.downloadUrl";
-                        HttpResponseMessage response3 = await httpClient.GetAsync(getUrl3);
-                        var download = response3.Content.ReadAsStringAsync().Result;
+
+
+                        /*
+
                         string pattern = "@microsoft\\.graph\\.downloadUrl\":\"([^\"]*)\"";
                         Match match = Regex.Match(download, pattern);
                         if (match.Success)
@@ -413,10 +412,10 @@ namespace MVC.Controllers
                             {
                                 Fachada.AgregarPlano(planoNuevo);
                             }
-
-                        }
+                        
+                        }*/
                     }
-                    
+
 
                 }
                 return null;
@@ -453,15 +452,15 @@ namespace MVC.Controllers
 
                 var userId = "27e25a40-12ac-4f7f-95b8-fef55f973bfb";
 
-                 //LA RECURSION QUE HAY QUE HACER. RECORRER CADA CARPETA INTERNA
-                 //* 
-                 //* 
-                 DriveDTO nuevoDrive = new DriveDTO();
+
+                  
+                 
+                  DriveDTO nuevoDrive = new DriveDTO();
                 nuevoDrive.value.AddRange(drive.value);
 
                 foreach (ArchivoDTO posibleCarpeta in drive.value)
                 {
-                    if (posibleCarpeta.Folder.ChildCount != "0")
+                    if (posibleCarpeta.SiteCollection.HostName != "0")
                     {
                         var getUrl2 = $"https://graph.microsoft.com/v1.0/users/{userId}/drive/items/{posibleCarpeta.Id}/children";
                         HttpResponseMessage response2 = await httpClient.GetAsync(getUrl2);
@@ -474,7 +473,7 @@ namespace MVC.Controllers
                         nuevoDrive.value = nuevoDrive.value.Distinct().ToList();
                     }
                 }
-
+                
                 return nuevoDrive;
             }
 
@@ -487,7 +486,7 @@ namespace MVC.Controllers
             nuevo.value = new List<ArchivoDTO>();
             foreach(ArchivoDTO archivo in drive.value)
             {
-                if (archivo.Name.EndsWith(".pdf"))
+                if (archivo.Name.EndsWith(".pdf") || archivo.Name.EndsWith(".png"))
                 {
                     nuevo.value.Add(archivo);
                 }
