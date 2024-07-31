@@ -131,6 +131,7 @@ namespace LogicaAccesoDatos.Repositorios
                 obra.Cronograma = nuevaObra.Cronograma;
                 obra.TipoCronograma = nuevaObra.TipoCronograma;
                 obra.NombreCronograma = nuevaObra.NombreCronograma;
+                obra.IdACargo = nuevaObra.IdACargo;
                 Context.Entry(obra).State = EntityState.Modified;
                 Context.SaveChanges();
             }

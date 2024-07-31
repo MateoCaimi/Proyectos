@@ -661,7 +661,7 @@ namespace MVC.Controllers
         }
 
         // POST: ObraController/Consumo
-        [HttpPost, ActionName("Consumo")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ConsumoPost(int IdObra)
         {
@@ -713,7 +713,7 @@ namespace MVC.Controllers
                     HttpContext.Session.SetString("MaterialesAlertar", System.Text.Json.JsonSerializer.Serialize(materialesAlertar, opciones)); //Uso el distinct para no repetir alertas. Ej: se baja de la barrera, y se consume de vuelta
                 }
                 ViewBag.Mensaje ="Materiales consumidos con exito";
-                return RedirectToAction("Detalles", new { id = IdObra });
+                return RedirectToAction("Consumo", new { idObra = IdObra });
                 
             }
             catch (Exception e)

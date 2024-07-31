@@ -18,13 +18,16 @@ else
     </div>
 }
 
-@using (Html.BeginForm("Consumo", "Obra", FormMethod.Post))
-{
+
+<form action="ConsumoPost" method="post">
+
+
     @Html.AntiForgeryToken()
 
     <div>
         <label>Nombre de la obra</label>
-        <input type="text" class="form-control" value="@ViewBag.NombreObra" name="IdObra" readonly="readonly" />
+        <input type="text" class="form-control" value="@ViewBag.NombreObra" readonly="readonly" />
+        <input type="hidden" class="form-control" value="@ViewBag.IdObra" name="IdObra" />
     </div>
 
     <div>
@@ -48,12 +51,13 @@ else
             </tr>
         </thead>
         <tbody id="materialList">
-            @Html.Partial("ListaConsumos", Model)
+            @Html.Partial("ListaConsumos", Model);
         </tbody>
     </table>
 
-    <button type="submit" class="btn btn-success">Enviar</button>
-}
+    <button type="submit" value="ConsumoPost" class="btn btn-success">Enviar</button>
+
+</form>
 
 @section Scripts {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
