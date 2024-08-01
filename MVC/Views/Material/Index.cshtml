@@ -4,6 +4,9 @@
     ViewData["Title"] = "Index";
 }
 
+<meta charset="UTF-8">
+<link rel="stylesheet" href="~/css/Material/index.css">
+
 <h1>Materiales</h1>
 
 <p>
@@ -24,7 +27,7 @@
     </div>
 
     <div class="form-group">
-        <input type="submit" value="Buscar" class="btn btn-primary" />
+        <input type="submit" value="Buscar" class="btn btnPrincipal" />
     </div>
 </form>
 
@@ -46,24 +49,21 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var mat in Model)
+        @foreach (var item in Model)
         {
-            <tr>
+            <tr onclick="location.href='@Url.Action("Editar", new { id = item.Id })'" style="cursor:pointer;">
 
                 <td>
-                    @Html.DisplayFor(modelItem => mat.Nombre)
+                    @Html.DisplayFor(modelItem => item.Nombre)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => mat.UnidadDeMedida)
-                </td>
-
-                <td>
-                    @Html.DisplayFor(modelItem => mat.BarreraDeStock)
+                    @Html.DisplayFor(modelItem => item.UnidadDeMedida)
                 </td>
 
                 <td>
-                    <a asp-action="Editar" asp-route-id="@mat.Id">Editar</a>
+                    @Html.DisplayFor(modelItem => item.BarreraDeStock)
                 </td>
+
             </tr>
         }
     </tbody>

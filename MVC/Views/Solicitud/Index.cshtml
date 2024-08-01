@@ -4,7 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="~/css/Solicitud/IndexSolicitud.css">
+
+<h1>Solcitudes de obra</h1>
 @if (ViewBag.Error != null)
 {
     <div class="alert alert-danger">
@@ -37,8 +40,10 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
-            <td>
+            <tr>
+            @* <tr onclick="location.href='@Url.Action("Editar", new { id = item.Id })'" style="cursor:pointer;"> *@
+
+                <td>
                 @Html.DisplayFor(modelItem => item.Proveedor.Mail)
             </td>
             <td>

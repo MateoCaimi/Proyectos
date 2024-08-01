@@ -50,7 +50,6 @@ namespace MVC.Controllers
             List<JObject> list = new List<JObject>();
             //await ObtenerCarpetaOneDrive();
             await GraphRecursivoParalelizado(list);//await TomarPdfRecursivo(siteId, path);
-            ObtenerCarpeta();
             /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("LoginQR", "Usuario", new {id = idObra});
@@ -391,7 +390,7 @@ namespace MVC.Controllers
                     // var folderAttachmentsId = "01TXBKQWRZF2PDJIHD7BD2NSNQDMK7T4RF";
                     var content = response.Content.ReadAsStringAsync();
                     var archivosRoot = content.Result; //los values
-                    DriveDTO driveRoot = JsonConvert.DeserializeObject<DriveDTO>(archivosRoot);
+                    DriveDTO driveRoot = JsonConvert.DeserializeObject<DriveDTO>(archivosRoot); 
                     ArchivoDTO archivo1 = driveRoot.value.First(); //El primer sitio va a traer lo mismo que los demás.
                     string driveId = "b!8nhpxotooUOpTxumD-yUZZftdxCsZtRDrtbWUXMo4Wtrc_pqCXxFQb6jFYOVPZwf"; //Es el mismo para cada sitio. Con hardcodear uno alcanza.
                     var getUrl3 = $"https://graph.microsoft.com/v1.0/sites/{archivo1.Id}/drives/{driveId}/root/search(q='')";
@@ -511,7 +510,7 @@ namespace MVC.Controllers
 
                 foreach (var item in items)
                 {
-                    if (this.EstaEnObra(item["webUrl"].ToString()))
+                    if (this.EstaEnObra(item["name"].ToString()))
                     {
                         tasks.Add(this.TomarPdfRecursivo(item["id"].ToString(), path));
                     }

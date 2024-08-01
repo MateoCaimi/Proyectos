@@ -4,58 +4,46 @@
     ViewData["Title"] = "Index";
 }
 
-<link rel="stylesheet" href="~/css/listado.css" asp-append-version="true" />
-<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/css/Obra/IndexObra.css" asp-append-version="true" />
 
-<div class="listado-container">
-    <h1 class="title">Obras</h1>
+<h1>Obras</h1>
 
-    @if (Context.Session.GetString("UsuarioTipo") == "Usuario de oficina")
-    {
-        <p>
-            <a class="btn btn-primary" asp-action="Agregar">Agregar obra nueva</a>
-        </p>
-    }
+@if (Context.Session.GetString("UsuarioTipo") == "Usuario de oficina")
+{
+    <p>
+        <a asp-action="Agregar">Agregar obra nueva</a>
+    </p>
+}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>@Html.DisplayNameFor(model => model.Nombre)</th>
-                <th>@Html.DisplayNameFor(model => model.Direccion)</th>
-                <th>@Html.DisplayNameFor(model => model.Cronograma)</th>
-                <th></th>
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Nombre)</th>
+            <th>@Html.DisplayNameFor(model => model.Direccion)</th>
+            <th>@Html.DisplayNameFor(model => model.Cronograma)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var finalizadas = item.Finalizada ? "resaltar-rojo" : "";
+         <tr class="@finalizadas" onclick="location.href='@Url.Action("Detalles", new { id = item.IdObra })'" style="cursor:pointer;">
+
+                <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                <td>@Html.DisplayFor(modelItem => item.Direccion)</td>
+                <td>
+                    @if (item.Cronograma != null)
+                    {
+                        <a href="@Url.Action("ObtenerCronograma", "Obra", new { id = item.IdObra })" target="_blank">Ver Cronograma</a>
+                    }
+                    else
+                    {
+                        <p>No hay cronograma</p>
+                    }
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                var finalizadas = item.Finalizada ? "resaltar-rojo" : "";
-                <tr class="@finalizadas">
-                    <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Direccion)</td>
-                    <td>
-                        @if (item.Cronograma != null)
-                        {
-                            <a href="@Url.Action("ObtenerCronograma", "Obra", new { id = item.IdObra })" target="_blank">Ver Cronograma</a>
-                        }
-                        else
-                        {
-                            <p>No hay cronograma</p>
-                        }
-                    </td>
-                    <td>
-                        <a class="btn btn-secondary" asp-action="Detalles" asp-route-id="@item.IdObra">Detalles</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
-
-
-
-
-
-
+        }
+    </tbody>
+</table>
 
 

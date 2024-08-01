@@ -1,5 +1,4 @@
-﻿/* Estilo general para el cuerpo */
-body {
+﻿body {
     font-family: Arial, sans-serif;
     /*background-color: #f9f9f9;*/
     margin: 0;
@@ -8,7 +7,7 @@ body {
 
 /* Encabezado principal */
 h1 {
-    font-family:'Malgun Gothic';
+    font-family: 'Montserrat', sans-serif;
     text-align: center;
     color: #b30000;
     margin-top: 20px;
@@ -25,17 +24,23 @@ h1 {
 }
 
 /* Estilo para los botones */
-.btn-success {
+.btnPrincipal {
     background-color: #8b0909;
     border-color: #8b0909;
     color: #fff;
 }
 
-    .btn-success:hover {
-        background-color: #ce5959;
-        border-color: #ce5959;
+    .btnPrincipal:hover {
+        background-color: #ff9c9c;
+        border-color: #ff9c9c;
     }
 
+.btnDescarga {
+    background-color: dimgrey;
+    border-color: dimgrey;
+    color: #fff;
+    margin-bottom:10px;
+}
 /* Estilo para el formulario */
 .form-group {
     margin-bottom: 15px;
@@ -121,3 +126,4 @@ p {
     p a {
         margin: 0 10px;
     }
+

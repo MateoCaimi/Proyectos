@@ -5,7 +5,7 @@
 }
 
 <meta charset="UTF-8">
-<link rel="stylesheet" href="~/css/empleadoindex.css">
+<link rel="stylesheet" href="~/css/Empleado/IndexEmpleado.css">
 <h1>Empleados</h1>
 
 @if (TempData["Anomalia"] != "" && TempData["Anomalia"] != null)
@@ -21,10 +21,13 @@
         @ViewBag.Error
     </div>
 }
-
 <p>
+
     <a asp-action="Agregar">Create New</a>
     <a asp-action="AgregarTipo">Crear Tipo</a>
+
+</p>
+
     <form method="post">
         <div class="form-group">
             <label>Filtrar por obra: </label>
@@ -37,11 +40,10 @@
             </select>
         </div>
         <div class="form-group">
-            <button type="submit" class="btn btn-success">Filtrar</button>
+            <input type="submit" value="Buscar" class="btn btnPrincipal" />
         </div>
     </form>
 
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -63,39 +65,34 @@
             <th>
                 @Html.DisplayNameFor(model => model.Banco)
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+        @foreach (var item in Model)
+        {
             var inactivos = item.Activo ? "" : "resaltar-rojo";
 
-        <tr class="@inactivos">
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cedula)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaIngreso)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TipoEmpleado.Categoría)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CuentaBanco)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Banco)
-            </td>
-            <td>
-                <a asp-action="Editar" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Detalles" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+            <tr class="@inactivos" onclick="location.href='@Url.Action("Detalles", new { id = item.Id })'" style="cursor:pointer;">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cedula)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaIngreso)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TipoEmpleado.Categoría)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CuentaBanco)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Banco)
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 
@@ -104,4 +101,3 @@
         color: red;
     }
 </style>
-
