@@ -1,12 +1,18 @@
 ﻿@model IEnumerable<LogicaNegocio.Entidades.Empleado>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Empleados";
 }
 
 <meta charset="UTF-8">
 <link rel="stylesheet" href="~/css/Empleado/IndexEmpleado.css">
 <h1>Empleados</h1>
+
+
+<svg class="bi" width="32" height="32" fill="currentColor">
+    <use xlink:href="bootstrap-icons.svg#heart-fill" />
+</svg>
+
 
 @if (TempData["Anomalia"] != "" && TempData["Anomalia"] != null)
 {
@@ -95,6 +101,14 @@
         }
     </tbody>
 </table>
+
+<div class="table_footer">
+    <p>Total de filas</p>
+</div>
+    </div>
+
+</div>
+
 
 <style>
     .resaltar-rojo {
