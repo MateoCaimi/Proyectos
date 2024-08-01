@@ -18,13 +18,16 @@ else
     </div>
 }
 
-@using (Html.BeginForm("Consumo", "Obra", FormMethod.Post))
-{
+
+<form action="ConsumoPost" method="post">
+
+
     @Html.AntiForgeryToken()
 
     <div>
         <label>Nombre de la obra</label>
-        <input type="text" class="form-control" value="@ViewBag.NombreObra" name="IdObra" readonly="readonly" />
+        <input type="text" class="form-control" value="@ViewBag.NombreObra" readonly="readonly" />
+        <input type="hidden" class="form-control" value="@ViewBag.IdObra" name="IdObra" />
     </div>
 
     <div>
@@ -32,7 +35,7 @@ else
         <select id="Material" name="IdMaterial" class="form-control">
             @foreach (var item in ViewBag.Materiales)
             {
-                <option value="@item.IdMaterial">@item.Material.Nombre (@item.Material.UnidadDeMedida) Stock= @item.Stock</option>
+                <option value="@item.IdMaterial">@item.Material.Nombre (@item.Material.UnidadDeMedida) Stock= @item.Stock </option>
             }
         </select>
         <label>Cantidad</label>
@@ -48,12 +51,13 @@ else
             </tr>
         </thead>
         <tbody id="materialList">
-            @Html.Partial("ListaConsumos", Model)
+            @Html.Partial("ListaConsumos", Model);
         </tbody>
     </table>
 
-    <button type="submit" class="btn btn-success">Enviar</button>
-}
+    <button type="submit" value="ConsumoPost" class="btn btn-success">Enviar</button>
+
+</form>
 
 @section Scripts {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -77,6 +81,7 @@ else
                             $("#materialList").html(response);
                             $("input[name='Cantidad']").val('');
                             $("#errorMensaje").hide();
+                            
                         },
                         error: function () {
                             $("#errorMensaje").text("Error al agregar el material a la lista de consumo. Inténtalo de nuevo.");

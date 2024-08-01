@@ -10,6 +10,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="OneOf" Version="3.0.271" />
     <PackageReference Include="PDFsharp" Version="6.1.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
   </ItemGroup>

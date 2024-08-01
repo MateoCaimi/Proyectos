@@ -3,55 +3,12 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
+<link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 
-    <h2>Notificaciones</h2>
-   
 
-    @if(Model != null){
+<div class="logoHomeContainer">
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>SOLICITUDES</th>
-                </tr>
-                <tr>
-                    <th>
-                        Obra
-                    </th>
-                    <th>
-                        Solicitante
-                    </th>
-                    <th>
-                        Estado
-                    </th>
-                    <th>
-
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var solicitud in Model)
-                {
-                    <tr>
-                        <td>
-                            @solicitud.Obra.Nombre
-                        </td>
-                        <td>
-                            Nombre de solicitante@*@solicitud.Solicitante.Nombre*@
-                        </td> 
-                        <td>
-                            @solicitud.Estado
-                        </td>
-                        <td>
-                            <a href="@Url.Action("Detalles", "Solicitud", new { id = solicitud.Id, idObra = solicitud.IdObra})">Ver Solicitud</a>
-
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
+    <img id="imgLogoHome" src="~/css/imagenes/logo negro.png" />
 
 </div>

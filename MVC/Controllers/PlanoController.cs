@@ -353,7 +353,7 @@ namespace MVC.Controllers
             try
             {
                 using (HttpClient httpClient = new HttpClient())
-                {
+                {   
                     string tokenAcceso = ObtenerTokenDeAccesoGraph().Result;
 
                     var scopes = new[] { "https://graph.microsoft.com/.default" };
@@ -410,7 +410,7 @@ namespace MVC.Controllers
                             string link = match.Groups[1].Value; //El link de descarga
                             byte[] plano = await httpClient.GetByteArrayAsync(link);
                             string planoNombre = archivo.Name;
-                            int idObra = Fachada.TraerIdPorNombreObra(archivo.Name);
+                            int idObra = 2;// Fachada.TraerIdPorNombreObra(archivo.Name);
                             string tipo = "application/pdf";
                             Plano planoNuevo = new Plano();
                             planoNuevo.NombrePdf = planoNombre;

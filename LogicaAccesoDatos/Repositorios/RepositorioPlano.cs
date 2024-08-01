@@ -50,10 +50,10 @@ namespace LogicaAccesoDatos.Repositorios
             {
                 throw new ObraException("No se puede ingresar un plano nulo.");
             }
-            if (this.BuscarPlanoConTipo(plano.Nombre, plano.IdTipoPlano) != null)
-            {
-                throw new ObraException("Ya existe un plano con ese nombre y ese tipo. Seleccione otro tipo de plano o cambie el nombre.");
-            }
+            //if (this.BuscarPlanoConTipo(plano.Nombre, plano.IdTipoPlano) != null)
+            //{
+            //    throw new ObraException("Ya existe un plano con ese nombre y ese tipo. Seleccione otro tipo de plano o cambie el nombre.");
+            //}
             try
             {
                 Obra obra = Context.Obras.FirstOrDefault(o => o.IdObra == plano.IdObra); 
