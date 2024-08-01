@@ -58,7 +58,7 @@ namespace LogicaAccesoDatos.Repositorios
 
                         unU.IntentosFallidos++;
                         Context.SaveChanges();//esto tira error
-                        if (unU.IntentosFallidos >= 3)
+                        if (unU.IntentosFallidos >= 10)
                         {
                             unU.TiempoDeBloqueo = DateTime.UtcNow.AddMinutes(1);
                             unU.IntentosFallidos = 0;
