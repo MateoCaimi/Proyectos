@@ -29,6 +29,7 @@ using System.Security.Policy;
 using LogicaNegocio.Entidades.DTOs;
 using ServiceStack;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.IO;
 
 
 namespace MVC.Controllers
@@ -46,8 +47,9 @@ namespace MVC.Controllers
             Fachada.Precarga();
             string siteId = "bodegapiedrafita.sharepoint.com,95552c4f-844e-44a0-b73d-7b7f3cda8e39,f5ebb529-4b04-4838-9fa8-73750fa93b26";
             string path = "1.%20PROYECTO/02.APROBADO";
-            await ObtenerCarpetaOneDrive();
-            //var allFiles = await TomarPdfRecursivo(siteId, path);
+            List<JObject> list = new List<JObject>();
+            //await ObtenerCarpetaOneDrive();
+            await GraphRecursivoParalelizado(list);//await TomarPdfRecursivo(siteId, path);
             ObtenerCarpeta();
             /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
@@ -491,11 +493,102 @@ namespace MVC.Controllers
 
         //}
 
+        private async Task GraphRecursivoParalelizado(List<JObject> pdfs)
+        {
+            string path = "1.%20PROYECTO/02.APROBADO";
+            string token = await ObtenerTokenDeAccesoGraph();
+            using (HttpClient httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                var tasks = new List<Task<List<JObject>>>();
+                var requestUri = $"https://graph.microsoft.com/v1.0/sites/";
+                var response = await httpClient.GetStringAsync(requestUri);
+
+                // Parseo respuesta
+                var json = JObject.Parse(response);
+                var items = json["value"].ToList(); // Convierto a lista para facilitar el manejo
+
+                foreach (var item in items)
+                {
+                    if (this.EstaEnObra(item["webUrl"].ToString()))
+                    {
+                        tasks.Add(this.TomarPdfRecursivo(item["id"].ToString(), path));
+                    }
+                }
+                await Task.WhenAll(tasks);
+
+                var postResponses = new List<JObject>();
+
+                foreach (var t in tasks)
+                {
+                    var postResponse = await t; //t.Result would be okay too.
+                    postResponses.AddRange(postResponse);
+                }
+
+                pdfs = postResponses;
+            }
+
+
+        }
+
+        private bool EstaEnObra(string url)
+        {
+            IEnumerable<Obra> obras = Fachada.TomarTodasObras();
+            foreach(Obra obra in obras)
+            {
+                if (url.ToLower().Contains(obra.Nombre.ToLower()))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private async Task<List<JObject>> TomarPdfRecursivo(string siteId, string path)
         {
             var pdfs = new List<JObject>();
             await TomarPdfsInterno(siteId, path, pdfs);
             return pdfs;
+        }
+
+        private async Task<List<JObject>> TomarPdfsInterno2(string siteId, string path, List<JObject> pdfs)
+        {
+            string token = await ObtenerTokenDeAccesoGraph();
+            using (HttpClient httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                var tasks = new List<Task>();
+
+                var requestUri = $"https://graph.microsoft.com/v1.0/sites/{siteId}/drive/root:/{path}:/children";
+                var response = await httpClient.GetStringAsync(requestUri);
+
+                // Parseo respuesta
+                var json = JObject.Parse(response);
+                var items = json["value"].ToList(); // Convierto a lista para facilitar el manejo
+
+                foreach (var item in items)
+                {
+                    if (item["folder"] != null)
+                    {
+                        // Es un folder, necesitamos llamar al método recursivamente
+                        var subPath = $"{path}/{item["name"]}";
+                        // Lanzar tarea asíncrona para procesamiento paralelo
+                        tasks.Add(TomarPdfsInterno(siteId, subPath, pdfs));
+                    }
+                    else
+                    {
+                        // Es un archivo PDF, agregarlo a la lista
+                        pdfs.Add(item as JObject);
+                    }
+                }
+
+                // Esperar a que todas las tareas se completen
+                await Task.WhenAll(tasks);
+
+                return pdfs;
+            }
         }
 
         private async Task TomarPdfsInterno(string siteId, string path, List<JObject> pdfs)
@@ -505,24 +598,33 @@ namespace MVC.Controllers
             {
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-                
+                var tasks = new List<Task>();
+
                 var requestUri = $"https://graph.microsoft.com/v1.0/sites/{siteId}/drive/root:/{path}:/children";
                 var response = await httpClient.GetStringAsync(requestUri);
 
                 // Parseo respuesta
                 var json = JObject.Parse(response);
-                foreach (var item in json["value"])
+                var items = json["value"].ToList(); // Convierto a lista para facilitar el manejo
+
+                foreach (var item in items)
                 {
                     if (item["folder"] != null)
                     {
+                        // Es un folder, necesitamos llamar al método recursivamente
                         var subPath = $"{path}/{item["name"]}";
-                        await TomarPdfsInterno(siteId, subPath, pdfs);
+                        // Lanzar tarea asíncrona para procesamiento paralelo
+                        tasks.Add(TomarPdfsInterno(siteId, subPath, pdfs));
                     }
                     else
                     {
+                        // Es un archivo PDF, agregarlo a la lista
                         pdfs.Add(item as JObject);
                     }
                 }
+
+                // Esperar a que todas las tareas se completen
+                await Task.WhenAll(tasks);
             }
         }
 
