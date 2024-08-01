@@ -12,6 +12,7 @@ using Microsoft.Graph;
 using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 using MVC.Models;
+using Microsoft.Graph.Authentication;
 using Newtonsoft.Json.Linq;
 using System.Net.Http.Headers;
 using System.Numerics;
@@ -43,7 +44,11 @@ namespace MVC.Controllers
         {
             //DriveItem carpeta = this.ObtenerCarpeta().Result;
             Fachada.Precarga();
-            await ObtenerCarpetaOneDrive();
+            string siteId = "bodegapiedrafita.sharepoint.com,95552c4f-844e-44a0-b73d-7b7f3cda8e39,f5ebb529-4b04-4838-9fa8-73750fa93b26";
+            string path = "1.%20PROYECTO/02.APROBADO";
+            //await ObtenerCarpetaOneDrive();
+            var allFiles = await TomarPdfRecursivo(siteId, path);
+            ObtenerCarpeta();
             /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("LoginQR", "Usuario", new {id = idObra});
@@ -72,7 +77,7 @@ namespace MVC.Controllers
                 ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
                 return View("Error", errorModel); //usar shared hasta tener vistas de error para cada coso
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 ErrorViewModel errorModel = new ErrorViewModel();
                 errorModel.RequestId = e.Message;
@@ -134,7 +139,7 @@ namespace MVC.Controllers
             }
         }
 
-    
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Agregar(Plano aIngresar, IFormFile archivoImagen)
@@ -171,7 +176,7 @@ namespace MVC.Controllers
                     TempData["Error"] = "Debe proporcionar un archivo válido.";
                     return View();
                 }
-                if(aIngresar.Nombre == null)
+                if (aIngresar.Nombre == null)
                 {
                     aIngresar.Nombre = aIngresar.NombrePdf.ToUpper();
                     string path = aIngresar.Nombre;
@@ -182,7 +187,7 @@ namespace MVC.Controllers
                 ViewBag.IdObra = aIngresar.IdObra;
                 ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
                 Fachada.AgregarPlano(aIngresar);
-          
+
 
                 return RedirectToAction("Index", new { idObra = aIngresar.IdObra });
             }
@@ -297,13 +302,13 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SubidaMultiple(int IdObra, int idTipoPlano, List<IFormFile> postedFiles)
         {
-            
+
             TempData["Error"] = null;
             ViewBag.IdObra = IdObra;
             if (!Fachada.BuscarObra(IdObra).Finalizada)
             {
                 List<Plano> planos = Fachada.CrearPlanosMultiples(IdObra, idTipoPlano, postedFiles);
-                for(int i = 0; i < planos.Count(); i++)
+                for (int i = 0; i < planos.Count(); i++)
                 {
                     using (var memoryStream = new MemoryStream())
                     {
@@ -311,7 +316,7 @@ namespace MVC.Controllers
                         planos[i].Pdf = memoryStream.ToArray();
                     }
                 }
-                foreach(Plano p in planos)
+                foreach (Plano p in planos)
                 {
                     Fachada.AgregarPlano(p);
                 }
@@ -342,6 +347,7 @@ namespace MVC.Controllers
             return accessToken;
         }
 
+
         public async Task<DriveItem> ObtenerCarpetaOneDrive()
         {
             try
@@ -365,16 +371,22 @@ namespace MVC.Controllers
                     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenAcceso);
                     var userId = "27e25a40-12ac-4f7f-95b8-fef55f973bfb";
                     var idXigna = "bodegapiedrafita.sharepoint.com,95552c4f-844e-44a0-b73d-7b7f3cda8e39,f5ebb529-4b04-4838-9fa8-73750fa93b26";
+                    var idIsleny = "bodegapiedrafita.sharepoint.com,fb1d4765-2750-4024-9f2a-400fdb36d6f6,0f8e81ca-2380-4e1a-88aa-ba6eae565975";
                     var idListDocumentos = "0e38f59a-b64e-47df-8116-d6c9a8d2945d";
+                    var idFedeBodega = "bodegapiedrafita-my.sharepoint.com,b2c703f4-c46f-4fd6-b23a-6976859a82a9,150412ee-bfd0-4386-8d59-c7993571ccee";
                     var driveIdDocuments = "b!9APHsm_E1k - yOml2hZqCqe4SBBXQv4ZDjVnHmTVxzO5tRwh6gJMjTKJ5BiA3oFZM";
                     var idAprobado = "01BAYPMGGZZP5UUSW6M5GLC3BZYEC7262A";
                     var idproceso = "01BAYPMGHHW6XSAA3IUVB2BH6YXY3G4YHV";
                     //ESTE ES EL QUE TRAE ARCHIVOS. REVISAR CONTENT
                     //var getUrl = $"https://graph.microsoft.com/v1.0/users/{userId}/drive/root/children";  Se puede traer el site id con el noombre del site osea de la obra, usar esto mas adelnate para ver si funciona
                     //var getUrl = $"https://graph.microsoft.com/v1.0/sites/{idXigna}/lists/{idListDocumentos}/items";
-                    var getUrl = $"https://graph.microsoft.com/v1.0/sites/{idXigna}/drive/root:/1.%20PROYECTO/02.APROBADO";
+                    //var getUrl = $"https://graph.microsoft.com/v1.0/sites";
+
+                    //var getUrl = $"https://graph.microsoft.com/v1.0/sites/{idIsleny}/drive/root:/1.%20PROYECTO/02.APROBADO";
+                    //var getUrl = $"https://graph.microsoft.com/v1.0/drives/b!TyxVlU6EoES3PXt_PNqOOSm16_UESzhIn6hzdQ-pOyaa9TgOTrbfR4EW1smo0pRd/items/01BAYPMGGZZP5UUSW6M5GLC3BZYEC7262A/children";
+                    var getUrl = $"https://graph.microsoft.com/v1.0/sites/{idXigna}/drive/root:/1.%20PROYECTO/02.APROBADO/01.ALBA%C3%91ILERIA/AL1-IMPLANTACION:/children";
                     HttpResponseMessage response = await httpClient.GetAsync(getUrl);
-                   // var folderAttachmentsId = "01TXBKQWRZF2PDJIHD7BD2NSNQDMK7T4RF";
+                    // var folderAttachmentsId = "01TXBKQWRZF2PDJIHD7BD2NSNQDMK7T4RF";
                     var content = response.Content.ReadAsStringAsync();
                     var archivosRoot = content.Result; //los values
                     DriveDTO driveRoot = JsonConvert.DeserializeObject<DriveDTO>(archivosRoot);
@@ -426,65 +438,101 @@ namespace MVC.Controllers
             }
         }
 
-        private async Task<DriveDTO> AgregaArchivosCarpetasAsync(DriveDTO drive)
+        //private async Task<DriveDTO> AgregaArchivosCarpetasAsync(DriveDTO drive)
+        //{
+        //    using (HttpClient httpClient = new HttpClient())
+        //    {
+        //        string tokenAcceso = ObtenerTokenDeAccesoGraph().Result;
+
+        //        var scopes = new[] { "https://graph.microsoft.com/.default" };
+
+        //        var tenantId = "20feb869-2f89-4be1-a7ed-fcc4d1579353";
+
+        //        var clientId = "ed32de75-de3c-4053-bb7c-488659eda9ad";
+
+        //        var clientSecret = "ns.8Q~ulrwLxTPhDR8jHeBIs.PlB5m3LIHD3pdoY";
+
+        //        var clientSecretCredential = new ClientSecretCredential(tenantId, clientId, clientSecret);
+
+        //        var organizationId = "20feb869-2f89-4be1-a7ed-fcc4d1579353";
+
+        //        var driveId = "b!msuOPhxmpkacBgMQlPFHs0GBQhXAt9RDgmQl3jvMs1RdQUZNQ3BeQI8-0DOwkKAW";
+
+        //        var graphClient = new GraphServiceClient(clientSecretCredential, scopes);
+
+        //        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenAcceso);
+
+        //        var userId = "27e25a40-12ac-4f7f-95b8-fef55f973bfb";
+
+
+
+
+        //        DriveDTO nuevoDrive = new DriveDTO();
+        //        nuevoDrive.value.AddRange(drive.value);
+
+        //        foreach (ArchivoDTO posibleCarpeta in drive.value)
+        //        {
+        //            if (posibleCarpeta.SiteCollection.HostName != "0")
+        //            {
+        //                var getUrl2 = $"https://graph.microsoft.com/v1.0/users/{userId}/drive/items/{posibleCarpeta.Id}/children";
+        //                HttpResponseMessage response2 = await httpClient.GetAsync(getUrl2);
+        //                var content2 = response2.Content.ReadAsStringAsync();
+        //                var archivosCarpeta = content2.Result; //los values
+        //                DriveDTO driveCarpeta = JsonConvert.DeserializeObject<DriveDTO>(archivosCarpeta);
+        //                nuevoDrive.value.AddRange(driveCarpeta.value);
+        //                nuevoDrive.value = nuevoDrive.value.Distinct().ToList();
+        //                nuevoDrive = await AgregaArchivosCarpetasAsync(nuevoDrive);
+        //                nuevoDrive.value = nuevoDrive.value.Distinct().ToList();
+        //            }
+        //        }
+
+        //        return nuevoDrive;
+        //    }
+
+        //}
+
+        private async Task<List<JObject>> TomarPdfRecursivo(string siteId, string path)
         {
+            var pdfs = new List<JObject>();
+            await TomarPdfsInterno(siteId, path, pdfs);
+            return pdfs;
+        }
+
+        private async Task TomarPdfsInterno(string siteId, string path, List<JObject> pdfs)
+        {
+            string token = await ObtenerTokenDeAccesoGraph();
             using (HttpClient httpClient = new HttpClient())
             {
-                string tokenAcceso = ObtenerTokenDeAccesoGraph().Result;
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-                var scopes = new[] { "https://graph.microsoft.com/.default" };
+                
+                var requestUri = $"https://graph.microsoft.com/v1.0/sites/{siteId}/drive/root:/{path}:/children";
+                var response = await httpClient.GetStringAsync(requestUri);
 
-                var tenantId = "20feb869-2f89-4be1-a7ed-fcc4d1579353";
-
-                var clientId = "ed32de75-de3c-4053-bb7c-488659eda9ad";
-
-                var clientSecret = "ns.8Q~ulrwLxTPhDR8jHeBIs.PlB5m3LIHD3pdoY";
-
-                var clientSecretCredential = new ClientSecretCredential(tenantId, clientId, clientSecret);
-
-                var organizationId = "20feb869-2f89-4be1-a7ed-fcc4d1579353";
-
-                var driveId = "b!msuOPhxmpkacBgMQlPFHs0GBQhXAt9RDgmQl3jvMs1RdQUZNQ3BeQI8-0DOwkKAW";
-
-                var graphClient = new GraphServiceClient(clientSecretCredential, scopes);
-
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenAcceso);
-
-                var userId = "27e25a40-12ac-4f7f-95b8-fef55f973bfb";
-
-
-                  
-                 
-                  DriveDTO nuevoDrive = new DriveDTO();
-                nuevoDrive.value.AddRange(drive.value);
-
-                foreach (ArchivoDTO posibleCarpeta in drive.value)
+                // Parseo respuesta
+                var json = JObject.Parse(response);
+                foreach (var item in json["value"])
                 {
-                    if (posibleCarpeta.SiteCollection.HostName != "0")
+                    if (item["folder"] != null)
                     {
-                        var getUrl2 = $"https://graph.microsoft.com/v1.0/users/{userId}/drive/items/{posibleCarpeta.Id}/children";
-                        HttpResponseMessage response2 = await httpClient.GetAsync(getUrl2);
-                        var content2 = response2.Content.ReadAsStringAsync();
-                        var archivosCarpeta = content2.Result; //los values
-                        DriveDTO driveCarpeta = JsonConvert.DeserializeObject<DriveDTO>(archivosCarpeta);
-                        nuevoDrive.value.AddRange(driveCarpeta.value);
-                        nuevoDrive.value = nuevoDrive.value.Distinct().ToList();
-                        nuevoDrive = await AgregaArchivosCarpetasAsync(nuevoDrive);
-                        nuevoDrive.value = nuevoDrive.value.Distinct().ToList();
+                        var subPath = $"{path}/{item["name"]}";
+                        await TomarPdfsInterno(siteId, subPath, pdfs);
+                    }
+                    else
+                    {
+                        pdfs.Add(item as JObject);
                     }
                 }
-                
-                return nuevoDrive;
             }
-
         }
+
 
         private DriveDTO FiltrarCarpetas(DriveDTO? drive)
         {
             var userId = "27e25a40-12ac-4f7f-95b8-fef55f973bfb";
             DriveDTO nuevo = new DriveDTO();
             nuevo.value = new List<ArchivoDTO>();
-            foreach(ArchivoDTO archivo in drive.value)
+            foreach (ArchivoDTO archivo in drive.value)
             {
                 if (archivo.Name.EndsWith(".pdf") || archivo.Name.EndsWith(".png"))
                 {
