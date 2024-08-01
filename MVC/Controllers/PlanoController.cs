@@ -46,8 +46,8 @@ namespace MVC.Controllers
             Fachada.Precarga();
             string siteId = "bodegapiedrafita.sharepoint.com,95552c4f-844e-44a0-b73d-7b7f3cda8e39,f5ebb529-4b04-4838-9fa8-73750fa93b26";
             string path = "1.%20PROYECTO/02.APROBADO";
-            //await ObtenerCarpetaOneDrive();
-            var allFiles = await TomarPdfRecursivo(siteId, path);
+            await ObtenerCarpetaOneDrive();
+            //var allFiles = await TomarPdfRecursivo(siteId, path);
             ObtenerCarpeta();
             /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
@@ -380,11 +380,11 @@ namespace MVC.Controllers
                     //ESTE ES EL QUE TRAE ARCHIVOS. REVISAR CONTENT
                     //var getUrl = $"https://graph.microsoft.com/v1.0/users/{userId}/drive/root/children";  Se puede traer el site id con el noombre del site osea de la obra, usar esto mas adelnate para ver si funciona
                     //var getUrl = $"https://graph.microsoft.com/v1.0/sites/{idXigna}/lists/{idListDocumentos}/items";
-                    //var getUrl = $"https://graph.microsoft.com/v1.0/sites";
+                    var getUrl = $"https://graph.microsoft.com/v1.0/sites";
 
                     //var getUrl = $"https://graph.microsoft.com/v1.0/sites/{idIsleny}/drive/root:/1.%20PROYECTO/02.APROBADO";
                     //var getUrl = $"https://graph.microsoft.com/v1.0/drives/b!TyxVlU6EoES3PXt_PNqOOSm16_UESzhIn6hzdQ-pOyaa9TgOTrbfR4EW1smo0pRd/items/01BAYPMGGZZP5UUSW6M5GLC3BZYEC7262A/children";
-                    var getUrl = $"https://graph.microsoft.com/v1.0/sites/{idXigna}/drive/root:/1.%20PROYECTO/02.APROBADO/01.ALBA%C3%91ILERIA/AL1-IMPLANTACION:/children";
+                    //var getUrl = $"https://graph.microsoft.com/v1.0/sites/{idXigna}/drive/root:/1.%20PROYECTO/02.APROBADO/01.ALBA%C3%91ILERIA/AL1-IMPLANTACION:/children";
                     HttpResponseMessage response = await httpClient.GetAsync(getUrl);
                     // var folderAttachmentsId = "01TXBKQWRZF2PDJIHD7BD2NSNQDMK7T4RF";
                     var content = response.Content.ReadAsStringAsync();
