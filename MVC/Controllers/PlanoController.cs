@@ -606,10 +606,31 @@ namespace MVC.Controllers
                 var json = JObject.Parse(response);
                 var items = json["value"].ToList(); // Convierto a lista para facilitar el manejo
 
+
+
+
                 foreach (var item in items)
                 {
                     if (item["folder"] != null)
                     {
+
+                        //FEDE TE DEJO LA IDEA DE LAS FECHAS. 
+
+                        //Es folder entonces es tipo plano. Tomar el substring del name del folder y buscar el tipo plano.
+                        //string nombreCarpeta = "name del folder";
+                        //if(fachada.ExisteTipoPlano(nombreCarpeta)){
+                        //TipoPlano TipoPlanoActual = Fachada.BuscarTipoPlanoPorNombre(string );
+                        //}
+                        //Aca deberiamos tener el if del lastTimeodify
+                        //if(item.lasttimemodufy != TipoPlanoActual.LastTimeModify){
+
+                        //Aca iria la llamada recursiva sino sale del if y sigue sin entrar a la carpeta
+
+                        //}
+
+
+
+
                         // Es un folder, necesitamos llamar al método recursivamente
                         var subPath = $"{path}/{item["name"]}";
                         // Lanzar tarea asíncrona para procesamiento paralelo
