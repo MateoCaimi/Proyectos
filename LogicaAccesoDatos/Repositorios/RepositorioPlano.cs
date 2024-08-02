@@ -190,5 +190,10 @@ namespace LogicaAccesoDatos.Repositorios
 
             return list;
         }
+
+        public bool ExistePlano(byte[] plano, string planoNombre)
+        {
+            return Context.Planos.Any(p => p.Pdf == plano || p.NombrePdf == planoNombre);
+        }
     }
 }

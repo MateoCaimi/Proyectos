@@ -538,5 +538,10 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioObra.TraerIdPorNombreObra(name);
         }
+
+        public bool ExistePlano(byte[] plano, string planoNombre)
+        {
+            return RepositorioPlano.ExistePlano(plano, planoNombre);
+        }
     }
 }

@@ -528,7 +528,7 @@ namespace LogicaAccesoDatos.Repositorios
 
         internal int TraerIdPorNombreObra(string name)
         {
-            Obra obra = Context.Obras.Where(o => o.Nombre.Contains(name)).FirstOrDefault();
+            Obra obra = Context.Obras.Where(o => name.ToLower().Contains(o.Nombre.ToLower())).FirstOrDefault();
             if(obra == null)
             {
                 return 0;

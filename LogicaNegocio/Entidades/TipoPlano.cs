@@ -17,6 +17,7 @@ namespace LogicaNegocio.Entidades
 
         [Required(ErrorMessage = "Ingrese una categoria")]
         public string Categoria { get; set; }
+        public string UltimaModificacion { get; set; }
 
         public TipoPlano() { }
 

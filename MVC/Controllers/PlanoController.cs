@@ -52,6 +52,7 @@ namespace MVC.Controllers
             //await ObtenerCarpetaOneDrive();
             
             list = await GraphRecursivoParalelizado();//await TomarPdfRecursivo(siteId, path);
+            List<Plano> planos = await this.FormateoDePlanos(list);
             /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("LoginQR", "Usuario", new {id = idObra});
@@ -494,6 +495,83 @@ namespace MVC.Controllers
 
         //}
 
+        private async Task<List<Plano>> FormateoDePlanos(List<JObject> list)
+        {
+            string token = await ObtenerTokenDeAccesoGraph();
+            using (HttpClient httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                foreach (JObject obj in list)
+                {
+                    string input = obj.ToString();
+                    string inicio = "\"@microsoft.graph.downloadUrl\": \"";
+                    string final = "\"";
+                    string pattern = $@"{Regex.Escape(inicio)}(.*?){Regex.Escape(final)}";
+
+                    Match match = Regex.Match(input, pattern);
+                    if (match.Success)
+                    {
+                        string webUrl = obj["webUrl"].ToString();
+                        string result = match.Groups[1].Value;
+                        byte[] plano = await httpClient.GetByteArrayAsync(result);
+                        string planoNombre = obj["name"].ToString();
+                        bool checkExistencia = Fachada.ExistePlano(plano, planoNombre);
+                        if (!checkExistencia)
+                        {
+                            int idObra = Fachada.TraerIdPorNombreObra(webUrl);
+                            if (idObra == 0)
+                            {
+                                idObra = Fachada.TraerIdPorNombreObra(planoNombre);
+                            }
+                            string tipo = "";
+                            if (planoNombre.Contains(".pdf"))
+                            {
+                                tipo = "application/pdf";
+                            }
+                            else if (planoNombre.Contains(".png"))
+                            {
+                                tipo = "image/png";
+                            }
+                            if (tipo != "")
+                            {
+                                TipoPlano tipoPlano = this.TraerTipoPlanoPorRuta(webUrl);
+                                Plano planoNuevo = new Plano();
+                                planoNuevo.NombrePdf = planoNombre;
+                                planoNuevo.Pdf = plano;
+                                planoNuevo.TipoPdf = tipo;
+                                planoNuevo.FechaPublicado = DateTime.Now;
+                                planoNuevo.IdTipoPlano = 1; //Tipo genérico
+                                planoNuevo.Nombre = planoNombre;
+                                planoNuevo.IdObra = idObra;
+                                planoNuevo.IdTipoPlano = tipoPlano.Id;
+                                if (idObra != 0) //Si no encuentra obra, no es un plano para agregar. Es o un pdf cualquiera o de una obra no subida
+                                {
+                                    Fachada.AgregarPlano(planoNuevo);
+                                }
+                            }
+                        }
+                        
+                    }
+                }
+
+            }
+            return null;
+        }
+
+        private TipoPlano TraerTipoPlanoPorRuta(string ruta)
+        {
+            ruta = ruta.Replace("%20", " ");
+            IEnumerable<TipoPlano> tipos = Fachada.BuscarTiposPlanos();
+            foreach(TipoPlano tipo in tipos)
+            {
+                if (ruta.ToLower().Contains(tipo.Categoria.ToLower()))
+                {
+                    return tipo;
+                }
+            }
+            return tipos.First(); //<<A INGRESAR>>
+        }
+
         private async Task<List<JObject>> GraphRecursivoParalelizado()
         {
             string path = "1.%20PROYECTO/02.APROBADO";
@@ -627,11 +705,19 @@ namespace MVC.Controllers
                             //Aca iria la llamada recursiva sino sale del if y sigue sin entrar a la carpeta
 
                             //}
-
-                            // Es un folder, necesitamos llamar al método recursivamente
+                            // es un folder, necesitamos llamar al método recursivamente
                             var subPath = $"{path}/{item["name"]}";
                             // Lanzar tarea asíncrona para procesamiento paralelo
                             tasks.Add(TomarPdfsInterno(siteId, subPath, pdfs, token));
+
+                            /*TipoPlano tipo = this.TraerTipoPlanoPorRuta(item["webUrl"].ToString());
+                            if (tipo != null)
+                            {
+                                if(tipo.UltimaModificacion != item["lastTimeModified"].ToString())
+                                {
+
+                                }
+                            }*/
                         }
                         else
                         {
