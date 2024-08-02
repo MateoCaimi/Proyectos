@@ -1,0 +1,78 @@
+﻿/*.navbarImg {   CON MENU HAMBURGUESA
+    width: 100%;
+    height:100%;
+}
+
+.navbar-brand{
+    width:70%;
+    margin-bottom:30px;
+}*/
+
+.imgLogo {
+    width: 20%;
+}
+
+.contenedorLogo {
+
+    text-align: center;
+}
+
+
+
+/* CSS para el navbar */
+.navbar {
+    width: 100%;
+    background-color: black; 
+    padding: 18px 0; 
+    margin: 0 auto;
+}
+
+.navbar-nav {
+    text-align:center;
+    align-items:center;
+    flex-direction: row;
+}
+
+.nav-item {
+    margin: 0 15px;
+    border-radius:20px;
+    color:wheat;
+}
+
+
+
+.nav-link {
+    color: #ffffff !important; /* Asegura que el texto sea blanco */
+}
+
+.btnLoginLogout {
+    position: absolute;
+    right: 20px; /* Ajusta la distancia desde el borde derecho */
+    top: 5%;
+}
+
+/* CSS para la cabecera */
+header {
+    padding-bottom: 20px; /* Añade espacio en la parte inferior para el navbar */
+}
+
+.contenedor{
+    max-width:70%;
+    margin: 20px auto; 
+    background-color:white;
+    padding:50px;
+}
+
+body{
+    background-color:#fff0e3;
+
+}
+
+.contenedorFooter{
+    padding: 22px;
+    text-align:center;
+    background-color:#4a11115f;
+    color:white;
+}
+
+

@@ -1,4 +1,86 @@
-﻿
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] Bodega y Piedrafita</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/MVC.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Layout.css">
+</head>
+
+<body>
+    <div id="capaDeFondo"></div>
+    <header>
+        <div class="contenedorLogo">
+            <img class="imgLogo" src="~/css/Imagenes/logo negro.png" alt="Logo" />
+        </div>
+        <nav class="navbar navbar-expand-lg ">
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav ms-auto">
+                        @if (Context.Session.GetString("UsuarioLogueado") != null && Context.Session.GetString("UsuarioTipo") != "Usuario administrador")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Obra" asp-action="Index">Obra</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Material" asp-action="Index">Material</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Empleado" asp-action="Index">Empleado</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Empleado" asp-action="Liquidar">Liquidación</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Plano" asp-action="Index">Plano</a>
+                            </li>
+                                <partial name="_Notificaciones2" class="nav-link"/>
+                            <a class="btn btn-primary btnLoginLogout" asp-controller="Usuario" asp-action="CerrarSesion">Cerrar sesión</a>
+
+                        }
+                        else if (Context.Session.GetString("UsuarioLogueado") != null && Context.Session.GetString("UsuarioTipo") == "Usuario administrador")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Usuario" asp-action="Listado">Lista de Usuarios</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Usuario" asp-action="Agregar">Registrar Usuario</a>
+                            </li>
+                            <a class="btn btn-primary btnLoginLogout" asp-controller="Usuario" asp-action="CerrarSesion">Cerrar sesión</a>
+
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="contenedor">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+<footer>
+    <div class="contenedorFooter">
+        &copy; 2024 - Bodega & Piedrafita A - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </div>
+</footer>
+</html>
+
+
+@* CON MENU HAMBURGUESA
 
 <!DOCTYPE html>
 <html lang="en">
@@ -11,24 +93,28 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/MVC.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Layout.css">
+
 </head>
- 
+
 <body>
     <div id="capaDeFondo">
     </div>
     <header>
-      
-        
+
+
+            <div class="contenedorLogo">
+
+            <img class="imgLogo" src="~/css/Imagenes/logo negro.png" alt="Logo" />
+            </div>
+
         <nav id="layout" class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 navbar-left">
-            
+
             <button class="btnBurga btn-primary" type="button" onclick="mostrarOcultar()">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            
-           
-                    <h2>
-                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">B&P</a>
-                    </h2>
+
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"> <img class="navbarImg" src="~/css/imagenes/LOGOTIPO negro2.png" /></a>
 
                     <ul class="navbar-nav flex-column">
                         @if (Context.Session.GetString("UsuarioLogueado") != null && Context.Session.GetString("UsuarioTipo") != "Usuario administrador")
@@ -61,13 +147,13 @@
                         }
                     </ul>
         </nav>
-        
+
        <div class="btnLoginLogout">
 
             @if (Context.Session.GetString("UsuarioLogueado") != null)
             {
                     <a class="btn btn-primary" asp-controller="Usuario" asp-action="CerrarSesion">Cerrar sesion</a>
-               
+
             }
             else
             {
@@ -75,7 +161,7 @@
             }
 
        </div>
-              
+
     </header>
 
     <div class="container">
@@ -84,7 +170,7 @@
         </main>
     </div>
 
-    
+
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -94,8 +180,9 @@
 
 <footer class="border-top footer text-muted">
     <div class="container">
-        &copy; 2024 - MVC - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        &copy; 2024 - Bodega & Piedrafita A - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
     </div>
 </footer>
 
 </html>
+ *@
