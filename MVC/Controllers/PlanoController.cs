@@ -30,6 +30,7 @@ using LogicaNegocio.Entidades.DTOs;
 using ServiceStack;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.IO;
+using NuGet.Common;
 
 
 namespace MVC.Controllers
@@ -49,7 +50,8 @@ namespace MVC.Controllers
             string path = "1.%20PROYECTO/02.APROBADO";
             List<JObject> list = new List<JObject>();
             //await ObtenerCarpetaOneDrive();
-            await GraphRecursivoParalelizado(list);//await TomarPdfRecursivo(siteId, path);
+            
+            list = await GraphRecursivoParalelizado();//await TomarPdfRecursivo(siteId, path);
             /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("LoginQR", "Usuario", new {id = idObra});
@@ -492,7 +494,7 @@ namespace MVC.Controllers
 
         //}
 
-        private async Task GraphRecursivoParalelizado(List<JObject> pdfs)
+        private async Task<List<JObject>> GraphRecursivoParalelizado()
         {
             string path = "1.%20PROYECTO/02.APROBADO";
             string token = await ObtenerTokenDeAccesoGraph();
@@ -510,9 +512,10 @@ namespace MVC.Controllers
 
                 foreach (var item in items)
                 {
-                    if (this.EstaEnObra(item["name"].ToString()))
+                    if (this.EstaEnObra(item["webUrl"].ToString()))
                     {
-                        tasks.Add(this.TomarPdfRecursivo(item["id"].ToString(), path));
+                        string url = item["id"].ToString();
+                        tasks.Add(this.TomarPdfRecursivo(url, path, token));
                     }
                 }
                 await Task.WhenAll(tasks);
@@ -521,11 +524,11 @@ namespace MVC.Controllers
 
                 foreach (var t in tasks)
                 {
-                    var postResponse = await t; //t.Result would be okay too.
+                    var postResponse = t.Result; //t.Result would be okay too.
                     postResponses.AddRange(postResponse);
                 }
 
-                pdfs = postResponses;
+                return postResponses;
             }
 
 
@@ -544,10 +547,10 @@ namespace MVC.Controllers
             return false;
         }
 
-        private async Task<List<JObject>> TomarPdfRecursivo(string siteId, string path)
+        private async Task<List<JObject>> TomarPdfRecursivo(string siteId, string path, string token)
         {
             var pdfs = new List<JObject>();
-            await TomarPdfsInterno(siteId, path, pdfs);
+            await TomarPdfsInterno(siteId, path, pdfs, token);
             return pdfs;
         }
 
@@ -574,7 +577,7 @@ namespace MVC.Controllers
                         // Es un folder, necesitamos llamar al método recursivamente
                         var subPath = $"{path}/{item["name"]}";
                         // Lanzar tarea asíncrona para procesamiento paralelo
-                        tasks.Add(TomarPdfsInterno(siteId, subPath, pdfs));
+                        tasks.Add(TomarPdfsInterno(siteId, subPath, pdfs, token));
                     }
                     else
                     {
@@ -590,61 +593,65 @@ namespace MVC.Controllers
             }
         }
 
-        private async Task TomarPdfsInterno(string siteId, string path, List<JObject> pdfs)
+        private async Task<List<JObject>> TomarPdfsInterno(string siteId, string path, List<JObject> pdfs, string token)
         {
-            string token = await ObtenerTokenDeAccesoGraph();
+
             using (HttpClient httpClient = new HttpClient())
             {
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-                var tasks = new List<Task>();
-
+                var tasks = new List<Task<List<JObject>>>();
                 var requestUri = $"https://graph.microsoft.com/v1.0/sites/{siteId}/drive/root:/{path}:/children";
-                var response = await httpClient.GetStringAsync(requestUri);
-
-                // Parseo respuesta
-                var json = JObject.Parse(response);
-                var items = json["value"].ToList(); // Convierto a lista para facilitar el manejo
-
-
-
-
-                foreach (var item in items)
+                try
                 {
-                    if (item["folder"] != null)
+                    var response = await httpClient.GetStringAsync(requestUri); //si tira 404 seguí de largo
+
+                    // Parseo respuesta
+                    var json = JObject.Parse(response);
+                    var items = json["value"].ToList(); // Convierto a lista para facilitar el manejo
+                    foreach (var item in items)
                     {
+                        if (item["folder"] != null)
+                        {
 
-                        //FEDE TE DEJO LA IDEA DE LAS FECHAS. 
+                            //FEDE TE DEJO LA IDEA DE LAS FECHAS. 
 
-                        //Es folder entonces es tipo plano. Tomar el substring del name del folder y buscar el tipo plano.
-                        //string nombreCarpeta = "name del folder";
-                        //if(fachada.ExisteTipoPlano(nombreCarpeta)){
-                        //TipoPlano TipoPlanoActual = Fachada.BuscarTipoPlanoPorNombre(string );
-                        //}
-                        //Aca deberiamos tener el if del lastTimeodify
-                        //if(item.lasttimemodufy != TipoPlanoActual.LastTimeModify){
+                            //Es folder entonces es tipo plano. Tomar el substring del name del folder y buscar el tipo plano.
+                            //string nombreCarpeta = "name del folder";
+                            //if(fachada.ExisteTipoPlano(nombreCarpeta)){
+                            //TipoPlano TipoPlanoActual = Fachada.BuscarTipoPlanoPorNombre(string );
+                            //}
+                            //Aca deberiamos tener el if del lastTimeodify
+                            //if(item.lasttimemodufy != TipoPlanoActual.LastTimeModify){
 
-                        //Aca iria la llamada recursiva sino sale del if y sigue sin entrar a la carpeta
+                            //Aca iria la llamada recursiva sino sale del if y sigue sin entrar a la carpeta
 
-                        //}
+                            //}
 
-
-
-
-                        // Es un folder, necesitamos llamar al método recursivamente
-                        var subPath = $"{path}/{item["name"]}";
-                        // Lanzar tarea asíncrona para procesamiento paralelo
-                        tasks.Add(TomarPdfsInterno(siteId, subPath, pdfs));
+                            // Es un folder, necesitamos llamar al método recursivamente
+                            var subPath = $"{path}/{item["name"]}";
+                            // Lanzar tarea asíncrona para procesamiento paralelo
+                            tasks.Add(TomarPdfsInterno(siteId, subPath, pdfs, token));
+                        }
+                        else
+                        {
+                            pdfs.Add(item as JObject);
+                        }
                     }
-                    else
-                    {
-                        // Es un archivo PDF, agregarlo a la lista
-                        pdfs.Add(item as JObject);
-                    }
+
+                    // Esperar a que todas las tareas se completen
+                    await Task.WhenAll(tasks);
+
+                    return pdfs;
+                }
+                catch (Exception ex)
+                {
+                    return null;
                 }
 
-                // Esperar a que todas las tareas se completen
-                await Task.WhenAll(tasks);
+
+
+
             }
         }
 
