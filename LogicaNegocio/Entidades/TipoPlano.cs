@@ -18,12 +18,26 @@ namespace LogicaNegocio.Entidades
         [Required(ErrorMessage = "Ingrese una categoria")]
         public string Categoria { get; set; }
         public string UltimaModificacion { get; set; }
+        public int? idObra { get; set; }
 
         public TipoPlano() { }
 
         public TipoPlano(string cat)
         {
             this.Categoria = cat;
+
+        }
+        public TipoPlano(string cat, string ulti)
+        {
+            this.Categoria = cat;
+            this.UltimaModificacion = ulti;
+        }
+
+        public TipoPlano(string cat, int idobra)
+        {
+            this.Categoria = cat;
+            this.idObra = idobra;
+            this.UltimaModificacion = "2000-01-01";
 
         }
 

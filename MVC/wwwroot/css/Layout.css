@@ -7,31 +7,60 @@
     width:70%;
     margin-bottom:30px;
 }*/
+.flexContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+
+.contenedorLogo {
+    align-self: center;
+    text-align:center;
+    flex-grow: 3;
+}
+
+.containerLogout{
+
+    flex-grow: 1.5;
+
+}
+
 
 .imgLogo {
     width: 20%;
 }
 
-.contenedorLogo {
-
-    text-align: center;
+a.btn :hover {
+    text-decoration: underline;
+    
+}/*
+a:visited {
+    color: white;
 }
 
-
+a:active {
+    color: darkred;
+}*/
 
 /* CSS para el navbar */
 .navbar {
     width: 100%;
-    background-color: black; 
-    padding: 18px 0; 
+    background-color: black;
+    padding: 15px 0;
     margin: 0 auto;
 }
-
-.navbar-nav {
-    text-align:center;
-    align-items:center;
+#ulNav {
+    display: flex;
+    justify-content: space-around;
     flex-direction: row;
+    text-align: center;
+    align-items: center;
+    margin: auto;
 }
+
+
 
 .nav-item {
     margin: 0 15px;
@@ -45,8 +74,8 @@
     color: #ffffff !important; /* Asegura que el texto sea blanco */
 }
 
-.btnLoginLogout {
-    position: absolute;
+#btnLoginLogout {
+    position:relative;
     right: 20px; /* Ajusta la distancia desde el borde derecho */
     top: 5%;
 }
@@ -64,7 +93,7 @@ header {
 }
 
 body{
-    background-color:#fff0e3;
+    background-color:#eae4e4;
 
 }
 

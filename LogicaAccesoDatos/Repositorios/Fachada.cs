@@ -543,5 +543,40 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioPlano.ExistePlano(plano, planoNombre);
         }
+
+
+        //----------------------------------------------
+
+
+
+        public TipoPlano BuscarTipoPlanoPorNombre(string nombreCarpeta)
+        {
+            return RepositorioPlano.TipoPlanoPorNombre(nombreCarpeta);
+        }
+
+        public TipoPlano crearTipoPlanos(string nombreCarpeta, int idObra)
+        {
+            return RepositorioPlano.CrearTipoPlano(nombreCarpeta, idObra);
+        }
+
+        public void ActualizarFechaUltimaModificacion(TipoPlano tipoPlanoActual, string ultimaModificacion)
+        {
+            RepositorioPlano.ActualizarFechaUltimaModificacion(tipoPlanoActual, ultimaModificacion);
+        }
+
+        public List<TipoPlano> BuscarTiposPlanosPorObra(int idObra)
+        {
+            return RepositorioPlano.BuscarTipoPlanoPorObra(idObra);
+        }
+
+        public int TraerIdPorNombreTipoPlano(string v)
+        {
+            return RepositorioPlano.TraerIdPorNombreTipoPlano(v);
+        }
+
+        public List<Solicitud> BuscarTodasLasSolicitudes()
+        {
+            return RepositorioSolicitud.TomarTodos2();
+        }
     }
 }

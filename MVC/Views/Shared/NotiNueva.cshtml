@@ -1,0 +1,115 @@
+﻿@using System.Text.Json;
+@using Microsoft.AspNetCore.Http;
+@using LogicaNegocio.Entidades;
+<link rel="stylesheet" href="~/css/site.css">
+
+@{
+    string notificaciones = Context.Session.GetString("Notificaciones");
+
+    if (Context.Session.GetString("UsuarioTipo") == "Usuario de oficina")
+    {
+
+
+
+        <div class="dropdown containerNoti">
+
+
+            @if (notificaciones != null)
+            {
+                List<Solicitud> notificacionesNuevas = JsonSerializer.Deserialize<List<Solicitud>>(notificaciones);
+
+
+                int cantNoti = notificacionesNuevas.Count();
+
+                <span class="badge bg-primary rounded-pill">
+                    @cantNoti
+            </span>
+
+            }
+            <button class="btn btnNoti btn-Primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Notificaciones
+                @*Aca iria la Campanita*@
+            </button>
+
+            @if (notificaciones != null)
+            {
+
+                List<Solicitud> notificacionesNuevas = JsonSerializer.Deserialize<List<Solicitud>>(notificaciones);
+                <ul class="dropdown-menu ulNoti" aria-labelledby="dropdownMenuButton1">
+
+
+
+                    @foreach (Solicitud soli in notificacionesNuevas)
+                {
+
+                    <li class="list-group">
+                            <a class="list-group-item list-group-item-action" href="@Url.Action("Detalles", "Solicitud", new { idSolicitud = soli.Id, idObra = soli.IdObra})">Notificacion de la obra: @soli.Obra.Nombre</a>
+                    </li>
+
+                }
+               
+             </ul>
+             }else{
+            <span class="badge bg-primary rounded-pill">
+                0
+            </span>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                </ul>
+
+                }
+        </div>
+
+
+    }
+
+
+    // if (Context.Session.GetString("UsuarioTipo") == "Usuario de obra")
+    // {
+        
+    // if (solicitudesAprob != null)
+    // {
+    //     List<Solicitud> solicitudesListApro = JsonSerializer.Deserialize<List<Solicitud>>(solicitudesAprob);
+    //     int cantSoli3 = solicitudesListApro.Count();
+
+    //         <span class="badge bg-primary rounded-pill">
+    //             @cantSoli3
+    //         </span>
+
+    //       <div class="dropend">
+
+    //         <button class="btn btn-Primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    //             Solicitudes aprobadas
+    //             @*Aca iria la Campanita*@
+    //         </button>
+
+
+
+    //         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+
+
+
+    //             @foreach (Solicitud soli in solicitudesListApro)
+    //             {
+
+    //                 <li class="list-group">
+    //                         <a class="list-group-item list-group-item-action" href="@Url.Action("Confirmar", "Solicitud", new { idSolicitud = soli.Id })">Se aprobo la solicitud de: @soli.Obra.Nombre</a>
+    //                 </li>
+
+    //             }
+
+
+    //         </ul>
+    //     </div>
+
+    // }
+
+    }
+    
+
+
+
+
+
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@

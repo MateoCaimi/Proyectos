@@ -49,7 +49,13 @@ namespace LogicaAccesoDatos.Repositorios
 
         public IEnumerable<Solicitud> TomarTodos()
         {
+
             return Context.Solicitudes.ToList();
+        }
+
+        public List<Solicitud> TomarTodos2()
+        {
+            return Context.Solicitudes.Include(s => s.Obra).Include(s => s.Solicitante).Include(s => s.Aprovador).ToList();
         }
 
         public IEnumerable<Solicitud> SolicitudesDeObra(int idObra)

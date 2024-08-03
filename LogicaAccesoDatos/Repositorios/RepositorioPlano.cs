@@ -29,6 +29,8 @@ namespace LogicaAccesoDatos.Repositorios
             {
                 TipoPlano tipoGenerico = new TipoPlano();
                 tipoGenerico.Categoria = "<<A INGRESAR>>";
+                tipoGenerico.UltimaModificacion = "2022-3-1";
+                //tipoGenerico.idObra = 1;
                 Context.TiposPlanos.Add(tipoGenerico);
 
                 Context.SaveChanges();
@@ -194,6 +196,76 @@ namespace LogicaAccesoDatos.Repositorios
         public bool ExistePlano(byte[] plano, string planoNombre)
         {
             return Context.Planos.Any(p => p.Pdf == plano || p.NombrePdf == planoNombre);
+        }
+
+
+
+
+
+
+
+
+
+        //------------------------------------------------------------------------------------
+
+
+
+        public TipoPlano TipoPlanoPorNombre(string nombreCarpeta)
+        {
+            return Context.TiposPlanos.Where(tp => tp.Categoria == nombreCarpeta).FirstOrDefault();
+        }
+
+        public TipoPlano CrearTipoPlano(string nombreCarpeta, int idObra)
+        {
+            TipoPlano nuevoTipo = new TipoPlano(nombreCarpeta);
+            nuevoTipo.idObra = idObra;
+            nuevoTipo.UltimaModificacion = "2000-01-01";
+            Context.TiposPlanos.Add(nuevoTipo);
+            Context.SaveChanges();
+
+            return nuevoTipo;
+        }
+
+        public void ActualizarFechaUltimaModificacion(TipoPlano tipoPlanoActual, string ultimaModificacion)
+        {
+            tipoPlanoActual.UltimaModificacion = ultimaModificacion;
+            EliminarTipoPlano(tipoPlanoActual);
+
+        }
+
+        public void EliminarTipoPlano(TipoPlano tipoPlanoActual)
+        {
+            foreach (var plano in Context.Planos)
+            {
+                if (plano.IdTipoPlano == tipoPlanoActual.Id)
+                {
+                    Context.Planos.Remove(plano);
+                }
+            }
+
+            Context.TiposPlanos.Update(tipoPlanoActual);
+            Context.SaveChanges();
+        }
+
+        public List<TipoPlano> BuscarTipoPlanoPorObra(int idObra)
+        {
+            List<TipoPlano> listaTP = new List<TipoPlano>();
+            foreach (var tipoPlano in Context.TiposPlanos)
+            {
+                if (tipoPlano.idObra == idObra)
+                {
+                    listaTP.Add(tipoPlano);
+                }
+
+            }
+
+            return listaTP;
+        }
+
+        internal int TraerIdPorNombreTipoPlano(string v)
+        {   
+            TipoPlano tipoplano = Context.TiposPlanos.Where(tp => tp.Categoria == v).FirstOrDefault();
+            return tipoplano.Id;
         }
     }
 }

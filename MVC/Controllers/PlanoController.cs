@@ -71,6 +71,7 @@ namespace MVC.Controllers
                 TempData["Error"] = null;
                 ViewBag.IdObra = idObra;
                 ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
+               // ViewBag.TiposdePlano = Fachada.BuscarTiposPlanosPorObra(idObra);
                 return View();
             }
             catch (ObraException e) //Solo manda ObraException si no existe obra
@@ -79,6 +80,7 @@ namespace MVC.Controllers
                 errorModel.RequestId = e.Message;
                 ViewBag.IdObra = idObra;
                 ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
+                
                 return View("Error", errorModel); //usar shared hasta tener vistas de error para cada coso
             }
             catch (Exception e)
@@ -540,10 +542,10 @@ namespace MVC.Controllers
                                 planoNuevo.Pdf = plano;
                                 planoNuevo.TipoPdf = tipo;
                                 planoNuevo.FechaPublicado = DateTime.Now;
-                                planoNuevo.IdTipoPlano = 1; //Tipo genérico
+                                planoNuevo.IdTipoPlano = Fachada.TraerIdPorNombreTipoPlano("<<A INGRESAR>>");  //Tipo genérico
                                 planoNuevo.Nombre = planoNombre;
                                 planoNuevo.IdObra = idObra;
-                                planoNuevo.IdTipoPlano = tipoPlano.Id;
+                                //planoNuevo.IdTipoPlano = tipoPlano.Id;
                                 if (idObra != 0) //Si no encuentra obra, no es un plano para agregar. Es o un pdf cualquiera o de una obra no subida
                                 {
                                     Fachada.AgregarPlano(planoNuevo);
@@ -671,6 +673,18 @@ namespace MVC.Controllers
             }
         }
 
+        private Obra ObraPorURL(string url)
+        {
+            IEnumerable<Obra> obras = Fachada.TomarTodasObras();
+            foreach (Obra obra in obras)
+            {
+                if (url.ToLower().Contains(obra.Nombre.ToLower()))
+                {
+                    return obra;
+                }
+            }
+            return null;
+        }
         private async Task<List<JObject>> TomarPdfsInterno(string siteId, string path, List<JObject> pdfs, string token)
         {
 
@@ -691,33 +705,44 @@ namespace MVC.Controllers
                     {
                         if (item["folder"] != null)
                         {
+                            ////si cambio la carpeta entra a buscar sino sigue
 
-                            //FEDE TE DEJO LA IDEA DE LAS FECHAS. 
+                            //bool cambioLaCarpeta = false;
+                            //TipoPlano tipoPlanoActual;
+                            //string nombreCarpeta = $"{item["name"]}";
+                            //var ultimaModificacion = $"{item["lastModifiedDateTime"]}";
+                            //Obra obra = this.ObraPorURL(item["webUrl"].ToString());
 
-                            //Es folder entonces es tipo plano. Tomar el substring del name del folder y buscar el tipo plano.
-                            //string nombreCarpeta = "name del folder";
-                            //if(fachada.ExisteTipoPlano(nombreCarpeta)){
-                            //TipoPlano TipoPlanoActual = Fachada.BuscarTipoPlanoPorNombre(string );
+
+
+                            //tipoPlanoActual = Fachada.BuscarTipoPlanoPorNombre(nombreCarpeta);
+
+                            //if (tipoPlanoActual == null)
+                            //{
+                            //    //          Si es carpeta nueva te agrega el tipoPlano
+
+                            //    tipoPlanoActual = Fachada.crearTipoPlanos(nombreCarpeta, obra.IdObra);
+
                             //}
-                            //Aca deberiamos tener el if del lastTimeodify
-                            //if(item.lasttimemodufy != TipoPlanoActual.LastTimeModify){
 
-                            //Aca iria la llamada recursiva sino sale del if y sigue sin entrar a la carpeta
+                            //      if (tipoPlanoActual.UltimaModificacion != ultimaModificacion)
+                            //      {
+                            //          Fachada.ActualizarFechaUltimaModificacion(tipoPlanoActual, ultimaModificacion);
+                            //          cambioLaCarpeta = true;
 
-                            //}
-                            // es un folder, necesitamos llamar al método recursivamente
+                            //      }
+
+
+
+                            //if (cambioLaCarpeta)
+                            //{
+
                             var subPath = $"{path}/{item["name"]}";
-                            // Lanzar tarea asíncrona para procesamiento paralelo
-                            tasks.Add(TomarPdfsInterno(siteId, subPath, pdfs, token));
+                       //         Lanzar tarea asíncrona para procesamiento paralelo
+                                 tasks.Add(TomarPdfsInterno(siteId, subPath, pdfs, token));
 
-                            /*TipoPlano tipo = this.TraerTipoPlanoPorRuta(item["webUrl"].ToString());
-                            if (tipo != null)
-                            {
-                                if(tipo.UltimaModificacion != item["lastTimeModified"].ToString())
-                                {
+                            //}
 
-                                }
-                            }*/
                         }
                         else
                         {

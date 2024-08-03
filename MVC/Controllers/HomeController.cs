@@ -60,6 +60,17 @@ namespace MVC.Controllers
                 //    TempData["Anomalia"] = "Se generaron marcas anómalas en el sistema. Revisar las marcas de la última semana.";
                 //}
 
+
+                //List<Solicitud> solicitudesTotales = Fachada.BuscarTodasLasSolicitudes();
+                //var opciones = new JsonSerializerOptions
+                //{
+                //    ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                //    WriteIndented = true,
+
+                //};
+                //HttpContext.Session.SetString("Notificaciones", System.Text.Json.JsonSerializer.Serialize(solicitudesTotales, opciones));
+
+
                 List<Solicitud> solicitudesPendientes = Fachada.BuscarSolicitudPendientesLista();
                 var opciones = new JsonSerializerOptions
                 {
@@ -68,7 +79,6 @@ namespace MVC.Controllers
 
                 };
                 HttpContext.Session.SetString("SolicitudesPendientes", System.Text.Json.JsonSerializer.Serialize(solicitudesPendientes, opciones));
-
 
 
 
@@ -83,6 +93,11 @@ namespace MVC.Controllers
 
                 List<ObraMaterial> alertasDeStock = Fachada.AlertarStockDeMaterialesTodasObras();
                 HttpContext.Session.SetString("MaterialesAlertar", System.Text.Json.JsonSerializer.Serialize(alertasDeStock, opciones));
+
+
+
+
+
 
             }
 

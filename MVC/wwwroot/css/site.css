@@ -63,10 +63,27 @@ body {
     z-index: 1000;
 }
 
+.list-group {
+    padding: 0;
+    margin: 0;
+    
+}
+    .list-group :hover{
+        background-color:darkred;
+        color:white;
+    }
+    .list-group :active{
+
+    }
 
 
+
+
+    .dropdown-menu {
+        padding: 0px;
+    }
 #notification-list {
-    list-style: none;
+    list-style: armenian;
     padding: 0;
     margin: 0;
 }
@@ -81,3 +98,38 @@ body {
         }
 /*---------------------------------------------------------------------------------------
 */
+
+
+
+.containerNoti {
+    
+    
+}
+.ulNoti{
+    
+}
+
+.btnNoti {
+    color: white;
+    padding: 10px 0px 10px 20px;
+    background-color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+    .btnNoti:hover {
+       
+    }
+
+    .btnNoti:active {
+       color:darkred;
+    }
+
+.bg-danger {
+    background-color: darkred !important;
+}
+
+#cantNoti {
+    margin-right: 20px;
+    background-color: darkred;
+}
