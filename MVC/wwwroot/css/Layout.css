@@ -7,6 +7,11 @@
     width:70%;
     margin-bottom:30px;
 }*/
+
+#headerCelu {
+    display: none;
+}
+
 .flexContainer {
     display: flex;
     flex-direction: row;
@@ -21,10 +26,17 @@
     flex-grow: 3;
 }
 
-.containerLogout{
-
+.containerLogout {
+    align-content: center;
     flex-grow: 1.5;
+}
 
+
+#btnLoginLogout {
+    width: 120px;
+    position: relative;
+    right: 20px; /* Ajusta la distancia desde el borde derecho */
+    top: 5%;
 }
 
 
@@ -52,6 +64,7 @@ a:active {
     margin: 0 auto;
 }
 #ulNav {
+    
     display: flex;
     justify-content: space-around;
     flex-direction: row;
@@ -74,22 +87,18 @@ a:active {
     color: #ffffff !important; /* Asegura que el texto sea blanco */
 }
 
-#btnLoginLogout {
-    position:relative;
-    right: 20px; /* Ajusta la distancia desde el borde derecho */
-    top: 5%;
-}
 
 /* CSS para la cabecera */
 header {
     padding-bottom: 20px; /* Añade espacio en la parte inferior para el navbar */
 }
 
-.contenedor{
-    max-width:70%;
-    margin: 20px auto; 
-    background-color:white;
-    padding:50px;
+.contenedor {
+    max-width: 70%;
+    margin: 20px auto;
+    background-color: white;
+    padding: 50px;
+    z-index: -1990;
 }
 
 body{
@@ -97,11 +106,97 @@ body{
 
 }
 
-.contenedorFooter{
+.contenedorFooter {
     padding: 22px;
-    text-align:center;
-    background-color:#4a11115f;
-    color:white;
+    text-align: center;
+    background-color: #4a11115f;
+    color: white;
+  
+}
+.navbar-nav .dropdown-menu {
+    position: absolute;
 }
 
+@media(max-width: 768px) {
 
+
+    #headerCelu {
+        display: block;
+    }
+
+    #headerCompu {
+        display: none;
+    }
+
+    .navbarImg{
+        height:100%;
+        width:100%;
+        padding: 1%;
+    }
+    /*----------------------------------------------*/
+    .navbar-left {
+        position: fixed;
+        display: flex;
+        flex-direction: column;
+        top: 0;
+        left: -250px;
+        height: 100%;
+        width: 250px;
+        background-color: black;
+        z-index: 1030;
+        transition: left 0.4s ease;
+    }
+   
+
+    .btnLoginLogout {
+        text-align: right;
+        padding-right: 1%;
+        padding-top: 1%;
+    }
+
+    
+
+    .btnBurga {
+        margin-left: 300px;
+        background-color: aliceblue;
+        color: black;
+        border: none;
+    }
+
+    #capaDeFondo {
+        position: absolute;
+        height: 100vh;
+        width: 100%;
+        opacity: 0;
+        z-index: -10;
+        background-color: black;
+    }
+
+    #layout{
+        background-color: black;
+    }
+
+
+    .contenedorFooter {
+        padding: 22px;
+        text-align: center;
+        background-color: #4a11115f;
+        color: white;
+        }
+
+    @media (min-width: 375px) and (max-width: 667px) {
+        .navbar-left {
+            flex-wrap:nowrap;
+
+            display: flex;
+            flex-direction: column;
+            top: 0;
+        }
+        .navbar{
+            justify-content:flex-start;
+        }
+    }
+    
+
+
+}
