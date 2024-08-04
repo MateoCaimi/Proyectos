@@ -47,14 +47,9 @@
 a.btn :hover {
     text-decoration: underline;
     
-}/*
-a:visited {
-    color: white;
 }
 
-a:active {
-    color: darkred;
-}*/
+
 
 /* CSS para el navbar */
 .navbar {
@@ -84,8 +79,14 @@ a:active {
 
 
 .nav-link {
-    color: #ffffff !important; /* Asegura que el texto sea blanco */
+    color: #ffffff !important;
 }
+
+
+li a .nav-link :active {
+    color: darkred;
+}
+
 
 
 /* CSS para la cabecera */
@@ -119,6 +120,7 @@ body{
 
 @media(max-width: 768px) {
 
+   
 
     #headerCelu {
         display: block;
@@ -184,7 +186,7 @@ body{
         color: white;
         }
 
-    @media (min-width: 375px) and (max-width: 667px) {
+    @media (min-width: 320px) and (max-width: 667px) {
         .navbar-left {
             flex-wrap:nowrap;
 

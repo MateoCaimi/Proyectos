@@ -1,0 +1,62 @@
+﻿body {
+}
+
+.ContainerHeaders {
+    display: flex;
+    flex-direction: row;
+    color:#b30000;
+    justify-content:space-between;
+}
+.linkCerrarObra{
+
+    align-content:center;
+    color:darkred;
+    text-decoration:none;
+    
+}
+    .linkCerrarObra:hover {
+        color: red;
+    }
+
+
+.linkQR {
+    
+    color: darkred;
+    text-decoration: none;
+    
+}.linkQR:hover {
+        color: red;
+    }
+
+#containerLinksObra {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+}
+
+.linkObra{
+    margin: 5px 5px 5px 5px;
+    padding:5px 10px 5px 10px;
+    color:darkred;
+    text-decoration: none;
+    background-color: #e4e4e4;
+    border-radius: 6px 6px;
+
+}
+    .linkObra:hover {
+        color: red;
+        background-color: #706161;
+    }
+
+
+containerVolver{
+   
+}
+
+.volver {
+    color: darkred;
+}
+    .volver:hover {
+        color: red;
+    }

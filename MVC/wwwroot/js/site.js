@@ -24,3 +24,20 @@ function mostrarOcultar() {
     }
      
 }
+
+////Saco y agrego clase en notificacion para que se abran a la derecha y no hacia abajo. No funciona aun
+function toggleDropendClass() {
+    var containerNoti = document.querySelector('.containerNoti');
+
+    if (window.innerWidth <= 768) {
+        containerNoti.classList.add('dropend');
+        containerNoti.classList.remove('dropdown');
+    } else {
+        containerNoti.classList.remove('dropend');
+        containerNoti.classList.add('dropdown');
+    }
+}
+
+toggleDropendClass();
+
+window.addEventListener('resize', toggleDropendClass);

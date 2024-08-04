@@ -3,6 +3,12 @@
 @{
     ViewData["Title"] = "Detalles";
 }
+
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="~/css/Obra/Detalles.css">
+
+
 @if (ViewBag.Error != null)
 {
     <div class="alert alert-danger">
@@ -17,49 +23,72 @@
     </div>
 }
 
-<h1>Detalles</h1>
-
 <div>
-    <h4>Obra</h4>
-    <hr />
+    <div class="ContainerHeaders">
+        <h1>Detalles de la obra  @Html.DisplayFor(model => model.Obra.Nombre)</h1>
+        @if (!Model.Obra.Finalizada)
+        {
+            <a class="linkCerrarObra" asp-action="Cerrar" asp-route-id="@Model?.Obra.IdObra">
+                Cerrar Obra
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+                </svg>
+            </a>
+        }
+        
+    </div>
+    <div>
+        
+        <a class="linkQR" asp-action="ObtenerQr" asp-route-id="@Model?.Obra.IdObra">
+            Descargar Código QR 
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
+            </svg>
+        </a>
+
+    </div>
+    
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Obra.FechaInicio)
+    <hr />
+        <dt class = "col-sm-4">
+            @Html.DisplayNameFor(model => model.Obra.FechaInicio):
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Obra.FechaInicio)
         </dd>
         @if (Model.Obra.Finalizada)
         {
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Obra.Finalizada)
+        <dt class = "col-sm-4">
+                @Html.DisplayNameFor(model => model.Obra.Finalizada):
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Obra.Finalizada)
+                @Html.DisplayFor(model => model.Obra.Finalizada)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Obra.FechaFinalizacion)
+        <dt class = "col-sm-4">
+                @Html.DisplayNameFor(model => model.Obra.FechaFinalizacion):
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Obra.FechaFinalizacion)
+                @Html.DisplayFor(model => model.Obra.FechaFinalizacion)
         </dd>
             
         }
 
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Obra.Nombre)
+        <dt class = "col-sm-4">
+            @Html.DisplayNameFor(model => model.Obra.Nombre):
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Obra.Nombre)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Obra.Direccion)
+        <dt class = "col-sm-4">
+            @Html.DisplayNameFor(model => model.Obra.Direccion):
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Obra.Direccion)
         </dd>
-        <dt class="col-sm-2">
-            Usuario a cargo
+        <dt class="col-sm-4">
+            Usuario a cargo:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Obra.UsuarioACargo.Nombre)
@@ -71,54 +100,65 @@
 {
     <div>
         <h5>Estadísticas de obra</h5>
-        <dt class="col-sm-2">
-            Material más solicitado
+        <dt class="col-sm-4">
+            Material más solicitado:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.MaterialMasSolicitado)
         </dd>
-        <dt class="col-sm-2">
-            Material menos solicitado
+        <dt class="col-sm-4">
+            Material menos solicitado:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.MaterialMenosSolicitado)
         </dd>
-        <dt class="col-sm-2">
-            Solicitante más común
+        <dt class="col-sm-4">
+            Solicitante más común:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.SolicitanteMasComun)
         </dd>
-        <dt class="col-sm-2">
-            Proveedor más común
+        <dt class="col-sm-4">
+            Proveedor más común:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ProveedorMasComun)
         </dd>
     </div>
 }
+else
+{
+    
+<hr />
+<div id="containerLinksObra">
+    <a class="linkObra" asp-action="Editar" asp-route-id="@Model?.Obra.IdObra">Modificar</a>  
+    
+    <a class="linkObra" href="@Url.Action("Index","Plano", new{idObra = Model?.Obra.IdObra})">Planos</a>
 
-<div>
-    <a asp-action="Editar" asp-route-id="@Model?.Obra.IdObra">Modificar</a> |    
-    @if (!Model.Obra.Finalizada)
-    {
-        <a asp-action="Cerrar" asp-route-id="@Model?.Obra.IdObra">| Cerrar Obra</a>
-    }
-    <a href="@Url.Action("Index","Plano", new{idObra = Model?.Obra.IdObra})">Planos</a>|
+   
 
-    <a asp-action="ObtenerQr" asp-route-id="@Model?.Obra.IdObra">Código QR</a>|
+    <a class="linkObra" asp-action="Materiales" asp-route-id="@Model?.Obra.IdObra">Materiales</a>
 
-    <a asp-action="Materiales" asp-route-id="@Model?.Obra.IdObra">Materiales</a>|
+    <a class="linkObra" href="@Url.Action("Liquidar","Empleado")">Liquidación</a>
 
-    <a href="@Url.Action("Liquidar","Empleado")">Liquidación</a>|
+    <a class="linkObra" href="@Url.Action("HorasLluvia", "Obra", new{idObra = Model?.Obra.IdObra})">Asignación de horas lluvia</a>
 
-    <a href="@Url.Action("HorasLluvia", "Obra", new{idObra = Model?.Obra.IdObra})">Asignación de horas lluvia</a>|
+    <a class="linkObra" href="@Url.Action("Empleados","Obra", new{idObra = Model?.Obra.IdObra})">Empleados de la obra</a>
 
-    <a href="@Url.Action("Empleados","Obra", new{idObra = Model?.Obra.IdObra})">Empleados de la obra</a>|
+    <a class="linkObra" href="@Url.Action("Index","Solicitud", new{idObra = Model?.Obra.IdObra})">Ver solicitudes</a>
 
-    <a href="@Url.Action("Index","Solicitud", new{idObra = Model?.Obra.IdObra})">Ver solicitudes</a>|
+    <a class="linkObra" href="@Url.Action("Consumo","Obra", new{idObra = Model?.Obra.IdObra})">Consumir materiales</a>
 
-    <a href="@Url.Action("Consumo","Obra", new{idObra = Model?.Obra.IdObra})">Consumir materiales</a>|
-
-    <a asp-action="Index">Back to List</a>
+  
 </div>
+}
+<div class="containerVolver">
+    <a class="volver" asp-action="Index">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5" />
+        </svg>
+        Volver al listado de obras
+    </a>
+</div>
+
+    
