@@ -45,6 +45,19 @@
     
 
 }
+
+#accordionExample {
+    width: 50%;
+}
+
+@media(max-width: 768px) {
+    .ContainerHeaders{
+        flex-direction:column;
+    }
+    #accordionExample {
+        width: 100%;
+    }
+}
 /*
 .accordion-header {
     border: 1px solid red
@@ -58,7 +71,6 @@
     .accordion-item:active {
         border: 1px solid red
     }*/
-
 .accordion-button {
     color: darkred;
 }
@@ -107,3 +119,4 @@ containerVolver{
     .volver:hover {
         color: red;
     }
+

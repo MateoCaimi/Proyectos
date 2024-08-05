@@ -28,6 +28,8 @@
         <h1>Detalles de la obra  @Html.DisplayFor(model => model.Obra.Nombre)</h1>
         @if (!Model.Obra.Finalizada)
         {
+
+
             <a class="linkCerrarObra" asp-action="Cerrar" asp-route-id="@Model?.Obra.IdObra">
                 Cerrar Obra
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
