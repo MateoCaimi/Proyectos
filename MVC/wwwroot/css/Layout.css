@@ -1,42 +1,23 @@
-﻿/*.navbarImg {   CON MENU HAMBURGUESA
-    width: 100%;
-    height:100%;
-}
-
-.navbar-brand{
-    width:70%;
-    margin-bottom:30px;
-}*/
-
+﻿
 #headerCelu {
     display: none;
 }
-
 .flexContainer {
+    width: 100%;
+    position: relative;
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
 }
 
-
 .contenedorLogo {
-    align-self: center;
-    text-align:center;
-    flex-grow: 3;
+    text-align: center;
+
 }
 
 .containerLogout {
-    align-content: center;
-    flex-grow: 1.5;
-}
-
-
-#btnLoginLogout {
-    width: 120px;
-    position: relative;
-    right: 20px; /* Ajusta la distancia desde el borde derecho */
-    top: 5%;
+    position: absolute;
+    right: 20px; /* Ajusta según tus necesidades */
 }
 
 
@@ -91,7 +72,7 @@ li a .nav-link :active {
 
 /* CSS para la cabecera */
 header {
-    padding-bottom: 20px; /* Añade espacio en la parte inferior para el navbar */
+    margin-bottom: 40px; /* Añade espacio en la parte inferior para el navbar */
 }
 
 .contenedor {

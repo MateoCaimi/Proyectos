@@ -10,13 +10,13 @@ h1 {
     font-family: 'Montserrat', sans-serif;
     text-align: center;
     color: #b30000;
-    margin-top: 20px;
+    margin: 20px;
 }
 
 h3{
     font-family: 'Montserrat', sans-serif;
     text-align: center;
-    color: #b30000;
+    color: #4b4a4a;
     margin-top: 20px;
 
 }
@@ -46,6 +46,7 @@ h3{
 /* Estilo para el formulario */
 .form-group {
     margin-bottom: 15px;
+    width:150%;
 }
 
     .form-group label {

@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\css\Layout.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\css\Imagenes\inicio Byp.jpg" />
   </ItemGroup>
 
