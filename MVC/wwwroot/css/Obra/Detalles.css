@@ -83,10 +83,13 @@
         background-color:white;
         color: darkred;
         
+        
     }
-    .accordion-button:focus {
-        border-color: red;
-    }
+
+.accordion-button:focus {
+    border-color: red;
+    box-shadow: 0 0 8px rgba(102, 102, 102, 0.2);
+}
 
 
     .accordion-body {

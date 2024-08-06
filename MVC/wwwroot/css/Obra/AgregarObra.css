@@ -45,13 +45,12 @@ h3{
 
 /* Estilo para el formulario */
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 
     .form-group label {
         font-weight: bold;
         display: block;
-        margin-bottom: 5px;
     }
 
 .form-control {
@@ -83,6 +82,7 @@ h3{
     background-color: #8b0909;
     border-color: #8b0909;
     color: #fff;
+    width: 100%;
     padding: 10px 20px;
     border-radius: 5px;
     text-align: center;
@@ -106,7 +106,7 @@ a {
     }
 
 /* Botón para volver a la lista */
-.back-to-list {
+/*.back-to-list {
     text-align: center;
     margin-top: 20px;
 }
@@ -119,14 +119,27 @@ a {
 
         .back-to-list a:hover {
             text-decoration: underline;
-        }
+        }*/
 
 /* Párrafos */
-p {
+/*p {
     text-align: center;
     margin: 20px 0;
 }
 
     p a {
         margin: 0 10px;
+    }*/
+
+.containerVolver {
+    margin-top: 20px;
+}
+
+.volver {
+    color: darkred;
+}
+
+    .volver:hover {
+        color: red;
     }
+
