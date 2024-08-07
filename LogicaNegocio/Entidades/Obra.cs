@@ -21,15 +21,20 @@ namespace LogicaNegocio.Entidades
 
         [Required(ErrorMessage = "Ingrese una fecha de inicio")]
         [DataType(DataType.Date)]
+        [Display(Name = "Fecha de inicio")]
+
         public DateTime FechaInicio { get; set; }
         [DataType(DataType.Date)]
         public DateTime? FechaFinalizacion { get; set; }
         [Required(ErrorMessage = "Ingrese un nombre valido")]
         public string Nombre { get; set; }
         [Required(ErrorMessage = "Ingrese una direccion")]
+        [Display(Name = "Dirección")]
         public string Direccion { get; set; }
         public bool Finalizada { get; set; }
+        [Display(Name = "Usuario a cargo")]
         [ForeignKey("UsuarioACargo")] public int IdACargo { get; set; }
+
         public UDeObra UsuarioACargo { get; set; }
         public string? NombreCronograma { get; set; }
         public string? TipoCronograma { get; set; }

@@ -1,6 +1,4 @@
-﻿
-
-/* Encabezado principal */
+﻿/* Encabezado principal */
 h1 {
     font-family: 'Montserrat', sans-serif;
     text-align: center;
@@ -8,12 +6,11 @@ h1 {
     margin: 20px;
 }
 
-h3{
+h3 {
     font-family: 'Montserrat', sans-serif;
     text-align: center;
     color: #4b4a4a;
     margin-top: 20px;
-
 }
 
 /* Alerta de error */
@@ -41,7 +38,7 @@ h3{
 /* Estilo para el formulario */
 .form-group {
     margin-bottom: 15px;
-    width:120%;
+    width: 120%;
 }
 
     .form-group label {
@@ -101,31 +98,7 @@ a {
         text-decoration: underline;
     }
 
-/* Botón para volver a la lista */
-/*.back-to-list {
-    text-align: center;
-    margin-top: 20px;
-}
 
-    .back-to-list a {
-        color: #b30000;
-        font-weight: bold;
-        text-decoration: none;
-    }
-
-        .back-to-list a:hover {
-            text-decoration: underline;
-        }*/
-
-/* Párrafos */
-/*p {
-    text-align: center;
-    margin: 20px 0;
-}
-
-    p a {
-        margin: 0 10px;
-    }*/
 
 .containerVolver {
     margin-top: 20px;
@@ -138,4 +111,3 @@ a {
     .volver:hover {
         color: red;
     }
-

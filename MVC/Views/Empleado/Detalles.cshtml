@@ -4,52 +4,79 @@
     ViewData["Title"] = "Detalles";
 }
 
-<h1>Detalles</h1>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="~/css/Empleado/DetallesEmpleado.css">
 
-<div>
-    <h4>Empleado</h4>
+
+
+<h1>Detalles</h1>
+    <h3>@Html.DisplayFor(model => model.Nombre)</h3> 
+
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Cedula)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Cedula)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FechaIngreso)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FechaIngreso)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TipoEmpleado)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TipoEmpleado.Categoría)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CuentaBanco)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CuentaBanco)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Banco)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Banco)
-        </dd>
-    </dl>
+<div class="info">
+            <dl class="row">
+                <dt class="col-sm-3 label">
+                    @Html.DisplayNameFor(model => model.Cedula)
+                </dt>
+                <dd class="col-sm-9 value">
+                    @Html.DisplayFor(model => model.Cedula)
+                </dd>
+                <dt class="col-sm-3 label">
+                    @Html.DisplayNameFor(model => model.FechaIngreso)
+                </dt>
+                <dd class="col-sm-9 value">
+                    @Html.DisplayFor(model => model.FechaIngreso)
+                </dd>
+                <dt class="col-sm-3 label">
+                    @Html.DisplayNameFor(model => model.TipoEmpleado)
+                </dt>
+                <dd class="col-sm-9 value">
+                    @Html.DisplayFor(model => model.TipoEmpleado.Categoría)
+                </dd>
+                <dt class="col-sm-3 label">
+                    @Html.DisplayNameFor(model => model.CuentaBanco)
+                </dt>
+                <dd class="col-sm-9 value">
+                    @Html.DisplayFor(model => model.CuentaBanco)
+                </dd>
+                <dt class="col-sm-3 label">
+                    @Html.DisplayNameFor(model => model.Banco)
+                </dt>
+                <dd class="col-sm-9 value">
+                    @Html.DisplayFor(model => model.Banco)
+                </dd>
+            </dl>
+        </div>
+
+<div class="accordion" id="accordionExample">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                Opciones del empleado
+            </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+
+                <a class="link" asp-action="Editar" asp-route-id="@Model?.Id">Modificar</a>
+
+            </div>
+            <div class="accordion-body">
+
+                <a class="link" asp-action="Marcas" asp-route-id="@Model?.Id">Marcas</a>
+
+            </div>
+        </div>
+    </div>
 </div>
 <div>
-    <a asp-action="Editar" asp-route-id="@Model.Id">Edit</a>
-    <a asp-action="Marcas" asp-route-id="@Model.Id">Marcas</a> |
-    <a asp-action="Index">Back to List</a>
+  
+    <div class="containerVolver">
+        <a class="volver" asp-action="Index">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5" />
+            </svg>
+            Volver al listado
+        </a>
+    </div>
 </div>

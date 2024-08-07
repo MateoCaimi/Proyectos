@@ -17,9 +17,13 @@ namespace LogicaNegocio.Entidades
         public int Id { get; set; }
         [Required(ErrorMessage = "Ingrese un nombre")]
         public string Nombre { get; set; }
-        [Required(ErrorMessage = "Ingrese una cedula")]
+        [Required(ErrorMessage = "Ingrese una cédula")]
+        [Display(Name = "Cédula")]
+
         public string Cedula { get; set; }
         [DataType(DataType.Date)]
+        [Display(Name = "Fecha de ingreso")]
+
         public DateTime? FechaIngreso { get; set; }
         [ForeignKey("TipoEmpleado")] public int? IdTipoEmpleado { get; set; }
         [Required(ErrorMessage = "Ingrese un tipo de empleado")]
