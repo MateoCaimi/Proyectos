@@ -28,6 +28,8 @@
         <h1>Detalles de la obra  @Html.DisplayFor(model => model.Obra.Nombre)</h1>
         @if (!Model.Obra.Finalizada)
         {
+
+
             <a class="linkCerrarObra" asp-action="Cerrar" asp-route-id="@Model?.Obra.IdObra">
                 Cerrar Obra
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
@@ -128,30 +130,78 @@
 }
 else
 {
-    
-<hr />
-<div id="containerLinksObra">
-    <a class="linkObra" asp-action="Editar" asp-route-id="@Model?.Obra.IdObra">Modificar</a>  
-    
-    <a class="linkObra" href="@Url.Action("Index","Plano", new{idObra = Model?.Obra.IdObra})">Planos</a>
-
    
 
-    <a class="linkObra" asp-action="Materiales" asp-route-id="@Model?.Obra.IdObra">Materiales</a>
+    <hr />
 
-    <a class="linkObra" href="@Url.Action("Liquidar","Empleado")">Liquidación</a>
+    <div class="accordion" id="accordionExample">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                    Opciones de la obra
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
 
-    <a class="linkObra" href="@Url.Action("HorasLluvia", "Obra", new{idObra = Model?.Obra.IdObra})">Asignación de horas lluvia</a>
+                    <a class="linkObra" asp-action="Editar" asp-route-id="@Model?.Obra.IdObra">Modificar</a>
 
-    <a class="linkObra" href="@Url.Action("Empleados","Obra", new{idObra = Model?.Obra.IdObra})">Empleados de la obra</a>
+                </div>
+            
+                <div class="accordion-body">
 
-    <a class="linkObra" href="@Url.Action("Index","Solicitud", new{idObra = Model?.Obra.IdObra})">Ver solicitudes</a>
+                    <a class="linkObra" href="@Url.Action("Liquidar","Empleado")">Liquidación</a>
 
-    <a class="linkObra" href="@Url.Action("Consumo","Obra", new{idObra = Model?.Obra.IdObra})">Consumir materiales</a>
 
-  
-</div>
-}
+                </div>
+            
+                <div class="accordion-body">
+
+                    <a class="linkObra" href="@Url.Action("Index","Plano", new{idObra = Model?.Obra.IdObra})">Planos</a>
+
+
+                </div>
+            
+                <div class="accordion-body">
+                    <a class="linkObra" asp-action="Materiales" asp-route-id="@Model?.Obra.IdObra">Materiales</a>
+
+
+                </div>
+           
+                <div class="accordion-body">
+
+                    <a class="linkObra" href="@Url.Action("HorasLluvia", "Obra", new{idObra = Model?.Obra.IdObra})">Asignación de horas lluvia</a>
+
+
+                </div>
+                <div class="accordion-body">
+
+                    <a class="linkObra" href="@Url.Action("Empleados","Obra", new{idObra = Model?.Obra.IdObra})">Empleados de la obra</a>
+
+
+
+                </div>
+                 <div class="accordion-body">
+
+                    <a class="linkObra" href="@Url.Action("Index","Solicitud", new{idObra = Model?.Obra.IdObra})">Ver solicitudes</a>
+
+
+                </div>
+                <div class="accordion-body">
+
+                    <a class="linkObra" href="@Url.Action("Consumo","Obra", new{idObra = Model?.Obra.IdObra})">Consumir materiales</a>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    }
+    
+    <hr />
+
 <div class="containerVolver">
     <a class="volver" asp-action="Index">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
@@ -161,4 +211,59 @@ else
     </a>
 </div>
 
-    
+
+
+
+
+
+
+@* <div id="containerLinksObra">
+    <ul>
+            <li>
+
+            <a class="linkObra" asp-action="Editar" asp-route-id="@Model?.Obra.IdObra">Modificar</a>
+            </li>
+            <li>
+
+                <a class="linkObra" href="@Url.Action("Index","Plano", new{idObra = Model?.Obra.IdObra})">Planos</a>
+            </li>
+            <li>
+
+                <a class="linkObra" asp-action="Materiales" asp-route-id="@Model?.Obra.IdObra">Materiales</a>
+            </li>
+            <li>
+
+                <a class="linkObra" href="@Url.Action("Liquidar","Empleado")">Liquidación</a>
+            </li>
+            <li>
+
+                <a class="linkObra" href="@Url.Action("HorasLluvia", "Obra", new{idObra = Model?.Obra.IdObra})">Asignación de horas lluvia</a>
+            </li>
+            <li>
+
+    <a class="linkObra" href="@Url.Action("Empleados","Obra", new{idObra = Model?.Obra.IdObra})">Empleados de la obra</a>
+            </li>
+            <li>
+
+    <a class="linkObra" href="@Url.Action("Index","Solicitud", new{idObra = Model?.Obra.IdObra})">Ver solicitudes</a>
+            </li>
+            <li>
+
+                <a class="linkObra" href="@Url.Action("Consumo","Obra", new{idObra = Model?.Obra.IdObra})">Consumir materiales</a>
+            </li>
+
+</ul>
+  
+</div>
+ *@
+@* <div class="containerVolver">
+    <a class="volver" asp-action="Index">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5" />
+        </svg>
+        Volver al listado de obras
+    </a>
+</div>
+
+
+ *@

@@ -26,6 +26,10 @@ body {
         pointer-events: none; /* Permite hacer clic a través de la capa */
     }
 
+.control-label{
+    font-size:18px;
+}
+
 
 #bienvenido {
     display: block;
