@@ -514,6 +514,8 @@ namespace MVC.Controllers
                     if (match.Success)
                     {
                         string webUrl = obj["webUrl"].ToString();
+                        Obra obra = this.ObraPorURL(webUrl);
+                        Carpeta carpetaContenedora = Fachada.ConseguirCarpetaContenedora(webUrl, obra);
                         string result = match.Groups[1].Value;
                         byte[] plano = await httpClient.GetByteArrayAsync(result);
                         string planoNombre = obj["name"].ToString();
@@ -540,6 +542,7 @@ namespace MVC.Controllers
                                 Plano planoNuevo = new Plano();
                                 planoNuevo.NombrePdf = planoNombre;
                                 planoNuevo.Pdf = plano;
+                                planoNuevo.CarpetaContenedora = carpetaContenedora;
                                 planoNuevo.TipoPdf = tipo;
                                 planoNuevo.FechaPublicado = DateTime.Now;
                                 planoNuevo.IdTipoPlano = Fachada.TraerIdPorNombreTipoPlano("<<A INGRESAR>>");  //Tipo genérico
@@ -562,7 +565,7 @@ namespace MVC.Controllers
 
         private TipoPlano TraerTipoPlanoPorRuta(string ruta)
         {
-            ruta = ruta.Replace("%20", " ");
+            ruta = Uri.UnescapeDataString(ruta);
             IEnumerable<TipoPlano> tipos = Fachada.BuscarTiposPlanos();
             foreach(TipoPlano tipo in tipos)
             {
@@ -592,10 +595,11 @@ namespace MVC.Controllers
 
                 foreach (var item in items)
                 {
-                    if (this.EstaEnObra(item["webUrl"].ToString()))
+                    Obra obra = this.EstaEnObra(item["webUrl"].ToString());
+                    if (obra != null)
                     {
                         string url = item["id"].ToString();
-                        tasks.Add(this.TomarPdfRecursivo(url, path, token));
+                        tasks.Add(this.TomarPdfRecursivo(url, path, token, obra));
                     }
                 }
                 await Task.WhenAll(tasks);
@@ -614,23 +618,23 @@ namespace MVC.Controllers
 
         }
 
-        private bool EstaEnObra(string url)
+        private Obra EstaEnObra(string url)
         {
             IEnumerable<Obra> obras = Fachada.TomarTodasObras();
             foreach(Obra obra in obras)
             {
                 if (url.ToLower().Contains(obra.Nombre.ToLower()))
                 {
-                    return true;
+                    return obra;
                 }
             }
-            return false;
+            return null;
         }
 
-        private async Task<List<JObject>> TomarPdfRecursivo(string siteId, string path, string token)
+        private async Task<List<JObject>> TomarPdfRecursivo(string siteId, string path, string token, Obra obra)
         {
             var pdfs = new List<JObject>();
-            await TomarPdfsInterno(siteId, path, pdfs, token);
+            await TomarPdfsInterno(siteId, path, pdfs, token, obra);
             return pdfs;
         }
 
@@ -657,7 +661,7 @@ namespace MVC.Controllers
                         // Es un folder, necesitamos llamar al método recursivamente
                         var subPath = $"{path}/{item["name"]}";
                         // Lanzar tarea asíncrona para procesamiento paralelo
-                        tasks.Add(TomarPdfsInterno(siteId, subPath, pdfs, token));
+                        tasks.Add(TomarPdfsInterno2(siteId, subPath, pdfs));
                     }
                     else
                     {
@@ -685,7 +689,7 @@ namespace MVC.Controllers
             }
             return null;
         }
-        private async Task<List<JObject>> TomarPdfsInterno(string siteId, string path, List<JObject> pdfs, string token)
+        private async Task<List<JObject>> TomarPdfsInterno(string siteId, string path, List<JObject> pdfs, string token, Obra obra)
         {
 
             using (HttpClient httpClient = new HttpClient())
@@ -738,8 +742,9 @@ namespace MVC.Controllers
                             //{
 
                             var subPath = $"{path}/{item["name"]}";
+                            await CrearCarpetas(subPath, obra);
                        //         Lanzar tarea asíncrona para procesamiento paralelo
-                                 tasks.Add(TomarPdfsInterno(siteId, subPath, pdfs, token));
+                                 tasks.Add(TomarPdfsInterno(siteId, subPath, pdfs, token, obra));
 
                             //}
 
@@ -766,6 +771,17 @@ namespace MVC.Controllers
             }
         }
 
+        private async Task CrearCarpetas(string subPath, Obra obra)
+        {
+            List<string> paths = subPath.Split("/").ToList();
+            string anterior = "";
+            foreach(string path in paths)
+            {
+                string pathFinal = Uri.UnescapeDataString(path);
+                Fachada.CrearCarpeta(pathFinal, anterior, obra);
+                anterior = path;
+            }
+        }
 
         private DriveDTO FiltrarCarpetas(DriveDTO? drive)
         {

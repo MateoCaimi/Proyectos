@@ -25,6 +25,7 @@ namespace LogicaAccesoDatos.EF
         public DbSet<ObraEmpleado> ObrasEmpleados { get; set; }
         public DbSet<SolicitudMaterial> SolicitudesMateriales { get; set; }
         public DbSet<ObraMaterial> ObrasMateriales { get; set; }
+        public DbSet<Carpeta> Carpetas { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

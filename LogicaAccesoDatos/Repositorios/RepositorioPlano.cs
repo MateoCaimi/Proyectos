@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -266,6 +267,35 @@ namespace LogicaAccesoDatos.Repositorios
         {   
             TipoPlano tipoplano = Context.TiposPlanos.Where(tp => tp.Categoria == v).FirstOrDefault();
             return tipoplano.Id;
+        }
+
+        public void CrearCarpeta(string path, string anterior, Obra obra)
+        {
+            Carpeta carpetaAnterior = this.BuscarCarpeta(anterior, obra);
+            Carpeta carpeta = new Carpeta();
+            if (BuscarCarpeta(path, obra) == null)
+            {
+                carpeta.IdObra = obra.IdObra;
+                carpeta.Name = path;
+                carpeta.Anterior = carpetaAnterior;
+                Context.Carpetas.Add(carpeta);
+                Context.SaveChanges();
+            }
+        }
+
+        private Carpeta BuscarCarpeta(string path, Obra obra)
+        {
+            return Context.Carpetas.Where(c => c.Name == path && c.IdObra == obra.IdObra).FirstOrDefault();
+        }
+
+        public Carpeta ConseguirCarpetaContenedora(string webUrl, Obra obra)
+        {
+            List<string> paths = webUrl.Split("/").ToList();
+            paths.RemoveAt(paths.Count - 1); //el ultimo siempre será el archivo, se elimina para agarrar a la carpeta contenedora
+            string ultimo = paths.LastOrDefault();
+            string path = Uri.UnescapeDataString(ultimo);
+            Carpeta carpetaContenedora = this.BuscarCarpeta(path, obra);
+            return carpetaContenedora;
         }
     }
 }

@@ -578,5 +578,15 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioSolicitud.TomarTodos2();
         }
+
+        public void CrearCarpeta(string path, string anterior, Obra obra)
+        {
+            RepositorioPlano.CrearCarpeta(path, anterior, obra);
+        }
+
+        public Carpeta ConseguirCarpetaContenedora(string webUrl, Obra obra)
+        {
+            return RepositorioPlano.ConseguirCarpetaContenedora(webUrl, obra);
+        }
     }
 }
