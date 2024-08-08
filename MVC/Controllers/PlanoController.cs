@@ -58,8 +58,12 @@ namespace MVC.Controllers
             Fachada.MapearTíposACarpetas();
             //await ObtenerCarpetaOneDrive();
             
-            list = await GraphRecursivoParalelizado();//await TomarPdfRecursivo(siteId, path);
-            List<Plano> planos = await this.FormateoDePlanos(list);
+            if(Name == "" || Name == null) //Solo hace la carga en el root
+            {
+                list = await GraphRecursivoParalelizado();//await TomarPdfRecursivo(siteId, path);
+                List<Plano> planos = await this.FormateoDePlanos(list);
+            }
+
             /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("LoginQR", "Usuario", new {id = idObra});
