@@ -118,7 +118,7 @@ body {
     cursor: pointer;
 }
     .btnNoti:hover {
-       
+        color: darkred;
     }
 
     .btnNoti:active {

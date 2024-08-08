@@ -113,3 +113,8 @@ a.btn {
         top: 0;
     }
 }*/
+
+
+.nav-link:hover {
+    color: darkred;
+}

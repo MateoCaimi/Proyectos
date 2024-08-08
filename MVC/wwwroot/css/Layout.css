@@ -61,7 +61,10 @@ a.btn :hover {
 
 .nav-link {
     color: #ffffff !important;
-}
+}.nav-link:hover{
+
+	color: Darkred;
+	}
 
 
 li a .nav-link :active {
