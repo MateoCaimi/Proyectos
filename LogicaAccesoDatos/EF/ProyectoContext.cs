@@ -31,7 +31,7 @@ namespace LogicaAccesoDatos.EF
         {
             string cadenaConexion =
                 @"SERVER=(localdb)\MSsqlLocaldb;
-                DATABASE=ProyectoIntegradorAGOSTO7171;
+                DATABASE=ProyectoIntegradorAGOSTO6;
                 INTEGRATED SECURITY=TRUE;
                 ENCRYPT=False"; //Puede evitar problemas si no hay un certificado y se usa SSL
             optionsBuilder.UseSqlServer(cadenaConexion)
