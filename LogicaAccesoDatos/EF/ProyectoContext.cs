@@ -31,7 +31,7 @@ namespace LogicaAccesoDatos.EF
         {
             string cadenaConexion =
                 @"SERVER=(localdb)\MSsqlLocaldb;
-                DATABASE=ProyectoIntegradorAGOSTO400;
+                DATABASE=ProyectoIntegradorAGOSTO6969;
                 INTEGRATED SECURITY=TRUE;
                 ENCRYPT=False"; //Puede evitar problemas si no hay un certificado y se usa SSL
             optionsBuilder.UseSqlServer(cadenaConexion)
@@ -43,6 +43,22 @@ namespace LogicaAccesoDatos.EF
             .HasOne(o => o.UsuarioACargo)
             .WithMany()
             .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Carpeta>()
+            .HasOne(o => o.Anterior)
+            .WithMany()
+            .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Plano>()
+            .HasOne(o => o.Obra)
+            .WithMany()
+            .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Plano>()
+            .HasOne(o => o.TipoPlano)
+            .WithMany()
+            .OnDelete(DeleteBehavior.NoAction);
+
             //LAS OBRAS TIENEN UN USUARIO A CARGO. LOS USUARIOS A CARGO TIENEN MUCHAS OBRAS. CUANDO SE BORRE OBRA / USUARIO NO BORRAR EL OTRO, dejar null. Esa es la idea.
 
             modelBuilder.Entity<Solicitud>()

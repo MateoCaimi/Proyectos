@@ -588,5 +588,25 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioPlano.ConseguirCarpetaContenedora(webUrl, obra);
         }
+
+        public Carpeta ObtenerCarpeta(string name, Obra obra)
+        {
+            return RepositorioPlano.BuscarCarpeta(name, obra);
+        }
+
+        public Carpeta ObtenerRoot(Obra obra)
+        {
+            return RepositorioPlano.BuscarRoot(obra);
+        }
+
+        public void MapearTíposACarpetas()
+        {
+            RepositorioPlano.MapearTiposACarpetas();
+        }
+
+        public List<Carpeta> CarpetasPosteriores(Carpeta carpeta)
+        {
+            return RepositorioPlano.CarpetasPosteriores(carpeta);
+        }
     }
 }
