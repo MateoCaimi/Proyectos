@@ -10,26 +10,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/MVC.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Layout.css">
-</head>           
+</head>
 
 <body>
     <div id="capaDeFondo"></div>
     <header id="headerCompu">
         <div class="flexContainer">
 
-            <div class="contenedorLogo">
+           @*  <div class="contenedorLogo">
                 <img class="imgLogo" src="~/css/Imagenes/logo negro.png" alt="Logo" />
-            </div>
-            <div class="containerLogout">
+            </div> *@
+           @*  <div class="containerLogout">
                 <a class="btn btn-danger " asp-controller="Usuario" asp-action="CerrarSesion">Cerrar sesión</a>
 
             </div>
-
+ *@
         </div>
         <nav class="navbar navbar-expand-lg ">
             @*  <div class="container-fluid">
             <div class="collapse navbar-collapse"> *@
-
+            <div class="contenedorLogo">
+                @* <img class="imgLogo" src="~/css/imagenes/logo blanco.png" /> *@
+              @*   <img class="imgLogo" src="~/css/imagenes/logotipo blanco.png" /> *@
+            </div>
 
             <ul id="ulNav" class="navbar-nav ms-auto">
                 @if (Context.Session.GetString("UsuarioLogueado") != null && Context.Session.GetString("UsuarioTipo") != "Usuario administrador")
@@ -52,6 +55,7 @@
 
                     <partial name="_Notificaciones2" class="nav-link " />
 
+                   
                     @* _Notificaciones2 *@
                     @*   <li class="nav-item">
 
@@ -70,7 +74,12 @@
 
 
                 }
+
             </ul>
+            <div class="containerLogout">
+                <a class="btn btn-danger  btnLogOut " asp-controller="Usuario" asp-action="CerrarSesion">Cerrar sesión</a>
+
+            </div>
             @*  </div>
             </div> *@
         </nav>
@@ -80,12 +89,7 @@
 
 
     <header id="headerCelu">
-
-
-
-
         <nav id="layout" class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light mb-3 navbar-left">
-
             <button id="btnBurga" class="btnBurga btn-primary" type="button" onclick="mostrarOcultar()">
                 <span class="navbar-toggler-icon"></span>
             </button>
