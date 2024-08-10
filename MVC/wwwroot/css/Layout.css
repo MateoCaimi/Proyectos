@@ -30,7 +30,7 @@
 
 }
     .btnLogOut:hover{
-        background-color:#d40000
+        background-color:#d40000;
     }
 
     .imgLogo {
@@ -128,6 +128,7 @@ body{
     }
 
     .navbarImg{
+        margin: -15% 0% 15% 0%;
         height:100%;
         width:100%;
         padding: 1%;
@@ -138,14 +139,39 @@ body{
         display: flex;
         flex-direction: column;
         top: 0;
-        left: -250px;
+        left: -200px;
         height: 100%;
-        width: 250px;
+        width: 200px;
         background-color: black;
         z-index: 1030;
         transition: left 0.4s ease;
     }
-   
+
+
+    #btnLoginLogout {
+        display: block;
+        background-color: darkred;
+        margin: auto;
+    }
+
+        #btnLoginLogout:hover {
+            text-decoration: none;
+            background-color: #d40000;
+        }
+
+        #btnLoginLogout:focus {
+            border-color: black;
+            background-color: #d40000;
+            box-shadow: 0 0 0 black;
+        }
+
+
+    .containerLogout {
+        margin: 1% 0%;
+        width: 25%;
+        left: 75%;
+        position: relative;
+    }
 
     .btnLoginLogout {
         text-align: right;
@@ -155,12 +181,30 @@ body{
 
     
 
-    .btnBurga {
-        margin-left: 300px;
-        background-color: aliceblue;
+    #btnBurga {
+        position:absolute;
+        margin-left: 200px;
+        background-color: darkred;
         color: black;
-        border: none;
+        border-radius:0px 20px 20px 0px;
+        width: 20%;
+        text-align: center;
+        padding: 5px 0;
+        border:none;
     }
+
+        #btnBurga:hover {
+            background-color: #d40000;
+        }
+        #btnBurga:active{
+            border:none;
+        }
+
+        #btnBurga:focus {
+            border-color: black;
+            background-color: #d40000;
+            box-shadow: none;
+        }
 
     #capaDeFondo {
         position: absolute;
@@ -195,7 +239,14 @@ body{
             justify-content:flex-start;
         }
     }
-    
+
+
+    @media(max-height: 400px) {
+
+        .navbarImg {
+            display: none;
+        }
+    }
 
 
 }
