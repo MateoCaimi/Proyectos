@@ -16,57 +16,50 @@
     <div class="alert alert-danger">
         @ViewBag.Error
     </div>
-}
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Liquidar" asp-controller="Empleado">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+}<div class="form-container">
+    <form asp-action="Liquidar" asp-controller="Empleado">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <div class="form-group">
-                <input type="hidden" name="id" value="@ViewBag.IdObra" />
-                <label>Filtrar por obra: </label>
-                <select id="IdObra" name="IdObra" class="form-control">
-                    <option value=null>Todas</option>
+        <div class="form-group">
+            <input type="hidden" name="id" value="@ViewBag.IdObra" />
+            <label>Filtrar por obra: </label>
+            <select id="IdObra" name="IdObra" class="form-control">
+                <option value=null>Todas</option>
+                @foreach (var item in ViewBag.Obras)
+                {
+                    <option value="@item.IdObra">@item.Nombre</option>
+                }
+            </select>
+        </div>
 
-                    @foreach (var item in ViewBag.Obras)
+        <div class="form-group">
+            <input type="hidden" name="id" value="@ViewBag.IdEmp" />
+            <label>Filtrar por empleado: </label>
+            <div id="IdEmpleado">
+                <select id="IdEmpleado" name="IdEmpleado" class="form-control">
+                    <option value=null>Todos</option>
+                    @foreach (var item in ViewBag.Empleados)
                     {
-                        <option value="@item.IdObra">@item.Nombre</option>
+                        <option value="@item.Id">@item.Nombre</option>
                     }
                 </select>
             </div>
+        </div>
 
-            <div class="form-group">
-                <input type="hidden" name="id" value="@ViewBag.IdEmp" />
-                <label>Filtrar por empleado: </label>
-                <div id="IdEmpleado">
-                    <select id="IdEmpleado" name="IdEmpleado" class="form-control">
-                        <option value=null>Todos</option>
-
-                        @foreach (var item in ViewBag.Empleados)
-                        {
-                            <option value="@item.Id">@item.Nombre</option>
-                        }
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="desde" class="control-label"> Fecha inicio: </label>
-                <input for="desde" name="desde" type="date" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label for="hasta" class="control-label">Fecha fin: </label>
-                <input for="hasta" name="hasta" type="date" class="form-control" />
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Liquidar" class="btn btnPrincipal" />
-            </div>
-        </form>
-    </div>
+        <div class="form-group">
+            <label for="FechaRango">Filtrar por fechas: </label>
+            <input id="FechaRango" name="FechaRango" class="form-control" type="text" />
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Liquidar" class="btn btnPrincipal" />
+        </div>
+    </form>
 </div>
 
-<br />
 
+@if (Model != null && Model.Any())
+{
+    
 
 <form asp-controller="Empleado" asp-action="DescargarPDF" method="post">
     
@@ -79,7 +72,6 @@
         <input type="hidden" name="ObraEmpleadoLiquidacionViewModelList[@i].ObraEmpleado.Empleado.Banco" value="@Model.ElementAt(i).ObraEmpleado.Empleado.Banco" />
         <input type="hidden" name="ObraEmpleadoLiquidacionViewModelList[@i].ObraEmpleado.Empleado.CuentaBanco" value="@Model.ElementAt(i).ObraEmpleado.Empleado.CuentaBanco" />
         <input type="hidden" name="ObraEmpleadoLiquidacionViewModelList[@i].Liquidacion" value="@Model.ElementAt(i).Liquidacion" />
-        <!-- Añadir otros campos aquí -->
     }
 </form>
 
@@ -140,6 +132,8 @@
         }
     </tbody>
 </table>
+}
+
 
 @section Scripts
 {
@@ -167,5 +161,16 @@
         });
 
 
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            flatpickr("#FechaRango", {
+                mode: "range",
+                dateFormat: "d-m-Y",
+                locale: "es"
+
+            });
+        });
     </script>
 }

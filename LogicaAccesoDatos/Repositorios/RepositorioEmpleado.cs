@@ -842,7 +842,7 @@ namespace LogicaAccesoDatos.Repositorios
 
         internal List<Marca> MarcasDelRangoDeFecha(List<Marca> marcas, DateTime desde, DateTime hasta)
         {
-            return marcas.Where(mar => mar.Entrada.Date.Day >= desde.Day && mar.Entrada.Date.Day <= hasta.Day).ToList();
+            return marcas.Where(mar => mar.Entrada.Date >= desde && mar.Entrada.Date <= hasta).ToList();
         }
 
         internal List<Marca> TraerTodasMarcas(Empleado empleado)

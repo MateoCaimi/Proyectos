@@ -160,9 +160,9 @@ namespace MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Marcas(int id, int IdObra, DateTime desde, DateTime hasta)
+    
+        public ActionResult Marcas(int id, int IdObra, string FechaRango)
         {
-
             if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("Index", "Usuario");
@@ -182,21 +182,35 @@ namespace MVC.Controllers
 
             Empleado empleado = Fachada.BuscarEmpleado(id);
             List<Marca> marcas = Fachada.TraerTodasMarcas(empleado);
+
             if (IdObra != 0)
             {
                 Obra obra = Fachada.BuscarObra(IdObra);
                 marcas = Fachada.MarcasDelEmpleadoEnLaObra(marcas, obra);
             }
-            if(desde.Year != 0001 && hasta.Year != 0001)
+
+            // Manejo del rango de fechas
+            if (!string.IsNullOrEmpty(FechaRango))
             {
-                marcas = Fachada.MarcasDelRangoDeFechas(marcas, desde, hasta);
+                // Dividir el rango en dos fechas: desde y hasta
+                var fechas = FechaRango.Split(" to ");
+                if (fechas.Length == 2)
+                {
+                    DateTime desde = DateTime.Parse(fechas[0]);
+                    DateTime hasta = DateTime.Parse(fechas[1]);
+
+                    marcas = Fachada.MarcasDelRangoDeFechas(marcas, desde, hasta);
+                }
             }
+
             ViewBag.Obras = Fachada.TomarTodasObras();
             ViewBag.IdEmp = empleado.Id;
             ViewBag.HorasTotales = Fachada.HorasTotales(marcas);
             ViewBag.Dias = marcas.Count();
+
             return View(marcas);
         }
+
 
         public ActionResult GenerarMarcas()
         {
@@ -505,7 +519,7 @@ namespace MVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Liquidar(int IdObra, int IdEmpleado,DateTime desde, DateTime hasta)
+        public async Task<IActionResult> Liquidar(int IdObra, int IdEmpleado,string FechaRango)
         {
 
             if (HttpContext.Session.GetString("UsuarioLogueado") == null)
@@ -527,9 +541,16 @@ namespace MVC.Controllers
 
             try
             {
-                if (desde.Year == 0001 || hasta.Year == 0001)
+                if (string.IsNullOrEmpty(FechaRango) || !FechaRango.Contains("to"))
                 {
-                    throw new Exception("Seleccione fechas");
+                    throw new Exception("Seleccione un rango de fechas válido");
+                }
+
+                // Parsear el rango de fechas
+                var fechaParts = FechaRango.Split(" to ");
+                if (fechaParts.Length != 2 || !DateTime.TryParse(fechaParts[0], out var desde) || !DateTime.TryParse(fechaParts[1], out var hasta))
+                {
+                    throw new Exception("Formato de rango de fechas no válido");
                 }
                 Empleado empleado = Fachada.BuscarEmpleado(IdEmpleado);
                 Obra obra = Fachada.BuscarObra(IdObra);

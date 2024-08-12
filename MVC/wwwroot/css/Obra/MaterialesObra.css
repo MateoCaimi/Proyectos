@@ -126,3 +126,16 @@ p {
     p a {
         margin: 0 10px;
     }
+
+
+.containerVolver {
+    margin-top: 20px;
+}
+
+.volver {
+    color: darkred;
+}
+
+    .volver:hover {
+        color: red;
+    }

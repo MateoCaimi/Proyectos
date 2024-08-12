@@ -1,0 +1,102 @@
+﻿
+h1 {
+    font-family: 'Montserrat', sans-serif;
+    color: #b30000;
+    margin: 0 20px;
+}
+
+
+.info {
+    padding: 16px;
+}
+
+.label {
+    font-weight: bold;
+    color: #333;
+    padding: 10px;
+}
+
+.value {
+    color: #555;
+    padding: 10px;
+}
+
+.row {
+    margin-bottom: 12px;
+}
+
+/* Estilo para la tabla */
+.table {
+    width: 100%;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+    border-radius: 10px;
+}
+
+    .table th, .table td {
+        padding: 10px;
+        text-align: left;
+        border-top: 1px solid #ddd;
+    }
+
+    .table th {
+        background-color: #8b0909;
+        color: #fff;
+    }
+
+    .table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .table tr:hover {
+        background-color: #e6e6e6;
+    }
+
+
+.btnAceptar {
+    margin-top: 20px;
+    background-color: #3aba01;
+    border-color: #8b0909;
+    color: #fff;
+}
+
+.btnRechazar {
+    margin-top: 20px;
+    background-color: #004eff;
+    border-color: #8b0909;
+    color: #fff;
+}   
+
+.botones {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start;
+}
+
+    .botones form {
+        margin: 0;
+    }
+
+.containerVolver {
+    margin-top: 20px;
+}
+
+.volver {
+    color: darkred;
+}
+
+    .volver:hover {
+        color: red;
+    }
+
+
+
+@media(max-width: 768px) {
+    .ContainerHeaders {
+        flex-direction: column;
+    }
+
+    #accordionExample {
+        width: 100%;
+    }
+}

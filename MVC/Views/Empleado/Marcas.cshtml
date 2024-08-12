@@ -4,76 +4,92 @@
     ViewData["Title"] = "Listado de marcas";
 }
 
+<meta charset="UTF-8">
+<link rel="stylesheet" href="~/css/Empleado/Marcas.css">
+
 <h1>Listado de marcas</h1>
 
-<form method="post">
-    <div class="form-group">
-        <input type="hidden" name="id" value="@ViewBag.IdEmp" />
-        <label>Filtrar por obra: </label>
-        <select id="IdObra" name="IdObra" class="form-control">
-            <option value=null>Todas</option>
-
-            @foreach (var item in ViewBag.Obras)
-            {
-                <option value="@item.IdObra">@item.Nombre</option>
-            }
-        </select>
-    </div>
-    <div class="form-group">
-        <label>Filtrar por fechas: </label>
-        <input for="Desde" class="form-control" type="date" name="Desde" />
-        <input for="Hasta" class="form-control" type="date" name="Hasta" />
-    </div>
-    <div class="form-group">
-        <button type="submit" class="btn btn-success">Filtrar</button>
-    </div>
-</form>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Entrada)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Salida)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.HorasExtra)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.HorasLluvia)
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model.Any())
-        {
+<div class="form-container">
+    <form method="post">
+        <div class="form-row">
             <div class="form-group">
-                <label>Horas totales:</label>
-                <p>@ViewBag.HorasTotales</p>
+                <input type="hidden" name="id" value="@ViewBag.IdEmp" />
+                <label for="IdObra">Filtrar por obra: </label>
+                <select id="IdObra" name="IdObra" class="form-control">
+                    <option value="">Todas</option>
+                    @foreach (var item in ViewBag.Obras)
+                    {
+                        <option value="@item.IdObra">@item.Nombre</option>
+                    }
+                </select>
             </div>
             <div class="form-group">
-                <label>Dias trabajados:</label>
-                <p>@ViewBag.Dias</p>
+                <label for="FechaRango">Filtrar por fechas: </label>
+                <input id="FechaRango" name="FechaRango" class="form-control" type="text" />
             </div>
-        }
-        @foreach (var item in Model)
-        {
+            <div class="form-group">
+                <button type="submit" class="btn btnPrincipal">Filtrar</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <div class="inline-label-value">
+        <label>Horas totales:</label>
+        <p>@ViewBag.HorasTotales</p>
+    </div>
+
+    <div class="inline-label-value">
+        <label>Días trabajados:</label>
+        <p>@ViewBag.Dias</p>
+    </div>
+
+
+    <table class="table">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Entrada)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Salida)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.HorasExtra)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.HorasLluvia)
-                </td>
+                <th>@Html.DisplayNameFor(model => model.Entrada)</th>
+                <th>@Html.DisplayNameFor(model => model.Salida)</th>
+                <th>@Html.DisplayNameFor(model => model.HorasExtra)</th>
+                <th>@Html.DisplayNameFor(model => model.HorasLluvia)</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Entrada)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Salida)</td>
+                    <td>@Html.DisplayFor(modelItem => item.HorasExtra)</td>
+                    <td>@Html.DisplayFor(modelItem => item.HorasLluvia)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<div class="containerVolver">
+    <a class="volver" asp-action="Index">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5" />
+        </svg>
+        Volver al empleado
+    </a>
+</div>
+
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            flatpickr("#FechaRango", {
+                mode: "range",
+                dateFormat: "d-m-Y",
+                locale: "es"
+
+            });
+        });
+    </script>
+}

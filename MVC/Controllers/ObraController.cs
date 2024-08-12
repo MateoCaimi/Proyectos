@@ -80,6 +80,7 @@ namespace MVC.Controllers
         {
             Obra obra = Fachada.BuscarObra(IdObra);
             IEnumerable<ObraEmpleado> empleados = Fachada.GetEmpleadosObra(obra);
+            ViewBag.IdObra = IdObra;
             return View(empleados);
         }
 

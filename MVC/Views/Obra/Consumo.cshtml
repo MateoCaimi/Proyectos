@@ -4,7 +4,10 @@
     ViewData["Title"] = "Materiales de obra";
 }
 
-<h2>Consumo de material</h2>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="~/css/Obra/ConsumoObra.css">
+
+<h1>Consumo de material</h1>
 
 @if (TempData["Error"] != null)
 {
@@ -24,13 +27,13 @@ else
 
     @Html.AntiForgeryToken()
 
-    <div>
+    <div class="form-group">
         <label>Nombre de la obra</label>
         <input type="text" class="form-control" value="@ViewBag.NombreObra" readonly="readonly" />
         <input type="hidden" class="form-control" value="@ViewBag.IdObra" name="IdObra" />
     </div>
 
-    <div>
+    <div class="form-group">
         <label>Material</label>
         <select id="Material" name="IdMaterial" class="form-control">
             @foreach (var item in ViewBag.Materiales)
@@ -38,10 +41,13 @@ else
                 <option value="@item.IdMaterial">@item.Material.Nombre (@item.Material.UnidadDeMedida) Stock= @item.Stock </option>
             }
         </select>
+    </div>
+    <div class="form-group">
+
         <label>Cantidad</label>
         <input type="number" name="Cantidad" class="form-control" />
-        <button type="button" id="addItem" class="btn btn-primary">Consumir</button>
     </div>
+        <button type="button" id="addItem" class="btn btnAgregar">Consumir</button>
 
     <table class="table">
         <thead>
@@ -55,9 +61,18 @@ else
         </tbody>
     </table>
 
-    <button type="submit" value="ConsumoPost" class="btn btn-success">Enviar</button>
+    <button type="submit" value="ConsumoPost" class="btn btnPrincipal">Enviar</button>
 
 </form>
+
+<div class="containerVolver">
+    <a class="volver" asp-action="Detalles" asp-route-id="@ViewBag.IdObra">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5" />
+        </svg>
+        Volver a la obra
+    </a>
+</div>
 
 @section Scripts {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
