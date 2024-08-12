@@ -2,28 +2,39 @@
 #headerCelu {
     display: none;
 }
-.flexContainer {
+/*.flexContainer {
     width: 100%;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-}
+}*/
 
 .contenedorLogo {
     text-align: center;
-
+    width:10%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-image: url('imagenes/logotipo blanco.png');
 }
 
 .containerLogout {
-    position: absolute;
+    position: relative;
+    width:10%;
     right: 20px; /* Ajusta según tus necesidades */
-}
 
-
-.imgLogo {
-    width: 20%;
 }
+.btnLogOut{
+    border:1px solid black;
+    background-color:darkred;
+
+}
+    .btnLogOut:hover{
+        background-color:#d40000;
+    }
+
+    .imgLogo {
+    }
 
 a.btn :hover {
     text-decoration: underline;
@@ -38,6 +49,8 @@ a.btn :hover {
     background-color: black;
     padding: 15px 0;
     margin: 0 auto;
+    display: flex;
+    align-items: stretch
 }
 #ulNav {
     
@@ -62,6 +75,9 @@ a.btn :hover {
 .nav-link {
     color: #ffffff !important;
 }
+    .nav-link:hover {
+        color: Darkred !important;
+    }
 
 
 li a .nav-link :active {
@@ -112,6 +128,7 @@ body{
     }
 
     .navbarImg{
+        margin: -15% 0% 15% 0%;
         height:100%;
         width:100%;
         padding: 1%;
@@ -122,14 +139,39 @@ body{
         display: flex;
         flex-direction: column;
         top: 0;
-        left: -250px;
+        left: -200px;
         height: 100%;
-        width: 250px;
+        width: 200px;
         background-color: black;
         z-index: 1030;
         transition: left 0.4s ease;
     }
-   
+
+
+    #btnLoginLogout {
+        display: block;
+        background-color: darkred;
+        margin: auto;
+    }
+
+        #btnLoginLogout:hover {
+            text-decoration: none;
+            background-color: #d40000;
+        }
+
+        #btnLoginLogout:focus {
+            border-color: black;
+            background-color: #d40000;
+            box-shadow: 0 0 0 black;
+        }
+
+
+    .containerLogout {
+        margin: 1% 0%;
+        width: 25%;
+        left: 75%;
+        position: relative;
+    }
 
     .btnLoginLogout {
         text-align: right;
@@ -139,12 +181,30 @@ body{
 
     
 
-    .btnBurga {
-        margin-left: 300px;
-        background-color: aliceblue;
+    #btnBurga {
+        position:absolute;
+        margin-left: 200px;
+        background-color: darkred;
         color: black;
-        border: none;
+        border-radius:0px 20px 20px 0px;
+        width: 20%;
+        text-align: center;
+        padding: 5px 0;
+        border:none;
     }
+
+        #btnBurga:hover {
+            background-color: #d40000;
+        }
+        #btnBurga:active{
+            border:none;
+        }
+
+        #btnBurga:focus {
+            border-color: black;
+            background-color: #d40000;
+            box-shadow: none;
+        }
 
     #capaDeFondo {
         position: absolute;
@@ -179,7 +239,14 @@ body{
             justify-content:flex-start;
         }
     }
-    
+
+
+    @media(max-height: 400px) {
+
+        .navbarImg {
+            display: none;
+        }
+    }
 
 
 }

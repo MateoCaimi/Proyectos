@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LogicaAccesoDatos.Migrations
 {
     /// <inheritdoc />
-    public partial class aver : Migration
+    public partial class _123444 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,7 +48,8 @@ namespace LogicaAccesoDatos.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Categoria = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Categoria = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IdObra = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -129,6 +130,36 @@ namespace LogicaAccesoDatos.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Carpetas",
+                columns: table => new
+                {
+                    IdObra = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    NameAnterior = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IdTipo = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Carpetas", x => new { x.Name, x.IdObra });
+                    table.ForeignKey(
+                        name: "FK_Carpetas_Carpetas_NameAnterior_IdObra",
+                        columns: x => new { x.NameAnterior, x.IdObra },
+                        principalTable: "Carpetas",
+                        principalColumns: new[] { "Name", "IdObra" });
+                    table.ForeignKey(
+                        name: "FK_Carpetas_Obras_IdObra",
+                        column: x => x.IdObra,
+                        principalTable: "Obras",
+                        principalColumn: "IdObra",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Carpetas_TiposPlanos_IdTipo",
+                        column: x => x.IdTipo,
+                        principalTable: "TiposPlanos",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Materiales",
                 columns: table => new
                 {
@@ -176,37 +207,6 @@ namespace LogicaAccesoDatos.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Planos",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IdTipoPlano = table.Column<int>(type: "int", nullable: false),
-                    FechaPublicado = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IdObra = table.Column<int>(type: "int", nullable: false),
-                    NombrePdf = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TipoPdf = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Pdf = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Planos", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Planos_Obras_IdObra",
-                        column: x => x.IdObra,
-                        principalTable: "Obras",
-                        principalColumn: "IdObra",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Planos_TiposPlanos_IdTipoPlano",
-                        column: x => x.IdTipoPlano,
-                        principalTable: "TiposPlanos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Solicitudes",
                 columns: table => new
                 {
@@ -241,6 +241,43 @@ namespace LogicaAccesoDatos.Migrations
                         name: "FK_Solicitudes_Usuarios_IdUsuario",
                         column: x => x.IdUsuario,
                         principalTable: "Usuarios",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Planos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IdTipoPlano = table.Column<int>(type: "int", nullable: false),
+                    FechaPublicado = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IdObra = table.Column<int>(type: "int", nullable: false),
+                    NombrePdf = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TipoPdf = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Pdf = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    CarpetaContenedoraName = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CarpetaContenedoraIdObra = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Planos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Planos_Carpetas_CarpetaContenedoraName_CarpetaContenedoraIdObra",
+                        columns: x => new { x.CarpetaContenedoraName, x.CarpetaContenedoraIdObra },
+                        principalTable: "Carpetas",
+                        principalColumns: new[] { "Name", "IdObra" },
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Planos_Obras_IdObra",
+                        column: x => x.IdObra,
+                        principalTable: "Obras",
+                        principalColumn: "IdObra");
+                    table.ForeignKey(
+                        name: "FK_Planos_TiposPlanos_IdTipoPlano",
+                        column: x => x.IdTipoPlano,
+                        principalTable: "TiposPlanos",
                         principalColumn: "Id");
                 });
 
@@ -315,6 +352,21 @@ namespace LogicaAccesoDatos.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Carpetas_IdObra",
+                table: "Carpetas",
+                column: "IdObra");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Carpetas_IdTipo",
+                table: "Carpetas",
+                column: "IdTipo");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Carpetas_NameAnterior_IdObra",
+                table: "Carpetas",
+                columns: new[] { "NameAnterior", "IdObra" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Empleados_IdTipoEmpleado",
                 table: "Empleados",
                 column: "IdTipoEmpleado");
@@ -338,6 +390,11 @@ namespace LogicaAccesoDatos.Migrations
                 name: "IX_ObrasMateriales_IdMaterial",
                 table: "ObrasMateriales",
                 column: "IdMaterial");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Planos_CarpetaContenedoraName_CarpetaContenedoraIdObra",
+                table: "Planos",
+                columns: new[] { "CarpetaContenedoraName", "CarpetaContenedoraIdObra" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Planos_IdObra",
@@ -394,7 +451,7 @@ namespace LogicaAccesoDatos.Migrations
                 name: "ObrasEmpleados");
 
             migrationBuilder.DropTable(
-                name: "TiposPlanos");
+                name: "Carpetas");
 
             migrationBuilder.DropTable(
                 name: "Materiales");
@@ -404,6 +461,9 @@ namespace LogicaAccesoDatos.Migrations
 
             migrationBuilder.DropTable(
                 name: "Empleados");
+
+            migrationBuilder.DropTable(
+                name: "TiposPlanos");
 
             migrationBuilder.DropTable(
                 name: "Obras");

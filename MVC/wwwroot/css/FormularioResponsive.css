@@ -1,0 +1,43 @@
+﻿body {
+
+   
+}
+
+
+
+
+@media(max-width: 768px) {
+
+
+    .form-group {
+        margin-bottom: 10px;
+        width: 100%;
+    }
+
+    
+
+    #btnLoginLogout {
+        display: block;
+        background-color: darkred;
+        margin: auto;
+    }
+
+        #btnLoginLogout:hover {
+            text-decoration: none;
+            background-color: #d40000;
+        }
+
+        #btnLoginLogout:focus {
+            border-color: black;
+            background-color: #d40000;
+            box-shadow: 0 0 0 black;
+        }
+
+
+    .containerLogout {
+        margin: 1% 0%;
+        width: 25%;
+        left: 75%;
+        position: relative;
+    }
+}

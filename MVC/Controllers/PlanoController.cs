@@ -42,17 +42,28 @@ namespace MVC.Controllers
 
 
         // GET: PlanoController
-        public async Task<ActionResult> Index(int idObra)
+        public async Task<ActionResult> Index(string Name, int idObra)
         {
             //DriveItem carpeta = this.ObtenerCarpeta().Result;
             Fachada.Precarga();
             string siteId = "bodegapiedrafita.sharepoint.com,95552c4f-844e-44a0-b73d-7b7f3cda8e39,f5ebb529-4b04-4838-9fa8-73750fa93b26";
             string path = "1.%20PROYECTO/02.APROBADO";
             List<JObject> list = new List<JObject>();
+            Obra obra = Fachada.BuscarObra(idObra);
+            Carpeta carpetaActual = Fachada.ObtenerCarpeta(Name, obra);
+            if(carpetaActual == null)
+            {
+                carpetaActual = Fachada.ObtenerRoot(obra);
+            }
+            Fachada.MapearTíposACarpetas();
             //await ObtenerCarpetaOneDrive();
             
-            list = await GraphRecursivoParalelizado();//await TomarPdfRecursivo(siteId, path);
-            List<Plano> planos = await this.FormateoDePlanos(list);
+            if(Name == "" || Name == null) //Solo hace la carga en el root
+            {
+                list = await GraphRecursivoParalelizado();//await TomarPdfRecursivo(siteId, path);
+                List<Plano> planos = await this.FormateoDePlanos(list);
+            }
+
             /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("LoginQR", "Usuario", new {id = idObra});
@@ -71,8 +82,9 @@ namespace MVC.Controllers
                 TempData["Error"] = null;
                 ViewBag.IdObra = idObra;
                 ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
+                ViewBag.CarpetasPosteriores = Fachada.CarpetasPosteriores(carpetaActual);
                // ViewBag.TiposdePlano = Fachada.BuscarTiposPlanosPorObra(idObra);
-                return View();
+                return View(carpetaActual);
             }
             catch (ObraException e) //Solo manda ObraException si no existe obra
             {
@@ -499,6 +511,7 @@ namespace MVC.Controllers
 
         private async Task<List<Plano>> FormateoDePlanos(List<JObject> list)
         {
+            Fachada.MapearTíposACarpetas();
             string token = await ObtenerTokenDeAccesoGraph();
             using (HttpClient httpClient = new HttpClient())
             {
@@ -545,7 +558,7 @@ namespace MVC.Controllers
                                 planoNuevo.CarpetaContenedora = carpetaContenedora;
                                 planoNuevo.TipoPdf = tipo;
                                 planoNuevo.FechaPublicado = DateTime.Now;
-                                planoNuevo.IdTipoPlano = Fachada.TraerIdPorNombreTipoPlano("<<A INGRESAR>>");  //Tipo genérico
+                                planoNuevo.IdTipoPlano = tipoPlano.Id;
                                 planoNuevo.Nombre = planoNombre;
                                 planoNuevo.IdObra = idObra;
                                 //planoNuevo.IdTipoPlano = tipoPlano.Id;
@@ -741,6 +754,7 @@ namespace MVC.Controllers
                             //if (cambioLaCarpeta)
                             //{
 
+
                             var subPath = $"{path}/{item["name"]}";
                             await CrearCarpetas(subPath, obra);
                        //         Lanzar tarea asíncrona para procesamiento paralelo
@@ -751,6 +765,7 @@ namespace MVC.Controllers
                         }
                         else
                         {
+                            await CrearTipo(path, obra);
                             pdfs.Add(item as JObject);
                         }
                     }
@@ -769,6 +784,13 @@ namespace MVC.Controllers
 
 
             }
+        }
+
+        private async Task CrearTipo(string path, Obra obra)
+        {
+            List<string> paths = path.Split("/").ToList();
+            string name = paths.Last();
+            Fachada.crearTipoPlanos(name, obra.IdObra);
         }
 
         private async Task CrearCarpetas(string subPath, Obra obra)

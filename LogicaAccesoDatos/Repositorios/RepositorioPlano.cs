@@ -25,12 +25,11 @@ namespace LogicaAccesoDatos.Repositorios
 
         public void Precarga()
         {
-            int cantTipoPlano = this.TomarTodosTipos().Count();
-            if(cantTipoPlano == 0)
+            List<TipoPlano> cantTipoPlano = this.TomarTodosTipos().ToList();
+            if(cantTipoPlano.Count == 0) 
             {
                 TipoPlano tipoGenerico = new TipoPlano();
                 tipoGenerico.Categoria = "<<A INGRESAR>>";
-                tipoGenerico.UltimaModificacion = "2022-3-1";
                 //tipoGenerico.idObra = 1;
                 Context.TiposPlanos.Add(tipoGenerico);
 
@@ -219,8 +218,6 @@ namespace LogicaAccesoDatos.Repositorios
         public TipoPlano CrearTipoPlano(string nombreCarpeta, int idObra)
         {
             TipoPlano nuevoTipo = new TipoPlano(nombreCarpeta);
-            nuevoTipo.idObra = idObra;
-            nuevoTipo.UltimaModificacion = "2000-01-01";
             Context.TiposPlanos.Add(nuevoTipo);
             Context.SaveChanges();
 
@@ -229,7 +226,6 @@ namespace LogicaAccesoDatos.Repositorios
 
         public void ActualizarFechaUltimaModificacion(TipoPlano tipoPlanoActual, string ultimaModificacion)
         {
-            tipoPlanoActual.UltimaModificacion = ultimaModificacion;
             EliminarTipoPlano(tipoPlanoActual);
 
         }
@@ -253,7 +249,7 @@ namespace LogicaAccesoDatos.Repositorios
             List<TipoPlano> listaTP = new List<TipoPlano>();
             foreach (var tipoPlano in Context.TiposPlanos)
             {
-                if (tipoPlano.idObra == idObra)
+                if (tipoPlano.IdObra == idObra)
                 {
                     listaTP.Add(tipoPlano);
                 }
@@ -277,13 +273,28 @@ namespace LogicaAccesoDatos.Repositorios
             {
                 carpeta.IdObra = obra.IdObra;
                 carpeta.Name = path;
-                carpeta.Anterior = carpetaAnterior;
+                if(carpetaAnterior != null)
+                {
+                    carpeta.NameAnterior = carpetaAnterior.Name;
+                }
+                TipoPlano tipo = this.BuscarTipoPlanoPorNombre(carpeta.Name);
+                if (tipo != null)
+                {
+                    carpeta.IdTipo = tipo.Id;
+                }
+
                 Context.Carpetas.Add(carpeta);
                 Context.SaveChanges();
             }
         }
 
-        private Carpeta BuscarCarpeta(string path, Obra obra)
+        public TipoPlano BuscarTipoPlanoPorNombre(string name)
+        {
+            TipoPlano tipo = Context.TiposPlanos.Where(tp => tp.Categoria == name).FirstOrDefault();
+            return tipo;
+        }
+
+        public Carpeta BuscarCarpeta(string path, Obra obra)
         {
             return Context.Carpetas.Where(c => c.Name == path && c.IdObra == obra.IdObra).FirstOrDefault();
         }
@@ -296,6 +307,40 @@ namespace LogicaAccesoDatos.Repositorios
             string path = Uri.UnescapeDataString(ultimo);
             Carpeta carpetaContenedora = this.BuscarCarpeta(path, obra);
             return carpetaContenedora;
+        }
+
+        public void MapearTiposACarpetas()
+        {
+            List<Plano> planos = this.TomarTodos().ToList();
+            List<TipoPlano> tipos = this.TomarTodosTipos().ToList();
+            List<Carpeta> carpetas = this.TomarTodasCarpetas().ToList();
+            foreach(Carpeta carpeta in carpetas)
+            {
+                foreach(TipoPlano tipo in tipos)
+                {
+                    if(carpeta.Name == tipo.Categoria)
+                    {
+                        carpeta.Tipo = tipo;
+                        break;
+                    }
+                }
+            }
+            Context.SaveChanges();
+        }
+
+        private IEnumerable<Carpeta> TomarTodasCarpetas()
+        {
+            return Context.Carpetas;
+        }
+
+        internal Carpeta BuscarRoot(Obra obra)
+        {
+            return Context.Carpetas.Where(c => c.IdObra == obra.IdObra && c.Anterior == null).FirstOrDefault();
+        }
+
+        internal List<Carpeta> CarpetasPosteriores(Carpeta carpeta)
+        {
+            return Context.Carpetas.Where(c => c.Anterior.Name == carpeta.Name && c.Obra.IdObra == carpeta.IdObra).ToList();
         }
     }
 }

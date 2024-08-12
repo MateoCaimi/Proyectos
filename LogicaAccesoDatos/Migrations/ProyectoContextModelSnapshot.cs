@@ -22,6 +22,31 @@ namespace LogicaAccesoDatos.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("LogicaNegocio.Entidades.Carpeta", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("IdObra")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdTipo")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NameAnterior")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Name", "IdObra");
+
+                    b.HasIndex("IdObra");
+
+                    b.HasIndex("IdTipo");
+
+                    b.HasIndex("NameAnterior", "IdObra");
+
+                    b.ToTable("Carpetas");
+                });
+
             modelBuilder.Entity("LogicaNegocio.Entidades.Empleado", b =>
                 {
                     b.Property<int>("Id")
@@ -213,6 +238,13 @@ namespace LogicaAccesoDatos.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CarpetaContenedoraIdObra")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CarpetaContenedoraName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("FechaPublicado")
                         .HasColumnType("datetime2");
 
@@ -242,6 +274,8 @@ namespace LogicaAccesoDatos.Migrations
                     b.HasIndex("IdObra");
 
                     b.HasIndex("IdTipoPlano");
+
+                    b.HasIndex("CarpetaContenedoraName", "CarpetaContenedoraIdObra");
 
                     b.ToTable("Planos");
                 });
@@ -363,6 +397,9 @@ namespace LogicaAccesoDatos.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("IdObra")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("TiposPlanos");
@@ -440,6 +477,30 @@ namespace LogicaAccesoDatos.Migrations
                     b.HasBaseType("LogicaNegocio.Entidades.Usuario");
 
                     b.HasDiscriminator().HasValue("UNormal");
+                });
+
+            modelBuilder.Entity("LogicaNegocio.Entidades.Carpeta", b =>
+                {
+                    b.HasOne("LogicaNegocio.Entidades.Obra", "Obra")
+                        .WithMany()
+                        .HasForeignKey("IdObra")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LogicaNegocio.Entidades.TipoPlano", "Tipo")
+                        .WithMany()
+                        .HasForeignKey("IdTipo");
+
+                    b.HasOne("LogicaNegocio.Entidades.Carpeta", "Anterior")
+                        .WithMany()
+                        .HasForeignKey("NameAnterior", "IdObra")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Anterior");
+
+                    b.Navigation("Obra");
+
+                    b.Navigation("Tipo");
                 });
 
             modelBuilder.Entity("LogicaNegocio.Entidades.Empleado", b =>
@@ -525,14 +586,22 @@ namespace LogicaAccesoDatos.Migrations
                     b.HasOne("LogicaNegocio.Entidades.Obra", "Obra")
                         .WithMany()
                         .HasForeignKey("IdObra")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("LogicaNegocio.Entidades.TipoPlano", "TipoPlano")
                         .WithMany()
                         .HasForeignKey("IdTipoPlano")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("LogicaNegocio.Entidades.Carpeta", "CarpetaContenedora")
+                        .WithMany()
+                        .HasForeignKey("CarpetaContenedoraName", "CarpetaContenedoraIdObra")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("CarpetaContenedora");
 
                     b.Navigation("Obra");
 

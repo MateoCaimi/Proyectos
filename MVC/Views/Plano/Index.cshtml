@@ -1,4 +1,4 @@
-﻿@model IEnumerable<LogicaNegocio.Entidades.Plano>
+﻿@model LogicaNegocio.Entidades.Carpeta
 
 @{
     ViewData["Title"] = "Index";
@@ -15,29 +15,38 @@
 <h1>Planos</h1>
 
 <p>
-    <a href="@Url.Action("Agregar", new {idObra = ViewBag.IdObra})"> Agregar Plano</a>
+    <a href="@Url.Action("Agregar", new {idObra = Model.IdObra})"> Agregar Plano</a>
 </p>
 
 <p>
-    <a href="@Url.Action("SubidaMultiple", new {idObra = ViewBag.IdObra})"> Agregar Planos Múltiples</a>
+    <a href="@Url.Action("SubidaMultiple", new {idObra = Model.IdObra})"> Agregar Planos Múltiples</a>
 </p>
 
+@if(Model.Anterior != null){
+    <p>
+        <a href="@Url.Action("Index", new {Name = Model.Anterior.Name, idObra = Model.IdObra})">Atrás</a>
+    </p>
+}
 
-    
+
 <table class="table">
     <tbody>
-@foreach (var item in ViewBag.TiposdePlano) {
-
-
-        <tr>
-            <td>Foto</td>  
-            <td>
-                    <a href="@Url.Action("ListarPlanos", new {idTipoPlano = item.Id, idObra = ViewBag.IdObra})">@item.Categoria</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in ViewBag.CarpetasPosteriores)
+        {
+            <tr>
+                <td>Foto</td>
+                <td>
+                    @if (item.Tipo != null)
+                    {
+                        <a href="@Url.Action("ListarPlanos", new {idTipoPlano = item.Tipo.Id, idObra = item.IdObra})">@item.Name</a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("Index", new {Name = item.Name, idObra = item.IdObra})">@item.Name</a>
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
-
-
 

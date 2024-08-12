@@ -11,13 +11,13 @@ function mostrarOcultar() {
    // let capaStyle = window.getComputedStyle(capa);
 
 
-    if (layoutStyle.getPropertyValue('left') == "-250px") {
+    if (layoutStyle.getPropertyValue('left') == "-200px") {
         capa.style.setProperty('opacity', '0.5')
         capa.style.setProperty('z-index', '0');
         layout.style.setProperty('left', '0px');
 
     } else {
-        layout.style.setProperty('left', '-250px');
+        layout.style.setProperty('left', '-200px');
         capa.style.setProperty('opacity', '0')
         capa.style.setProperty('z-index', '-10');
 
