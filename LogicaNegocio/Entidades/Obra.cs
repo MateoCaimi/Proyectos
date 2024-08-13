@@ -41,6 +41,8 @@ namespace LogicaNegocio.Entidades
         public byte[]? Cronograma { get; set; }
         public byte[]? QR { get; set; }
 
+        public DateTime? UltimaActualizacion { get; set; }
+
         //Pruebas de listas
         public List<Material> Materiales { get; set; } = new List<Material>();
         public Obra()

@@ -249,7 +249,7 @@ namespace LogicaAccesoDatos.Repositorios
                 return null;
             }
         }
-        public Proveedor ProveedorMasComun(int IdObra)
+        /*public Proveedor ProveedorMasComun(int IdObra)
         {
             Dictionary<Proveedor, int> retorno = new Dictionary<Proveedor, int>();
             IEnumerable<Solicitud> solicitudesObra = Context.Solicitudes.Where(s => s.IdObra == IdObra);
@@ -273,7 +273,7 @@ namespace LogicaAccesoDatos.Repositorios
             {
                 return null;
             }
-        }
+        }*/
         public Usuario SolicitanteMasComun(int IdObra)
         {
             Dictionary<Usuario, int> retorno = new Dictionary<Usuario, int>();
@@ -324,10 +324,10 @@ namespace LogicaAccesoDatos.Repositorios
                 return null;
             }
         }
-        private Proveedor BuscarProveedor(int idProveedor)
+        /*private Proveedor BuscarProveedor(int idProveedor)
         {
             return Context.Proveedores.Find(idProveedor);
-        }
+        }*/
 
         private bool TieneSolicitudesPendientes(Obra obra)
         {
@@ -553,6 +553,22 @@ namespace LogicaAccesoDatos.Repositorios
                 Context.Obras.Add(obraGenerica);
                 Context.SaveChanges();
             }
+        }
+
+        internal bool ActualizarPlanosEnObra(Obra obra)
+        {
+            if(obra.UltimaActualizacion != null)
+            {
+                TimeSpan? diff = obra.UltimaActualizacion - DateTime.Now;
+                return diff.Value.Minutes > 5; //solo cada cinco minutos actualizar
+            }
+            return true; //si es primera vez, actualizar
+        }
+
+        internal void ActualizarFechaUltimaActualizacion(Obra obra)
+        {
+            obra.UltimaActualizacion = DateTime.Now;
+            Context.SaveChanges();
         }
     }
 }

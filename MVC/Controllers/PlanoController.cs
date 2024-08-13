@@ -48,20 +48,25 @@ namespace MVC.Controllers
             Fachada.Precarga();
             string siteId = "bodegapiedrafita.sharepoint.com,95552c4f-844e-44a0-b73d-7b7f3cda8e39,f5ebb529-4b04-4838-9fa8-73750fa93b26";
             string path = "1.%20PROYECTO/02.APROBADO";
+            Fachada.MapearTíposACarpetas();
             List<JObject> list = new List<JObject>();
             Obra obra = Fachada.BuscarObra(idObra);
+            //await ObtenerCarpetaOneDrive();
+            //Fachada.MapearTíposACarpetas();
+            bool continuar = true;//Fachada.ActualizarPlanosEnObra(obra);
+            if ((Name == "" || Name == null) && continuar) //Solo hace la carga en el root
+            {
+                Fachada.ActualizarFechaUltimaActualizacion(obra);
+                list = await GraphRecursivoParalelizado(idObra);//await TomarPdfRecursivo(siteId, path);
+                Fachada.MapearTíposACarpetas();
+                List<Plano> planos = await this.FormateoDePlanos(list);
+                List<Plano> planos2 = Fachada.TomarTodosPlanos().ToList();
+            }
+
             Carpeta carpetaActual = Fachada.ObtenerCarpeta(Name, obra);
-            if(carpetaActual == null)
+            if (carpetaActual == null)
             {
                 carpetaActual = Fachada.ObtenerRoot(obra);
-            }
-            Fachada.MapearTíposACarpetas();
-            //await ObtenerCarpetaOneDrive();
-            
-            if(Name == "" || Name == null) //Solo hace la carga en el root
-            {
-                list = await GraphRecursivoParalelizado();//await TomarPdfRecursivo(siteId, path);
-                List<Plano> planos = await this.FormateoDePlanos(list);
             }
 
             /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
@@ -82,7 +87,14 @@ namespace MVC.Controllers
                 TempData["Error"] = null;
                 ViewBag.IdObra = idObra;
                 ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
-                ViewBag.CarpetasPosteriores = Fachada.CarpetasPosteriores(carpetaActual);
+                if(carpetaActual != null)
+                {
+                    ViewBag.CarpetasPosteriores = Fachada.CarpetasPosteriores(carpetaActual);
+                }
+                else
+                {
+                    ViewBag.CarpetasPosteriores = new List<Carpeta>();
+                }
                // ViewBag.TiposdePlano = Fachada.BuscarTiposPlanosPorObra(idObra);
                 return View(carpetaActual);
             }
@@ -511,8 +523,8 @@ namespace MVC.Controllers
 
         private async Task<List<Plano>> FormateoDePlanos(List<JObject> list)
         {
-            Fachada.MapearTíposACarpetas();
             string token = await ObtenerTokenDeAccesoGraph();
+            List<Plano> retorno = new List<Plano>();
             using (HttpClient httpClient = new HttpClient())
             {
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -528,7 +540,6 @@ namespace MVC.Controllers
                     {
                         string webUrl = obj["webUrl"].ToString();
                         Obra obra = this.ObraPorURL(webUrl);
-                        Carpeta carpetaContenedora = Fachada.ConseguirCarpetaContenedora(webUrl, obra);
                         string result = match.Groups[1].Value;
                         byte[] plano = await httpClient.GetByteArrayAsync(result);
                         string planoNombre = obj["name"].ToString();
@@ -551,11 +562,10 @@ namespace MVC.Controllers
                             }
                             if (tipo != "")
                             {
-                                TipoPlano tipoPlano = this.TraerTipoPlanoPorRuta(webUrl);
+                                TipoPlano tipoPlano = this.TraerTipoPlanoPorRuta(webUrl, obra);
                                 Plano planoNuevo = new Plano();
                                 planoNuevo.NombrePdf = planoNombre;
                                 planoNuevo.Pdf = plano;
-                                planoNuevo.CarpetaContenedora = carpetaContenedora;
                                 planoNuevo.TipoPdf = tipo;
                                 planoNuevo.FechaPublicado = DateTime.Now;
                                 planoNuevo.IdTipoPlano = tipoPlano.Id;
@@ -565,33 +575,48 @@ namespace MVC.Controllers
                                 if (idObra != 0) //Si no encuentra obra, no es un plano para agregar. Es o un pdf cualquiera o de una obra no subida
                                 {
                                     Fachada.AgregarPlano(planoNuevo);
+                                    retorno.Add(planoNuevo);
                                 }
                             }
+                            else
+                            {
+                                //pruebita
+                            }
+                        }
+                        else
+                        {
+                            //pruebita
                         }
                         
                     }
                 }
 
             }
-            return null;
+            return retorno;
         }
 
-        private TipoPlano TraerTipoPlanoPorRuta(string ruta)
+        private TipoPlano TraerTipoPlanoPorRuta(string ruta, Obra obra)
         {
-            ruta = Uri.UnescapeDataString(ruta);
-            IEnumerable<TipoPlano> tipos = Fachada.BuscarTiposPlanos();
+            IEnumerable<TipoPlano> tipos = Fachada.BuscarTiposPlanosPorObra(obra.IdObra);
+            string rutaNueva = Uri.UnescapeDataString(ruta);
+            List<string> arrayStrings = rutaNueva.Split("/").ToList();
+            arrayStrings.Reverse();
             foreach(TipoPlano tipo in tipos)
             {
-                if (ruta.ToLower().Contains(tipo.Categoria.ToLower()))
-                {
-                    return tipo;
+                foreach (string posible in arrayStrings) { 
+                    if(tipo.Categoria.ToLower() == posible.ToLower())
+                    {
+                        return tipo;
+                    }
                 }
             }
             return tipos.First(); //<<A INGRESAR>>
         }
 
-        private async Task<List<JObject>> GraphRecursivoParalelizado()
+        private async Task<List<JObject>> GraphRecursivoParalelizado(int idParam)
         {
+            Fachada.LimpiarCarpetasYTipos(idParam);
+            Fachada.Precarga();
             string path = "1.%20PROYECTO/02.APROBADO";
             string token = await ObtenerTokenDeAccesoGraph();
             using (HttpClient httpClient = new HttpClient())
@@ -609,7 +634,7 @@ namespace MVC.Controllers
                 foreach (var item in items)
                 {
                     Obra obra = this.EstaEnObra(item["webUrl"].ToString());
-                    if (obra != null)
+                    if (obra != null && obra.IdObra == idParam)
                     {
                         string url = item["id"].ToString();
                         tasks.Add(this.TomarPdfRecursivo(url, path, token, obra));
@@ -710,6 +735,7 @@ namespace MVC.Controllers
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
                 var tasks = new List<Task<List<JObject>>>();
+                var crears = new List<Task>();
                 var requestUri = $"https://graph.microsoft.com/v1.0/sites/{siteId}/drive/root:/{path}:/children";
                 try
                 {
@@ -756,22 +782,22 @@ namespace MVC.Controllers
 
 
                             var subPath = $"{path}/{item["name"]}";
-                            await CrearCarpetas(subPath, obra);
                        //         Lanzar tarea asíncrona para procesamiento paralelo
-                                 tasks.Add(TomarPdfsInterno(siteId, subPath, pdfs, token, obra));
+                            tasks.Add(TomarPdfsInterno(siteId, subPath, pdfs, token, obra));
 
                             //}
 
                         }
                         else
                         {
-                            await CrearTipo(path, obra);
+                            crears.Add(CrearCarpetasYTipo(path, obra));
                             pdfs.Add(item as JObject);
                         }
                     }
 
                     // Esperar a que todas las tareas se completen
                     await Task.WhenAll(tasks);
+                    await Task.WhenAll(crears);
 
                     return pdfs;
                 }
@@ -793,16 +819,18 @@ namespace MVC.Controllers
             Fachada.crearTipoPlanos(name, obra.IdObra);
         }
 
-        private async Task CrearCarpetas(string subPath, Obra obra)
+        private async Task CrearCarpetasYTipo(string subPath, Obra obra)
         {
             List<string> paths = subPath.Split("/").ToList();
             string anterior = "";
-            foreach(string path in paths)
+            foreach (string path in paths)
             {
-                string pathFinal = Uri.UnescapeDataString(path);
-                Fachada.CrearCarpeta(pathFinal, anterior, obra);
+                //string pathFinal = Uri.UnescapeDataString(path);
+                Fachada.CrearCarpeta(path, anterior, obra);
                 anterior = path;
             }
+
+            CrearTipo(subPath, obra);
         }
 
         private DriveDTO FiltrarCarpetas(DriveDTO? drive)

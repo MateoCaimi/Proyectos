@@ -31,6 +31,7 @@
 
 <table class="table">
     <tbody>
+        
         @foreach (var item in ViewBag.CarpetasPosteriores)
         {
             <tr>
@@ -42,7 +43,7 @@
                     }
                     else
                     {
-                        <a href="@Url.Action("Index", new {Name = item.Name, idObra = item.IdObra})">@item.Name</a>
+                        <a href="@Url.Action("Index", new {Name = item.Name, idObra = item.IdObra})">@item.NombreFormateado()</a>
                     }
                 </td>
             </tr>
