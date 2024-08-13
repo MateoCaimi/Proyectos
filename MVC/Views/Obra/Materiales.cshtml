@@ -7,15 +7,16 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" href="~/css/Obra/MaterialesObra.css">
 
-
 <h1>Materiales de la Obra</h1>
 
 
 
-<p>
+<div class="containerMatsObra">
     <a asp-action="Crear" asp-controller="Solicitud" asp-route-idobra="@ViewBag.idObra">Crear una solicitud</a>
     <a asp-action="Consumo" asp-controller="Obra" asp-route-idobra="@ViewBag.idObra">Consumir materiales</a>
-</p>
+
+</div>
+
 
 <table class="table">
     <thead>

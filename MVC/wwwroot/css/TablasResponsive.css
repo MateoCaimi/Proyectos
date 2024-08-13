@@ -42,6 +42,12 @@
     }
 }
 
+@media(max-width: 900px) {
+
+    .tablaAEsconder900 {
+        display: none;
+    }
+}
 
 @media(max-width: 1000px) {
 
@@ -60,6 +66,14 @@
 @media(max-width: 1150px) {
 
     .tablaAEsconder1150 {
+        display: none;
+    }
+}
+
+
+@media(max-width: 1250px) {
+
+    .tablaAEsconder1250 {
         display: none;
     }
 }
