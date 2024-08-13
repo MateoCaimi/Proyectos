@@ -6,6 +6,7 @@
 
 <meta charset="UTF-8">
 <link rel="stylesheet" href="~/css/Empleado/Marcas.css">
+<link href="~/css/tablasresponsive.css" rel="stylesheet" />
 
 <h1>Listado de marcas</h1>
 
@@ -28,7 +29,7 @@
                 <input id="FechaRango" name="FechaRango" class="form-control" type="text" />
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btnPrincipal">Filtrar</button>
+                <button type="submit" class="btn btn100 btnPrincipal">Filtrar</button>
             </div>
         </div>
     </form>
@@ -36,6 +37,7 @@
 
 @if (Model != null && Model.Any())
 {
+    
     <div class="inline-label-value">
         <label>Horas totales:</label>
         <p>@ViewBag.HorasTotales</p>
@@ -52,8 +54,8 @@
             <tr>
                 <th>@Html.DisplayNameFor(model => model.Entrada)</th>
                 <th>@Html.DisplayNameFor(model => model.Salida)</th>
-                <th>@Html.DisplayNameFor(model => model.HorasExtra)</th>
-                <th>@Html.DisplayNameFor(model => model.HorasLluvia)</th>
+                <th class="tablaAEsconder800">@Html.DisplayNameFor(model => model.HorasExtra)</th>
+                <th class="tablaAEsconder600">@Html.DisplayNameFor(model => model.HorasLluvia)</th>
             </tr>
         </thead>
         <tbody>
@@ -62,8 +64,8 @@
                 <tr>
                     <td>@Html.DisplayFor(modelItem => item.Entrada)</td>
                     <td>@Html.DisplayFor(modelItem => item.Salida)</td>
-                    <td>@Html.DisplayFor(modelItem => item.HorasExtra)</td>
-                    <td>@Html.DisplayFor(modelItem => item.HorasLluvia)</td>
+                    <td class="tablaAEsconder800">@Html.DisplayFor(modelItem => item.HorasExtra)</td>
+                    <td class="tablaAEsconder600">@Html.DisplayFor(modelItem => item.HorasLluvia)</td>
                 </tr>
             }
         </tbody>

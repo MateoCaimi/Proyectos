@@ -53,7 +53,7 @@
             <input id="FechaRango" name="FechaRango" class="form-control" type="text" />
         </div>
         <div class="form-group">
-            <input type="submit" value="Liquidar" class="btn btnPrincipal" />
+            <input type="submit" value="Liquidar" class="btn btnPrincipal" id="btnLiquidar" />
         </div>
     </form>
 </div>
@@ -61,79 +61,80 @@
 
 @if (Model != null && Model.Any())
 {
-    
-
-<form asp-controller="Empleado" asp-action="DescargarPDF" method="post">
-    
-    <button type="submit" class="btn btnDescarga">Descargar PDF</button>
-
-    @for (int i = 0; i < Model.Count(); i++)
-    {
-        <input type="hidden" name="ObraEmpleadoLiquidacionViewModelList[@i].ObraEmpleado.Empleado.Nombre" value="@Model.ElementAt(i).ObraEmpleado.Empleado.Nombre" />
-        <input type="hidden" name="ObraEmpleadoLiquidacionViewModelList[@i].ObraEmpleado.Empleado.Cedula" value="@Model.ElementAt(i).ObraEmpleado.Empleado.Cedula" />
-        <input type="hidden" name="ObraEmpleadoLiquidacionViewModelList[@i].ObraEmpleado.Empleado.Banco" value="@Model.ElementAt(i).ObraEmpleado.Empleado.Banco" />
-        <input type="hidden" name="ObraEmpleadoLiquidacionViewModelList[@i].ObraEmpleado.Empleado.CuentaBanco" value="@Model.ElementAt(i).ObraEmpleado.Empleado.CuentaBanco" />
-        <input type="hidden" name="ObraEmpleadoLiquidacionViewModelList[@i].Liquidacion" value="@Model.ElementAt(i).Liquidacion" />
-    }
-</form>
 
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ObraEmpleado.Empleado.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ObraEmpleado.Empleado.Cedula)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ObraEmpleado.Empleado.TipoEmpleado)
-            </th>
-            <th class="columnaAEsconderLiquidacion">
-                @Html.DisplayNameFor(model => model.ObraEmpleado.Empleado.CuentaBanco)
-            </th>
-            <th class="columnaAEsconderLiquidacion">
-                @Html.DisplayNameFor(model => model.ObraEmpleado.Empleado.Banco)
-            </th>
-            <th>
+    <form asp-controller="Empleado" asp-action="DescargarPDF" method="post">
 
-                @Html.DisplayNameFor(model => model.Liquidacion)
-                 @if (ViewBag.TotalLiquidacion != null){
-                <p>
-                     Total: @ViewBag.TotalLiquidacion
-                </p>
-                 }
+        <button type="submit" class="btn btnDescarga">Descargar PDF</button>
 
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
+        @for (int i = 0; i < Model.Count(); i++)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ObraEmpleado.Empleado.Nombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ObraEmpleado.Empleado.Cedula)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ObraEmpleado.Empleado.TipoEmpleado.Categoría)
-                </td>
-                <td class="columnaAEsconderLiquidacion">
-                    @Html.DisplayFor(modelItem => item.ObraEmpleado.Empleado.CuentaBanco)
-                </td class="columnaAEsconderLiquidacion">
-                <td>
-                    @Html.DisplayFor(modelItem => item.ObraEmpleado.Empleado.Banco)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Liquidacion)
-                </td>
-            </tr>
+            <input type="hidden" name="ObraEmpleadoLiquidacionViewModelList[@i].ObraEmpleado.Empleado.Nombre" value="@Model.ElementAt(i).ObraEmpleado.Empleado.Nombre" />
+            <input type="hidden" name="ObraEmpleadoLiquidacionViewModelList[@i].ObraEmpleado.Empleado.Cedula" value="@Model.ElementAt(i).ObraEmpleado.Empleado.Cedula" />
+            <input type="hidden" name="ObraEmpleadoLiquidacionViewModelList[@i].ObraEmpleado.Empleado.Banco" value="@Model.ElementAt(i).ObraEmpleado.Empleado.Banco" />
+            <input type="hidden" name="ObraEmpleadoLiquidacionViewModelList[@i].ObraEmpleado.Empleado.CuentaBanco" value="@Model.ElementAt(i).ObraEmpleado.Empleado.CuentaBanco" />
+            <input type="hidden" name="ObraEmpleadoLiquidacionViewModelList[@i].Liquidacion" value="@Model.ElementAt(i).Liquidacion" />
         }
-    </tbody>
-</table>
+    </form>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ObraEmpleado.Empleado.Nombre)
+                </th>
+                <th class="tablaAEsconder800">
+                    @Html.DisplayNameFor(model => model.ObraEmpleado.Empleado.Cedula)
+                </th>
+                <th class="tablaAEsconder600">
+                    @Html.DisplayNameFor(model => model.ObraEmpleado.Empleado.TipoEmpleado)
+                </th>
+                <th class="tablaAEsconder1150">
+                    @Html.DisplayNameFor(model => model.ObraEmpleado.Empleado.CuentaBanco)
+                </th>
+                <th class="tablaAEsconder1000">
+                    @Html.DisplayNameFor(model => model.ObraEmpleado.Empleado.Banco)
+                </th>
+                <th>
+
+                    @Html.DisplayNameFor(model => model.Liquidacion)
+                    @if (ViewBag.TotalLiquidacion != null)
+                    {
+                        <p>
+                            Total: @ViewBag.TotalLiquidacion
+                        </p>
+                    }
+
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ObraEmpleado.Empleado.Nombre)
+                    </td>
+                    <td class="tablaAEsconder800">
+                        @Html.DisplayFor(modelItem => item.ObraEmpleado.Empleado.Cedula)
+                    </td>
+                    <td class="tablaAEsconder600">
+                        @Html.DisplayFor(modelItem => item.ObraEmpleado.Empleado.TipoEmpleado.Categoría)
+                    </td>
+                    <td class="tablaAEsconder1150">
+                        @Html.DisplayFor(modelItem => item.ObraEmpleado.Empleado.CuentaBanco)
+                    </td>
+                    <td class="tablaAEsconder1000">
+                        @Html.DisplayFor(modelItem => item.ObraEmpleado.Empleado.Banco)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Liquidacion)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
 
 

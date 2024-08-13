@@ -5,20 +5,61 @@
 @media(max-width: 600px) {
 
 
-    .columnaAEsconderObra{
-        display:none;
-    }
-    .columnaAEsconderLiquidacion{
-        display:none;
+    .columnaAEsconderObra {
+        display: none;
     }
 
+    .columnaAEsconderLiquidacion {
+        display: none;
+    }
 
+    .tablaAEsconder600 {
+        display: none;
+    }
 }
 
 
 @media(max-width: 800px) {
 
+    .tablaAEsconderEmp {
+        display: none;
+    }
+
     .columnaAEsconderLiquidacion {
+        display: none;
+    }
+
+    .tablaAEsconder800 {
+        display: none;
+    }
+
+    .btn100 {
+        width: 100%;
+    }
+
+    .inline-label-value {
+        justify-content: center;
+    }
+}
+
+
+@media(max-width: 1000px) {
+
+    .tablaAEsconder1000 {
+        display: none;
+    }
+}
+
+@media(max-width: 1100px) {
+
+    .tablaAEsconder1100 {
+        display: none;
+    }
+}
+
+@media(max-width: 1150px) {
+
+    .tablaAEsconder1150 {
         display: none;
     }
 }
