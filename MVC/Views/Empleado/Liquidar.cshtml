@@ -8,6 +8,7 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" href="~/css/Empleado/Liquidar.css">
 <link rel="stylesheet" href="~/css/FormularioResponsive.css">
+<link href="~/css/tablasresponsive.css" rel="stylesheet" />
 
 <h1>Liquidar empleados</h1>
 
@@ -89,10 +90,10 @@
             <th>
                 @Html.DisplayNameFor(model => model.ObraEmpleado.Empleado.TipoEmpleado)
             </th>
-            <th>
+            <th class="columnaAEsconderLiquidacion">
                 @Html.DisplayNameFor(model => model.ObraEmpleado.Empleado.CuentaBanco)
             </th>
-            <th>
+            <th class="columnaAEsconderLiquidacion">
                 @Html.DisplayNameFor(model => model.ObraEmpleado.Empleado.Banco)
             </th>
             <th>
@@ -120,9 +121,9 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.ObraEmpleado.Empleado.TipoEmpleado.Categoría)
                 </td>
-                <td>
+                <td class="columnaAEsconderLiquidacion">
                     @Html.DisplayFor(modelItem => item.ObraEmpleado.Empleado.CuentaBanco)
-                </td>
+                </td class="columnaAEsconderLiquidacion">
                 <td>
                     @Html.DisplayFor(modelItem => item.ObraEmpleado.Empleado.Banco)
                 </td>
