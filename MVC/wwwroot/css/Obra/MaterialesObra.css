@@ -118,12 +118,15 @@ a.btn-action {
     }
 
 /* Encabezado y párrafo */
-p {
+.containerMatsObra {
+    display: flex;
+    flex-direction: row;
     text-align: center;
+    align-items:center;
+    justify-content: center;
     margin: 20px 0;
 }
-
-    p a {
+    .containerMatsObra a {
         margin: 0 10px;
     }
 
@@ -139,3 +142,13 @@ p {
     .volver:hover {
         color: red;
     }
+
+@media(max-width: 600px) {
+
+    .containerMatsObra {
+        display: flex;
+        flex-direction: column;
+    }
+
+
+}

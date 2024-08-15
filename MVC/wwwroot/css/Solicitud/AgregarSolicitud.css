@@ -21,7 +21,7 @@
     background-color: #8b0909;
     border-color: #8b0909;
     color: #fff;
-    width:15%;
+    width:25%;
 }
 
     .btnPrincipal:hover {
@@ -34,6 +34,7 @@
     border-color: dimgrey;
     color: #fff;
     margin-bottom: 30px;
+    width:25%;
 }
 
 
@@ -92,3 +93,28 @@
         border-color: #666;
         box-shadow: 0 0 8px rgba(102, 102, 102, 0.2);
     }
+
+
+
+@media(min-width:1500px) {
+
+    .btnPrincipal {
+        width: 20%;
+    }
+
+    .btnAgregar {
+        width: 20%;
+    }
+}
+
+
+@media(max-width:700px) {
+
+    .btnPrincipal {
+        width: 100%;
+    }
+
+    .btnAgregar {
+        width: 100%;
+    }
+}

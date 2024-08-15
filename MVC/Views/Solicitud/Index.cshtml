@@ -6,6 +6,8 @@
 
 <meta charset="UTF-8">
 <link rel="stylesheet" href="~/css/Solicitud/IndexSolicitud.css">
+<link href="~/css/tablasresponsive.css" rel="stylesheet" />
+
 
 <h1>Solcitudes de obra</h1>
 @if (ViewBag.Error != null)
@@ -20,16 +22,14 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Proveedor)
-            </th>
+           
             <th>
                 @Html.DisplayNameFor(model => model.Obra)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Solicitante)
             </th>
-            <th>
+            <th class="tablaAEsconder600">
                 @Html.DisplayNameFor(model => model.Aprovador)
             </th>
             <th>
@@ -43,16 +43,13 @@
             <tr>
             @* <tr onclick="location.href='@Url.Action("Editar", new { id = item.Id })'" style="cursor:pointer;"> *@
 
-                <td>
-                @Html.DisplayFor(modelItem => item.Proveedor.Mail)
-            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Obra.Direccion)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Solicitante.Nombre)
             </td>
-            <td>
+            <td class="tablaAEsconder600">
                 @Html.DisplayFor(modelItem => item.Aprovador.Nombre)
             </td>
             <td>

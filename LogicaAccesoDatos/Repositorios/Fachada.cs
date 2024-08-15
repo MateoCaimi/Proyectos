@@ -62,10 +62,10 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioObra.MaterialMasSolicitado(IdObra);
         }
-        public Proveedor ProveedorMasComun(int IdObra)
+        /*public Proveedor ProveedorMasComun(int IdObra)
         {
             return RepositorioObra.ProveedorMasComun(IdObra);
-        }
+        }*/
         public Usuario SolicitanteMasComun(int IdObra)
         {
             return RepositorioObra.SolicitanteMasComun(IdObra);
@@ -607,6 +607,21 @@ namespace LogicaAccesoDatos.Repositorios
         public List<Carpeta> CarpetasPosteriores(Carpeta carpeta)
         {
             return RepositorioPlano.CarpetasPosteriores(carpeta);
+        }
+
+        public void LimpiarCarpetasYTipos(int idObra)
+        {
+            RepositorioPlano.LimpiarCarpetasYTipos(idObra);
+        }
+
+        public bool ActualizarPlanosEnObra(Obra obra)
+        {
+            return RepositorioObra.ActualizarPlanosEnObra(obra);
+        }
+
+        public void ActualizarFechaUltimaActualizacion(Obra obra)
+        {
+            RepositorioObra.ActualizarFechaUltimaActualizacion(obra);
         }
     }
 }

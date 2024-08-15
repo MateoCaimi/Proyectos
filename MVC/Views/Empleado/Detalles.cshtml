@@ -6,7 +6,7 @@
 
 <meta charset="UTF-8">
 <link rel="stylesheet" href="~/css/Empleado/DetallesEmpleado.css">
-
+<link href="~/css/tablasresponsive.css" rel="stylesheet" />
 
 
 <h1>Detalles</h1>
@@ -15,16 +15,16 @@
     <hr />
 <div class="info">
             <dl class="row">
-                <dt class="col-sm-3 label">
+                <dt class="col-sm-3 label ">
                     @Html.DisplayNameFor(model => model.Cedula)
                 </dt>
                 <dd class="col-sm-9 value">
                     @Html.DisplayFor(model => model.Cedula)
                 </dd>
-                <dt class="col-sm-3 label">
+        <dt class="col-sm-3 label tablaAEsconderDetalleEmp">
                     @Html.DisplayNameFor(model => model.FechaIngreso)
                 </dt>
-                <dd class="col-sm-9 value">
+        <dd class="col-sm-9 value tablaAEsconderDetalleEmp">
                     @Html.DisplayFor(model => model.FechaIngreso)
                 </dd>
                 <dt class="col-sm-3 label">
@@ -33,10 +33,10 @@
                 <dd class="col-sm-9 value">
                     @Html.DisplayFor(model => model.TipoEmpleado.Categoría)
                 </dd>
-                <dt class="col-sm-3 label">
+        <dt class="col-sm-3 label tablaAEsconderDetalleEmp">
                     @Html.DisplayNameFor(model => model.CuentaBanco)
                 </dt>
-                <dd class="col-sm-9 value">
+        <dd class="col-sm-9 value tablaAEsconderDetalleEmp">
                     @Html.DisplayFor(model => model.CuentaBanco)
                 </dd>
                 <dt class="col-sm-3 label">

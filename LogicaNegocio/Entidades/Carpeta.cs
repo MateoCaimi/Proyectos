@@ -22,5 +22,10 @@ namespace LogicaNegocio.Entidades
         [ForeignKey("Tipo")]
         public int? IdTipo { get; set; }
         public TipoPlano? Tipo { get; set; }
+
+        public string NombreFormateado()
+        {
+            return Uri.UnescapeDataString(Name);
+        }
     }
 }

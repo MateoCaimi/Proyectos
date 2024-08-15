@@ -218,6 +218,15 @@ namespace LogicaAccesoDatos.Repositorios
         public TipoPlano CrearTipoPlano(string nombreCarpeta, int idObra)
         {
             TipoPlano nuevoTipo = new TipoPlano(nombreCarpeta);
+            nuevoTipo.IdObra = idObra;
+            List<TipoPlano> tipos = this.BuscarTipoPlanoPorObra(idObra);
+            foreach(TipoPlano tipo in tipos)
+            {
+                if(tipo.Categoria == nuevoTipo.Categoria)
+                {
+                    return null;
+                }
+            }
             Context.TiposPlanos.Add(nuevoTipo);
             Context.SaveChanges();
 
@@ -275,9 +284,17 @@ namespace LogicaAccesoDatos.Repositorios
                 carpeta.Name = path;
                 if(carpetaAnterior != null)
                 {
-                    carpeta.NameAnterior = carpetaAnterior.Name;
+                    if(carpetaAnterior.IdTipo != null)
+                    {
+                        carpeta.NameAnterior = carpetaAnterior.NameAnterior;
+                    }
+                    else
+                    {
+                        carpeta.NameAnterior = carpetaAnterior.Name;
+                    }
+
                 }
-                TipoPlano tipo = this.BuscarTipoPlanoPorNombre(carpeta.Name);
+                TipoPlano tipo = this.BuscarTipoPlanoPorNombre(carpeta.Name, obra);
                 if (tipo != null)
                 {
                     carpeta.IdTipo = tipo.Id;
@@ -288,9 +305,9 @@ namespace LogicaAccesoDatos.Repositorios
             }
         }
 
-        public TipoPlano BuscarTipoPlanoPorNombre(string name)
+        public TipoPlano BuscarTipoPlanoPorNombre(string name, Obra obra)
         {
-            TipoPlano tipo = Context.TiposPlanos.Where(tp => tp.Categoria == name).FirstOrDefault();
+            TipoPlano tipo = Context.TiposPlanos.Where(tp => tp.Categoria == name && tp.IdObra == obra.IdObra).FirstOrDefault();
             return tipo;
         }
 
@@ -304,7 +321,7 @@ namespace LogicaAccesoDatos.Repositorios
             List<string> paths = webUrl.Split("/").ToList();
             paths.RemoveAt(paths.Count - 1); //el ultimo siempre será el archivo, se elimina para agarrar a la carpeta contenedora
             string ultimo = paths.LastOrDefault();
-            string path = Uri.UnescapeDataString(ultimo);
+            string path = ultimo;
             Carpeta carpetaContenedora = this.BuscarCarpeta(path, obra);
             return carpetaContenedora;
         }
@@ -318,14 +335,14 @@ namespace LogicaAccesoDatos.Repositorios
             {
                 foreach(TipoPlano tipo in tipos)
                 {
-                    if(carpeta.Name == tipo.Categoria)
+                    if(carpeta.Name == tipo.Categoria && carpeta.IdObra == tipo.IdObra)
                     {
-                        carpeta.Tipo = tipo;
+                        carpeta.IdTipo = tipo.Id;
+                        Context.SaveChanges();
                         break;
                     }
                 }
             }
-            Context.SaveChanges();
         }
 
         private IEnumerable<Carpeta> TomarTodasCarpetas()
@@ -341,6 +358,30 @@ namespace LogicaAccesoDatos.Repositorios
         internal List<Carpeta> CarpetasPosteriores(Carpeta carpeta)
         {
             return Context.Carpetas.Where(c => c.Anterior.Name == carpeta.Name && c.Obra.IdObra == carpeta.IdObra).ToList();
+        }
+
+        internal void LimpiarCarpetasYTipos(int idObra)
+        {
+            //se hace en orden para no tener dependencias
+            List<Plano> planos = Context.Planos.Where(p => p.IdObra == idObra).ToList();
+            List<Carpeta> carpetas = Context.Carpetas.Where(p => p.IdObra == idObra).ToList();
+            List<TipoPlano> tipos = Context.TiposPlanos.Where(p => p.IdObra == idObra).ToList();
+            foreach(Plano p in planos)
+            {
+                Context.Planos.Remove(p);
+                Context.SaveChanges();
+            }
+            foreach(TipoPlano t in tipos)
+            {
+                Context.TiposPlanos.Remove(t);
+                Context.SaveChanges();
+            }
+            foreach(Carpeta c in carpetas)
+            {
+                Context.Carpetas.Remove(c);
+                Context.SaveChanges();
+            }
+
         }
     }
 }

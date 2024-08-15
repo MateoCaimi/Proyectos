@@ -16,7 +16,6 @@ namespace LogicaAccesoDatos.EF
         public DbSet<Material> Materiales { get; set; }
         public DbSet<Empleado> Empleados { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
-        public DbSet<Proveedor> Proveedores { get; set; }
         public DbSet<Plano> Planos { get; set; }
         public DbSet<TipoEmpleado> TiposEmpleados { get; set; }
         public DbSet<TipoPlano> TiposPlanos { get; set; }
@@ -31,7 +30,7 @@ namespace LogicaAccesoDatos.EF
         {
             string cadenaConexion =
                 @"SERVER=(localdb)\MSsqlLocaldb;
-                DATABASE=ProyectoIntegradorAGOSTO60;
+                DATABASE=ProyectoIntegradorAgosto138;
                 INTEGRATED SECURITY=TRUE;
                 ENCRYPT=False"; //Puede evitar problemas si no hay un certificado y se usa SSL
             optionsBuilder.UseSqlServer(cadenaConexion)

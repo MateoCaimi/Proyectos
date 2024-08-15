@@ -10,7 +10,7 @@ h1 {
     text-align: center;
     color: #b30000;
     margin-top: 20px;
-    margin-bottom:40px;
+    margin-bottom: 40px;
 }
 
 /* Alerta de error */
@@ -34,7 +34,7 @@ form {
     display: flex;
     justify-content: space-between; /* Distribuye uniformemente los elementos */
     align-items: center; /* Alinea verticalmente los elementos */
-    width: 150%;
+    width: 100%;
     background-color: #f9f9f9;
     padding: 20px;
 }
@@ -141,3 +141,21 @@ p {
         margin: 0 10px;
     }
 
+
+    
+
+@media(max-width: 1150px) {
+
+    form {
+        flex-direction: column;
+    }
+
+    .form-group {
+        width: 100%;
+        text-align: center;
+    }
+
+    .form-group, #btnLiquidar {
+        width: 60%;
+    }
+}

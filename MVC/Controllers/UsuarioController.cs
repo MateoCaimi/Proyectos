@@ -122,14 +122,23 @@ namespace MVC.Controllers
         [HttpPost]
         public ActionResult CambiarPass(string NombreUsuario, string Contrasenia, string confirmarPass)
         {
-            Fachada.CambiarPass(NombreUsuario, Contrasenia, confirmarPass);
-            Usuario u = Fachada.BuscarUsuarioXNombreU(NombreUsuario);
+            try
+            {
+                Fachada.CambiarPass(NombreUsuario, Contrasenia, confirmarPass);
+                Usuario u = Fachada.BuscarUsuarioXNombreU(NombreUsuario);
 
-            HttpContext.Session.SetString("UsuarioLogueado", u.NombreUsuario);
-            HttpContext.Session.SetString("UsuarioTipo", u.Tipo);
+                HttpContext.Session.SetString("UsuarioLogueado", u.NombreUsuario);
+                HttpContext.Session.SetString("UsuarioTipo", u.Tipo);
 
-            //Si es usuario normal no pasa
-            return RedirectToAction("Index", "Obra");
+                //Si es usuario normal no pasa
+                return RedirectToAction("Index", "Obra");
+            }
+            catch(UsuarioException u)
+            {
+                ViewBag.Error = u.Message;
+                ViewBag.nom = NombreUsuario;
+                return View();
+            }
         }
 
 

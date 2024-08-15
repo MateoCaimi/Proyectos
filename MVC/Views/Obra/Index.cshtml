@@ -7,7 +7,7 @@
 
 <meta charset="UTF-8">
 <link rel="stylesheet" href="~/css/Obra/IndexObra.css">
-
+<link href="~/css/tablasresponsive.css" rel="stylesheet" />
 <h1>Obras</h1>
 
 @if (Context.Session.GetString("UsuarioTipo") == "Usuario de oficina")
@@ -21,7 +21,7 @@
     <thead>
         <tr>
             <th>@Html.DisplayNameFor(model => model.Nombre)</th>
-            <th>@Html.DisplayNameFor(model => model.Direccion)</th>
+            <th class="columnaAEsconderObra">@Html.DisplayNameFor(model => model.Direccion)</th>
             <th>@Html.DisplayNameFor(model => model.Cronograma)</th>
         </tr>
     </thead>
@@ -32,7 +32,7 @@
          <tr class="@finalizadas" onclick="location.href='@Url.Action("Detalles", new { id = item.IdObra })'" style="cursor:pointer;">
 
                 <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
-                <td>@Html.DisplayFor(modelItem => item.Direccion)</td>
+                <td class="columnaAEsconderObra">@Html.DisplayFor(modelItem => item.Direccion)</td>
                 <td>
                     @if (item.Cronograma != null)
                     {

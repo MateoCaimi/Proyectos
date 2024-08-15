@@ -18,7 +18,7 @@ namespace LogicaNegocio.Interfaces
         public void FinalizarObra(Obra obra);
         public Material MaterialMenosSolicitado(int IdObra);
         public Material MaterialMasSolicitado(int IdObra);
-        public Proveedor ProveedorMasComun(int IdObra);
+        //public Proveedor ProveedorMasComun(int IdObra);
         public Usuario SolicitanteMasComun(int IdObra);
         public UDeOficina AprobadorMasComun(int IdObra);
 
