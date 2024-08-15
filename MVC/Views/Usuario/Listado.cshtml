@@ -5,6 +5,11 @@
     ViewData["Title"] = "Listado";
 }
 
+<meta charset="UTF-8">
+<link rel="stylesheet" href="~/css/Usuario/IndexUsuario.css">
+
+<h1>Usuarios</h1>
+
 @if (ViewBag.Error != null)
 {
     <div class="alert alert-danger">
@@ -12,10 +17,9 @@
     </div>
 }
 
-<h1>Listado</h1>
 
 <p>
-    <a asp-action="Agregar">Create New</a>
+    <a asp-action="Agregar">Agregar usuario</a>
 </p>
 <table class="table">
     <thead>

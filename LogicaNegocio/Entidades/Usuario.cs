@@ -19,10 +19,16 @@ namespace LogicaNegocio.Entidades
         [Required(ErrorMessage = "Ingrese un nombre")]
         public string Nombre { get; set; }
         [Required(ErrorMessage = "Ingrese un nombre de usuario")]
+        [Display(Name = "Nombre de usuario")]
+
         public string NombreUsuario { get; set; }
         [Required(ErrorMessage = "Ingrese una contraseña")]
         [RegularExpression(@"^.{8,}$", ErrorMessage = "La contraseña debe tener un mínimo de 8 caracteres.")]
+        [Display(Name = "Contraseña")]
+
         public string Contrasenia { get; set; }
+        [Display(Name = "Tipo de usuario")]
+
         public virtual string Tipo { get; set; }
         public bool CambioContrasenia { get; set; } 
         public int IntentosFallidos { get; set; }

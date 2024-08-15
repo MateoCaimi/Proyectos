@@ -1,13 +1,21 @@
 ﻿@using LogicaNegocio.Entidades
 @model LogicaNegocio.Entidades.Usuario
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="~/css/Usuario/CambiarPass.css">
+
 
 <h1>Bienvenido</h1>
-<br>
+<hr />
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger" role="alert">
+        <p>@ViewBag.Error</p>
+    </div>
+
+}
+
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="CambiarPass">
@@ -37,11 +45,4 @@
         </form>
     </div>
 </div>
-@if (ViewBag.Error != null)
-{
-    <div class="alert alert-danger" role="alert">
-        <p>@ViewBag.Error</p>
-    </div>
-
-}
 

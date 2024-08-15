@@ -1,0 +1,59 @@
+﻿
+h1 {
+    font-family: 'Montserrat', sans-serif;
+    color: #b30000;
+    margin: 0 20px;
+}
+h3 {
+    font-family: 'Montserrat', sans-serif;
+    color: #4b4a4a;
+    margin: 0 20px;
+}
+
+.btn-primary {
+    background-color: #8b0909;
+    border-color: #8b0909;
+    color: #fff;
+    width: 100%;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+    .btn-primary:hover {
+        background-color: #ff9c9c;
+        border-color: #ff9c9c;
+    }
+
+.containerVolver {
+    margin-top: 20px;
+}
+
+.volver {
+    color: darkred;
+}
+
+    .volver:hover {
+        color: red;
+    }
+
+.info {
+    padding: 16px;
+}
+
+.label {
+    font-weight: bold;
+    color: #333;
+    padding: 10px;
+}
+
+.value {
+    color: #555;
+    padding: 10px;
+}
+
+.row {
+    margin-bottom: 12px;
+}
