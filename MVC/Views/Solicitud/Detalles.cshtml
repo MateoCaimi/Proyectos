@@ -72,7 +72,6 @@
                             <td>@item.Material.Nombre (@item.Material.UnidadDeMedida)</td>
                             <td>
                                 <input type="number" name="Cantidad_@item.Material.Id" value="@item.Cantidad" min="1" />
-                                <input type="hidden" name="@item.IdMaterial" value="@item.Material.Id" />
                             </td>
                             <td>
                                 <input type="checkbox" name="materialesSeleccionados" value="@item.Material.Id" />
@@ -83,12 +82,11 @@
             </tbody>
         </table>
 
-    }
-
     <div class="botones">
 
         @if (Context.Session.GetString("UsuarioTipo") == "Usuario de oficina")
         {
+
         <input type="hidden" name="idSolicitud" value="@Model.Id" />
         <button class="btn btnAceptar" id="btnConfirmar" type="submit">Aceptar solicitud</button>
         }
@@ -102,6 +100,8 @@
         }
 
     </div>
+    }
+
 }
 
 
@@ -124,6 +124,6 @@
 
         setTimeout(function () {
             window.location.href = '@Url.Action("Index", "Solicitud", new { idObra = @Model.IdObra })'; //esto es prueba para redirigir a el confirmar q te tira para el index
-        }, 1500); // 0.5 segundo de retraso
+        },1500); // 0.5 segundo de retraso
     });
 </script>
