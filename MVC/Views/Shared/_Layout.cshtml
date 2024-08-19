@@ -49,7 +49,7 @@
                     <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Empleado" asp-action="Index">Empleado</a>
                     </li>
-                    @if (Context.Session.GetString("UsuarioTipo") == "Usuario oficina")
+                    @if (Context.Session.GetString("UsuarioTipo") == "Usuario de oficina")
                     {
                     <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Empleado" asp-action="Liquidar">Liquidación</a>
