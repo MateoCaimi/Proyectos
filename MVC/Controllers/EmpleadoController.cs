@@ -180,14 +180,8 @@ namespace MVC.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            Empleado empleado = Fachada.BuscarEmpleado(id);
-            List<Marca> marcas = Fachada.TraerTodasMarcas(empleado);
-
-            if (IdObra != 0)
-            {
-                Obra obra = Fachada.BuscarObra(IdObra);
-                marcas = Fachada.MarcasDelEmpleadoEnLaObra(marcas, obra);
-            }
+            DateTime desde = new DateTime();
+            DateTime hasta = new DateTime();
 
             // Manejo del rango de fechas
             if (!string.IsNullOrEmpty(FechaRango))
@@ -196,13 +190,49 @@ namespace MVC.Controllers
                 var fechas = FechaRango.Split(" to ");
                 if (fechas.Length == 2)
                 {
-                    DateTime desde = DateTime.Parse(fechas[0]);
-                    DateTime hasta = DateTime.Parse(fechas[1]);
+                     desde = DateTime.Parse(fechas[0]);
+                     hasta = DateTime.Parse(fechas[1]);
 
-                    marcas = Fachada.MarcasDelRangoDeFechas(marcas, desde, hasta);
+                   
                 }
             }
 
+
+            //if (!Fachada.AgregarEmpleadosAObraDTO(desde, hasta))
+            //{
+            //    TempData["Anomalia"] = "Se encontraron anomalías generando a los empleados en obra en el sistema. Revisar las marcas de la última semana.";
+            //}
+
+            //if (!Fachada.AgregarTodasLasMarcasDTO(desde, hasta))
+            //{
+            //    TempData["Anomalia"] = "Se generaron marcas anómalas en el sistema. Revisar las marcas de la última semana.";
+            //}
+
+            //// Manejo del rango de fechas
+            //if (!string.IsNullOrEmpty(FechaRango))
+            //{
+            //    // Dividir el rango en dos fechas: desde y hasta
+            //    var fechas = FechaRango.Split(" to ");
+            //    if (fechas.Length == 2)
+            //    {
+            //        DateTime desde = DateTime.Parse(fechas[0]);
+            //        DateTime hasta = DateTime.Parse(fechas[1]);
+
+            //        marcas = Fachada.MarcasDelRangoDeFechas(marcas, desde, hasta);
+            //    }
+            //}
+
+
+            Empleado empleado = Fachada.BuscarEmpleado(id);
+            List<Marca> marcas = Fachada.TraerTodasMarcas(empleado);
+            marcas = Fachada.MarcasDelRangoDeFechas(marcas, desde, hasta);
+            if (IdObra != 0)
+            {
+                Obra obra = Fachada.BuscarObra(IdObra);
+                marcas = Fachada.MarcasDelEmpleadoEnLaObra(marcas, obra);
+            }
+
+            
             ViewBag.Obras = Fachada.TomarTodasObras();
             ViewBag.IdEmp = empleado.Id;
             ViewBag.HorasTotales = Fachada.HorasTotales(marcas);
@@ -498,19 +528,19 @@ namespace MVC.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            DateTime desde = new DateTime();
-            DateTime hasta = new DateTime();
+            //DateTime desde = new DateTime();
+            //DateTime hasta = new DateTime();
 
 
-            if (!Fachada.AgregarEmpleadosAObraDTO(desde, hasta))
-            {
-                TempData["Anomalia"] = "Se encontraron anomalías generando a los empleados en obra en el sistema. Revisar las marcas de la última semana.";
-            }
+            //if (!Fachada.AgregarEmpleadosAObraDTO(desde, hasta))
+            //{
+            //    TempData["Anomalia"] = "Se encontraron anomalías generando a los empleados en obra en el sistema. Revisar las marcas de la última semana.";
+            //}
 
-            if (!Fachada.AgregarTodasLasMarcasDTO(desde, hasta))
-            {
-                TempData["Anomalia"] = "Se generaron marcas anómalas en el sistema. Revisar las marcas de la última semana.";
-            }
+            //if (!Fachada.AgregarTodasLasMarcasDTO(desde, hasta))
+            //{
+            //    TempData["Anomalia"] = "Se generaron marcas anómalas en el sistema. Revisar las marcas de la última semana.";
+            //}
 
             ViewBag.Obras = Fachada.TomarTodasObras();
             ViewBag.Empleados = Fachada.TomarTodosEmpleados();
@@ -552,6 +582,7 @@ namespace MVC.Controllers
                 {
                     throw new Exception("Formato de rango de fechas no válido");
                 }
+
                 Empleado empleado = Fachada.BuscarEmpleado(IdEmpleado);
                 Obra obra = Fachada.BuscarObra(IdObra);
                 List<ObraEmpleadoLiquidacionViewModel> vm = new List<ObraEmpleadoLiquidacionViewModel>();
@@ -602,6 +633,14 @@ namespace MVC.Controllers
             return PartialView("CambiarListadoLiquidacion", empleadosObra);
         }
 
+
+
+        public ActionResult ListaTipoEmpleado()
+        {
+            IEnumerable<TipoEmpleado> todosTiposEmpleado = Fachada.TomarTodosTipoEmpleados();
+
+            return View(todosTiposEmpleado);
+        }
         // GET: EmpleadoController/Edit/5
         public ActionResult ModificarTipo(int id)
         {

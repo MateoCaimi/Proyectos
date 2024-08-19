@@ -1,0 +1,53 @@
+﻿@model IEnumerable<LogicaNegocio.Entidades.TipoEmpleado>
+
+@{
+    ViewData["Title"] = "ListaTipoEmpleado";
+}
+<link href="~/css/usuario/indexusuario.css" rel="stylesheet" />
+<link href="~/css/tablasresponsive.css" rel="stylesheet" />
+s
+<h1>Lista de Categorias</h1>
+
+<p>
+    <a asp-action="AgregarTipo">Agregar Categoria</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Categoría)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ValorHora)
+            </th>
+            <th class="tablaAEsconder900">
+                @Html.DisplayNameFor(model => model.Presentismo)
+            </th>
+            <th class="tablaAEsconder600">
+                @Html.DisplayNameFor(model => model.Compensacion)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Categoría)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ValorHora)
+            </td>
+                <td class ="tablaAEsconder900">
+                @Html.DisplayFor(modelItem => item.Presentismo)
+            </td>
+                <td class="tablaAEsconder600">
+                @Html.DisplayFor(modelItem => item.Compensacion)
+            </td>
+            <td>
+                    <a asp-action="ModificarTipo" asp-route-id="@item.Id">Edit</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

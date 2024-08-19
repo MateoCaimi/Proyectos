@@ -108,6 +108,7 @@ namespace LogicaAccesoDatos.Repositorios
 
         public void Precarga()
         {
+            PrecargaMarcasDelAño();
             int cantTipos = this.GetTipos().Count;
             if (cantTipos == 0)
             {
@@ -135,8 +136,46 @@ namespace LogicaAccesoDatos.Repositorios
                 Context.SaveChanges();
             }
 
-            
+
+
         }
+        public void PrecargaMarcasDelAño()
+        {
+            //DateTime hoy = DateTime.Now;
+            //DateTime desde = new DateTime();
+            //DateTime hasta = new DateTime();
+
+
+            //for (int i = 4; i < hoy.Month; i++)
+            //{
+
+            //    if (i == 4 || i == 6 || i == 9 || i == 11)
+            //    {
+            //        desde = new DateTime(2024, i, 01);
+            //        hasta = new DateTime(2024, i, 30, 23, 59, 59);
+            //    }
+            //    else if (i == 2)
+            //    {
+            //        desde = new DateTime(2024, i, 01);
+            //        hasta = new DateTime(2024, i, 29, 23, 59, 59);
+            //    }
+            //    else
+            //    {
+            //        desde = new DateTime(2024, i, 01);
+            //        hasta = new DateTime(2024, i, 31, 23, 59, 59);
+
+            //    }
+
+            //     ConseguirTodasLasMarcas(desde, hasta);
+
+
+            //}
+
+
+
+        }
+
+
 
         private List<Usuario> GetUsuariosObra()
         {
@@ -167,7 +206,7 @@ namespace LogicaAccesoDatos.Repositorios
                 hastaDato = SetHoraA0(hasta);
                 desdeDato = SetHoraA0(desde);
             }
-            if(this.DiferenciaDias(desde, hasta) > 45)
+            if (this.DiferenciaDias(desde, hasta) > 45)
             {
                 throw new EmpleadoException("Debe ingresar un rango de días menor a 45.");
             }
@@ -270,7 +309,7 @@ namespace LogicaAccesoDatos.Repositorios
         {
             DateTime diaHoraCero = this.SetHoraA0(dia);
             List<Marca> marcasEmpleado = this.MarcasEmpleadoRango(emp, dia, new DateTime(dia.Year, dia.Month, dia.Day + 1, 0, 0, 0));
-            if(marcasEmpleado != null && marcasEmpleado.Count != 0)
+            if (marcasEmpleado != null && marcasEmpleado.Count != 0)
             {
                 return true;
             }
@@ -345,8 +384,8 @@ namespace LogicaAccesoDatos.Repositorios
         }
 
 
-        public async Task<bool> ConseguirTodasLasMarcas(DateTime desde, DateTime hasta) 
-            // SI EXISTE SOLO UNA MARCA DEL DIA LA MARCA DE ESE DIA QUEDA DESFAZADA.
+        public async Task<bool> ConseguirTodasLasMarcas(DateTime desde, DateTime hasta)
+        // SI EXISTE SOLO UNA MARCA DEL DIA LA MARCA DE ESE DIA QUEDA DESFAZADA.
         {
             DateTime hastaDato;
             DateTime desdeDato;
@@ -356,7 +395,7 @@ namespace LogicaAccesoDatos.Repositorios
             {
                 hastaDato = DateTime.Now;
 
-                desdeDato = new DateTime(hastaDato.Year, hastaDato.Month, hastaDato.Day - hastaDato.Day + 1); 
+                desdeDato = new DateTime(hastaDato.Year, hastaDato.Month, hastaDato.Day - hastaDato.Day + 1);
 
             }
             else
@@ -373,7 +412,7 @@ namespace LogicaAccesoDatos.Repositorios
                     throw new EmpleadoException("No se pueden generar marcas ahora mismo, intentar en unos minutos.");
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new EmpleadoException("No se pueden generar marcas ahora mismo, intentar en unos minutos.");
             }
@@ -403,14 +442,14 @@ namespace LogicaAccesoDatos.Repositorios
                     }
                     else
                     {
-                       bool encontroObra = false;
-                       string comentario = emp.Marcas.First().Comentario;
+                        bool encontroObra = false;
+                        string comentario = emp.Marcas.First().Comentario;
 
-                        
+
                         foreach (var o in TomarTodasLasObras())
                         {
                             comentario = comentario.ToLower();
-                         
+
                             if (comentario.Contains(o.Nombre.ToLower()))
                             {
                                 obra = GetObraPorNombre(o.Nombre);
@@ -443,27 +482,27 @@ namespace LogicaAccesoDatos.Repositorios
 
                         if (marcasPorDia > 2)
                         {
-                            m.Entrada = emp.Marcas[i - marcasPorDia + 1].HoraMarcaje; 
+                            m.Entrada = emp.Marcas[i - marcasPorDia + 1].HoraMarcaje;
                             m.Salida = emp.Marcas[i].HoraMarcaje;
 
 
                             m.IdEmpleado = empleado.Id;
                             m.IdObra = obra.IdObra;
                             m.HorasLluvia = 0;
-                           
+
 
                         }
                         else
                         {
 
-                            m.Entrada = emp.Marcas.ElementAt(i - 1).HoraMarcaje; 
+                            m.Entrada = emp.Marcas.ElementAt(i - 1).HoraMarcaje;
                             m.Salida = emp.Marcas.ElementAt(i).HoraMarcaje;
 
 
                             m.IdEmpleado = empleado.Id;
                             m.IdObra = obra.IdObra;
                             m.HorasLluvia = 0;
-                            
+
 
                         }
                     }
@@ -493,7 +532,7 @@ namespace LogicaAccesoDatos.Repositorios
 
                     }
                     else
-                        {
+                    {
                         if (!this.ExisteMarca(m))
                         {
                             Empleado empTest = this.Buscar(m.IdEmpleado);
@@ -660,7 +699,7 @@ namespace LogicaAccesoDatos.Repositorios
         private List<Marca> MarcasEmpleadoRango(Empleado empleado, DateTime desde, DateTime hasta)
         {
             return Context.Marcas.Where(marc => marc.Entrada.Day >= desde.Day
-                        && marc.Salida.Day <= hasta.Day
+                        && marc.Salida.Day <= hasta.Day && marc.Entrada.Month == desde.Month
                         && marc.IdEmpleado == empleado.Id).ToList();
         }
 
@@ -675,7 +714,7 @@ namespace LogicaAccesoDatos.Repositorios
             List<Marca> marcasEmpRango = this.MarcasEmpObraRango(oe, desde, hasta);
             foreach (Marca m in marcasEmpRango)
             {
-                horasTotales += m.HorasTrabajadas(); // Para los bonos(Forma de pago de la mepresa) solo se utilizan horas trabajadas
+                horasTotales += m.HorasTrabajadas(); // Para los bonos(Forma de pago de la empresa) solo se utilizan horas trabajadas
                 //horasLluvia += m.HorasLluvia;
                 //horasExtra += m.HorasExtra;
             }
@@ -686,11 +725,16 @@ namespace LogicaAccesoDatos.Repositorios
 
         private double CalcularNominal(Empleado empleado, int horasTotales)
         {
+            double nominal;
             // Lo separo en otro metodo por ser importante, preguntar regla de negocio de pagos.
             double valorHora = empleado.TipoEmpleado.ValorHora + empleado.IncentivoXHora;
             double compensacion = empleado.TipoEmpleado.Compensacion;
             double presentismo = empleado.TipoEmpleado.Presentismo;
-            double nominal = horasTotales * valorHora;
+            if (presentismo != 0)
+            {
+                presentismo = (valorHora + compensacion) * presentismo / 100;
+            }
+            nominal = (valorHora + compensacion + presentismo) * horasTotales;
             return nominal;
 
         }
@@ -739,7 +783,7 @@ namespace LogicaAccesoDatos.Repositorios
         private List<Marca> MarcasEmpObraRango(ObraEmpleado oe, DateTime desde, DateTime hasta)
         {
             return Context.Marcas.Where(marc => marc.Entrada.Day >= desde.Day
-            && marc.Salida.Day <= hasta.Day && marc.IdObra == oe.IdObra
+            && marc.Salida.Day <= hasta.Day && marc.IdObra == oe.IdObra && marc.Entrada.Month == desde.Month
             && marc.IdEmpleado == oe.IdEmpleado).ToList();
         }
 
@@ -810,7 +854,7 @@ namespace LogicaAccesoDatos.Repositorios
             tipoEmpleado.Categoría = tipo.Categoría;
             tipoEmpleado.ValorHora = tipo.ValorHora;
             tipoEmpleado.Compensacion = tipo.Compensacion;
-            tipoEmpleado.Presentismo = tipoEmpleado.Presentismo;
+            tipoEmpleado.Presentismo = tipo.Presentismo;
             Context.SaveChanges();
         }
 
@@ -980,7 +1024,7 @@ namespace LogicaAccesoDatos.Repositorios
         internal int HorasTotales(List<Marca> marcas)
         {
             int total = 0;
-            foreach(Marca m in marcas)
+            foreach (Marca m in marcas)
             {
                 total += m.HorasTrabajadas();
             }
@@ -1002,7 +1046,7 @@ namespace LogicaAccesoDatos.Repositorios
                 obraEmpleado.FechaEgreso = obraEmpleadoNuevo.FechaEgreso;
                 Context.SaveChanges();
             }
-            catch(EmpleadoException ee)
+            catch (EmpleadoException ee)
             {
                 throw new EmpleadoException(ee.Message);
             }
