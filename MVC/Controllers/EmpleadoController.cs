@@ -244,6 +244,22 @@ namespace MVC.Controllers
 
         public ActionResult GenerarMarcas()
         {
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 

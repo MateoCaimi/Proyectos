@@ -193,14 +193,14 @@ namespace MVC.Controllers
         {
 
 
-            /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("Index", "Usuario");
             }
             else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario administrador")
             {
                 return RedirectToAction("Index", "Obra");
-            }*/
+            }
 
 
             try
@@ -229,14 +229,14 @@ namespace MVC.Controllers
         public ActionResult Editar(int id)
         {
 
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario administrador")
-            //{
-            //    return RedirectToAction("Index", "Home");
-            //}
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario administrador")
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
 
             Usuario usuario = Fachada.BuscarUsuario(id);
@@ -255,14 +255,14 @@ namespace MVC.Controllers
         {
 
 
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario administrador")
-            //{
-            //    return RedirectToAction("Index", "Home");
-            //}
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario administrador")
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
             try
             {
@@ -288,14 +288,14 @@ namespace MVC.Controllers
         public ActionResult Eliminar(int id)
         {
 
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario administrador")
-            //{
-            //    return RedirectToAction("Index", "Home");
-            //}
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario administrador")
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
             try
             {
@@ -316,14 +316,14 @@ namespace MVC.Controllers
         public ActionResult EliminarConfirmado(int id)
         {
 
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario administrador")
-            //{
-            //    return RedirectToAction("Index", "Home");
-            //}
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario administrador")
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
 
             try
@@ -343,14 +343,14 @@ namespace MVC.Controllers
         public ActionResult Listado()
         {
 
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario administrador")
-            //{
-            //    return RedirectToAction("Index", "Home");
-            //}
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario administrador")
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
             IEnumerable<Usuario> usuarios = Fachada.ObtenerUsuarios();
             return View(usuarios);

@@ -78,6 +78,23 @@ namespace MVC.Controllers
         }
         public ActionResult Empleados(int IdObra)
         {
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             Obra obra = Fachada.BuscarObra(IdObra);
             IEnumerable<ObraEmpleado> empleados = Fachada.GetEmpleadosObra(obra);
             ViewBag.IdObra = IdObra;
@@ -127,6 +144,10 @@ namespace MVC.Controllers
             else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
             {
                 return RedirectToAction("Index", "Plano");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
             }
             //   detalles de obra solo ve el u de ofi o tambien de obra
 
@@ -604,7 +625,7 @@ namespace MVC.Controllers
                 }
                 Font arial = new Font("Arial", 50, FontStyle.Regular);
                 Brush brush = new SolidBrush(Color.Black);
-                string text = "Obra: " + obra.Nombre;
+                string text = "  Obra: " + obra.Nombre;
                 Rectangle rectangle = new Rectangle(0, 0, 1000, 200);
                 Pen pen = new Pen(Color.White, 2);
                 graphics.DrawRectangle(pen, rectangle);
