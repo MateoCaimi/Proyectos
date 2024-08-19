@@ -5,17 +5,17 @@
 
 @{
     string solicitudes = Context.Session.GetString("SolicitudesPendientes");
-   // string solicitudesAprob = Context.Session.GetString("SolicitudesAprobadas");
+     string solicitudesAprob = Context.Session.GetString("SolicitudesAprobadas");
     string solicitudesConfirmadas = Context.Session.GetString("SolicitudesConfirmadas");
     string alertasDeStock = Context.Session.GetString("MaterialesAlertar");
 
     List<Solicitud> solicitudesList = new List<Solicitud>();
-  //  List<Solicitud> solicitudesListApro = new List<Solicitud>();
+    List<Solicitud> solicitudesListApro = new List<Solicitud>();
     List<Solicitud> solicitudesListConf = new List<Solicitud>();
     List<ObraMaterial> materialesAlertar = new List<ObraMaterial>();
 
     if (solicitudes != null) { solicitudesList = JsonSerializer.Deserialize<List<Solicitud>>(solicitudes); }
-   // if (solicitudesAprob != null) { solicitudesListApro = JsonSerializer.Deserialize<List<Solicitud>>(solicitudesAprob); }
+    if (solicitudesAprob != null) { solicitudesListApro = JsonSerializer.Deserialize<List<Solicitud>>(solicitudesAprob); }
     if (solicitudesConfirmadas != null) { solicitudesListConf = JsonSerializer.Deserialize<List<Solicitud>>(solicitudesConfirmadas); }
     if (alertasDeStock != null) { materialesAlertar = JsonSerializer.Deserialize<List<ObraMaterial>>(alertasDeStock); }
 
@@ -27,23 +27,25 @@
         <div class="dropend containerNoti">
 
 
-             @{int cantSoli = solicitudesList.Count() /* solicitudesListApro.Count() */ + solicitudesListConf.Count() + materialesAlertar.Count();}
-               
-              @* if(cantSoli == 0){
-            //     <span class="badge bg-primary rounded-pill">
-            //         0
-            //     </span>
-            // }
-            // else
-            // {
-                
-                 <span class="badge bg-primary rounded-pill">
-                    @cantSoli
-                 </span>
-            // }
-           *@
+            @{
+                int cantSoli = solicitudesList.Count() /* solicitudesListApro.Count() */ + solicitudesListConf.Count() + materialesAlertar.Count();
+            }
 
-           
+            @* if(cantSoli == 0){
+    //     <span class="badge bg-primary rounded-pill">
+    //         0
+    //     </span>
+    // }
+    // else
+    // {
+
+    <span class="badge bg-primary rounded-pill">
+    @cantSoli
+    </span>
+    // }
+    *@
+
+
 
             <button class=" btnNoti dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
@@ -56,182 +58,187 @@
                 @cantSoli
             </span>
 
-                @* List<Solicitud> solicitudesList = JsonSerializer.Deserialize<List<Solicitud>>(solicitudes);*@
-            
+            @* List<Solicitud> solicitudesList = JsonSerializer.Deserialize<List<Solicitud>>(solicitudes);*@
+
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+
+
+
+                @foreach (Solicitud soli in solicitudesList)
+                {
+
+                    <li class="list-group">
+                        <a class="list-group-item list-group-item-action" href="@Url.Action("Detalles", "Solicitud", new { idSolicitud = soli.Id, idObra = soli.IdObra})">Solicitud de la obra: @soli.Obra.Nombre</a>
+                    </li>
+
+                }
+                @*foreach (Solicitud soli in solicitudesListApro)
+        // {
+
+        //     <li class="list-group">
+        //         <a class="list-group-item list-group-item-action" href="@Url.Action("Detalles", "Solicitud", new { idSolicitud = soli.Id, idObra = soli.IdObra})">Se aprobo una solicitud de la obra: @soli.Obra.Nombre</a>
+        //     </li>
+
+        // }*@
+                @foreach (Solicitud soli in solicitudesListConf)
+                {
+
+                    <li class="list-group">
+                        <a class="list-group-item list-group-item-action" href="@Url.Action("Detalles", "Solicitud", new { idSolicitud = soli.Id, idObra = soli.IdObra})">Confrmada la solicitud de la obra: @soli.Obra.Nombre</a>
+                    </li>
+
+                }
+                @foreach (ObraMaterial om in materialesAlertar)
+                {
+
+                    <li class="list-group">
+                        <a class="list-group-item list-group-item-action" href="@Url.Action("Materiales", "Obra", new { id = om.Obra.IdObra })">En la obra @om.Obra.Nombre el stock de @om.Material.Nombre bajó de la barrera definida</a>
+                    </li>
+
+                }
+
+            </ul>
+
+
+
+
+        </div>
+    }
+
+
+
+
+    //         <div class="dropend">
+    //           @if(solicitudesConfirmadas != null)
+    //          {
+    //                 List<Solicitud> solicitudesListConf = JsonSerializer.Deserialize<List<Solicitud>>(solicitudesConfirmadas);
+
+    //                 int cantSoli2 = solicitudesListConf.Count();
+
+
+
+    //             <span class="badge bg-primary rounded-pill">
+    //                 @cantSoli2
+    //             </span>
+    //          }
+    //             <button class="btn btn-Primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    //                 Solicitudes confirmadas
+    //                 @*Aca iria la Campanita*@
+    //             </button>
+
+
+    //                 @if (solicitudes != null)
+    //                 {
+    //                 List<Solicitud> solicitudesListConf = JsonSerializer.Deserialize<List<Solicitud>>(solicitudesConfirmadas);
+
+    //             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+
+
+
+    //                 @foreach (Solicitud soli in solicitudesListConf)
+    //                 {
+
+    //                     <li class="list-group">
+    //                             <a class="list-group-item list-group-item-action" href="@Url.Action("Detalles", "Solicitud", new { idSolicitud = soli.Id, idObra = soli.IdObra})">Se confirmo la solicitud de la obra: @soli.Obra.Nombre</a>
+    //                     </li>
+
+    //                 }
+
+
+    //             </ul>
+    //             }
+    //             else
+    //             {
+    //                 <span class="badge bg-primary rounded-pill">
+    //                     0
+    //                 </span>
+    //                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+    //                 </ul>
+
+    //             }
+    //             </div>
+
+    //         <div class="dropend">
+    //             @if (alertasDeStock != null)
+    //             {
+    //                 List<ObraMaterial> materialesAlertar = JsonSerializer.Deserialize<List<ObraMaterial>>(alertasDeStock);
+
+    //                 int cantMaterial = materialesAlertar.Count();
+    //                 <span class="badge bg-primary rounded-pill">
+    //                     @cantMaterial
+    //                 </span>
+    //             }
+    //             <button class="btn btn-Primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    //                 Alertas de stock en obra
+    //                 @*Aca iria la Campanita*@
+    //             </button>
+    //                 @if (alertasDeStock != null)
+    //                 {
+    //                 List<ObraMaterial> materialesAlertar = JsonSerializer.Deserialize<List<ObraMaterial>>(alertasDeStock);
+
+    //                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+    //                 @foreach (ObraMaterial om in materialesAlertar)
+    //                 {
+
+    //                     <li class="list-group">
+    //                             <a class="list-group-item list-group-item-action" href="@Url.Action("Materiales", "Obra", new { id = om.Obra.IdObra })">En la obra @om.Obra.Nombre el stock de @om.Material.Nombre bajó de la barrera definida</a>
+    //                         </li>
+
+    //                 }
+    //                 </ul>
+    //             }
+
+    //         </div>
+    //     }
+
+
+
+    if (Context.Session.GetString("UsuarioTipo") == "Usuario de obra")
+    {
+
+        if (solicitudesAprob != null)
+        {
+            int cantSoli3 = solicitudesListApro.Count();
+
+
+
+
+            <button class=" btnNoti dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
+                    <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6" />
+                </svg> Notificaciones
+                @*Aca iria la Campanita*@
+            </button>
+
+            <span id="cantNoti" class="badge bg-danger rounded-pill">
+                @cantSoli3
+            </span>
+
+           
+            <div class="dropend containerNoti">
+
+              
+
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
 
 
 
-                    @foreach (Solicitud soli in solicitudesList)
+                    @foreach (Solicitud soli in solicitudesListApro)
                     {
 
                         <li class="list-group">
-                                <a class="list-group-item list-group-item-action" href="@Url.Action("Detalles", "Solicitud", new { idSolicitud = soli.Id, idObra = soli.IdObra})">Solicitud de la obra: @soli.Obra.Nombre</a>
+                            <a class="list-group-item list-group-item-action" href="@Url.Action("Confirmar", "Solicitud", new { idSolicitud = soli.Id })">Se aprobo la solicitud de: @soli.Obra.Nombre</a>
                         </li>
 
                     }
-                     @*foreach (Solicitud soli in solicitudesListApro)
-                    // {
-
-                    //     <li class="list-group">
-                    //         <a class="list-group-item list-group-item-action" href="@Url.Action("Detalles", "Solicitud", new { idSolicitud = soli.Id, idObra = soli.IdObra})">Se aprobo una solicitud de la obra: @soli.Obra.Nombre</a>
-                    //     </li>
-
-                      // }*@
-                    @foreach (Solicitud soli in solicitudesListConf)
-                    {
-
-                        <li class="list-group">
-                            <a class="list-group-item list-group-item-action" href="@Url.Action("Detalles", "Solicitud", new { idSolicitud = soli.Id, idObra = soli.IdObra})">Confrmada la solicitud de la obra: @soli.Obra.Nombre</a>
-                        </li>
-
-                    }
-                    @foreach (ObraMaterial om in materialesAlertar)
-                    {
-
-                        <li class="list-group">
-                            <a class="list-group-item list-group-item-action" href="@Url.Action("Materiales", "Obra", new { id = om.Obra.IdObra })">En la obra @om.Obra.Nombre el stock de @om.Material.Nombre bajó de la barrera definida</a>
-                        </li>
-
-                    }
-               
-                 </ul>
-               
-           
-
-                
-        </div>
-     }
 
 
+                </ul>
+            </div>
 
+        }
 
-//         <div class="dropend">
-//           @if(solicitudesConfirmadas != null)
-//          {
-//                 List<Solicitud> solicitudesListConf = JsonSerializer.Deserialize<List<Solicitud>>(solicitudesConfirmadas);
-
-//                 int cantSoli2 = solicitudesListConf.Count();
-
-
-
-//             <span class="badge bg-primary rounded-pill">
-//                 @cantSoli2
-//             </span>
-//          }
-//             <button class="btn btn-Primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-//                 Solicitudes confirmadas
-//                 @*Aca iria la Campanita*@
-//             </button>
-
-
-//                 @if (solicitudes != null)
-//                 {
-//                 List<Solicitud> solicitudesListConf = JsonSerializer.Deserialize<List<Solicitud>>(solicitudesConfirmadas);
-
-//             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-
-
-
-//                 @foreach (Solicitud soli in solicitudesListConf)
-//                 {
-
-//                     <li class="list-group">
-//                             <a class="list-group-item list-group-item-action" href="@Url.Action("Detalles", "Solicitud", new { idSolicitud = soli.Id, idObra = soli.IdObra})">Se confirmo la solicitud de la obra: @soli.Obra.Nombre</a>
-//                     </li>
-
-//                 }
-
-
-//             </ul>
-//             }
-//             else
-//             {
-//                 <span class="badge bg-primary rounded-pill">
-//                     0
-//                 </span>
-//                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-//                 </ul>
-
-//             }
-//             </div>
-
-//         <div class="dropend">
-//             @if (alertasDeStock != null)
-//             {
-//                 List<ObraMaterial> materialesAlertar = JsonSerializer.Deserialize<List<ObraMaterial>>(alertasDeStock);
-
-//                 int cantMaterial = materialesAlertar.Count();
-//                 <span class="badge bg-primary rounded-pill">
-//                     @cantMaterial
-//                 </span>
-//             }
-//             <button class="btn btn-Primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-//                 Alertas de stock en obra
-//                 @*Aca iria la Campanita*@
-//             </button>
-//                 @if (alertasDeStock != null)
-//                 {
-//                 List<ObraMaterial> materialesAlertar = JsonSerializer.Deserialize<List<ObraMaterial>>(alertasDeStock);
-
-//                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-//                 @foreach (ObraMaterial om in materialesAlertar)
-//                 {
-
-//                     <li class="list-group">
-//                             <a class="list-group-item list-group-item-action" href="@Url.Action("Materiales", "Obra", new { id = om.Obra.IdObra })">En la obra @om.Obra.Nombre el stock de @om.Material.Nombre bajó de la barrera definida</a>
-//                         </li>
-
-//                 }
-//                 </ul>
-//             }
-            
-//         </div>
-//     }
-
-
-
-//     if (Context.Session.GetString("UsuarioTipo") == "Usuario de obra")
-//     {
-        
-//     if (solicitudesAprob != null)
-//     {
-//         List<Solicitud> solicitudesListApro = JsonSerializer.Deserialize<List<Solicitud>>(solicitudesAprob);
-//         int cantSoli3 = solicitudesListApro.Count();
-
-//             <span class="badge bg-primary rounded-pill">
-//                 @cantSoli3
-//             </span>
-
-//           <div class="dropend">
-
-//             <button class="btn btn-Primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-//                 Solicitudes aprobadas
-//                 @*Aca iria la Campanita*@
-//             </button>
-
-
-
-//             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-
-
-
-//                 @foreach (Solicitud soli in solicitudesListApro)
-//                 {
-
-//                     <li class="list-group">
-//                             <a class="list-group-item list-group-item-action" href="@Url.Action("Confirmar", "Solicitud", new { idSolicitud = soli.Id })">Se aprobo la solicitud de: @soli.Obra.Nombre</a>
-//                     </li>
-
-//                 }
-
-
-//             </ul>
-//         </div>
-
-//     }
-
-//     }
+    }
 
 
 

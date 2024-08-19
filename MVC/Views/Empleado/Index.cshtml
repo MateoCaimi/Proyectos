@@ -28,28 +28,31 @@
         @ViewBag.Error
     </div>
 }
-<p>
 
-    <a asp-action="Agregar">Agregar empleado</a>
-    <a asp-action="ListaTipoEmpleado">Categorias de empleado</a>
+@if (Context.Session.GetString("UsuarioTipo") == "Usuario de oficina")
+{
+    <p>
 
-</p>
+        <a asp-action="Agregar">Agregar empleado</a>
+        <a asp-action="ListaTipoEmpleado">Categorias de empleado</a>
 
-    <form method="post">
-        <div class="form-group">
-            <label>Filtrar por obra: </label>
-            <select id="IdObra" name="IdObra" class="form-control">
-                <option value=0>Todas</option>
-                @foreach (var item in ViewBag.Obras)
-                {
-                    <option value="@item.IdObra">@item.Nombre</option>
-                }
-            </select>
-        </div>
-        <div class="form-group">
-            <input type="submit" value="Buscar" class="btn btnPrincipal" />
-        </div>
-    </form>
+    </p>
+}
+<form method="post">
+    <div class="form-group">
+        <label>Filtrar por obra: </label>
+        <select id="IdObra" name="IdObra" class="form-control">
+            <option value=0>Todas</option>
+            @foreach (var item in ViewBag.Obras)
+            {
+                <option value="@item.IdObra">@item.Nombre</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Buscar" class="btn btnPrincipal" />
+    </div>
+</form>
 
 <table class="table">
     <thead>
@@ -89,7 +92,7 @@
                 <td class="tablaAEsconder1000">
                     @Html.DisplayFor(modelItem => item.FechaIngreso)
                 </td>
-                <td >
+                <td>
                     @Html.DisplayFor(modelItem => item.TipoEmpleado.Categoría)
                 </td>
                 <td class="tablaAEsconder1100">

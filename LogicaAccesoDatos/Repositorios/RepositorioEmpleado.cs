@@ -141,35 +141,35 @@ namespace LogicaAccesoDatos.Repositorios
         }
         public void PrecargaMarcasDelAño()
         {
-            //DateTime hoy = DateTime.Now;
-            //DateTime desde = new DateTime();
-            //DateTime hasta = new DateTime();
+            DateTime hoy = DateTime.Now;
+            DateTime desde = new DateTime();
+            DateTime hasta = new DateTime();
 
 
-            //for (int i = 4; i < hoy.Month; i++)
-            //{
+            for (int i = 4; i < hoy.Month; i++)
+            {
 
-            //    if (i == 4 || i == 6 || i == 9 || i == 11)
-            //    {
-            //        desde = new DateTime(2024, i, 01);
-            //        hasta = new DateTime(2024, i, 30, 23, 59, 59);
-            //    }
-            //    else if (i == 2)
-            //    {
-            //        desde = new DateTime(2024, i, 01);
-            //        hasta = new DateTime(2024, i, 29, 23, 59, 59);
-            //    }
-            //    else
-            //    {
-            //        desde = new DateTime(2024, i, 01);
-            //        hasta = new DateTime(2024, i, 31, 23, 59, 59);
+                if (i == 4 || i == 6 || i == 9 || i == 11)
+                {
+                    desde = new DateTime(2024, i, 01);
+                    hasta = new DateTime(2024, i, 30, 23, 59, 59);
+                }
+                else if (i == 2)
+                {
+                    desde = new DateTime(2024, i, 01);
+                    hasta = new DateTime(2024, i, 29, 23, 59, 59);
+                }
+                else
+                {
+                    desde = new DateTime(2024, i, 01);
+                    hasta = new DateTime(2024, i, 31, 23, 59, 59);
 
-            //    }
+                }
 
-            //     ConseguirTodasLasMarcas(desde, hasta);
+                ConseguirTodasLasMarcas(desde, hasta);
 
 
-            //}
+            }
 
 
 

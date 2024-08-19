@@ -132,6 +132,10 @@ else
                 </button>
             </h2>
             <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+
+                @if (Context.Session.GetString("UsuarioTipo") == "Usuario de oficina")
+                {
+                    
                 <div class="accordion-body">
 
                     <a class="linkObra" asp-action="Editar" asp-route-id="@Model?.Obra.IdObra">Modificar</a>
@@ -144,6 +148,7 @@ else
 
 
                 </div>
+                }
 
                 <div class="accordion-body">
 
