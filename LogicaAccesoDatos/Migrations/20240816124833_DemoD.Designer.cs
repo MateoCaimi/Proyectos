@@ -12,15 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogicaAccesoDatos.Migrations
 {
     [DbContext(typeof(ProyectoContext))]
-    [Migration("20240808021423_123444")]
-    partial class _123444
+    [Migration("20240816124833_DemoD")]
+    partial class DemoD
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.7")
+                .HasAnnotation("ProductVersion", "8.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -186,6 +186,9 @@ namespace LogicaAccesoDatos.Migrations
                     b.Property<string>("TipoCronograma")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("UltimaActualizacion")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("IdObra");
 
                     b.HasIndex("IdACargo");
@@ -241,13 +244,6 @@ namespace LogicaAccesoDatos.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CarpetaContenedoraIdObra")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CarpetaContenedoraName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime>("FechaPublicado")
                         .HasColumnType("datetime2");
 
@@ -278,8 +274,6 @@ namespace LogicaAccesoDatos.Migrations
 
                     b.HasIndex("IdTipoPlano");
 
-                    b.HasIndex("CarpetaContenedoraName", "CarpetaContenedoraIdObra");
-
                     b.ToTable("Planos");
                 });
 
@@ -305,7 +299,7 @@ namespace LogicaAccesoDatos.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Proveedores");
+                    b.ToTable("Proveedor");
                 });
 
             modelBuilder.Entity("LogicaNegocio.Entidades.Solicitud", b =>
@@ -597,14 +591,6 @@ namespace LogicaAccesoDatos.Migrations
                         .HasForeignKey("IdTipoPlano")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.HasOne("LogicaNegocio.Entidades.Carpeta", "CarpetaContenedora")
-                        .WithMany()
-                        .HasForeignKey("CarpetaContenedoraName", "CarpetaContenedoraIdObra")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CarpetaContenedora");
 
                     b.Navigation("Obra");
 

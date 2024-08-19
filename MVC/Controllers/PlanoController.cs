@@ -543,7 +543,7 @@ namespace MVC.Controllers
                         string result = match.Groups[1].Value;
                         byte[] plano = await httpClient.GetByteArrayAsync(result);
                         string planoNombre = obj["name"].ToString();
-                        bool checkExistencia = Fachada.ExistePlano(plano, planoNombre);
+                        bool checkExistencia = false;//Fachada.ExistePlano(plano, planoNombre);
                         if (!checkExistencia)
                         {
                             int idObra = Fachada.TraerIdPorNombreObra(webUrl);
@@ -784,6 +784,8 @@ namespace MVC.Controllers
                             var subPath = $"{path}/{item["name"]}";
                        //         Lanzar tarea asíncrona para procesamiento paralelo
                             tasks.Add(TomarPdfsInterno(siteId, subPath, pdfs, token, obra));
+                            // Esperar a que todas las tareas se completen
+                            await Task.WhenAll(tasks);
 
                             //}
 
@@ -791,13 +793,10 @@ namespace MVC.Controllers
                         else
                         {
                             crears.Add(CrearCarpetasYTipo(path, obra));
+                            await Task.WhenAll(crears);
                             pdfs.Add(item as JObject);
                         }
                     }
-
-                    // Esperar a que todas las tareas se completen
-                    await Task.WhenAll(tasks);
-                    await Task.WhenAll(crears);
 
                     return pdfs;
                 }
@@ -814,9 +813,7 @@ namespace MVC.Controllers
 
         private async Task CrearTipo(string path, Obra obra)
         {
-            List<string> paths = path.Split("/").ToList();
-            string name = paths.Last();
-            Fachada.crearTipoPlanos(name, obra.IdObra);
+            Fachada.crearTipoPlanos(path, obra.IdObra);
         }
 
         private async Task CrearCarpetasYTipo(string subPath, Obra obra)
@@ -830,7 +827,7 @@ namespace MVC.Controllers
                 anterior = path;
             }
 
-            CrearTipo(subPath, obra);
+            CrearTipo(anterior, obra);
         }
 
         private DriveDTO FiltrarCarpetas(DriveDTO? drive)

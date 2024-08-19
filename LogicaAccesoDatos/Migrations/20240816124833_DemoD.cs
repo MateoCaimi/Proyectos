@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LogicaAccesoDatos.Migrations
 {
     /// <inheritdoc />
-    public partial class _123444 : Migration
+    public partial class DemoD : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Proveedores",
+                name: "Proveedor",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -23,7 +23,7 @@ namespace LogicaAccesoDatos.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Proveedores", x => x.Id);
+                    table.PrimaryKey("PK_Proveedor", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -117,7 +117,8 @@ namespace LogicaAccesoDatos.Migrations
                     NombreCronograma = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TipoCronograma = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Cronograma = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    QR = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
+                    QR = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    UltimaActualizacion = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -207,6 +208,35 @@ namespace LogicaAccesoDatos.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Planos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IdTipoPlano = table.Column<int>(type: "int", nullable: false),
+                    FechaPublicado = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IdObra = table.Column<int>(type: "int", nullable: false),
+                    NombrePdf = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TipoPdf = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Pdf = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Planos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Planos_Obras_IdObra",
+                        column: x => x.IdObra,
+                        principalTable: "Obras",
+                        principalColumn: "IdObra");
+                    table.ForeignKey(
+                        name: "FK_Planos_TiposPlanos_IdTipoPlano",
+                        column: x => x.IdTipoPlano,
+                        principalTable: "TiposPlanos",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Solicitudes",
                 columns: table => new
                 {
@@ -228,9 +258,9 @@ namespace LogicaAccesoDatos.Migrations
                         principalColumn: "IdObra",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Solicitudes_Proveedores_IdProveedor",
+                        name: "FK_Solicitudes_Proveedor_IdProveedor",
                         column: x => x.IdProveedor,
-                        principalTable: "Proveedores",
+                        principalTable: "Proveedor",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Solicitudes_Usuarios_IdUDeOficina",
@@ -241,43 +271,6 @@ namespace LogicaAccesoDatos.Migrations
                         name: "FK_Solicitudes_Usuarios_IdUsuario",
                         column: x => x.IdUsuario,
                         principalTable: "Usuarios",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Planos",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IdTipoPlano = table.Column<int>(type: "int", nullable: false),
-                    FechaPublicado = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IdObra = table.Column<int>(type: "int", nullable: false),
-                    NombrePdf = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TipoPdf = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Pdf = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    CarpetaContenedoraName = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CarpetaContenedoraIdObra = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Planos", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Planos_Carpetas_CarpetaContenedoraName_CarpetaContenedoraIdObra",
-                        columns: x => new { x.CarpetaContenedoraName, x.CarpetaContenedoraIdObra },
-                        principalTable: "Carpetas",
-                        principalColumns: new[] { "Name", "IdObra" },
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Planos_Obras_IdObra",
-                        column: x => x.IdObra,
-                        principalTable: "Obras",
-                        principalColumn: "IdObra");
-                    table.ForeignKey(
-                        name: "FK_Planos_TiposPlanos_IdTipoPlano",
-                        column: x => x.IdTipoPlano,
-                        principalTable: "TiposPlanos",
                         principalColumn: "Id");
                 });
 
@@ -392,11 +385,6 @@ namespace LogicaAccesoDatos.Migrations
                 column: "IdMaterial");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Planos_CarpetaContenedoraName_CarpetaContenedoraIdObra",
-                table: "Planos",
-                columns: new[] { "CarpetaContenedoraName", "CarpetaContenedoraIdObra" });
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Planos_IdObra",
                 table: "Planos",
                 column: "IdObra");
@@ -436,6 +424,9 @@ namespace LogicaAccesoDatos.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Carpetas");
+
+            migrationBuilder.DropTable(
                 name: "Marcas");
 
             migrationBuilder.DropTable(
@@ -451,7 +442,7 @@ namespace LogicaAccesoDatos.Migrations
                 name: "ObrasEmpleados");
 
             migrationBuilder.DropTable(
-                name: "Carpetas");
+                name: "TiposPlanos");
 
             migrationBuilder.DropTable(
                 name: "Materiales");
@@ -463,13 +454,10 @@ namespace LogicaAccesoDatos.Migrations
                 name: "Empleados");
 
             migrationBuilder.DropTable(
-                name: "TiposPlanos");
-
-            migrationBuilder.DropTable(
                 name: "Obras");
 
             migrationBuilder.DropTable(
-                name: "Proveedores");
+                name: "Proveedor");
 
             migrationBuilder.DropTable(
                 name: "TiposEmpleados");
