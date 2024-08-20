@@ -29,12 +29,13 @@ namespace LogicaAccesoDatos.EF
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string cadenaConexion =
-                @"SERVER=(localdb)\MSsqlLocaldb;
-                DATABASE=ProyectoIntegradorAgosto4242;
-                INTEGRATED SECURITY=TRUE;
-                ENCRYPT=False";
+             @"SERVER=(localdb)\MSsqlLocaldb;
+            DATABASE=ProyectoIntegradorPcw;
+            INTEGRATED SECURITY=TRUE;
+            ENCRYPT=False";
 
-            string cadenaConexionDeploy =
+
+            string cadenaConexionNube =
                 @"Server=tcp:fmaprueba2sqldbdbserver.database.windows.net,1433;Initial Catalog=DemoDeploy;User Id=DemoAdmin@fmaprueba2sqldbdbserver;Password=Capurro1234";
             //Puede evitar problemas si no hay un certificado y se usa SSL
             optionsBuilder.UseSqlServer(cadenaConexion)
