@@ -8,6 +8,7 @@ using LogicaNegocio.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using OneOf.Types;
 using PdfSharp.Pdf.Filters;
 using System;
 using System.Collections.Generic;
@@ -108,7 +109,8 @@ namespace LogicaAccesoDatos.Repositorios
 
         public void Precarga()
         {
-            PrecargaMarcasDelAño();
+           // borrarTodasLasMarcas();
+            
             int cantTipos = this.GetTipos().Count;
             if (cantTipos == 0)
             {
@@ -139,30 +141,57 @@ namespace LogicaAccesoDatos.Repositorios
 
 
         }
+        //Esta como paara probar y ejecutar previo a todo
+        public void borrarTodasLasMarcas()
+        {
+            foreach(Marca m in Context.Marcas)
+            {
+                Context.Marcas.Remove(m);
+            }
+            Context.SaveChanges(); 
+        }
+
         public void PrecargaMarcasDelAño()
         {
             DateTime hoy = DateTime.Now;
             DateTime desde = new DateTime();
             DateTime hasta = new DateTime();
+            int mesInicio = 1;
 
-
-            for (int i = 4; i < hoy.Month; i++)
+            if (hoy.Month > 4) //Porque cloudTimes no acepta mas de 5 llamadas
             {
+             mesInicio = hoy.Month - 4;
+            }
 
-                if (i == 4 || i == 6 || i == 9 || i == 11)
+            //Carga los ultimos 5 meses hasta la actualidad o desde principio de año
+
+            for (int i = mesInicio; i <= hoy.Month; i++)
+            {
+                if(i == hoy.Month)
                 {
-                    desde = new DateTime(2024, i, 01);
-                    hasta = new DateTime(2024, i, 30, 23, 59, 59);
+                    desde = new DateTime(hoy.Year, i, 01, 00, 00, 01);
+                    hasta = new DateTime(hoy.Year, i, hoy.Day, hoy.Hour, hoy.Minute, hoy.Second);
+                }
+                else if (i == 4 || i == 6 || i == 9 || i == 11)
+                {
+                    desde = new DateTime(hoy.Year, i, 01, 00, 00, 01);
+                    hasta = new DateTime(hoy.Year, i, 30, 23, 59, 59);
                 }
                 else if (i == 2)
                 {
-                    desde = new DateTime(2024, i, 01);
-                    hasta = new DateTime(2024, i, 29, 23, 59, 59);
+                    if (hoy.Year % 4 == 0)
+                    {
+                        desde = new DateTime(hoy.Year, i, 01, 00, 00, 01);
+                        hasta = new DateTime(hoy.Year, i, 28, 23, 59, 59);
+                    }
+
+                    desde = new DateTime(hoy.Year, i, 01, 00, 00, 01);
+                    hasta = new DateTime(hoy.Year, i, 29, 23, 59, 59);
                 }
                 else
                 {
-                    desde = new DateTime(2024, i, 01);
-                    hasta = new DateTime(2024, i, 31, 23, 59, 59);
+                    desde = new DateTime(hoy.Year, i, 01, 00, 00, 01);
+                    hasta = new DateTime(hoy.Year, i, 31, 23, 59, 59);
 
                 }
 
@@ -170,8 +199,6 @@ namespace LogicaAccesoDatos.Repositorios
 
 
             }
-
-
 
         }
 
@@ -400,13 +427,16 @@ namespace LogicaAccesoDatos.Repositorios
             }
             else
             {
-                hastaDato = SetHoraA0(hasta);
-                desdeDato = SetHoraA0(desde);
+               hastaDato = SetHoraA0(hasta);
+               desdeDato = SetHoraA0(desde);
             }
             string response;
+
+            //Cambie el desde y hasta(daato)
+
             try
             {
-                response = LlamadaCloudtimes(desdeDato, hastaDato).Result; //Formatear la respuesta cloudtimes.
+                response = LlamadaCloudtimes(desde, hasta).Result; //Formatear la respuesta cloudtimes.
                 if (response.Contains("IP"))
                 {
                     throw new EmpleadoException("No se pueden generar marcas ahora mismo, intentar en unos minutos.");

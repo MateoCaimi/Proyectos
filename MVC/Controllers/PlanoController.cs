@@ -56,11 +56,15 @@ namespace MVC.Controllers
             bool continuar = true;//Fachada.ActualizarPlanosEnObra(obra);
             if ((Name == "" || Name == null) && continuar) //Solo hace la carga en el root
             {
+                if (Fachada.ActualizarPlanosEnObra(obra))
+                {
                 Fachada.ActualizarFechaUltimaActualizacion(obra);
+
                 list = await GraphRecursivoParalelizado(idObra);//await TomarPdfRecursivo(siteId, path);
                 Fachada.MapearTíposACarpetas();
                 List<Plano> planos = await this.FormateoDePlanos(list);
                 List<Plano> planos2 = Fachada.TomarTodosPlanos().ToList();
+                }
             }
 
             Carpeta carpetaActual = Fachada.ObtenerCarpeta(Name, obra);

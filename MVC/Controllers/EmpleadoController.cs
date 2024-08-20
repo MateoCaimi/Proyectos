@@ -287,17 +287,17 @@ namespace MVC.Controllers
 
             try
             {
-                Fachada.Precarga();
+                //Fachada.Precarga();
                 TempData["Anomalia"] = "";
-                if (!Fachada.AgregarEmpleadosAObraDTO(desde, hasta))
-                {
-                    TempData["Anomalia"] = "Se encontraron anomalías generando a los empleados en obra en el sistema. Revisar las marcas del rango especificado.";
-                }
+                //if (!Fachada.AgregarEmpleadosAObraDTO(desde, hasta))
+                //{
+                //    TempData["Anomalia"] = "Se encontraron anomalías generando a los empleados en obra en el sistema. Revisar las marcas del rango especificado.";
+                //}
 
-                if (!Fachada.AgregarTodasLasMarcasDTO(desde, hasta))
-                {
-                    TempData["Anomalia"] = "Se generaron marcas anómalas en el sistema. Revisar las marcas del rango especificado.";
-                }
+                //if (!Fachada.AgregarTodasLasMarcasDTO(desde, hasta))
+                //{
+                //    TempData["Anomalia"] = "Se generaron marcas anómalas en el sistema. Revisar las marcas del rango especificado.";
+                //}
                 return View();
             }
             catch(Exception e)

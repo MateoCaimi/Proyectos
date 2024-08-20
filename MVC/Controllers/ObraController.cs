@@ -479,7 +479,7 @@ namespace MVC.Controllers
         [HttpGet("{id}/cronograma")]
         public IActionResult ObtenerCronograma(int id)
         {
-
+        
             if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("Index", "Usuario");
@@ -501,7 +501,7 @@ namespace MVC.Controllers
                 return NotFound();
             }
 
-            return File(obra.Cronograma, obra.TipoCronograma, obra.NombreCronograma);
+             return File(obra.Cronograma, obra.TipoCronograma, obra.NombreCronograma);
         }
 
         public IActionResult Materiales(int id)

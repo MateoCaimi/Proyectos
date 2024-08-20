@@ -623,5 +623,10 @@ namespace LogicaAccesoDatos.Repositorios
         {
             RepositorioObra.ActualizarFechaUltimaActualizacion(obra);
         }
+
+        public void PrecargaMarcas()
+        {
+            RepositorioEmpleado.PrecargaMarcasDelAño();
+        }
     }
 }

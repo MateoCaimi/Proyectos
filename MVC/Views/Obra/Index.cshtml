@@ -36,7 +36,18 @@
                 <td>
                     @if (item.Cronograma != null)
                     {
-                        <a href="@Url.Action("ObtenerCronograma", "Obra", new { id = item.IdObra })" target="_blank">Ver Cronograma</a>
+
+                        <a id="btnDescargarCronograma" href="@Url.Action("ObtenerCronograma", "Obra", new { id = item.IdObra })" target="_blank">Ver Cronograma</a>
+
+                       @*  <script>
+                            document.getElementById("btnDescargarCronograma").addEventListener("click", function () {
+
+                                setTimeout(function () {
+                                    window.location.href = '@Url.Action("ObtenerCronograma", "Obra", new { id = item.IdObra })'; //esto es prueba para redirigir a el confirmar q te tira para el index
+                                }, 1500); // 0.5 segundo de retraso
+                            });
+                        </script> *@
+
                     }
                     else
                     {
