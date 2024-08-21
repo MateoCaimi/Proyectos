@@ -146,7 +146,7 @@ namespace MVC.Controllers
         // GET: PlanoController/Create
         public ActionResult Agregar(int idObra)
         {
-            /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("Index", "Usuario");
             }
@@ -157,7 +157,7 @@ namespace MVC.Controllers
             else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
             {
                 return RedirectToAction("Index", "Obra");
-            }*/
+            }
 
             TempData["Error"] = null;
             ViewBag.IdObra = idObra;
@@ -179,7 +179,7 @@ namespace MVC.Controllers
         public async Task<ActionResult> Agregar(Plano aIngresar, IFormFile archivoImagen)
         {
 
-            /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("Index", "Usuario");
             }
@@ -190,7 +190,7 @@ namespace MVC.Controllers
             else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
             {
                 return RedirectToAction("Index", "Obra");
-            }*/
+            }
 
 
             try

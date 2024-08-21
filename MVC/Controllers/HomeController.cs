@@ -25,7 +25,7 @@ namespace MVC.Controllers
         public IActionResult Index()
         {
             Fachada.Precarga();
-            Fachada.PrecargaMarcas();
+            //Fachada.PrecargaMarcas();
             if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
 

@@ -37,7 +37,7 @@
                     @if (item.Cronograma != null)
                     {
 
-                        <a id="btnDescargarCronograma" href="@Url.Action("ObtenerCronograma", "Obra", new { id = item.IdObra })" target="_blank">Ver Cronograma</a>
+                        <a id="btnDescargarCronograma" onclick="location.href='@Url.Action("ObtenerCronograma", "Obra", new { id = item.IdObra })';event.stopPropagation();return false;" target="_blank">Ver Cronograma</a>
 
                        @*  <script>
                             document.getElementById("btnDescargarCronograma").addEventListener("click", function () {
