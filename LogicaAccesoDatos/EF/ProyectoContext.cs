@@ -30,7 +30,7 @@ namespace LogicaAccesoDatos.EF
         {
             string cadenaConexion =
              @"SERVER=(localdb)\MSsqlLocaldb;
-            DATABASE=ProyectoIntegradorPcw;
+            DATABASE=ProyectoIntegradorPcN;
             INTEGRATED SECURITY=TRUE;
             ENCRYPT=False";
 
@@ -38,7 +38,7 @@ namespace LogicaAccesoDatos.EF
             string cadenaConexionNube =
                 @"Server=tcp:fmaprueba2sqldbdbserver.database.windows.net,1433;Initial Catalog=DemoDeploy;User Id=DemoAdmin@fmaprueba2sqldbdbserver;Password=Capurro1234";
             //Puede evitar problemas si no hay un certificado y se usa SSL
-            optionsBuilder.UseSqlServer(cadenaConexion)
+            optionsBuilder.UseSqlServer(cadenaConexionNube)
                 .EnableDetailedErrors();
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

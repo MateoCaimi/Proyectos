@@ -158,14 +158,14 @@ namespace LogicaAccesoDatos.Repositorios
             DateTime hasta = new DateTime();
             int mesInicio = 1;
 
-            if (hoy.Month > 4) //Porque cloudTimes no acepta mas de 5 llamadas
+            if (hoy.Month > 2) //Porque cloudTimes no acepta mas de 5 llamadas
             {
-             mesInicio = hoy.Month - 4;
+             mesInicio = hoy.Month - 2;
             }
 
-            //Carga los ultimos 5 meses hasta la actualidad o desde principio de año
+            //Carga los ultimos 2 meses hasta la actualidad o desde principio de año
 
-            for (int i = mesInicio; i <= hoy.Month; i++)
+            for (int i = hoy.Month; i >= mesInicio; i--)
             {
                 if(i == hoy.Month)
                 {
@@ -195,7 +195,8 @@ namespace LogicaAccesoDatos.Repositorios
 
                 }
 
-                //ConseguirTodasLasMarcas(desde, hasta);
+                AgregarEmpleadosAObraDTO(desde,hasta);
+                ConseguirTodasLasMarcas(desde, hasta);
 
 
             }

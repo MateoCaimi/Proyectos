@@ -83,6 +83,7 @@ h1 {
     }
 
 /* Estilo para los enlaces */
+
 a {
     color: #b30000;
     text-decoration: none;
@@ -124,6 +125,6 @@ p {
         margin: 0 10px;
     }
 #btnDescargarCronograma{
-    background-color:red;
+  
     z-index:55;
 }

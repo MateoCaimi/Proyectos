@@ -75,8 +75,8 @@ namespace LogicaAccesoDatos.Migrations
                         .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<double>("IncentivoXHora")
-                        .HasColumnType("float");
+                    b.Property<decimal>("IncentivoXHora")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -365,14 +365,14 @@ namespace LogicaAccesoDatos.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Compensacion")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Compensacion")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<double>("Presentismo")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Presentismo")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<double>("ValorHora")
-                        .HasColumnType("float");
+                    b.Property<decimal>("ValorHora")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 

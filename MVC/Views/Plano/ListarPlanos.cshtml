@@ -3,7 +3,8 @@
 @{
     ViewData["Title"] = "ListarPlanos";
 }
-
+<link href="~/css/empleado/indexempleado.css" rel="stylesheet" />
+<link href="~/css/tablasresponsive.css" rel="stylesheet" />
 <h1>Listado de Planos</h1>
 
 
@@ -49,16 +50,16 @@
             <th>
                 @Html.DisplayNameFor(model => model.Nombre)
             </th>
-            <th>
+            <th class="tablaAEsconder600">
                 @Html.DisplayNameFor(model => model.TipoPlano)
             </th>
-            <th>
+            <th class="tablaAEsconder800">
                 @Html.DisplayNameFor(model => model.FechaPublicado)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Pdf)
             </th>
-            <th></th>
+           
         </tr>
     </thead>
     <tbody>
@@ -68,18 +69,15 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Nombre)
                 </td>
-                <td>
+                <td class="tablaAEsconder600">
                     @Html.DisplayFor(modelItem => item.TipoPlano.Categoria)
                 </td>
-                <td>
+                <td class="tablaAEsconder800">
                     @Html.DisplayFor(modelItem => item.FechaPublicado)
                 </td>
                 <td>
                     <a href="@Url.Action("ObtenerPdf", new { id = item.Id })" target="_blank">Ver PDF</a>
-                <td>
-
-                    <a asp-action="Eliminar" asp-route-id="@item.Id">Eliminar</a>
-                </td>
+               
             </tr>
         }
     </tbody>

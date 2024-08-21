@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LogicaAccesoDatos.Migrations
 {
     /// <inheritdoc />
-    public partial class otraMas : Migration
+    public partial class nnueee : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -33,9 +33,9 @@ namespace LogicaAccesoDatos.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Categoría = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ValorHora = table.Column<double>(type: "float", nullable: false),
-                    Presentismo = table.Column<double>(type: "float", nullable: false),
-                    Compensacion = table.Column<double>(type: "float", nullable: false)
+                    ValorHora = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Presentismo = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Compensacion = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -88,7 +88,7 @@ namespace LogicaAccesoDatos.Migrations
                     IdTipoEmpleado = table.Column<int>(type: "int", nullable: false),
                     CuentaBanco = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Banco = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IncentivoXHora = table.Column<double>(type: "float", nullable: false),
+                    IncentivoXHora = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Activo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
