@@ -7,7 +7,7 @@
     },
     "mssql2": {
       "type": "mssql",
-      "connectionId": "ConnectionStrings:DemoAgain42"
+      "connectionId": "ConnectionStrings:AppSubida"
     }
   }
 }

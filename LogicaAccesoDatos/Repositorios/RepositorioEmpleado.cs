@@ -764,7 +764,7 @@ namespace LogicaAccesoDatos.Repositorios
             {
                 presentismo = (valorHora + compensacion) * presentismo / 100;
             }
-            nominal = (valorHora + compensacion + presentismo) * horasTotales;
+            nominal = (valorHora + compensacion + presentismo + empleado.IncentivoXHora) * horasTotales;
             return nominal;
 
         }
