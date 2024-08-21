@@ -501,7 +501,7 @@ namespace MVC.Controllers
                 return NotFound();
             }
 
-             return File(obra.Cronograma, obra.TipoCronograma, obra.NombreCronograma);
+            return File(obra.Cronograma, obra.TipoCronograma, obra.NombreCronograma);
         }
 
         public IActionResult Materiales(int id)
@@ -553,8 +553,11 @@ namespace MVC.Controllers
 
 
 
+            var location = new Uri($"{Request.Scheme}://{Request.Host}{Request.Path}{Request.QueryString}");
 
-            string data = $"https://localhost:7289/Plano?idObra={id}"; //Se cambia el link una vez hecho el deploy, pero la idea sería esta.
+            var uri = location.AbsoluteUri.Replace(location.AbsolutePath,"");
+
+            string data = uri + $"/Plano?idObra={id}"; //Se cambia el link una vez hecho el deploy, pero la idea sería esta.
             string url = $"https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&qzone=30&data={data}";
 
             using (HttpClient cliente = new HttpClient())
