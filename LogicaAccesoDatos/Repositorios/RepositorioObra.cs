@@ -514,9 +514,9 @@ namespace LogicaAccesoDatos.Repositorios
             return Context.ObrasEmpleados.Where(e => e.IdObra == oe.IdObra && e.IdEmpleado == oe.IdEmpleado).Any();
         }
 
-        internal double CalcularTotalLiquidacion(List<ObraEmpleadoLiquidacionViewModel> vm)
+        internal decimal CalcularTotalLiquidacion(List<ObraEmpleadoLiquidacionViewModel> vm)
         {
-           double total = 0;
+           decimal total = 0;
 
             foreach (ObraEmpleadoLiquidacionViewModel emp in vm)
             {

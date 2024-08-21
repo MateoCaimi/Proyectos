@@ -19,12 +19,20 @@ namespace LogicaNegocio.Entidades
         [Required(ErrorMessage = "Ingrese una categoria")]
         public string Categoría { get; set; }
         [Required(ErrorMessage = "Ingrese un valor por hora")]
+        [Display(Name = "Valor por Hora")]
+        [RegularExpression(@"^\d+(\,\d{1,2})?$", ErrorMessage = "El campo Valor por Hora debe ser un número válido con coma como separador decimal.")]
+
         [Range(0,double.MaxValue)]
-        public double ValorHora { get; set; }
-        [Range(0,double.MaxValue)]
-        public double Presentismo { get; set; }
-        [Range(0,double.MaxValue)]
-        public double Compensacion { get; set; }
+        public decimal ValorHora { get; set; }
+        [Range(0, double.MaxValue)]
+        [RegularExpression(@"^\d+(\,\d{1,2})?$", ErrorMessage = "El campo Valor por Hora debe ser un número válido con coma como separador decimal.")]
+
+        public decimal Presentismo { get; set; }
+        [Range(0, double.MaxValue)]
+        [RegularExpression(@"^\d+(\,\d{1,2})?$", ErrorMessage = "El campo Valor por Hora debe ser un número válido con coma como separador decimal.")]
+
+
+        public decimal Compensacion { get; set; }
 
         public TipoEmpleado()
         {

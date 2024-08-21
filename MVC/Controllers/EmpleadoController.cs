@@ -100,36 +100,7 @@ namespace MVC.Controllers
             return View(empleados);
         }
 
-        // GET: EmpleadoController
-        public ActionResult ListaTipos()
-        {
-
-
-            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            {
-                return RedirectToAction("Index", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
-            {
-                return RedirectToAction("Listado", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
-            {
-                return RedirectToAction("Index", "Plano");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            IEnumerable<TipoEmpleado> tipoEmpleados = Fachada.TomarTodosTipoEmpleados();
-            //Fachada.AgregarEmpleadosAObraDTO();
-            //Fachada.AgregarTodasLasMarcasPorIdEmpleado(44);
-            //Fachada.AgregarTodasLasMarcasDTO();
-            //Liquidar();
-            //Fachada.AgregarEmpleadosAObra();
-            return View(tipoEmpleados);
-        }
+        
 
         public ActionResult Marcas(int id)
         {
@@ -587,6 +558,7 @@ namespace MVC.Controllers
 
             try
             {
+
                 if (string.IsNullOrEmpty(FechaRango) || !FechaRango.Contains("to"))
                 {
                     throw new Exception("Seleccione un rango de fechas válido");
@@ -602,9 +574,9 @@ namespace MVC.Controllers
                 Empleado empleado = Fachada.BuscarEmpleado(IdEmpleado);
                 Obra obra = Fachada.BuscarObra(IdObra);
                 List<ObraEmpleadoLiquidacionViewModel> vm = new List<ObraEmpleadoLiquidacionViewModel>();
-                Dictionary<ObraEmpleado, double> dic;
+                Dictionary<ObraEmpleado, decimal> dic;
                 dic = Fachada.Liquidar(desde, hasta, obra, empleado); 
-                foreach(KeyValuePair<ObraEmpleado, double> kv in dic) //No es lógica de negocio, es formateo de vista, entonces entiendo que es válido.
+                foreach(KeyValuePair<ObraEmpleado, decimal> kv in dic) //No es lógica de negocio, es formateo de vista, entonces entiendo que es válido.
                 {
                     vm.Add(new ObraEmpleadoLiquidacionViewModel(kv.Key, kv.Value));
                 }

@@ -32,7 +32,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
+            <tr onclick="location.href='@Url.Action("ModificarTipo", new { id = item.Id })'" style="cursor:pointer;">
                 <td>
                     @Html.DisplayFor(modelItem => item.Categoría)
                 </td>
@@ -45,9 +45,7 @@
                 <td class="tablaAEsconder600">
                     @Html.DisplayFor(modelItem => item.Compensacion)
                 </td>
-                <td>
-                    <a asp-action="ModificarTipo" asp-route-id="@item.Id">Edit</a>
-                </td>
+
             </tr>
         }
     </tbody>

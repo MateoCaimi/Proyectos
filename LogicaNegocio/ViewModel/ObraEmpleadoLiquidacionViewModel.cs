@@ -11,10 +11,10 @@ namespace LogicaNegocio.ViewModel
     [Serializable]
     public class ObraEmpleadoLiquidacionViewModel
     {
-        public double Liquidacion {  get; set; }
+        public decimal Liquidacion {  get; set; }
         public ObraEmpleado? ObraEmpleado {  get; set; }
 
-        public ObraEmpleadoLiquidacionViewModel(ObraEmpleado obraEmp, double liq)
+        public ObraEmpleadoLiquidacionViewModel(ObraEmpleado obraEmp, decimal liq)
         {
             this.Liquidacion = liq;
             this.ObraEmpleado = obraEmp;

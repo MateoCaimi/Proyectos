@@ -454,7 +454,7 @@ namespace LogicaAccesoDatos.Repositorios
             return RepositorioEmpleado.TraerTodasMarcas(empleado);
         }
 
-        public Dictionary<ObraEmpleado, double> Liquidar(DateTime desde, DateTime hasta, Obra? obra, Empleado? empleado)
+        public Dictionary<ObraEmpleado, decimal> Liquidar(DateTime desde, DateTime hasta, Obra? obra, Empleado? empleado)
         {
             return RepositorioEmpleado.Liquidar(desde, hasta, obra, empleado);
         }
@@ -529,7 +529,7 @@ namespace LogicaAccesoDatos.Repositorios
             RepositorioEmpleado.ModificarObraEmpleado(obraEmpleadoNuevo);
         }
 
-        public double TotalLiquidacion(List<ObraEmpleadoLiquidacionViewModel> vm)
+        public decimal TotalLiquidacion(List<ObraEmpleadoLiquidacionViewModel> vm)
         {
             return RepositorioObra.CalcularTotalLiquidacion(vm);
         }

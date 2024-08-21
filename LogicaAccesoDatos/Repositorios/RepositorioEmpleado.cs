@@ -195,7 +195,7 @@ namespace LogicaAccesoDatos.Repositorios
 
                 }
 
-                ConseguirTodasLasMarcas(desde, hasta);
+                //ConseguirTodasLasMarcas(desde, hasta);
 
 
             }
@@ -685,7 +685,7 @@ namespace LogicaAccesoDatos.Repositorios
         //    }
         //}
 
-        public Dictionary<ObraEmpleado, double> Liquidar(DateTime desde, DateTime hasta, Obra? obra, Empleado? empleado)
+        public Dictionary<ObraEmpleado, decimal> Liquidar(DateTime desde, DateTime hasta, Obra? obra, Empleado? empleado)
         {
             if (obra != null && empleado != null)
             {
@@ -704,13 +704,13 @@ namespace LogicaAccesoDatos.Repositorios
 
         }
 
-        public Dictionary<ObraEmpleado, double> LiquidacionEmpleado(Empleado empleado, DateTime desde, DateTime hasta)
+        public Dictionary<ObraEmpleado, decimal> LiquidacionEmpleado(Empleado empleado, DateTime desde, DateTime hasta)
         {
-            double liquidacionNominal;
+            decimal liquidacionNominal;
             int horasTotales = 0;
             ObraEmpleado oe = new ObraEmpleado();
             oe.Empleado = empleado;
-            Dictionary<ObraEmpleado, double> ret = new Dictionary<ObraEmpleado, double>();
+            Dictionary<ObraEmpleado, decimal> ret = new Dictionary<ObraEmpleado, decimal>();
             //int horasLluvia = 0;
             //int horasExtra = 0;
 
@@ -733,10 +733,10 @@ namespace LogicaAccesoDatos.Repositorios
                         && marc.IdEmpleado == empleado.Id).ToList();
         }
 
-        public Dictionary<ObraEmpleado, double> LiquidacionObraEmpleado(ObraEmpleado oe, DateTime desde, DateTime hasta) //Dos firmas, para el manejo desde controller y desde repo
+        public Dictionary<ObraEmpleado, decimal> LiquidacionObraEmpleado(ObraEmpleado oe, DateTime desde, DateTime hasta) //Dos firmas, para el manejo desde controller y desde repo
         {
-            double liquidacionNominal;
-            Dictionary<ObraEmpleado, double> ret = new Dictionary<ObraEmpleado, double>();
+            decimal liquidacionNominal;
+            Dictionary<ObraEmpleado, decimal> ret = new Dictionary<ObraEmpleado, decimal>();
             int horasTotales = 0;
             //int horasLluvia = 0;
             //int horasExtra = 0;
@@ -753,13 +753,13 @@ namespace LogicaAccesoDatos.Repositorios
             return ret;
         }
 
-        private double CalcularNominal(Empleado empleado, int horasTotales)
+        private decimal CalcularNominal(Empleado empleado, int horasTotales)
         {
-            double nominal;
+            decimal nominal;
             // Lo separo en otro metodo por ser importante, preguntar regla de negocio de pagos.
-            double valorHora = empleado.TipoEmpleado.ValorHora + empleado.IncentivoXHora;
-            double compensacion = empleado.TipoEmpleado.Compensacion;
-            double presentismo = empleado.TipoEmpleado.Presentismo;
+            decimal valorHora = empleado.TipoEmpleado.ValorHora + empleado.IncentivoXHora;
+            decimal compensacion = empleado.TipoEmpleado.Compensacion;
+            decimal presentismo = empleado.TipoEmpleado.Presentismo;
             if (presentismo != 0)
             {
                 presentismo = (valorHora + compensacion) * presentismo / 100;
@@ -769,10 +769,10 @@ namespace LogicaAccesoDatos.Repositorios
 
         }
 
-        public Dictionary<ObraEmpleado, double> LiquidacionObra(Obra obra, DateTime desde, DateTime hasta)
+        public Dictionary<ObraEmpleado, decimal> LiquidacionObra(Obra obra, DateTime desde, DateTime hasta)
         {
             List<ObraEmpleado> empleadosObra = this.GetEmpleadosObra(obra); //Repetición de métodos entre repositorios. Que los repos se llamen está mal, pero no sé como organizarlo todavía
-            Dictionary<ObraEmpleado, double> liqPorEmp = new Dictionary<ObraEmpleado, double>();
+            Dictionary<ObraEmpleado, decimal> liqPorEmp = new Dictionary<ObraEmpleado, decimal>();
             foreach (ObraEmpleado oe in empleadosObra)
             {
                 var liqEmpleado = this.LiquidacionObraEmpleado(oe, desde, hasta);
@@ -784,9 +784,9 @@ namespace LogicaAccesoDatos.Repositorios
             return liqPorEmp;
         }
 
-        public Dictionary<ObraEmpleado, double> LiquidacionTotal(DateTime desde, DateTime hasta)
+        public Dictionary<ObraEmpleado, decimal> LiquidacionTotal(DateTime desde, DateTime hasta)
         {
-            Dictionary<ObraEmpleado, double> liqPorObras = new Dictionary<ObraEmpleado, double>();
+            Dictionary<ObraEmpleado, decimal> liqPorObras = new Dictionary<ObraEmpleado, decimal>();
             List<Obra> obras = this.GetObras(); //Repetición de métodos entre repositorios. Que los repos se llamen está mal, pero no sé como organizarlo todavía
 
             foreach (Obra o in obras)
