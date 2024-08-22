@@ -7,7 +7,7 @@
     },
     "mssql2": {
       "type": "mssql",
-      "connectionId": "ConnectionStrings:AppSubida"
+      "connectionId": "ConnectionStrings:fmaprueba2sqldbdbserver.database.windows.net"
     }
   }
 }

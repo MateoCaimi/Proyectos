@@ -7,6 +7,7 @@ using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace LogicaAccesoDatos.EF
 {
@@ -32,12 +33,13 @@ namespace LogicaAccesoDatos.EF
              @"SERVER=(localdb)\MSsqlLocaldb;
             DATABASE=ProyectoIntegradorparaaa;
             INTEGRATED SECURITY=TRUE;
-            ENCRYPT=False";
+            ENCRYPT=False"
+            ;
 
-        string cadenaConexionNube =
-            @"Server=tcp:fmaprueba2sqldbdbserver.database.windows.net,1433;Initial Catalog=DemoDeploy;User Id=DemoAdmin@fmaprueba2sqldbdbserver;Password=Capurro1234";
-        //Puede evitar problemas si no hay un certificado y se usa SSL
-        optionsBuilder.UseSqlServer(cadenaConexion)
+            string cadenaConexionNube =
+                @"Server=tcp:fmaprueba2sqldbdbserver.database.windows.net,1433;Initial Catalog=Demo2;User Id=DemoAdmin@fmaprueba2sqldbdbserver;Password=Capurro1234";
+            //Puede evitar problemas si no hay un certificado y se usa SSL
+            optionsBuilder.UseSqlServer(cadenaConexionNube)
                 .EnableDetailedErrors();
         }
 

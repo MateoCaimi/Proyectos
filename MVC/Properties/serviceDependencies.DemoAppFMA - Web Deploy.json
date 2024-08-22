@@ -1,11 +1,11 @@
 {
   "dependencies": {
     "mssql2": {
-      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/DemoAppFMA/providers/Microsoft.ServiceLinker/linkers/ConnectionStringsAppSubida_11F989CD8B",
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/DemoAppFMA/providers/Microsoft.ServiceLinker/linkers/ConnectionStringsfmaprueba2sqldbdbserver_8AE13ECA21",
       "secretStore": "AzureAppSettings",
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/fmaprueba2sqldbdbserver/databases/DemoDeploy",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/fmaprueba2sqldbdbserver/databases/Demo2",
       "type": "mssql.azure",
-      "connectionId": "ConnectionStrings:AppSubida"
+      "connectionId": "ConnectionStrings:fmaprueba2sqldbdbserver.database.windows.net"
     }
   }
 }
