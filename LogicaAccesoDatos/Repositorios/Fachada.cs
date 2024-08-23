@@ -262,9 +262,9 @@ namespace LogicaAccesoDatos.Repositorios
             return RepositorioSolicitud.MaterialesDeSolicitud(id);
         }
 
-        public Solicitud CrearSolicitud(int idObra, int idSolicitante)
+        public Solicitud CrearSolicitud(int idObra, int idSolicitante, string Comentario)
         {
-            return RepositorioSolicitud.CrearSolicitud(idObra, idSolicitante);
+            return RepositorioSolicitud.CrearSolicitud(idObra, idSolicitante, Comentario);
         }
 
         public void ConfigurarSolicitud(IEnumerable<SolicitudMaterial> laSolicitudConMateriales, Dictionary<int, int> materialesSeleccionadosConCantidad)

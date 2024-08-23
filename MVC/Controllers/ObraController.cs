@@ -528,6 +528,7 @@ namespace MVC.Controllers
 
             IEnumerable<ObraMaterial> materialesObra = Fachada.MaterialesDeObra(id);
             ViewBag.idObra = id;
+            ViewBag.NomObra = Fachada.BuscarObra(id).Nombre;
             return View(materialesObra);
         }
 

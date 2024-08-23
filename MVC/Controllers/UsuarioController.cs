@@ -193,14 +193,14 @@ namespace MVC.Controllers
         {
 
 
-            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("Index", "Usuario");
             }
             else if (HttpContext.Session.GetString("UsuarioTipo") != "Usuario administrador")
             {
                 return RedirectToAction("Index", "Obra");
-            }
+            }*/
 
 
             try

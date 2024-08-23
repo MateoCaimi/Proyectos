@@ -26,6 +26,10 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Plano");
             }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
+            }
             IEnumerable<Material> materiales = Fachada.TomarTodosMateriales();
             return View(materiales);
 
@@ -49,6 +53,10 @@ namespace MVC.Controllers
             else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
             {
                 return RedirectToAction("Index", "Plano");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
             }
 
             try
@@ -90,6 +98,10 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Plano");
             }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
             try
             {
@@ -119,6 +131,10 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Plano");
             }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
             Material material = Fachada.BuscarMaterial(id);
             return View(material);
@@ -141,6 +157,10 @@ namespace MVC.Controllers
             else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
             {
                 return RedirectToAction("Index", "Plano");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario obra")
+            {
+                return RedirectToAction("Index", "Home");
             }
 
             try

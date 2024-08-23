@@ -9,10 +9,8 @@
 <link rel="stylesheet" href="~/css/Solicitud/AgregarSolicitud.css">
 <link rel="stylesheet" href="~/css/FormularioResponsive.css">
 
-<h1>Solicitud de material</h1>
+<h1>Solicitud de material para obra @ViewBag.NomObra</h1>
 
-
-<h2>Solicitud de material</h2>
 @if (TempData["ErrorNoMateriales"] != null)
 {
     <div class="alert alert-danger">
@@ -34,7 +32,12 @@ else
 
         <div class="form-group">
             <label>Nombre de la obra</label>
-            <input type="text" class="form-control" value="@ViewBag.IdObra" name="IdObra" readonly="readonly" />
+            <input type="text" class="form-control" value="@ViewBag.IdObra" name="IdObra" hidden="true" />
+            <input type="text" class="form-control" value="@ViewBag.NomObra" name="NomObra" readonly="readonly" />
+        </div>
+        <div class="form-group">
+            <label for="Comentario" class="control-label"></label>
+            <textarea name="Comentario" class="form-control"></textarea> 
         </div>
 
         <div class="form-group">
