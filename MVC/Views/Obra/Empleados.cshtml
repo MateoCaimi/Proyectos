@@ -19,22 +19,9 @@
             <th class="tablaAEsconder600">
                 @Html.DisplayNameFor(model => model.Empleado.Cedula)
             </th>
-            <th class="tablaAEsconder1100">
-                @Html.DisplayNameFor(model => model.FechaIngreso)
-            </th>
-            <th class="tablaAEsconder1250">
-                @Html.DisplayNameFor(model => model.FechaEgreso)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Empleado.TipoEmpleado.Categoría)
             </th>
-            <th class="tablaAEsconder900">
-                @Html.DisplayNameFor(model => model.Empleado.CuentaBanco)
-            </th>
-            <th class="tablaAEsconder800">
-                @Html.DisplayNameFor(model => model.Empleado.Banco)
-            </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -47,20 +34,8 @@
                 <td class="tablaAEsconder600">
                     @Html.DisplayFor(modelItem => item.Empleado.Cedula)
                 </td>
-                <td class="tablaAEsconder1100">
-                    @Html.DisplayFor(modelItem => item.FechaIngreso)
-                </td>
-                <td class="tablaAEsconder1250">
-                    @Html.DisplayFor(modelItem => item.FechaEgreso)
-                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Empleado.TipoEmpleado.Categoría)
-                </td>
-                <td class="tablaAEsconder900">
-                    @Html.DisplayFor(modelItem => item.Empleado.CuentaBanco)
-                </td>
-                <td class="tablaAEsconder800">
-                    @Html.DisplayFor(modelItem => item.Empleado.Banco)
                 </td>
             </tr>
         }

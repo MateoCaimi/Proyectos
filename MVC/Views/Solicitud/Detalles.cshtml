@@ -82,24 +82,20 @@
             </tbody>
         </table>
 
-    <div class="botones">
 
         @if (Context.Session.GetString("UsuarioTipo") == "Usuario de oficina")
         {
-
-        <input type="hidden" name="idSolicitud" value="@Model.Id" />
-        <button class="btn btnAceptar" id="btnConfirmar" type="submit">Aceptar solicitud</button>
+            <input type="hidden" name="idSolicitud" value="@Model.Id" />
+            <button class="btn btnAceptar" id="btnConfirmar" type="submit">Aceptar solicitud</button>
         }
 
-        @if (Context.Session.GetString("UsuarioTipo") == "Usuario de oficina")
-        {
-            <form method="post" action="@Url.Action("Rechazar", "Solicitud")">
-                <input type="hidden" name="idSolicitud" value="@Model.Id" />
-                <button type="submit" class="btn btnRechazar">Rechazar solicitud</button>
-            </form>
-        }
-
-    </div>
+    }
+    @if (Context.Session.GetString("UsuarioTipo") == "Usuario de oficina")
+    {
+        <form method="post" action="@Url.Action("Rechazar", "Solicitud")">
+            <input type="hidden" name="idSolicitud" value="@Model.Id" />
+            <button type="submit" class="btn btnRechazar">Rechazar solicitud</button>
+        </form>
     }
 
 }
@@ -124,6 +120,6 @@
 
         setTimeout(function () {
             window.location.href = '@Url.Action("Index", "Solicitud", new { idObra = @Model.IdObra })'; //esto es prueba para redirigir a el confirmar q te tira para el index
-        },1500); // 0.5 segundo de retraso
+        }, 1500); // 0.5 segundo de retraso
     });
 </script>

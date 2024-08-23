@@ -247,7 +247,7 @@ namespace LogicaAccesoDatos.Repositorios
                     throw new EmpleadoException("No se pueden generar marcas ahora mismo, intentar en unos minutos.");
                 }
             }
-            catch (Exception e)
+            catch (EmpleadoException ee)
             {
                 throw new EmpleadoException("No se pueden generar marcas ahora mismo, intentar en unos minutos.");
             }

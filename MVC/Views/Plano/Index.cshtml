@@ -5,56 +5,72 @@
 }
 <link href="~/css/empleado/indexempleado.css" rel="stylesheet" />
 
-@if (ViewBag.Error != null)
+@if (Model != null)
 {
-    <div class="alert alert-danger">
-        @ViewBag.Error
-    </div>
-}
 
 
-<h1>Planos</h1>
-
-<p>
-    <a href="@Url.Action("Agregar", new {idObra = Model.IdObra})"> Agregar Plano</a>
-</p>
-
-<p>
-    <a href="@Url.Action("SubidaMultiple", new {idObra = Model.IdObra})"> Agregar Planos Múltiples</a>
-</p>
-
-@if(Model.Anterior != null){
+    <h1>Planos</h1>
+    <hr />
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.Error
+        </div>
+    }
     <p>
-        <a href="@Url.Action("Index", new {Name = Model.Anterior.Name, idObra = Model.IdObra})">Atrás</a>
+        <a href="@Url.Action("Agregar", new {idObra = Model.IdObra})"> Agregar Plano</a>
     </p>
+
+    <p>
+        <a href="@Url.Action("SubidaMultiple", new {idObra = Model.IdObra})"> Agregar Planos Múltiples</a>
+    </p>
+
+    @if (Model.Anterior != null)
+    {
+        <p>
+            <a href="@Url.Action("Index", new {Name = Model.Anterior.Name, idObra = Model.IdObra})">Atrás</a>
+        </p>
+    }
+
+
+    <table class="table">
+        <tbody>
+
+            @foreach (var item in ViewBag.CarpetasPosteriores)
+            {
+                <tr>
+                    <td>
+                        <svg class="folderIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                            <path d="M64 480H448c35.3 0 64-28.7 64-64V160c0-35.3-28.7-64-64-64H288c-10.1 0-19.6-4.7-25.6-12.8L243.2 57.6C231.1 41.5 212.1 32 192 32H64C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64z" />
+                        </svg>
+
+
+                    </td>
+                    <td>
+                        @if (item.Tipo != null)
+                        {
+                            <a href="@Url.Action("ListarPlanos", new {idTipoPlano = item.Tipo.Id, idObra = item.IdObra})">@item.Name</a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("Index", new {Name = item.Name, idObra = item.IdObra})">@item.NombreFormateado()</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h3>No hay planos para esta obra</h3>
 }
 
-
-<table class="table">
-    <tbody>
-        
-        @foreach (var item in ViewBag.CarpetasPosteriores)
-        {
-            <tr>
-                <td>
-                <svg class="folderIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                    <path d="M64 480H448c35.3 0 64-28.7 64-64V160c0-35.3-28.7-64-64-64H288c-10.1 0-19.6-4.7-25.6-12.8L243.2 57.6C231.1 41.5 212.1 32 192 32H64C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64z" />
-                    </svg>
-
-
-                </td>
-                <td>
-                    @if (item.Tipo != null)
-                    {
-                        <a href="@Url.Action("ListarPlanos", new {idTipoPlano = item.Tipo.Id, idObra = item.IdObra})">@item.Name</a>
-                    }
-                    else
-                    {
-                        <a href="@Url.Action("Index", new {Name = item.Name, idObra = item.IdObra})">@item.NombreFormateado()</a>
-                    }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-
+<div class="containerVolver">
+    <a class="volver" asp-action="Detalles" asp-controller="Obra" asp-route-id="@ViewBag.IdObra">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5" />
+        </svg>
+        Volver a la obra
+    </a>
+</div>

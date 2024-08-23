@@ -43,14 +43,14 @@
                     <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Obra" asp-action="Index">Obra</a>
                     </li>
+                    @if (Context.Session.GetString("UsuarioTipo") == "Usuario de oficina")
+                    {
                     <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Material" asp-action="Index">Material</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Empleado" asp-action="Index">Empleado</a>
                     </li>
-                    @if (Context.Session.GetString("UsuarioTipo") == "Usuario de oficina")
-                    {
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Empleado" asp-action="Liquidar">Liquidación</a>
                         </li>
@@ -107,16 +107,16 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Obra" asp-action="Index">Obra</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Material" asp-action="Index">Material</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Empleado" asp-action="Index">Empleado</a>
-                    </li>
-                    @if (Context.Session.GetString("UsuarioTipo") == "Usuario oficina")
+                    @if (Context.Session.GetString("UsuarioTipo") == "Usuario de oficina")
                     {
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Empleado" asp-action="Liquidar">Liquidación</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Material" asp-action="Index">Material</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Empleado" asp-action="Index">Empleado</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Empleado" asp-action="Liquidar">Liquidación</a>
                         </li>
 
                     }

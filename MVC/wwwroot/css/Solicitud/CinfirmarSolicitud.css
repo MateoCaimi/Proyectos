@@ -53,24 +53,12 @@ h1 {
     }
 
 
-.btnAceptar {
+.btnConfirmar {
     margin-top: 20px;
-    background-color: #3aba01;
-    border-color: #fff;
+    background-color: darkred;
+    border-color: #8b0909;
     color: #fff;
-    padding: 12px;
-    padding-left: 19px;
-    text-align: center;
 }
-
-.btnRechazar {
-    margin-top: 20px;
-    background-color: #004eff;
-    border-color: #fff;
-    color: #fff;
-    padding:12px;
-}   
-
 
 
 .containerVolver {
