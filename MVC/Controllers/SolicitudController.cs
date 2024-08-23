@@ -28,6 +28,7 @@ namespace MVC.Controllers
         public ActionResult Index(int idObra)
         {
             Fachada.Precarga();
+            ViewBag.NomObra = Fachada.BuscarObra(idObra).Nombre;
             if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario de oficina")
             {
 
@@ -136,6 +137,7 @@ namespace MVC.Controllers
                 {
                     ViewBag.Materiales = Fachada.TodosLosMateriales();
                     ViewBag.IdObra = idObra;
+                    ViewBag.NomObra = Fachada.BuscarObra(idObra).Nombre;
 
                     List<SolicitudMaterial> tempMaterials = new List<SolicitudMaterial>();
                     return View(tempMaterials);
@@ -158,7 +160,7 @@ namespace MVC.Controllers
         // POST: SolicitudController/Crear
         [HttpPost, ActionName("Crear")]
         [ValidateAntiForgeryToken]
-        public ActionResult CrearPost(int IdObra)
+        public ActionResult CrearPost(int IdObra, string Comentario)
         {
             if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
@@ -182,7 +184,7 @@ namespace MVC.Controllers
                 }
                 List<SolicitudMaterial> item = JsonConvert.DeserializeObject<List<SolicitudMaterial>>((string)TempData["ListaActual"]);
                 Usuario solicitante = Fachada.BuscarUsuarioXNombreU(HttpContext.Session.GetString("UsuarioLogueado"));
-                Solicitud solicitud = Fachada.CrearSolicitud(IdObra, solicitante.Id);
+                Solicitud solicitud = Fachada.CrearSolicitud(IdObra, solicitante.Id, Comentario);
                 Fachada.AgregarSolicitud(solicitud);
                 Fachada.AgregarSolicitudMateriales(solicitud, item);
                 return RedirectToAction("Index", new { idObra = IdObra });
@@ -240,6 +242,7 @@ namespace MVC.Controllers
                     }
 
                 }
+
                 lista.Add(solicitudMaterial);
                 TempData["ListaActual"] = JsonConvert.SerializeObject(lista);
                 ViewBag.Materiales = Fachada.TodosLosMateriales();
@@ -300,6 +303,7 @@ namespace MVC.Controllers
                     Solicitud solicitud = Fachada.BuscarSolicitud(idSolicitud);
                     ViewBag.Materiales = Fachada.BuscarMaterialesSolicitud(idSolicitud);
                     ViewBag.IdObra = solicitud.IdObra;
+                    ViewBag.NomObra = Fachada.BuscarObra(solicitud.IdObra).Nombre;
                     return View("Detalles", solicitud);
                 }
 
@@ -373,6 +377,7 @@ namespace MVC.Controllers
             Solicitud solicitud = Fachada.BuscarSolicitud(idSolicitud);
             IEnumerable<SolicitudMaterial> solicitudMateriales = Fachada.BuscarMaterialesSolicitud(idSolicitud);
             ViewBag.Materiales = solicitudMateriales;
+            ViewBag.NomObra = Fachada.BuscarObra(solicitud.IdObra).Nombre;
             return View(solicitud);
         }
 
@@ -403,6 +408,7 @@ namespace MVC.Controllers
                     ViewBag.Error = "La solicitud no existe.";
                     return View();
                 }
+                ViewBag.NomObra = Fachada.BuscarObra(solicitud.IdObra).Nombre;
                 Usuario confirmador = Fachada.BuscarUsuarioXNombreU(HttpContext.Session.GetString("UsuarioLogueado"));
                 Fachada.ConfirmarSolicitud(solicitud, confirmador);
                 ViewBag.Mensaje = "Solicitud confirmada correctamente.";
@@ -446,6 +452,7 @@ namespace MVC.Controllers
             XFont fontLineas = new XFont("Verdana", 12, XFontStyleEx.Regular);
             XFont fontHeader = new XFont("Verdana", 15, XFontStyleEx.Italic);
             XFont fontFooter = new XFont("Verdana", 12, XFontStyleEx.BoldItalic);
+            XFont fontComment = new XFont("Verdana", 10, XFontStyleEx.Italic);
           
            
 
@@ -466,6 +473,12 @@ namespace MVC.Controllers
                 XStringFormat.TopCenter);
 
             yPos += 20;  // Espacio después del subtítulo
+
+            gfx.DrawString(solicitud.Comentario, fontComment, XBrushes.Gray,
+            new XRect(0, yPos, page.Width / 2, page.Height),
+            XStringFormat.Center);
+
+            yPos += 20;  // Espacio después del comentario
 
             // Línea horizontal
             XPen line = new XPen(XColors.Black, 1);
@@ -519,7 +532,8 @@ namespace MVC.Controllers
                 XStringFormat.Center);
 
 
-           
+
+
             string filename = $"{solicitud.Obra.Nombre} - {solicitud.Solicitante.Nombre}.pdf";
            
 

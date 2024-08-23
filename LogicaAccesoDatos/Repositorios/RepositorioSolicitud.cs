@@ -84,11 +84,12 @@ namespace LogicaAccesoDatos.Repositorios
 
         }
 
-        internal Solicitud CrearSolicitud(int idObra, int idSolicitante)
+        internal Solicitud CrearSolicitud(int idObra, int idSolicitante, string Comentario)
         {
             Solicitud solicitud = new Solicitud();
             solicitud.IdObra = idObra;
             solicitud.IdUsuario = idSolicitante;
+            solicitud.Comentario = Comentario;
             solicitud.Estado = Estado.Solicitado;
             return solicitud;
         }

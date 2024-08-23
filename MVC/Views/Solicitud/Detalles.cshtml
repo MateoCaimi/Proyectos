@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="~/css/Solicitud/DetallesSolicitud.css">
 <link rel="stylesheet" href="~/css/FormularioResponsive.css">
 
-<h1>Detalles de la solicitud</h1>
+<h1>Detalles de la solicitud de la obra @ViewBag.NomObra</h1>
 
 <hr />
 @if (ViewBag.Error != null)
@@ -48,6 +48,9 @@
         </dt>
         <dd class="col-sm-9 value">
             @Html.DisplayFor(model => model.Estado)
+        </dd>
+        <dd class="col-sm-9 value">
+            @Html.DisplayFor(model => model.Comentario)
         </dd>
     </dl>
 </div>
