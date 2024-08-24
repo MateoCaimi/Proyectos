@@ -17,13 +17,14 @@
             @ViewBag.Error
         </div>
     }
-    <p>
+
+   @*  <p>
         <a href="@Url.Action("Agregar", new {idObra = Model.IdObra})"> Agregar Plano</a>
     </p>
 
     <p>
         <a href="@Url.Action("SubidaMultiple", new {idObra = Model.IdObra})"> Agregar Planos Múltiples</a>
-    </p>
+    </p> *@
 
     @if (Model.Anterior != null)
     {

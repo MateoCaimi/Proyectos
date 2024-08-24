@@ -570,5 +570,10 @@ namespace LogicaAccesoDatos.Repositorios
             obra.UltimaActualizacion = DateTime.Now;
             Context.SaveChanges();
         }
+
+        internal Obra BuscarObraPorCapataz(string? nomObrero)
+        {
+           return Context.Obras.Where(o => o.UsuarioACargo.NombreUsuario == nomObrero).FirstOrDefault();
+        }
     }
 }

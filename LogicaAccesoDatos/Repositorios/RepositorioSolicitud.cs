@@ -84,13 +84,13 @@ namespace LogicaAccesoDatos.Repositorios
 
         }
 
-        internal Solicitud CrearSolicitud(int idObra, int idSolicitante, string Comentario)
+        internal Solicitud CrearSolicitud(int idObra, int idSolicitante, string comentario)
         {
             Solicitud solicitud = new Solicitud();
             solicitud.IdObra = idObra;
             solicitud.IdUsuario = idSolicitante;
-            solicitud.Comentario = Comentario;
             solicitud.Estado = Estado.Solicitado;
+            solicitud.Comentario = comentario;
             return solicitud;
         }
 
@@ -231,8 +231,8 @@ namespace LogicaAccesoDatos.Repositorios
         internal List<Solicitud> BuscarSolicitudesAprobadasParaUnUObra(string? nomObrero)
         {
             Usuario u = this.BuscarUsuarioXNombreU(nomObrero);
-
-            return Context.Solicitudes.Include(s => s.Obra).Where(sp => sp.Estado == Estado.Aprobado && sp.Obra.IdACargo == u.Id).ToList();
+            return Context.Solicitudes.Include(s => s.Obra).Where(sp => sp.Estado == Estado.Aprobado && sp.Obra.UsuarioACargo.Id == u.Id).ToList();
+       //     return Context.Solicitudes.Include(s => s.Obra).Include(s => s.Solicitante).Where(sp => sp.Estado == Estado.Aprobado && sp.Obra.IdACargo == u.Id).ToList();
         }
 
         private Usuario BuscarUsuarioXNombreU(string? nomObrero)
@@ -249,6 +249,14 @@ namespace LogicaAccesoDatos.Repositorios
         {
             solicitud.Estado = Estado.Visto;
             Context.SaveChanges();
+        }
+
+        internal List<Solicitud> BuscarSolicitudesAprobadasPorObra(string? nomObrero)
+        {
+            Fachada fachada = new Fachada();
+            Obra obra = fachada.BuscarObraPorCapataz(nomObrero);
+
+            return Context.Solicitudes.Include(s => s.Obra).Where(sp => sp.IdObra == obra.IdObra && sp.Estado == Estado.Aprobado).ToList();
         }
     }
 }

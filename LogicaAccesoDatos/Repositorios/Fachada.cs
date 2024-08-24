@@ -262,9 +262,9 @@ namespace LogicaAccesoDatos.Repositorios
             return RepositorioSolicitud.MaterialesDeSolicitud(id);
         }
 
-        public Solicitud CrearSolicitud(int idObra, int idSolicitante, string Comentario)
+        public Solicitud CrearSolicitud(int idObra, int idSolicitante, string comentario)
         {
-            return RepositorioSolicitud.CrearSolicitud(idObra, idSolicitante, Comentario);
+            return RepositorioSolicitud.CrearSolicitud(idObra, idSolicitante, comentario);
         }
 
         public void ConfigurarSolicitud(IEnumerable<SolicitudMaterial> laSolicitudConMateriales, Dictionary<int, int> materialesSeleccionadosConCantidad)
@@ -627,6 +627,16 @@ namespace LogicaAccesoDatos.Repositorios
         public void PrecargaMarcas()
         {
             RepositorioEmpleado.PrecargaMarcasDelAño();
+        }
+
+        public List<Solicitud> BuscarSolicitudAprobadasPorObra(string? nomObrero)
+        {
+            return RepositorioSolicitud.BuscarSolicitudesAprobadasPorObra(nomObrero);
+        }
+
+        internal Obra BuscarObraPorCapataz(string? nomObrero)
+        {
+            return RepositorioObra.BuscarObraPorCapataz(nomObrero);
         }
     }
 }

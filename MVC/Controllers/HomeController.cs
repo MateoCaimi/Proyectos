@@ -25,7 +25,11 @@ namespace MVC.Controllers
         public IActionResult Index()
         {
             Fachada.Precarga();
-            Fachada.PrecargaMarcas();
+            if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario de oficina")
+            {
+                Fachada.PrecargaMarcas();
+            }
+
             if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
 
@@ -105,7 +109,11 @@ namespace MVC.Controllers
             if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario de obra")
             {
                 string nomObrero = HttpContext.Session.GetString("UsuarioLogueado");
+
+
+
                 List<Solicitud> solicitudesAprobadas = Fachada.BuscarSolicitudAprobadasParaUnUObra(nomObrero);
+           //     List<Solicitud> solicitudesAprobadas2 = Fachada.BuscarSolicitudAprobadasPorObra(nomObrero);
                 var opciones3 = new JsonSerializerOptions
                 {
                     ReferenceHandler = ReferenceHandler.IgnoreCycles,
