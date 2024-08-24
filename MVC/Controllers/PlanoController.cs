@@ -44,6 +44,15 @@ namespace MVC.Controllers
         // GET: PlanoController
         public async Task<ActionResult> Index(string Name, int idObra)
         {
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("LoginQR", "Usuario", new { id = idObra });
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
             //DriveItem carpeta = this.ObtenerCarpeta().Result;
             Fachada.Precarga();
             string siteId = "bodegapiedrafita.sharepoint.com,95552c4f-844e-44a0-b73d-7b7f3cda8e39,f5ebb529-4b04-4838-9fa8-73750fa93b26";
@@ -73,14 +82,7 @@ namespace MVC.Controllers
                 carpetaActual = Fachada.ObtenerRoot(obra);
             }
 
-            /*if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            {
-                return RedirectToAction("LoginQR", "Usuario", new {id = idObra});
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
-            {
-                return RedirectToAction("Listado", "Usuario");
-            }*/
+            
             //Dictionary<string, int> carpetas = Fachada.CarpetasConCantidad();
             try
             {
@@ -144,146 +146,146 @@ namespace MVC.Controllers
 
 
         // GET: PlanoController/Create
-        public ActionResult Agregar(int idObra)
-        {
-            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            {
-                return RedirectToAction("Index", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
-            {
-                return RedirectToAction("Listado", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
-            {
-                return RedirectToAction("Index", "Obra");
-            }
+        //public ActionResult Agregar(int idObra)
+        //{
+        //    if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+        //    {
+        //        return RedirectToAction("Index", "Usuario");
+        //    }
+        //    else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+        //    {
+        //        return RedirectToAction("Listado", "Usuario");
+        //    }
+        //    else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+        //    {
+        //        return RedirectToAction("Index", "Obra");
+        //    }
 
-            TempData["Error"] = null;
-            ViewBag.IdObra = idObra;
-            if (!Fachada.BuscarObra(idObra).Finalizada)
-            {
-                ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
-                return View();
-            }
-            else
-            {
-                TempData["Error"] = "No se puede agregar planos a una obra finalizada.";
-                return RedirectToAction("Index", new { idObra = idObra });
-            }
-        }
-
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Agregar(Plano aIngresar, IFormFile archivoImagen)
-        {
-
-            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            {
-                return RedirectToAction("Index", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
-            {
-                return RedirectToAction("Listado", "Usuario");
-            }
-            else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
-            {
-                return RedirectToAction("Index", "Obra");
-            }
+        //    TempData["Error"] = null;
+        //    ViewBag.IdObra = idObra;
+        //    if (!Fachada.BuscarObra(idObra).Finalizada)
+        //    {
+        //        ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
+        //        return View();
+        //    }
+        //    else
+        //    {
+        //        TempData["Error"] = "No se puede agregar planos a una obra finalizada.";
+        //        return RedirectToAction("Index", new { idObra = idObra });
+        //    }
+        //}
 
 
-            try
-            {
-                if (aIngresar == null || aIngresar.TipoPdf != "application/pdf")
-                {
-                    using (var memoryStream = new MemoryStream())
-                    {
-                        await archivoImagen.CopyToAsync(memoryStream);
-                        aIngresar.NombrePdf = archivoImagen.FileName;
-                        aIngresar.TipoPdf = archivoImagen.ContentType;
-                        aIngresar.Pdf = memoryStream.ToArray();
-                    }
-                }
-                else
-                {
-                    TempData["Error"] = "Debe proporcionar un archivo válido.";
-                    return View();
-                }
-                if (aIngresar.Nombre == null)
-                {
-                    aIngresar.Nombre = aIngresar.NombrePdf.ToUpper();
-                    string path = aIngresar.Nombre;
-                    string pattern = @"\.\w+$";
-                    Match match = Regex.Match(path, pattern);
-                    aIngresar.Nombre = aIngresar.Nombre.Replace(match.Value, "");
-                }
-                ViewBag.IdObra = aIngresar.IdObra;
-                ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
-                Fachada.AgregarPlano(aIngresar);
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> Agregar(Plano aIngresar, IFormFile archivoImagen)
+        //{
+
+        //    if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+        //    {
+        //        return RedirectToAction("Index", "Usuario");
+        //    }
+        //    else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+        //    {
+        //        return RedirectToAction("Listado", "Usuario");
+        //    }
+        //    else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+        //    {
+        //        return RedirectToAction("Index", "Obra");
+        //    }
 
 
-                return RedirectToAction("Index", new { idObra = aIngresar.IdObra });
-            }
-            catch (Exception e)
-            {
-                TempData["Error"] = e.Message;
-                return RedirectToAction("Index", new { idObra = aIngresar.IdObra });
-            }
-        }
+        //    try
+        //    {
+        //        if (aIngresar == null || aIngresar.TipoPdf != "application/pdf")
+        //        {
+        //            using (var memoryStream = new MemoryStream())
+        //            {
+        //                await archivoImagen.CopyToAsync(memoryStream);
+        //                aIngresar.NombrePdf = archivoImagen.FileName;
+        //                aIngresar.TipoPdf = archivoImagen.ContentType;
+        //                aIngresar.Pdf = memoryStream.ToArray();
+        //            }
+        //        }
+        //        else
+        //        {
+        //            TempData["Error"] = "Debe proporcionar un archivo válido.";
+        //            return View();
+        //        }
+        //        if (aIngresar.Nombre == null)
+        //        {
+        //            aIngresar.Nombre = aIngresar.NombrePdf.ToUpper();
+        //            string path = aIngresar.Nombre;
+        //            string pattern = @"\.\w+$";
+        //            Match match = Regex.Match(path, pattern);
+        //            aIngresar.Nombre = aIngresar.Nombre.Replace(match.Value, "");
+        //        }
+        //        ViewBag.IdObra = aIngresar.IdObra;
+        //        ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
+        //        Fachada.AgregarPlano(aIngresar);
 
 
-        // GET: PlanoController/Delete/5
-        public ActionResult Eliminar(int id)
-        {
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
-            //{
-            //    return RedirectToAction("Index", "Obra");
-            //}
+        //        return RedirectToAction("Index", new { idObra = aIngresar.IdObra });
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        TempData["Error"] = e.Message;
+        //        return RedirectToAction("Index", new { idObra = aIngresar.IdObra });
+        //    }
+        //}
 
-            Plano plano = Fachada.BuscarPlano(id);
-            return View(plano);
-        }
 
-        // POST: PlanoController/Delete/5
-        [HttpPost, ActionName("Eliminar")]
-        [ValidateAntiForgeryToken]
-        public ActionResult EliminarConfirmado(int id)
-        {
-            //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-            //{
-            //    return RedirectToAction("Index", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
-            //{
-            //    return RedirectToAction("Listado", "Usuario");
-            //}
-            //else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
-            //{
-            //    return RedirectToAction("Index", "Obra");
-            //}
+        //// GET: PlanoController/Delete/5
+        //public ActionResult Eliminar(int id)
+        //{
+        //    //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+        //    //{
+        //    //    return RedirectToAction("Index", "Usuario");
+        //    //}
+        //    //else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+        //    //{
+        //    //    return RedirectToAction("Listado", "Usuario");
+        //    //}
+        //    //else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+        //    //{
+        //    //    return RedirectToAction("Index", "Obra");
+        //    //}
 
-            try
-            {
-                Plano planoABorrar = Fachada.BuscarPlano(id);
-                Fachada.EliminarPlano(planoABorrar);
-                return RedirectToAction("Index", new { idObra = planoABorrar.IdObra });
-            }
-            catch (ObraException e)
-            {
-                ErrorViewModel errorModel = new ErrorViewModel();
-                errorModel.RequestId = e.Message;
-                return View("Error", errorModel); //usar shared hasta tener vistas de error para cada coso
-            }
-        }
+        //    Plano plano = Fachada.BuscarPlano(id);
+        //    return View(plano);
+        //}
+
+        //// POST: PlanoController/Delete/5
+        //[HttpPost, ActionName("Eliminar")]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult EliminarConfirmado(int id)
+        //{
+        //    //if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+        //    //{
+        //    //    return RedirectToAction("Index", "Usuario");
+        //    //}
+        //    //else if (HttpContext.Session.GetString("UsuarioTipo") == "UAdministrador")
+        //    //{
+        //    //    return RedirectToAction("Listado", "Usuario");
+        //    //}
+        //    //else if (HttpContext.Session.GetString("UsuarioTipo") != "UDeOficina")
+        //    //{
+        //    //    return RedirectToAction("Index", "Obra");
+        //    //}
+
+        //    try
+        //    {
+        //        Plano planoABorrar = Fachada.BuscarPlano(id);
+        //        Fachada.EliminarPlano(planoABorrar);
+        //        return RedirectToAction("Index", new { idObra = planoABorrar.IdObra });
+        //    }
+        //    catch (ObraException e)
+        //    {
+        //        ErrorViewModel errorModel = new ErrorViewModel();
+        //        errorModel.RequestId = e.Message;
+        //        return View("Error", errorModel); //usar shared hasta tener vistas de error para cada coso
+        //    }
+        //}
 
 
 
@@ -316,52 +318,52 @@ namespace MVC.Controllers
             return View(planos);
 
         }
-        public ActionResult SubidaMultiple(int idObra)
-        {
-            TempData["Error"] = null;
-            ViewBag.IdObra = idObra;
-            if (!Fachada.BuscarObra(idObra).Finalizada)
-            {
-                ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
-                return View();
-            }
-            else
-            {
-                TempData["Error"] = "No se puede agregar planos a una obra finalizada.";
-                return RedirectToAction("Index", new { idObra = idObra });
-            }
-        }
+        //public ActionResult SubidaMultiple(int idObra)
+        //{
+        //    TempData["Error"] = null;
+        //    ViewBag.IdObra = idObra;
+        //    if (!Fachada.BuscarObra(idObra).Finalizada)
+        //    {
+        //        ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
+        //        return View();
+        //    }
+        //    else
+        //    {
+        //        TempData["Error"] = "No se puede agregar planos a una obra finalizada.";
+        //        return RedirectToAction("Index", new { idObra = idObra });
+        //    }
+        //}
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SubidaMultiple(int IdObra, int idTipoPlano, List<IFormFile> postedFiles)
-        {
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> SubidaMultiple(int IdObra, int idTipoPlano, List<IFormFile> postedFiles)
+        //{
 
-            TempData["Error"] = null;
-            ViewBag.IdObra = IdObra;
-            if (!Fachada.BuscarObra(IdObra).Finalizada)
-            {
-                List<Plano> planos = Fachada.CrearPlanosMultiples(IdObra, idTipoPlano, postedFiles);
-                for (int i = 0; i < planos.Count(); i++)
-                {
-                    using (var memoryStream = new MemoryStream())
-                    {
-                        await postedFiles[i].CopyToAsync(memoryStream);
-                        planos[i].Pdf = memoryStream.ToArray();
-                    }
-                }
-                foreach (Plano p in planos)
-                {
-                    Fachada.AgregarPlano(p);
-                }
-                return View();
-            }
-            else
-            {
-                TempData["Error"] = "No se puede agregar planos a una obra finalizada.";
-                return RedirectToAction("Index", new { idObra = IdObra });
-            }
-        }
+        //    TempData["Error"] = null;
+        //    ViewBag.IdObra = IdObra;
+        //    if (!Fachada.BuscarObra(IdObra).Finalizada)
+        //    {
+        //        List<Plano> planos = Fachada.CrearPlanosMultiples(IdObra, idTipoPlano, postedFiles);
+        //        for (int i = 0; i < planos.Count(); i++)
+        //        {
+        //            using (var memoryStream = new MemoryStream())
+        //            {
+        //                await postedFiles[i].CopyToAsync(memoryStream);
+        //                planos[i].Pdf = memoryStream.ToArray();
+        //            }
+        //        }
+        //        foreach (Plano p in planos)
+        //        {
+        //            Fachada.AgregarPlano(p);
+        //        }
+        //        return View();
+        //    }
+        //    else
+        //    {
+        //        TempData["Error"] = "No se puede agregar planos a una obra finalizada.";
+        //        return RedirectToAction("Index", new { idObra = IdObra });
+        //    }
+        //}
         private async Task<string> ObtenerTokenDeAccesoGraph()
         {
             var clientId = "ed32de75-de3c-4053-bb7c-488659eda9ad";

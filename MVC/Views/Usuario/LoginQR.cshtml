@@ -1,59 +1,45 @@
 ﻿@using LogicaNegocio.Entidades
 @model LogicaNegocio.Entidades.Usuario
 
-<link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
-<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<h1>Bienvenido</h1>
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger" role="alert">
+        <p>@ViewBag.Error</p>
+    </div>
 
-@{
-    Layout = null;
 }
 
 
 <div class="containerFlex">
 
-    <div class="containerIzq">
+<br>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="LoginQR">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <br>
+            <input type="text" class="form-control" value="@ViewBag.IdObra" name="idObra" hidden="true" />
+            <br>
+            <div class="form-group">
+                <label asp-for="NombreUsuario" class="control-label"></label>
+                <input asp-for="NombreUsuario" class="form-control" />
+                <span asp-validation-for="NombreUsuario" class="text-danger"></span>
+            </div>
+            <br>
+            <div class="form-group">
+                <label asp-for="Contrasenia" class="control-label"></label>
+                <input asp-for="Contrasenia" class="form-control" />
+                <span asp-validation-for="Contrasenia" class="text-danger"></span>
+            </div>
+            <br>
+            <div class="form-group">
+                <input type="submit" value="Iniciar sesion" class="btn btn-primary" />
+            </div>
+        </form>
     </div>
-    <div class="containerDer">
-
-        <div class="col-md-4 formLogin">
-
-            <h1 id="bienvenido">Bienvenido</h1>
-            <form asp-action="Index">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <br>
-                <div class="form-group">
-                    <input placeholder="Nombre de usuario" asp-for="NombreUsuario" class="form-control" />
-                    <span asp-validation-for="NombreUsuario" class="text-danger"></span>
-                </div>
-                <br>
-                <div class="form-group">
-                    <input asp-for="Contrasenia" placeholder="Contraseña" type="password" class="form-control" />
-                    <span asp-validation-for="Contrasenia" class="text-danger"></span>
-                </div>
-                <br>
-                <div class="form-group" id="btn-login">
-                    <input type="submit" value="Iniciar sesion" class="btn btn-secondary" />
-                </div>
-
-            </form>
-
-            <br />
-
-            @if (ViewBag.Error != null)
-            {
-                <div class="alert alert-danger" role="alert">
-                    <p>@ViewBag.Error</p>
-                </div>
-
-            }
-
-
-        </div>
-
-    </div>
-
-
 </div>
+
 
 
 
