@@ -4,6 +4,11 @@
 }
 
 
+@media(max-width: 650px) {
+    .inputChico {
+        width: 70px;
+    }
+}
 
 
 @media(max-width: 768px) {

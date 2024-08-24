@@ -72,12 +72,14 @@
                     foreach (var item in ViewBag.Materiales)
                     {
                         <tr>
-                            <td>@item.Material.Nombre (@item.Material.UnidadDeMedida)</td>
-                            <td>
-                                <input type="number" name="Cantidad_@item.Material.Id" value="@item.Cantidad" min="1" />
+                            <td >
+                                @item.Material.Nombre (@item.Material.UnidadDeMedida)
+                            </td>
+                            <td >
+                                <input class="inputChico" type="number" name="Cantidad_@item.Material.Id" value="@item.Cantidad" min="1" />
                             </td>
                             <td>
-                                <input type="checkbox" name="materialesSeleccionados" value="@item.Material.Id" />
+                                <input  type="checkbox" name="materialesSeleccionados" value="@item.Material.Id" />
                             </td>
                         </tr>
                     }

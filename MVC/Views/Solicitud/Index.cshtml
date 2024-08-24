@@ -22,17 +22,17 @@
 <table class="table">
     <thead>
         <tr>
-           
-            <th>
-                @Html.DisplayNameFor(model => model.Obra)
-            </th>
-            <th>
+
+           @*  <th>
+               Direccion
+            </th> *@
+            <th class="tablaAEsconder800">
                 @Html.DisplayNameFor(model => model.Solicitante)
             </th>
-            <th class="tablaAEsconder600">
+            <th class="tablaAEsconder1100">
                 @Html.DisplayNameFor(model => model.Aprovador)
             </th>
-            <th>
+            <th class="tablaAEsconder900">
                 @Html.DisplayNameFor(model => model.Comentario)
             </th>
             <th>
@@ -42,46 +42,47 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+        @foreach (var item in Model)
+        {
             <tr>
-            @* <tr onclick="location.href='@Url.Action("Editar", new { id = item.Id })'" style="cursor:pointer;"> *@
+                @* <tr onclick="location.href='@Url.Action("Editar", new { id = item.Id })'" style="cursor:pointer;"> *@
 
-            <td>
-                @Html.DisplayFor(modelItem => item.Obra.Direccion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Solicitante.Nombre)
-            </td>
-            <td class="tablaAEsconder600">
-                @Html.DisplayFor(modelItem => item.Aprovador.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Comentario)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Estado)
-            </td>
-            <td>
+              @*   <td>
+                    @Html.DisplayFor(modelItem => item.Obra.Direccion)
+                </td> *@
+                <td class="tablaAEsconder800">
+                    @Html.DisplayFor(modelItem => item.Solicitante.Nombre)
+                </td>
+                <td class="tablaAEsconder1100">
+                    @Html.DisplayFor(modelItem => item.Aprovador.Nombre)
+                </td>
+                <td class="tablaAEsconder900">
+                    @Html.DisplayFor(modelItem => item.Comentario)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Estado)
+                </td>
+                <td>
                     @if (item.Estado == LogicaNegocio.Entidades.Estado.Solicitado)
                     {
-                        <a asp-action="Detalles" asp-route-idSolicitud="@item.Id" >Detalles</a>
+                        <a asp-action="Detalles" asp-route-idSolicitud="@item.Id">Detalles</a>
                     }
                     @if (item.Estado == LogicaNegocio.Entidades.Estado.Aprobado)
                     {
-                        <a asp-action="Confirmar" asp-route-idSolicitud="@item.Id" >Confirmar</a>
+                        <a asp-action="Confirmar" asp-route-idSolicitud="@item.Id">Confirmar</a>
                     }
                     @if (item.Estado == LogicaNegocio.Entidades.Estado.Recibido || item.Estado == LogicaNegocio.Entidades.Estado.Visto)
                     {
                         <a asp-action="Confirmar" asp-route-idSolicitud="@item.Id">Ver solicitud</a>
                     }
-            </td>
-        </tr>
-}
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 
 <div class="containerVolver">
-    <a class="volver" asp-action="Detalles" asp-controller="Obra"  asp-route-id="@ViewBag.idObra">
+    <a class="volver" asp-action="Detalles" asp-controller="Obra" asp-route-id="@ViewBag.idObra">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5" />
         </svg>

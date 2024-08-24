@@ -21,7 +21,7 @@
     background-color: #8b0909;
     border-color: #8b0909;
     color: #fff;
-    width: 15%;
+    width:100%;
 }
 
     .btnPrincipal:hover {
@@ -34,8 +34,46 @@
     border-color: dimgrey;
     color: #fff;
     margin-bottom: 30px;
+    width:100%;
+}
+@media(min-width: 650px){
+
+
+    .btnPrincipal {
+       
+        width: 50%;
+    }
+
+    .btnAgregar {
+        
+        width: 50%;
+    }
+
 }
 
+@media(min-width: 900px) {
+
+
+    .btnPrincipal {
+        width: 30%;
+    }
+
+    .btnAgregar {
+        width: 30%;
+    }
+}
+
+@media(min-width: 1100opx) {
+
+
+    .btnPrincipal {
+        width: 25%;
+    }
+
+    .btnAgregar {
+        width: 25%;
+    }
+}
 
 /* Estilo para la tabla */
 .table {
