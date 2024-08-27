@@ -22,7 +22,7 @@ namespace LogicaNegocio.Entidades
         public Usuario? Solicitante { get; set; }
         [ForeignKey("Aprovador")] public int? IdUDeOficina { get; set; }
         public UDeOficina? Aprovador { get; set; }
-        public string Comentario { get; set; }
+        public string? Comentario { get; set; }
 
         public Estado Estado { get; set; }
        
