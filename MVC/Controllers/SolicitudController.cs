@@ -256,7 +256,7 @@ namespace MVC.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> Aprobar(int idSolicitud, List<int> materialesSeleccionados, IFormCollection form)
+        public async Task<ActionResult> Aprobar(int idSolicitud, List<int> materialesSeleccionados, IFormCollection form, string comentario)
         {
             if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
@@ -294,6 +294,7 @@ namespace MVC.Controllers
                     Fachada.ConfigurarSolicitud(laSolicitudConMateriales, materialesSeleccionadosConCantidad);
                     Usuario aprobador = Fachada.BuscarUsuarioXNombreU(HttpContext.Session.GetString("UsuarioLogueado"));
                     Solicitud solicitud = Fachada.BuscarSolicitud(idSolicitud);
+                    solicitud.Comentario = comentario;
                     Fachada.AceptarSolicitud(solicitud, (UDeOficina)aprobador);
                     return GenerarPdf(solicitud);
                 }
@@ -452,7 +453,7 @@ namespace MVC.Controllers
             XFont fontLineas = new XFont("Verdana", 12, XFontStyleEx.Regular);
             XFont fontHeader = new XFont("Verdana", 15, XFontStyleEx.Italic);
             XFont fontFooter = new XFont("Verdana", 12, XFontStyleEx.BoldItalic);
-            XFont fontComment = new XFont("Verdana", 10, XFontStyleEx.Italic);
+            XFont fontComment = new XFont("Verdana", 12, XFontStyleEx.Regular);
           
            
 
@@ -474,7 +475,7 @@ namespace MVC.Controllers
 
             yPos += 20;  // Espacio después del subtítulo
 
-            gfx.DrawString(solicitud.Comentario, fontComment, XBrushes.Gray,
+            gfx.DrawString($"Comentario: {solicitud.Comentario}", fontComment, XBrushes.Gray,
             new XRect(0, yPos, page.Width / 2, page.Height),
             XStringFormat.Center);
 
@@ -489,7 +490,7 @@ namespace MVC.Controllers
             // Detalles de los materiales
             foreach (SolicitudMaterial sm in materialesSolicitud)
             {
-                gfx.DrawString($"Material: {sm.Material.Nombre} Cantidad: {sm.Cantidad} {sm.Material.UnidadDeMedida}", fontLineas, XBrushes.Black,
+                gfx.DrawString($"Material: {sm.Material.Nombre} - Cantidad: {sm.Cantidad} {sm.Material.UnidadDeMedida}", fontLineas, XBrushes.Black,
                     new XRect(margin, yPos, page.Width - 2 * margin, page.Height),
                     XStringFormat.TopLeft);
                 yPos += 30;

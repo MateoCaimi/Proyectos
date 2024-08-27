@@ -49,9 +49,6 @@
         <dd class="col-sm-9 value">
             @Html.DisplayFor(model => model.Estado)
         </dd>
-        <dd class="col-sm-9 value">
-            @Html.DisplayFor(model => model.Comentario)
-        </dd>
     </dl>
 </div>
 @if (Model.Estado == LogicaNegocio.Entidades.Estado.Solicitado)
@@ -86,6 +83,14 @@
                 }
             </tbody>
         </table>
+
+        @if (Model != null)
+        {
+            <div class="form-group">
+                <label for="Comentario" class="control-label">Comentario</label>
+                <textarea name="Comentario" class="form-control"></textarea>
+            </div>
+        }
 
 
         @if (Context.Session.GetString("UsuarioTipo") == "Usuario de oficina")

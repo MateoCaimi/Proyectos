@@ -18,11 +18,11 @@ namespace LogicaNegocio.Entidades
         public Proveedor? Proveedor { get; set; }
         [ForeignKey("Obra")] public int IdObra { get; set; }
         public Obra? Obra { get; set; }
-        [ForeignKey("Solicitante")] public int? IdUsuario { get; set; }
-        public Usuario? Solicitante { get; set; }
+        [ForeignKey("Solicitante")] public int IdUsuario { get; set; }
+        public Usuario Solicitante { get; set; }
         [ForeignKey("Aprovador")] public int? IdUDeOficina { get; set; }
         public UDeOficina? Aprovador { get; set; }
-        public string Comentario { get; set; }
+        public string? Comentario { get; set; }
 
         public Estado Estado { get; set; }
        

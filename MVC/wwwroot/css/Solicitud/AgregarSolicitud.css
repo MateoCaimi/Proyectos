@@ -94,6 +94,17 @@
         box-shadow: 0 0 8px rgba(102, 102, 102, 0.2);
     }
 
+.containerVolver {
+    margin-top: 20px;
+}
+
+.volver {
+    color: darkred;
+}
+
+    .volver:hover {
+        color: red;
+    }
 
 
 @media(min-width:1500px) {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace LogicaNegocio.Entidades
@@ -12,10 +13,7 @@ namespace LogicaNegocio.Entidades
         {
         }
 
-        public UDeObra() : base()
-        {
-            
-        }
+        public UDeObra() { }
 
         public override string Tipo { get => "Usuario de obra"; }
     }
