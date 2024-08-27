@@ -12,8 +12,13 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogicaAccesoDatos.Migrations
 {
     [DbContext(typeof(ProyectoContext))]
+<<<<<<<< HEAD:LogicaAccesoDatos/Migrations/20240827172337_s.Designer.cs
     [Migration("20240827172337_s")]
     partial class s
+========
+    [Migration("20240824183835_sas")]
+    partial class sas
+>>>>>>>> 3c79956d5fa2c4aed96bc572c53086ac27d0095e:LogicaAccesoDatos/Migrations/20240824183835_sas.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -311,6 +316,10 @@ namespace LogicaAccesoDatos.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Comentario")
+<<<<<<<< HEAD:LogicaAccesoDatos/Migrations/20240827172337_s.Designer.cs
+========
+                        .IsRequired()
+>>>>>>>> 3c79956d5fa2c4aed96bc572c53086ac27d0095e:LogicaAccesoDatos/Migrations/20240824183835_sas.Designer.cs
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Estado")

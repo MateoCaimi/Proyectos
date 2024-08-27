@@ -6,7 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LogicaAccesoDatos.Migrations
 {
     /// <inheritdoc />
+<<<<<<<< HEAD:LogicaAccesoDatos/Migrations/20240827202158_ba.cs
     public partial class ba : Migration
+========
+    public partial class sas : Migration
+>>>>>>>> 3c79956d5fa2c4aed96bc572c53086ac27d0095e:LogicaAccesoDatos/Migrations/20240824183835_sas.cs
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -246,7 +250,11 @@ namespace LogicaAccesoDatos.Migrations
                     IdObra = table.Column<int>(type: "int", nullable: false),
                     IdUsuario = table.Column<int>(type: "int", nullable: false),
                     IdUDeOficina = table.Column<int>(type: "int", nullable: true),
+<<<<<<<< HEAD:LogicaAccesoDatos/Migrations/20240827202158_ba.cs
                     Comentario = table.Column<string>(type: "nvarchar(max)", nullable: true),
+========
+                    Comentario = table.Column<string>(type: "nvarchar(max)", nullable: false),
+>>>>>>>> 3c79956d5fa2c4aed96bc572c53086ac27d0095e:LogicaAccesoDatos/Migrations/20240824183835_sas.cs
                     Estado = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

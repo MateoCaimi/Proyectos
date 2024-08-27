@@ -7,24 +7,24 @@
     string solicitudes = Context.Session.GetString("SolicitudesPendientes");
     string solicitudesConfirmadas = Context.Session.GetString("SolicitudesConfirmadas");
     string alertasDeStock = Context.Session.GetString("MaterialesAlertar");
+    string solicitudesAprob = Context.Session.GetString("SolicitudesAprobadas");
 
-   
+
 
     List<Solicitud> solicitudesList = new List<Solicitud>();
     List<Solicitud> solicitudesListConf = new List<Solicitud>();
     List<ObraMaterial> materialesAlertar = new List<ObraMaterial>();
+    List<Solicitud> solicitudesListApro = new List<Solicitud>();
 
 
 
     if (solicitudes != null) { solicitudesList = JsonSerializer.Deserialize<List<Solicitud>>(solicitudes); }
     if (solicitudesConfirmadas != null) { solicitudesListConf = JsonSerializer.Deserialize<List<Solicitud>>(solicitudesConfirmadas); }
     if (alertasDeStock != null) { materialesAlertar = JsonSerializer.Deserialize<List<ObraMaterial>>(alertasDeStock); }
-
-
-    //Esto Es lo que no funciona. Trae todo bien pero no puede hacer el Deserialize
-    string solicitudesAprob = Context.Session.GetString("SolicitudesAprobadas");
-    List<Solicitud> solicitudesListApro = new List<Solicitud>();
     if (solicitudesAprob != null) { solicitudesListApro = JsonSerializer.Deserialize<List<Solicitud>>(solicitudesAprob); } //Aca rompe, se puede debuguear el deserialize
+    //Esto Es lo que no funciona. Trae todo bien pero no puede hacer el Deserialize
+
+
 
 
 
@@ -197,26 +197,27 @@
 
         if (solicitudesAprob != null)
         {
-            int cantSoli3 = solicitudesListApro.Count();
-
-
-
-
-            <button class=" btnNoti dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
-                    <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6" />
-                </svg> Notificaciones
-                @*Aca iria la Campanita*@
-            </button>
-
-            <span id="cantNoti" class="badge bg-danger rounded-pill">
-                @cantSoli3
-            </span>
-
-           
             <div class="dropend containerNoti">
 
-              
+
+                @{
+                    int cantSoli3 = solicitudesListApro.Count();
+                }
+
+
+
+                <button class=" btnNoti dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
+                        <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6" />
+                    </svg> Notificaciones
+                    @*Aca iria la Campanita*@
+                </button>
+
+                <span id="cantNoti" class="badge bg-danger rounded-pill">
+                    @cantSoli3
+                </span>
+
+
 
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
 
@@ -240,7 +241,7 @@
     }
 
 
-
+    
 
 
 }

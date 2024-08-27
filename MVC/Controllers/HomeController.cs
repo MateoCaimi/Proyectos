@@ -27,7 +27,16 @@ namespace MVC.Controllers
             Fachada.Precarga();
             if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario de oficina")
             {
-                Fachada.PrecargaMarcas();
+                try
+                {
+
+                    Fachada.PrecargaMarcas();
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.ApiError = "Para recargar las marcas ingrese denuevo en 1 minuto"; 
+                }
+
             }
 
             if (HttpContext.Session.GetString("UsuarioLogueado") == null)
@@ -112,7 +121,10 @@ namespace MVC.Controllers
 
 
 
-                List<Solicitud> solicitudesAprobadas = Fachada.BuscarSolicitudAprobadasParaUnUObra(nomObrero);
+             //  List<Solicitud> solicitudesAprobadas = Fachada.BuscarSolicitudAprobadasParaUnUObra(nomObrero);
+                List<Solicitud> solicitudesAprobadas = Fachada.BuscarSolicitudAprobadasPorObra(nomObrero);
+                
+
            //     List<Solicitud> solicitudesAprobadas2 = Fachada.BuscarSolicitudAprobadasPorObra(nomObrero);
                 var opciones3 = new JsonSerializerOptions
                 {
