@@ -43,6 +43,10 @@ namespace LogicaNegocio.Entidades
             {
                 throw new MaterialException("Ingrese la unidad de medida");
             }
+            if(this.BarreraDeStock < 0)
+            {
+                throw new MaterialException("La barrera de stock no puede ser negativa");
+            }
             
         }
     }

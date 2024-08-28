@@ -112,5 +112,25 @@ namespace LogicaNegocio.Entidades
             }
 
         }
+
+        public void ValidarNulos()
+        {
+            if(this.FechaIngreso == null)
+            {
+                throw new EmpleadoException("Debe seleccionar una fecha de ingreso.");
+            }
+            if (this.CuentaBanco == null)
+            {
+                throw new EmpleadoException("Debe ingresar una cuenta bancaria.");
+            }
+            if (this.Banco == null)
+            {
+                throw new EmpleadoException("Debe ingresar el banco de la cuenta.");
+            }
+            if (this.IdTipoEmpleado == null || this.IdTipoEmpleado == 0)
+            {
+                throw new EmpleadoException("Debe ingresar la categoría del empleado.");
+            }
+        }
     }
 }

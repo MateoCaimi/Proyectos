@@ -19,7 +19,7 @@
         @ViewBag.Error
     </div>
 }<div class="form-container">
-    <form asp-action="Liquidar" asp-controller="Empleado">
+    <form asp-action="Liquidar" asp-controller="Empleado" method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         <div class="form-group">
@@ -29,8 +29,17 @@
                 <option value=null>Todas</option>
                 @foreach (var item in ViewBag.Obras)
                 {
-                    <option value="@item.IdObra">@item.Nombre</option>
+                    if (ViewBag.IdObra != 0 && item.IdObra == ViewBag.IdObra)
+                    {
+                        <option selected value="@item.IdObra">@item.Nombre</option>
+                    }
+                    else
+                    {
+                        <option value="@item.IdObra">@item.Nombre</option>
+                    }
+                    
                 }
+
             </select>
         </div>
 
@@ -51,6 +60,10 @@
         <div class="form-group">
             <label for="FechaRango">Filtrar por fechas: </label>
             <input id="FechaRango" name="FechaRango" class="form-control" type="text" />
+        </div>
+        <div class="form-group">
+            <label for="inactivos">Considerar inactivos: </label>
+            <input id="inactivos" name="inactivos" type="checkbox" value="true" />
         </div>
         <div class="form-group">
             <input type="submit" value="Liquidar" class="btn btnPrincipal" id="btnLiquidar" />

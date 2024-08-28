@@ -171,7 +171,7 @@ namespace MVC.Controllers
             catch(MaterialException me)
             {
                 ViewBag.Error = me.Message;
-                return RedirectToAction(nameof(Index));
+                return View();
             }
         }
     }

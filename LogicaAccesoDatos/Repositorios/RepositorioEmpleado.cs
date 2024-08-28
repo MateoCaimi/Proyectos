@@ -12,6 +12,7 @@ using OneOf.Types;
 using PdfSharp.Pdf.Filters;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
@@ -37,10 +38,30 @@ namespace LogicaAccesoDatos.Repositorios
         {
             try
             {
-                //item.Validar();
+                item.Validar();
+                if(this.BuscarPorNombreYCedula("", item.Cedula) != null)
+                {
+                    throw new EmpleadoException("Ya existe un empleado con esta cédula en el sistema.");
+                }
                 item.Activo = true;
                 Context.Empleados.Add(item);
                 Context.SaveChanges();
+            }
+            catch (EmpleadoException ee)
+            {
+                throw new EmpleadoException(ee.Message);
+            }
+        }
+
+        public void AgregarEmp(Empleado item, bool desdeForm)
+        {
+            try
+            {
+                if (desdeForm)
+                {
+                    item.ValidarNulos();
+                }
+                this.Agregar(item);
             }
             catch (EmpleadoException ee)
             {
@@ -268,7 +289,7 @@ namespace LogicaAccesoDatos.Repositorios
                     empleado.CuentaBanco = "<<A INGRESAR>>";
                     empleado.Activo = true;
                     empleado.IdTipoEmpleado = BuscarTipoXNombre("<<A INGRESAR>>").Id; //Tenemos que tener una precarga con TipoEmpleado genérico
-                    this.Agregar(empleado);
+                    this.AgregarEmp(empleado, false);
                 }
                 if (emp.Marcas.Count() > 0)
                 {
@@ -686,45 +707,56 @@ namespace LogicaAccesoDatos.Repositorios
         //    }
         //}
 
-        public Dictionary<ObraEmpleado, decimal> Liquidar(DateTime desde, DateTime hasta, Obra? obra, Empleado? empleado)
+        public Dictionary<ObraEmpleado, decimal> Liquidar(DateTime desde, DateTime hasta, Obra? obra, Empleado? empleado, bool inactivos)
         {
             if (obra != null && empleado != null)
             {
                 ObraEmpleado oe = this.GetEmpleadoObra(empleado.Id, obra.IdObra);
-                return LiquidacionObraEmpleado(oe, desde, hasta);
+                return LiquidacionObraEmpleado(oe, desde, hasta, inactivos);
             }
             else if (empleado != null)
             {
-                return LiquidacionEmpleado(empleado, desde, hasta);
+                return LiquidacionEmpleado(empleado, desde, hasta, inactivos);
             }
             else if (obra != null)
             {
-                return LiquidacionObra(obra, desde, hasta);
+                return LiquidacionObra(obra, desde, hasta, inactivos);
             }
-            else return LiquidacionTotal(desde, hasta);
+            else return LiquidacionTotal(desde, hasta, inactivos);
 
         }
 
-        public Dictionary<ObraEmpleado, decimal> LiquidacionEmpleado(Empleado empleado, DateTime desde, DateTime hasta)
+        public Dictionary<ObraEmpleado, decimal> LiquidacionEmpleado(Empleado empleado, DateTime desde, DateTime hasta, bool inactivos)
         {
-            decimal liquidacionNominal;
-            int horasTotales = 0;
-            ObraEmpleado oe = new ObraEmpleado();
-            oe.Empleado = empleado;
-            Dictionary<ObraEmpleado, decimal> ret = new Dictionary<ObraEmpleado, decimal>();
-            //int horasLluvia = 0;
-            //int horasExtra = 0;
-
-            List<Marca> marcasEmpRango = this.MarcasEmpleadoRango(empleado, desde, hasta);
-            foreach (Marca m in marcasEmpRango)
+            if (inactivos || (!inactivos && empleado.Activo))
             {
-                horasTotales += m.HorasTrabajadas(); // Para los bonos(Forma de pago de la mepresa) solo se utilizan horas trabajadas
-                //horasLluvia += m.HorasLluvia;
-                //horasExtra += m.HorasExtra;
+                decimal liquidacionNominal;
+                int horasTotales = 0;
+                ObraEmpleado oe = new ObraEmpleado();
+                oe.Empleado = empleado;
+                Dictionary<ObraEmpleado, decimal> ret = new Dictionary<ObraEmpleado, decimal>();
+                //int horasLluvia = 0;
+                //int horasExtra = 0;
+
+                List<Marca> marcasEmpRango = this.MarcasEmpleadoRango(empleado, desde, hasta);
+                foreach (Marca m in marcasEmpRango)
+                {
+                    horasTotales += m.HorasTrabajadas(); // Para los bonos(Forma de pago de la mepresa) solo se utilizan horas trabajadas
+                                                         //horasLluvia += m.HorasLluvia;
+                                                         //horasExtra += m.HorasExtra;
+                }
+                liquidacionNominal = CalcularNominal(oe.Empleado, horasTotales);
+                ret.Add(oe, liquidacionNominal);
+                return ret;
             }
-            liquidacionNominal = CalcularNominal(oe.Empleado, horasTotales);
-            ret.Add(oe, liquidacionNominal);
-            return ret;
+            else{
+                ObraEmpleado oe = new ObraEmpleado();
+                oe.Empleado = empleado;
+                Dictionary<ObraEmpleado, decimal> ret2 = new Dictionary<ObraEmpleado, decimal>();
+                ret2.Add(oe, 0);
+                return ret2;
+            }
+
         }
 
         private List<Marca> MarcasEmpleadoRango(Empleado empleado, DateTime desde, DateTime hasta)
@@ -734,24 +766,35 @@ namespace LogicaAccesoDatos.Repositorios
                         && marc.IdEmpleado == empleado.Id).ToList();
         }
 
-        public Dictionary<ObraEmpleado, decimal> LiquidacionObraEmpleado(ObraEmpleado oe, DateTime desde, DateTime hasta) //Dos firmas, para el manejo desde controller y desde repo
+        public Dictionary<ObraEmpleado, decimal> LiquidacionObraEmpleado(ObraEmpleado oe, DateTime desde, DateTime hasta, bool inactivos) //Dos firmas, para el manejo desde controller y desde repo
         {
-            decimal liquidacionNominal;
-            Dictionary<ObraEmpleado, decimal> ret = new Dictionary<ObraEmpleado, decimal>();
-            int horasTotales = 0;
-            //int horasLluvia = 0;
-            //int horasExtra = 0;
-
-            List<Marca> marcasEmpRango = this.MarcasEmpObraRango(oe, desde, hasta);
-            foreach (Marca m in marcasEmpRango)
+            if(inactivos || (!inactivos && oe.Empleado.Activo))
             {
-                horasTotales += m.HorasTrabajadas(); // Para los bonos(Forma de pago de la empresa) solo se utilizan horas trabajadas
-                //horasLluvia += m.HorasLluvia;
-                //horasExtra += m.HorasExtra;
+                decimal liquidacionNominal;
+                Dictionary<ObraEmpleado, decimal> ret = new Dictionary<ObraEmpleado, decimal>();
+                int horasTotales = 0;
+                //int horasLluvia = 0;
+                //int horasExtra = 0;
+
+                List<Marca> marcasEmpRango = this.MarcasEmpObraRango(oe, desde, hasta);
+                foreach (Marca m in marcasEmpRango)
+                {
+                    horasTotales += m.HorasTrabajadas(); // Para los bonos(Forma de pago de la empresa) solo se utilizan horas trabajadas
+                                                         //horasLluvia += m.HorasLluvia;
+                                                         //horasExtra += m.HorasExtra;
+                }
+                liquidacionNominal = CalcularNominal(oe.Empleado, horasTotales);
+                ret.Add(oe, liquidacionNominal);
+                return ret;
             }
-            liquidacionNominal = CalcularNominal(oe.Empleado, horasTotales);
-            ret.Add(oe, liquidacionNominal);
-            return ret;
+            else
+            {
+                Dictionary<ObraEmpleado, decimal> ret2 = new Dictionary<ObraEmpleado, decimal>();
+                ret2.Add(oe, 0);
+                return ret2;
+            }
+
+
         }
 
         private decimal CalcularNominal(Empleado empleado, int horasTotales)
@@ -770,13 +813,13 @@ namespace LogicaAccesoDatos.Repositorios
 
         }
 
-        public Dictionary<ObraEmpleado, decimal> LiquidacionObra(Obra obra, DateTime desde, DateTime hasta)
+        public Dictionary<ObraEmpleado, decimal> LiquidacionObra(Obra obra, DateTime desde, DateTime hasta, bool inactivos)
         {
             List<ObraEmpleado> empleadosObra = this.GetEmpleadosObra(obra); //Repetición de métodos entre repositorios. Que los repos se llamen está mal, pero no sé como organizarlo todavía
             Dictionary<ObraEmpleado, decimal> liqPorEmp = new Dictionary<ObraEmpleado, decimal>();
             foreach (ObraEmpleado oe in empleadosObra)
             {
-                var liqEmpleado = this.LiquidacionObraEmpleado(oe, desde, hasta);
+                var liqEmpleado = this.LiquidacionObraEmpleado(oe, desde, hasta, inactivos);
                 foreach (var item in liqEmpleado)
                 {
                     liqPorEmp[item.Key] = item.Value;
@@ -785,14 +828,14 @@ namespace LogicaAccesoDatos.Repositorios
             return liqPorEmp;
         }
 
-        public Dictionary<ObraEmpleado, decimal> LiquidacionTotal(DateTime desde, DateTime hasta)
+        public Dictionary<ObraEmpleado, decimal> LiquidacionTotal(DateTime desde, DateTime hasta, bool inactivos)
         {
             Dictionary<ObraEmpleado, decimal> liqPorObras = new Dictionary<ObraEmpleado, decimal>();
             List<Obra> obras = this.GetObras(); //Repetición de métodos entre repositorios. Que los repos se llamen está mal, pero no sé como organizarlo todavía
 
             foreach (Obra o in obras)
             {
-                var liqObra = this.LiquidacionObra(o, desde, hasta);
+                var liqObra = this.LiquidacionObra(o, desde, hasta, inactivos);
                 foreach (var item in liqObra)
                 {
                     liqPorObras[item.Key] = item.Value;
@@ -857,7 +900,7 @@ namespace LogicaAccesoDatos.Repositorios
 
         private Empleado BuscarPorNombreYCedula(string empleadoNom, string empleadoCed)
         {
-            return Context.Empleados.Where(e => e.Nombre == empleadoNom && e.Cedula == empleadoCed).FirstOrDefault();
+            return Context.Empleados.Where(e => (e.Nombre == empleadoNom && e.Cedula == empleadoCed) || (e.Cedula == empleadoCed)).FirstOrDefault();
         }
 
         public void AgregarTipo(TipoEmpleado tipo)

@@ -89,9 +89,14 @@ namespace LogicaAccesoDatos.Repositorios
             {
                 throw new ObraException("No se puede cerrar la obra, tiene solicitudes de material en estado pendiente.");
             }
+            if (TieneSolicitudesSinConfirmar(obra))
+            {
+                throw new ObraException("No se puede cerrar la obra, tiene solicitudes de material en estado aprobado, pero sin confirmar.");
+            }
             try
             {
                 obra.FinalizarObra();
+                EliminarPlanosDeLaObra(obra); //Una vez cerrada la obra, se eliminan sus planos
                 Context.SaveChanges();
             }
             catch (Exception e)
@@ -100,7 +105,15 @@ namespace LogicaAccesoDatos.Repositorios
             }
         }
 
-
+        private void EliminarPlanosDeLaObra(Obra obra)
+        {
+            List<Plano> planos = Context.Planos.Where(p => p.IdObra == obra.IdObra).ToList();
+            foreach (Plano p in planos)
+            {
+                Context.Planos.Remove(p);
+                Context.SaveChanges();
+            }
+        }
 
         public void Modificar(Obra nuevaObra)
         {
@@ -179,7 +192,7 @@ namespace LogicaAccesoDatos.Repositorios
         public Obra Buscar(int id)
         {
             Obra retorno = null;
-            foreach (Obra obra in Context.Obras)
+            foreach (Obra obra in Context.Obras.Include(o => o.UsuarioACargo))
             {
                 if (obra.IdObra == id)
                 {
@@ -332,6 +345,11 @@ namespace LogicaAccesoDatos.Repositorios
         private bool TieneSolicitudesPendientes(Obra obra)
         {
             return Context.Solicitudes.Where(s => s.Obra.IdObra == obra.IdObra && s.Estado == Estado.Solicitado).Any();
+        }
+
+        private bool TieneSolicitudesSinConfirmar(Obra obra)
+        {
+            return Context.Solicitudes.Where(s => s.Obra.IdObra == obra.IdObra && s.Estado == Estado.Aprobado).Any();
         }
 
         internal IEnumerable<ObraMaterial> MaterialesDeObra(int idObra)

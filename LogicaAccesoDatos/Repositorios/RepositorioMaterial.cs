@@ -23,21 +23,29 @@ namespace LogicaAccesoDatos.Repositorios
         }
         public void Agregar(Material nuevoMaterial)
         {
-
-            nuevoMaterial.Validar();
-            
-            foreach (Material mat in Context.Materiales.ToList())
+            try
             {
-                 if (mat.Nombre == nuevoMaterial.Nombre && mat.UnidadDeMedida == nuevoMaterial.UnidadDeMedida)
-                {
+                nuevoMaterial.Validar();
 
-                    throw new MaterialException("Ya existe un material con ese nombre y esa unidad de medida.");
+                foreach (Material mat in Context.Materiales.ToList())
+                {
+                    if (mat.Nombre == nuevoMaterial.Nombre && mat.UnidadDeMedida == nuevoMaterial.UnidadDeMedida)
+                    {
+
+                        throw new MaterialException("Ya existe un material con ese nombre y esa unidad de medida.");
+                    }
+
                 }
 
+
+                Context.Materiales.Add(nuevoMaterial);
+                Context.SaveChanges();
+            }
+            catch(MaterialException m)
+            {
+                throw new MaterialException(m.Message);
             }
 
-            Context.Materiales.Add(nuevoMaterial);
-            Context.SaveChanges();
         }
 
 
@@ -61,19 +69,37 @@ namespace LogicaAccesoDatos.Repositorios
 
         public void Modificar(Material m)
         {
-            Material material = this.Buscar(m.Id);
-            if (material == null)
+            try
             {
-                throw new MaterialException("No se encontró el material para modificar.");
+                Material material = this.Buscar(m.Id);
+
+                if (material == null)
+                {
+                    throw new MaterialException("No se encontró el material para modificar.");
+                }
+                if (this.BuscarPorNombreYMedida(m.Nombre, m.UnidadDeMedida) != null)
+                {
+                    throw new MaterialException("Ya existe un material con ese nombre y esa unidad de medida.");
+                }
+
+                material.Nombre = m.Nombre;
+                material.UnidadDeMedida = m.UnidadDeMedida;
+                material.BarreraDeStock = m.BarreraDeStock;
+                material.Validar();
+                Context.Materiales.Update(material);
+                Context.SaveChanges();
+            }
+            catch(MaterialException e)
+            {
+                throw new MaterialException(e.Message);
             }
 
-            material.Nombre = m.Nombre;
-            material.UnidadDeMedida = m.UnidadDeMedida;
-            material.Validar();
-            Context.Materiales.Update(material);
-            Context.SaveChanges();
         }
 
+        private Material BuscarPorNombreYMedida(string nombre, string unidadDeMedida)
+        {
+            return Context.Materiales.Where(m => m.UnidadDeMedida == unidadDeMedida && m.Nombre == nombre).FirstOrDefault();
+        }
 
         public Material Buscar(int id)
         {

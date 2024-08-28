@@ -355,7 +355,7 @@ namespace MVC.Controllers
 
             try
             {
-                Fachada.AgregarEmpleado(empleado);
+                Fachada.AgregarEmpleado(empleado, true);
                 return RedirectToAction(nameof(Index));
             }
             catch (EmpleadoException ee)
@@ -495,7 +495,7 @@ namespace MVC.Controllers
         }
 
         // GET: EmpleadoController/Delete/5
-        public ActionResult Liquidar()
+        public ActionResult Liquidar(int idObra)
         {
 
             if (HttpContext.Session.GetString("UsuarioLogueado") == null)
@@ -532,11 +532,17 @@ namespace MVC.Controllers
             ViewBag.Obras = Fachada.TomarTodasObras();
             ViewBag.Empleados = Fachada.TomarTodosEmpleados();
             List<ObraEmpleadoLiquidacionViewModel> vm = new List<ObraEmpleadoLiquidacionViewModel>();
+            if(idObra != 0)
+            {
+                ViewBag.IdObra = idObra;
+                Obra obra = Fachada.BuscarObra(idObra);
+                ViewBag.Empleados = Fachada.TomarEmpleadosDeObra(obra); 
+            }
             return View(vm);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Liquidar(int IdObra, int IdEmpleado,string FechaRango)
+        public async Task<IActionResult> Liquidar(int IdObra, int IdEmpleado,string FechaRango, bool inactivos)
         {
 
             if (HttpContext.Session.GetString("UsuarioLogueado") == null)
@@ -575,7 +581,7 @@ namespace MVC.Controllers
                 Obra obra = Fachada.BuscarObra(IdObra);
                 List<ObraEmpleadoLiquidacionViewModel> vm = new List<ObraEmpleadoLiquidacionViewModel>();
                 Dictionary<ObraEmpleado, decimal> dic;
-                dic = Fachada.Liquidar(desde, hasta, obra, empleado); 
+                dic = Fachada.Liquidar(desde, hasta, obra, empleado, inactivos); 
                 foreach(KeyValuePair<ObraEmpleado, decimal> kv in dic) //No es lógica de negocio, es formateo de vista, entonces entiendo que es válido.
                 {
                     vm.Add(new ObraEmpleadoLiquidacionViewModel(kv.Key, kv.Value));
@@ -615,9 +621,17 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-
-            Obra obra = Fachada.BuscarObra(idObra);
-            List<Empleado> empleadosObra = Fachada.TomarEmpleadosDeObra(obra);
+            List<Empleado> empleadosObra = new List<Empleado>();
+            if (idObra != 0)
+            {
+                Obra obra = Fachada.BuscarObra(idObra);
+                empleadosObra = Fachada.TomarEmpleadosDeObra(obra);
+            }
+            else
+            {
+                empleadosObra = Fachada.TomarTodosEmpleados().ToList();
+            }
+            
             return PartialView("CambiarListadoLiquidacion", empleadosObra);
         }
 

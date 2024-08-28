@@ -76,11 +76,17 @@ namespace LogicaNegocio.Entidades
             ValidarFechaFinal();
             ValidarNombre();
             ValidarDireccion();
+            ValidarUACargo();
         }
 
+        private void ValidarUACargo()
+        {
+            if (IdACargo == 0)
+            {
+                throw new ObraException("Se debe asignar un usuario obra a cargo.");
 
-      
-
+            }
+        }
         public void ValidarFechaFinal()
         {
             if(this.FechaFinalizacion != null)

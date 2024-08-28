@@ -238,7 +238,7 @@ namespace MVC.Controllers
             {
                 ViewBag.Usuarios = Fachada.ObtenerUsuariosDeObra();
                 ViewBag.Error = e.Message;
-                return View();
+                return View(aIngresar);
             }
         }
 
@@ -269,12 +269,12 @@ namespace MVC.Controllers
                 Obra obra = Fachada.BuscarObra(id);
                 ViewBag.Usuarios = Fachada.ObtenerUsuariosDeObra();
                 return View(obra);
+
             }
             catch (ObraException e)
             {
-                ErrorViewModel errorModel = new ErrorViewModel();
-                errorModel.RequestId = e.Message;
-                return View("Error", errorModel); //usar shared hasta tener vistas de error para cada coso
+                ViewBag.Error = e.Message;
+                return View(); //usar shared hasta tener vistas de error para cada coso
             }
         }
 
@@ -321,7 +321,11 @@ namespace MVC.Controllers
                 {
                     throw new ObraException("No se encuentra la obra a modificar");
                 }
-               
+                if (TempData["Error"] != null)
+                {
+                    ViewBag.Error = TempData["Error"];
+                    TempData["Error"] = null;
+                }
                 ViewBag.Usuarios = Fachada.ObtenerUsuariosDeObra();
                 Fachada.ModificarObra(nuevaObra);
                 return RedirectToAction(nameof(Index));
@@ -329,7 +333,7 @@ namespace MVC.Controllers
             catch (ObraException e)
             {
                 ViewBag.Error = e.Message;
-                return View();
+                return View(nuevaObra);
             }
         }
 
@@ -856,9 +860,9 @@ namespace MVC.Controllers
             }
             catch (Exception ex)
             {
-                TempData["Error"] = ex.Message;
+                ViewBag.Mensaje = ex.Message;
                 Obra obra = Fachada.BuscarObra(IdObra);
-                return View();
+                return View(obra);
             }
         }
 

@@ -19,67 +19,71 @@
 <p>
     <a href="@Url.Action("Crear", new {idObra = ViewBag.IdObra})"> Crear Solicitud</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-
-           @*  <th>
-               Direccion
-            </th> *@
-            <th class="tablaAEsconder800">
-                @Html.DisplayNameFor(model => model.Solicitante)
-            </th>
-            <th class="tablaAEsconder1100">
-                @Html.DisplayNameFor(model => model.Aprovador)
-            </th>
-            <th class="tablaAEsconder900">
-                @Html.DisplayNameFor(model => model.Comentario)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Estado)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+@if(Model != null && Model.Any()) //si no hay solicitudes esconder tabla
+{
+    <table class="table">
+        <thead>
             <tr>
-                @* <tr onclick="location.href='@Url.Action("Editar", new { id = item.Id })'" style="cursor:pointer;"> *@
 
-              @*   <td>
-                    @Html.DisplayFor(modelItem => item.Obra.Direccion)
-                </td> *@
-                <td class="tablaAEsconder800">
-                    @Html.DisplayFor(modelItem => item.Solicitante.Nombre)
-                </td>
-                <td class="tablaAEsconder1100">
-                    @Html.DisplayFor(modelItem => item.Aprovador.Nombre)
-                </td>
-                <td class="tablaAEsconder900">
-                    @Html.DisplayFor(modelItem => item.Comentario)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Estado)
-                </td>
-                <td>
-                    @if (item.Estado == LogicaNegocio.Entidades.Estado.Solicitado)
-                    {
-                        <a asp-action="Detalles" asp-route-idSolicitud="@item.Id">Detalles</a>
-                    }
-                    @if (item.Estado == LogicaNegocio.Entidades.Estado.Aprobado)
-                    {
-                        <a asp-action="Confirmar" asp-route-idSolicitud="@item.Id">Confirmar</a>
-                    }
-                    @if (item.Estado == LogicaNegocio.Entidades.Estado.Recibido || item.Estado == LogicaNegocio.Entidades.Estado.Visto)
-                    {
-                        <a asp-action="Confirmar" asp-route-idSolicitud="@item.Id">Ver solicitud</a>
-                    }
-                </td>
+                @*  <th>
+            Direccion
+            </th> *@
+                <th class="tablaAEsconder800">
+                    @Html.DisplayNameFor(model => model.Solicitante)
+                </th>
+                <th class="tablaAEsconder1100">
+                    @Html.DisplayNameFor(model => model.Aprovador)
+                </th>
+                <th class="tablaAEsconder900">
+                    @Html.DisplayNameFor(model => model.Comentario)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Estado)
+                </th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    @* <tr onclick="location.href='@Url.Action("Editar", new { id = item.Id })'" style="cursor:pointer;"> *@
+
+                    @*   <td>
+            @Html.DisplayFor(modelItem => item.Obra.Direccion)
+            </td> *@
+                    <td class="tablaAEsconder800">
+                        @Html.DisplayFor(modelItem => item.Solicitante.Nombre)
+                    </td>
+                    <td class="tablaAEsconder1100">
+                        @Html.DisplayFor(modelItem => item.Aprovador.Nombre)
+                    </td>
+                    <td class="tablaAEsconder900">
+                        @Html.DisplayFor(modelItem => item.Comentario)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Estado)
+                    </td>
+                    <td>
+                        @if (item.Estado == LogicaNegocio.Entidades.Estado.Solicitado)
+                        {
+                            <a asp-action="Detalles" asp-route-idSolicitud="@item.Id">Detalles</a>
+                        }
+                        @if (item.Estado == LogicaNegocio.Entidades.Estado.Aprobado)
+                        {
+                            <a asp-action="Confirmar" asp-route-idSolicitud="@item.Id">Confirmar</a>
+                        }
+                        @if (item.Estado == LogicaNegocio.Entidades.Estado.Recibido || item.Estado == LogicaNegocio.Entidades.Estado.Visto)
+                        {
+                            <a asp-action="Confirmar" asp-route-idSolicitud="@item.Id">Ver solicitud</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
 
 <div class="containerVolver">
     <a class="volver" asp-action="Detalles" asp-controller="Obra" asp-route-id="@ViewBag.idObra">

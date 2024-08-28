@@ -409,9 +409,9 @@ namespace LogicaAccesoDatos.Repositorios
             return RepositorioEmpleado.BuscarTipos();
         }
 
-        public void AgregarEmpleado(Empleado empleado)
+        public void AgregarEmpleado(Empleado empleado, bool desdeForm)
         {
-            RepositorioEmpleado.Agregar(empleado);
+            RepositorioEmpleado.AgregarEmp(empleado, desdeForm);
         }
 
         public void DarEgreso(ObraEmpleado empleado, DateTime fecha)
@@ -454,9 +454,9 @@ namespace LogicaAccesoDatos.Repositorios
             return RepositorioEmpleado.TraerTodasMarcas(empleado);
         }
 
-        public Dictionary<ObraEmpleado, decimal> Liquidar(DateTime desde, DateTime hasta, Obra? obra, Empleado? empleado)
+        public Dictionary<ObraEmpleado, decimal> Liquidar(DateTime desde, DateTime hasta, Obra? obra, Empleado? empleado, bool inactivos)
         {
-            return RepositorioEmpleado.Liquidar(desde, hasta, obra, empleado);
+            return RepositorioEmpleado.Liquidar(desde, hasta, obra, empleado, inactivos);
         }
 
         //public Dictionary<ObraEmpleado, double> LiquidacionTotal(DateTime desde, DateTime hasta)
