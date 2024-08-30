@@ -11,7 +11,7 @@ using System.Net.Http.Headers;
 
 namespace LogicaAccesoDatos.Repositorios
 {
-    internal class RepositorioEmpleado : IRepositorioEmpleado
+    public class RepositorioEmpleado : IRepositorioEmpleado
     {
         public ProyectoContext Context { get; set; }
         public RepositorioEmpleado()

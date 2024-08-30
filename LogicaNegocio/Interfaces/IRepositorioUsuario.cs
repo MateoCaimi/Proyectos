@@ -4,20 +4,13 @@ namespace LogicaNegocio.Interfaces
 {
     public interface IRepositorioUsuario : IRepositorio<Usuario>
     {
-        public Usuario InicioSesion(string usu, string pass);
-        public Usuario UsuarioPorNombreUsuario(string nombreUsuario);
-
-        public Usuario Buscar(int id);
-
-        public bool TieneObrasAbiertas(Usuario item);
-
-        public IEnumerable<Usuario> TomarTodos();
-
-        public IEnumerable<Usuario> TomarTodosDeObra();
-
-        public IEnumerable<Usuario> TomarTodosDeOficina();
-
-        public IEnumerable<Usuario> TomarTodosDeNormal();
+        LogicaNegocio.Entidades.Usuario InicioSesion(System.String nombreUsuario, System.String contrasenia);
+        LogicaNegocio.Entidades.Usuario UsuarioPorNombreUsuario(System.String nombreUsuario);
+        System.Boolean TieneObrasAbiertas(LogicaNegocio.Entidades.Usuario item);
+        System.Collections.Generic.IEnumerable<LogicaNegocio.Entidades.Usuario> TomarTodosDeObra();
+        System.Collections.Generic.IEnumerable<LogicaNegocio.Entidades.Usuario> TomarTodosDeOficina();
+        System.Collections.Generic.IEnumerable<LogicaNegocio.Entidades.Usuario> TomarTodosDeNormal();
+        LogicaNegocio.Entidades.Usuario CastearU(System.String nombre, System.String nomUsuario, System.String pass, System.String tipo);
 
     }
 }

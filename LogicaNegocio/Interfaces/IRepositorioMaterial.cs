@@ -4,11 +4,8 @@ namespace LogicaNegocio.Interfaces
 {
     public interface IRepositorioMaterial : IRepositorio<Material>
     {
-
-        public Material MaterialPorNombre(string nombre);
-        public bool MaterialSeEncuentraEnObra(Material m);
-        public IEnumerable<Material> TomarTodos();
-
-
+        LogicaNegocio.Entidades.Material MaterialPorNombre(System.String nombre);
+        System.Boolean MaterialSeEncuentraEnObra(LogicaNegocio.Entidades.Material material);
+        System.Collections.Generic.IEnumerable<LogicaNegocio.Entidades.Material> MaterialesFiltados(System.String nombre);
     }
 }
