@@ -1,6 +1,5 @@
 ﻿using LogicaAccesoDatos.Repositorios;
 using LogicaNegocio.Entidades;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MVC.Controllers

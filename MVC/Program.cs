@@ -1,4 +1,3 @@
-using LogicaNegocio.Interfaces;
 using System.Globalization;
 var builder = WebApplication.CreateBuilder(args);
 

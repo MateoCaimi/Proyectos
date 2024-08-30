@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Numerics;
+﻿using LogicaNegocio.Excepciones;
 using LogicaNegocio.Interfaces;
-using LogicaNegocio.Excepciones;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LogicaNegocio.Entidades
 {
-    public class TipoEmpleado: IValidable
+    public class TipoEmpleado : IValidable
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
@@ -22,7 +16,7 @@ namespace LogicaNegocio.Entidades
         [Display(Name = "Valor por Hora")]
         [RegularExpression(@"^\d+(\,\d{1,2})?$", ErrorMessage = "El campo Valor por Hora debe ser un número válido con coma como separador decimal.")]
 
-        [Range(0,double.MaxValue)]
+        [Range(0, double.MaxValue)]
         public decimal ValorHora { get; set; }
         [Range(0, double.MaxValue)]
         [RegularExpression(@"^\d+(\,\d{1,2})?$", ErrorMessage = "El campo Valor por Hora debe ser un número válido con coma como separador decimal.")]
@@ -36,7 +30,7 @@ namespace LogicaNegocio.Entidades
 
         public TipoEmpleado()
         {
-            
+
         }
 
         public void Validar()

@@ -1,7 +1,6 @@
 ﻿using LogicaAccesoDatos.Repositorios;
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MVC.Controllers
@@ -10,7 +9,7 @@ namespace MVC.Controllers
     {
 
         private Fachada Fachada = new Fachada();
-     
+
         public ActionResult Index()
         {
             Fachada.Precarga();
@@ -61,8 +60,8 @@ namespace MVC.Controllers
 
             try
             {
-            IEnumerable<Material> materialesFiltrados = Fachada.MaterialesFiltrados(nombre);
-            return View(materialesFiltrados);
+                IEnumerable<Material> materialesFiltrados = Fachada.MaterialesFiltrados(nombre);
+                return View(materialesFiltrados);
 
             }
             catch (MaterialException me)
@@ -108,7 +107,7 @@ namespace MVC.Controllers
                 Fachada.AgregarMaterial(nuevoMaterial);
                 return RedirectToAction("Index");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 ViewBag.error = e.Message;
                 return View();
@@ -168,7 +167,7 @@ namespace MVC.Controllers
                 Fachada.ModificarMaterial(material);
                 return RedirectToAction(nameof(Index));
             }
-            catch(MaterialException me)
+            catch (MaterialException me)
             {
                 ViewBag.Error = me.Message;
                 return View();

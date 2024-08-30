@@ -1,27 +1,12 @@
-﻿using Azure;
-using LogicaAccesoDatos.EF;
+﻿using LogicaAccesoDatos.EF;
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Entidades.DTOs;
 using LogicaNegocio.Excepciones;
 using LogicaNegocio.Interfaces;
-using LogicaNegocio.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using OneOf.Types;
-using PdfSharp.Pdf.Filters;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Globalization;
-using System.Linq;
-using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace LogicaAccesoDatos.Repositorios
@@ -29,7 +14,6 @@ namespace LogicaAccesoDatos.Repositorios
     internal class RepositorioEmpleado : IRepositorioEmpleado
     {
         public ProyectoContext Context { get; set; }
-        //private readonly HttpClient _httpClient;
         public RepositorioEmpleado()
         {
             this.Context = new ProyectoContext();
@@ -39,7 +23,7 @@ namespace LogicaAccesoDatos.Repositorios
             try
             {
                 item.Validar();
-                if(this.BuscarPorNombreYCedula("", item.Cedula) != null)
+                if (this.BuscarPorNombreYCedula("", item.Cedula) != null)
                 {
                     throw new EmpleadoException("Ya existe un empleado con esta cédula en el sistema.");
                 }
@@ -130,8 +114,8 @@ namespace LogicaAccesoDatos.Repositorios
 
         public void Precarga()
         {
-           // borrarTodasLasMarcas();
-            
+            // borrarTodasLasMarcas();
+
             int cantTipos = this.GetTipos().Count;
             if (cantTipos == 0)
             {
@@ -162,16 +146,6 @@ namespace LogicaAccesoDatos.Repositorios
 
 
         }
-        //Esta como paara probar y ejecutar previo a todo
-        public void borrarTodasLasMarcas()
-        {
-            foreach(Marca m in Context.Marcas)
-            {
-                Context.Marcas.Remove(m);
-            }
-            Context.SaveChanges(); 
-        }
-
         public void PrecargaMarcasDelAño()
         {
             DateTime hoy = DateTime.Now;
@@ -181,14 +155,14 @@ namespace LogicaAccesoDatos.Repositorios
 
             if (hoy.Month > 2) //Porque cloudTimes no acepta mas de 5 llamadas
             {
-             mesInicio = hoy.Month - 2;
+                mesInicio = hoy.Month - 2;
             }
 
             //Carga los ultimos 2 meses hasta la actualidad o desde principio de año
 
             for (int i = hoy.Month; i >= mesInicio; i--)
             {
-                if(i == hoy.Month)
+                if (i == hoy.Month)
                 {
                     desde = new DateTime(hoy.Year, i, 01, 00, 00, 01);
                     hasta = new DateTime(hoy.Year, i, hoy.Day, hoy.Hour, hoy.Minute, hoy.Second);
@@ -216,7 +190,7 @@ namespace LogicaAccesoDatos.Repositorios
 
                 }
 
-                AgregarEmpleadosAObraDTO(desde,hasta);
+                AgregarEmpleadosAObraDTO(desde, hasta);
                 ConseguirTodasLasMarcas(desde, hasta);
 
 
@@ -367,47 +341,6 @@ namespace LogicaAccesoDatos.Repositorios
                 return false;
             }
         }
-
-
-
-        //public void AgregarEmpleadosAObra()
-        //{
-        //    DateTime desde = new DateTime(2024, 06, 01);
-        //    DateTime hasta = new DateTime(2024, 07, 01);
-        //    string response = LlamadaCloudtimes(desde, hasta).Result; //Formatear la respuesta cloudtimes.
-        //    var root = JObject.Parse(response);
-        //    int cantidadEmpleados = (int)root["cantidadEmpleados"];
-
-        //    for (int i = 0; i < cantidadEmpleados; i++)
-        //    {
-        //        if (!root["empleados"][i]["marcas"].HasValues)//PROBAR
-        //        {
-        //            continue; // Si no tiene marcas pasa al siguiente empleado
-        //        }
-        //        string empleadoNom = root["empleados"][i]["nombre"].ToString();
-        //        string empleadoCed = root["empleados"][i]["cedula"].ToString();
-        //        string nombreObra = root["empleados"][i]["marcas"][0]["nombreLector"].ToString(); //Saco del lector. Nunca será null.
-        //        Empleado empleado = this.BuscarPorNombreYCedula(empleadoNom, empleadoCed);
-        //        if (empleado == null) //Si no fue añadido ya añadilo.
-        //        {
-        //            empleado = new Empleado();
-        //            empleado.Nombre = empleadoNom;
-        //            empleado.Cedula = empleadoCed;
-        //            this.Agregar(empleado);
-        //        }
-        //        Obra obra = ObraPorNombre(nombreObra);
-        //        AgregarEmpleado(empleado, obra);
-        //        //El resto de variables las modifican manualmente.
-        //    }
-        //}
-
-
-
-
-
-
-
-
         public void AgregarEmpleado(Empleado empleado, Obra obra)
         {
 
@@ -449,8 +382,8 @@ namespace LogicaAccesoDatos.Repositorios
             }
             else
             {
-               hastaDato = SetHoraA0(hasta);
-               desdeDato = SetHoraA0(desde);
+                hastaDato = SetHoraA0(hasta);
+                desdeDato = SetHoraA0(desde);
             }
             string response;
 
@@ -628,85 +561,6 @@ namespace LogicaAccesoDatos.Repositorios
             return Context.Obras.Where(o => o.Nombre == nombreLector).FirstOrDefault();
         }
 
-        public async void ConseguirMarcasDelEmpleadoDTO(ObraEmpleado empleadoObra)
-        {
-            DateTime desde = new DateTime(2024, 06, 01);
-            DateTime hasta = new DateTime(2024, 07, 01);
-
-            string response = LlamadaCloudtimes(desde, hasta).Result; //Formatear la respuesta cloudtimes.
-            ListadoEmpleadosDTO listado = JsonConvert.DeserializeObject<ListadoEmpleadosDTO>(response);
-            bool flag = false;
-            foreach (EmpleadoDTO emp in listado.Empleados)
-            {
-                if (emp.Marcas.Count() == 0)
-                {
-                    continue; //Si no tiene marcas pasa al siguiente empleado
-                }
-                if (empleadoObra.Empleado.Cedula == emp.Cedula && empleadoObra.Obra.Nombre == emp.Marcas.First().NombreLector)
-                {
-                    flag = true;
-                    for (int i = 0; i < emp.Marcas.Count(); i = i + 2)
-                    {
-                        Marca m = new Marca();
-                        m.Entrada = emp.Marcas.ElementAt(i).HoraMarcaje; //horaMarcaje: Se asume 2 marcas por día. 
-                        m.Salida = emp.Marcas.ElementAt(i + 1).HoraMarcaje; //horaMarcaje
-                        m.IdEmpleado = empleadoObra.IdEmpleado;
-                        m.IdObra = empleadoObra.IdObra;
-                        m.HorasLluvia = 0;
-                        if (!this.ExisteMarca(m))
-                        {
-                            this.AgregarMarca(m);
-                        }
-
-                    }
-                }
-            }
-        }
-
-        //public async void ConseguirMarcasDelEmpleado(ObraEmpleado empleadoObra)
-        //{
-        //    DateTime desde = new DateTime(2024, 06, 01);
-        //    DateTime hasta = new DateTime(2024, 07, 01);
-
-        //    string response = LlamadaCloudtimes(desde, hasta).Result; //Formatear la respuesta cloudtimes.
-        //    var root = JObject.Parse(response);
-        //    //int cant = root.response.count();
-        //    int cantidadEmpleados = (int)root["cantidadEmpleados"];
-        //    bool flag = false;
-        //    for (int i = 0; i < cantidadEmpleados && !flag; i++)
-        //    {
-        //        if (root["empleados"][i]["marcas"][0] == null)
-        //        {
-        //            continue; // Si no tiene marcas pasa al siguiente empleado
-        //        }
-        //        string empleadoNom = root["empleados"][i]["nombre"].ToString();
-        //        string empleadoCed = root["empleados"][i]["cedula"].ToString();
-        //        string nombreObra = root["empleados"][i]["marcas"][0]["nombreLector"].ToString(); //Saco del lector. Nunca será null.
-        //        if (empleadoObra.Empleado.Cedula == empleadoCed && empleadoObra.Obra.Nombre == nombreObra)
-        //        {
-        //            flag = true;
-        //            int num = 0;
-        //            foreach (var marca in root["empleados"][i]["marcas"])
-        //            {
-        //                if (num % 2 == 0)
-        //                {
-        //                    Marca m = new Marca();
-        //                    m.Entrada = (DateTime)marca.First; //horaMarcaje: Se asume 2 marcas por día. 
-        //                    m.Salida = (DateTime)marca.Next.First; //horaMarcaje
-        //                    m.IdEmpleado = empleadoObra.IdEmpleado;
-        //                    m.IdObra = empleadoObra.IdObra;
-        //                    m.HorasLluvia = 0;
-        //                    if (!this.ExisteMarca(m))
-        //                    {
-        //                        this.AgregarMarca(m);
-        //                    }
-        //                }
-        //                num++;
-        //            }
-        //        }
-        //    }
-        //}
-
         public Dictionary<ObraEmpleado, decimal> Liquidar(DateTime desde, DateTime hasta, Obra? obra, Empleado? empleado, bool inactivos)
         {
             if (obra != null && empleado != null)
@@ -749,7 +603,8 @@ namespace LogicaAccesoDatos.Repositorios
                 ret.Add(oe, liquidacionNominal);
                 return ret;
             }
-            else{
+            else
+            {
                 ObraEmpleado oe = new ObraEmpleado();
                 oe.Empleado = empleado;
                 Dictionary<ObraEmpleado, decimal> ret2 = new Dictionary<ObraEmpleado, decimal>();
@@ -768,7 +623,7 @@ namespace LogicaAccesoDatos.Repositorios
 
         public Dictionary<ObraEmpleado, decimal> LiquidacionObraEmpleado(ObraEmpleado oe, DateTime desde, DateTime hasta, bool inactivos) //Dos firmas, para el manejo desde controller y desde repo
         {
-            if(inactivos || (!inactivos && oe.Empleado.Activo))
+            if (inactivos || (!inactivos && oe.Empleado.Activo))
             {
                 decimal liquidacionNominal;
                 Dictionary<ObraEmpleado, decimal> ret = new Dictionary<ObraEmpleado, decimal>();
@@ -891,13 +746,6 @@ namespace LogicaAccesoDatos.Repositorios
             }
             return esta;
         }
-
-        private Obra ObraPorNombre(string nombreObra)
-        {
-            return Context.Obras.Where(o => o.Nombre == nombreObra).FirstOrDefault();
-
-        }
-
         private Empleado BuscarPorNombreYCedula(string empleadoNom, string empleadoCed)
         {
             return Context.Empleados.Where(e => (e.Nombre == empleadoNom && e.Cedula == empleadoCed) || (e.Cedula == empleadoCed)).FirstOrDefault();
@@ -971,128 +819,6 @@ namespace LogicaAccesoDatos.Repositorios
         internal ObraEmpleado GetEmpleadoObra(int idEmpleado, int idObra)
         {
             return Context.ObrasEmpleados.Where(oe => oe.IdObra == idObra && oe.IdEmpleado == idEmpleado).Include(oe => oe.Empleado).Include(oe => oe.Obra).FirstOrDefault();
-        }
-
-        internal void AgregarTodasLasMarcasPorIdEmpleado(int idEmpleado)
-        {
-
-            Fachada f = new Fachada();
-
-            Empleado empl = f.BuscarEmpleado(idEmpleado);
-            DateTime desde = new DateTime(2024, 06, 01);
-            DateTime hasta = new DateTime(2024, 06, 30);
-
-
-            string response = LlamadaCloudtimes(desde, hasta).Result; //Formatear la respuesta cloudtimes.
-            ListadoEmpleadosDTO listado = JsonConvert.DeserializeObject<ListadoEmpleadosDTO>(response);
-            bool flag = false;
-            foreach (EmpleadoDTO empDTO in listado.Empleados)
-            {
-                if (empDTO.Marcas.Count() == 0)
-                {
-                    continue; //Si no tiene marcas pasa al siguiente empleado
-                }
-
-                Obra obra = f.BuscarObraPorNombre(empDTO.Marcas.First().NombreLector);
-
-                foreach (Empleado emp in Context.Empleados)
-                {
-
-
-
-
-
-
-                    if (emp.Cedula == empDTO.Cedula)
-                    {
-                        flag = true;
-                        for (int i = 0; i < empDTO.Marcas.Count(); i = i + 2)
-                        {
-                            Marca m = new Marca();
-                            m.Entrada = empDTO.Marcas.ElementAt(i).HoraMarcaje; //horaMarcaje: Se asume 2 marcas por día. 
-                            m.Salida = empDTO.Marcas.ElementAt(i + 1).HoraMarcaje; //horaMarcaje
-                            m.IdEmpleado = emp.Id;
-                            m.IdObra = obra.IdObra;
-                            m.HorasLluvia = 0;
-                            if (!this.ExisteMarca(m))
-                            {
-                                this.AgregarMarca(m);
-                            }
-
-                        }
-                    }
-                }
-
-
-
-
-
-            }
-
-
-
-
-
-
-
-            ///////////////////////////////////////////////////////////////////////////////
-
-            //Fachada f = new Fachada();
-
-            //Empleado emp = f.BuscarEmpleado(idEmpleado);
-            //DateTime desde = new DateTime(2024, 06, 01);
-            //DateTime hasta = new DateTime(2024, 07, 01);
-
-            //string response = LlamadaCloudtimes(desde, hasta).Result; //Formatear la respuesta cloudtimes.
-            //var root = JObject.Parse(response);
-            ////int cant = root.response.count();
-            //int cantidadEmpleados = (int)root["cantidadEmpleados"];
-            //bool flag = false;
-            //for (int i = 0; i < cantidadEmpleados && !flag; i++)
-            //{
-            //    if (root["empleados"][i]["marcas"][0] == null)
-            //    {
-            //        continue; // Si no tiene marcas pasa al siguiente empleado
-            //    }
-            //    string empleadoNom = root["empleados"][i]["nombre"].ToString();
-            //    string empleadoCed = root["empleados"][i]["cedula"].ToString();
-            //    if(root["empleados"][i]["marcas"][0]["nombreLector"] == null) { continue; }
-            //    string nombreObra = root["empleados"][i]["marcas"][0]["nombreLector"].ToString(); //Saco del lector. Nunca será null.
-
-            //    Obra obra = f.BuscarObraPorNombre(nombreObra);
-            //    if (emp.Cedula == empleadoCed)
-            //    {
-            //        flag = true;
-            //        int num = 0;
-            //        foreach (var marca in root["empleados"][i]["marcas"])
-            //        {
-            //            if (num % 2 == 0)
-            //            {
-            //                Marca m = new Marca();
-            //                m.Entrada = (DateTime)marca.First; //horaMarcaje: Se asume 2 marcas por día.
-            //                if(marca.Next == null)
-            //                {
-            //                    m.Salida = (DateTime)marca.First;
-            //                }
-            //                else
-            //                {
-            //                m.Salida = (DateTime)marca.Next.First; //horaMarcaje
-
-            //                }
-            //                m.IdEmpleado = emp.Id;
-            //                m.IdObra = obra.IdObra;
-            //                m.HorasLluvia = 0;
-            //                if (!this.ExisteMarca(m))
-            //                {
-            //                    this.AgregarMarca(m);
-            //                }
-            //            }
-            //            num++;
-            //        }
-            //    }
-            //}
-
-
         }
 
         internal int HorasTotales(List<Marca> marcas)

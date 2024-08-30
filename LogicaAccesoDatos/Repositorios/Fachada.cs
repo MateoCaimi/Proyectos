@@ -1,14 +1,5 @@
 ﻿using LogicaNegocio.Entidades;
-using LogicaNegocio.Excepciones;
 using LogicaNegocio.ViewModel;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace LogicaAccesoDatos.Repositorios
 {
@@ -30,26 +21,12 @@ namespace LogicaAccesoDatos.Repositorios
             RepositorioSolicitud = new RepositorioSolicitud();
             RepositorioEmpleado = new RepositorioEmpleado();
         }
-        public Obra ObraPorDireccion(string direccion)
-        {
-            return RepositorioObra.ObraPorDireccion(direccion);
-        }
-        public Obra ObraPorNombre(string nombre)
-        {
-            return RepositorioObra.ObraPorNombre(nombre);
-        }
+
         public IEnumerable<Obra> ObrasFiltradas(string? nombre, string? direccion, bool? finalizada)
         {
             return RepositorioObra.ObrasFiltradas(nombre, direccion, finalizada);
         }
-        public Obra BuscarPorNombre(string nombre)
-        {
-            return RepositorioObra.BuscarPorNombre(nombre);
-        }
-        public IEnumerable<Obra> BuscarPorDireccion(string direccion)
-        {
-            return RepositorioObra.BuscarPorDireccion(direccion);
-        }
+
         public void FinalizarObra(Obra obra)
         {
             RepositorioObra.FinalizarObra(obra);
@@ -62,14 +39,7 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioObra.MaterialMasSolicitado(IdObra);
         }
-        /*public Proveedor ProveedorMasComun(int IdObra)
-        {
-            return RepositorioObra.ProveedorMasComun(IdObra);
-        }*/
-        public Usuario SolicitanteMasComun(int IdObra)
-        {
-            return RepositorioObra.SolicitanteMasComun(IdObra);
-        }
+
         public UDeOficina AprobadorMasComun(int IdObra)
         {
             return RepositorioObra.AprobadorMasComun(IdObra);
@@ -77,10 +47,6 @@ namespace LogicaAccesoDatos.Repositorios
         public void AgregarObra(Obra item)
         {
             RepositorioObra.Agregar(item);
-        }
-        public void EliminarObra(Obra item)
-        {
-            RepositorioObra.Eliminar(item);
         }
         public void ModificarObra(Obra item)
         {
@@ -98,18 +64,6 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioObra.TomarObrasDeUnUsuarioObra(nomUsuarioObra);
         }
-        public IEnumerable<Plano> PlanosTotales(Obra obra)
-        {
-            return RepositorioPlano.PlanosTotales(obra);
-        }
-        public IEnumerable<Plano> PlanosFiltrados(Obra obra, int? tipo, string? nombre, DateTime? fechaDesde, DateTime? fechaHasta)
-        {
-            return RepositorioPlano.PlanosFiltrados(obra, tipo, nombre, fechaDesde, fechaHasta);
-        }
-        public IEnumerable<Plano> PlanosPorAntiguedad(Obra obra)
-        {
-            return RepositorioPlano.PlanosPorAntiguedad(obra);
-        }
         public IEnumerable<TipoPlano> BuscarTiposPlanos()
         {
             return RepositorioPlano.BuscarTiposPlanos();
@@ -117,14 +71,6 @@ namespace LogicaAccesoDatos.Repositorios
         public void AgregarPlano(Plano item)
         {
             RepositorioPlano.Agregar(item);
-        }
-        public void EliminarPlano(Plano item)
-        {
-            RepositorioPlano.Eliminar(item);
-        }
-        public void ModificarPlano(Plano item)
-        {
-            RepositorioPlano.Modificar(item);
         }
         public Plano BuscarPlano(int id)
         {
@@ -151,11 +97,6 @@ namespace LogicaAccesoDatos.Repositorios
         public void AgregarUsuario(Usuario usuario)
         {
             RepositorioUsuario.Agregar(usuario);
-        }
-
-        public UDeObra BuscarUsuarioObra(int idACargo)
-        {
-            return (UDeObra)RepositorioUsuario.Buscar(idACargo);
         }
         public void EliminarUsuario(Usuario usuario)
         {
@@ -201,12 +142,6 @@ namespace LogicaAccesoDatos.Repositorios
         {
             RepositorioMaterial.Agregar(nuevoMaterial);
         }
-
-        public void EliminarMaterial(Material material)
-        {
-            RepositorioMaterial.Eliminar(material);
-        }
-
         public Material BuscarMaterial(int id)
         {
             return RepositorioMaterial.Buscar(id);
@@ -236,12 +171,6 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioUsuario.UsuarioPorNombreUsuario(nombreUsuario);
         }
-
-        public List<Plano> CrearPlanosMultiples(int idObra, int idTipoPlano, List<IFormFile> postedFiles)
-        {
-            return RepositorioPlano.CrearPlanosMultiples(idObra, idTipoPlano, postedFiles);
-        }
-
         public void AgregarSolicitud(Solicitud solicitud)
         {
             RepositorioSolicitud.Agregar(solicitud);
@@ -271,12 +200,6 @@ namespace LogicaAccesoDatos.Repositorios
         {
             RepositorioSolicitud.ConfigurarMaterial(laSolicitudConMateriales, materialesSeleccionadosConCantidad);
         }
-
-        public IEnumerable<Solicitud> BuscarSolicitudPendientes()
-        {
-            return RepositorioSolicitud.BuscarSolicitudesPendientes();
-        }
-
         public void AceptarSolicitud(Solicitud solicitud, UDeOficina aprobador)
         {
             RepositorioSolicitud.AceptarSolicitud(solicitud, aprobador);
@@ -291,11 +214,6 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioSolicitud.BuscarSolicitudPendientesLista();
         }
-        public List<Solicitud> BuscarSolicitudAprobadasParaUnUObra(string? nomObrero)
-        {
-           return RepositorioSolicitud.BuscarSolicitudesAprobadasParaUnUObra(nomObrero);
-        }
-
         public List<Solicitud> BuscarSolicitudConfirmadasLista()
         {
             return RepositorioSolicitud.BuscarSolicitudConfirmada();
@@ -315,7 +233,7 @@ namespace LogicaAccesoDatos.Repositorios
         {
             RepositorioObra.ConsumirMateriales(item, obra);
         }
-        
+
         public IEnumerable<Empleado> TomarTodosEmpleados()
         {
             return RepositorioEmpleado.TomarTodos();
@@ -330,75 +248,19 @@ namespace LogicaAccesoDatos.Repositorios
         {
             RepositorioEmpleado.Modificar(nuevoEmpleado);
         }
-
-        public async Task<Task<string>> LlamadaClodtimes(DateTime inicio, DateTime fin)
-        {
-            return RepositorioEmpleado.LlamadaCloudtimes(inicio, fin);
-        }
-
         public void AsignacionHoras(Obra obra, int horasLluvia, DateTime dia)
         {
             RepositorioObra.AsignacionHorasLluvia(obra, horasLluvia, dia);
         }
-
-        public int HorasEmpleadoEnObra(ObraEmpleado oe, DateTime fechaDesde, DateTime fechaHasta)
-        {
-            return RepositorioObra.HorasEmpleadoEnObra(oe, fechaDesde, fechaHasta);
-        }
-
-        public int HorasLluviaEmpleadoEnObra(ObraEmpleado oe, DateTime fechaDesde, DateTime fechaHasta)
-        {
-            return RepositorioObra.HorasLluviaEmpleadoEnObra(oe, fechaDesde, fechaHasta);
-        }
-
         public List<ObraEmpleado> GetEmpleadosObra(Obra obra)
         {
             return RepositorioObra.GetEmpleadosObra(obra);
         }
-
-        //public void AgregarEmpleadosAObra()
-        //{
-        //    RepositorioEmpleado.AgregarEmpleadosAObra();
-        //}
-
-        public bool AgregarEmpleadosAObraDTO(DateTime desde, DateTime hasta)
-        {
-            try
-            {
-                return RepositorioEmpleado.AgregarEmpleadosAObraDTO(desde, hasta);
-            }
-            catch(EmpleadoException e)
-            {
-                    throw new EmpleadoException(e.Message);
-            }
-            catch (AggregateException err)
-            {
-                throw new EmpleadoException(err.InnerException.Message);
-            }
-        }
-
         public void Precarga()
         {
             RepositorioEmpleado.Precarga();
             RepositorioPlano.Precarga();
         }
-
-        public bool AgregarTodasLasMarcasDTO(DateTime desde, DateTime hasta)
-        {
-            try
-            {
-                return RepositorioEmpleado.ConseguirTodasLasMarcas(desde, hasta).Result;
-            }
-            catch (EmpleadoException e)
-            {
-                throw new EmpleadoException(e.Message);
-            }
-            catch (AggregateException err)
-            {
-                throw new EmpleadoException(err.InnerException.Message);
-            }
-        }
-
         public void AgregarTipoEmpleado(TipoEmpleado tipo)
         {
             RepositorioEmpleado.AgregarTipo(tipo);
@@ -413,22 +275,10 @@ namespace LogicaAccesoDatos.Repositorios
         {
             RepositorioEmpleado.AgregarEmp(empleado, desdeForm);
         }
-
-        public void DarEgreso(ObraEmpleado empleado, DateTime fecha)
-        {
-            RepositorioObra.DarEgreso(empleado, fecha);
-        }
-
         public ObraEmpleado BuscarEmpleadoObra(int idEmpleado, int idObra)
         {
             return RepositorioObra.EmpleadoObra(idEmpleado, idObra);
         }
-        
-        //public void conseguirMarcasEmpleado(ObraEmpleado oe)
-        //{
-        //   RepositorioEmpleado.ConseguirMarcasDelEmpleado(oe);
-        //}
-
         public void CambiarEstadoAVisto(Solicitud solicitud)
         {
             RepositorioSolicitud.CambiarEstadoAVisto(solicitud);
@@ -458,32 +308,6 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioEmpleado.Liquidar(desde, hasta, obra, empleado, inactivos);
         }
-
-        //public Dictionary<ObraEmpleado, double> LiquidacionTotal(DateTime desde, DateTime hasta)
-        //{
-        //    return RepositorioEmpleado.LiquidacionTotal(desde, hasta);
-        //}
-
-        //public Dictionary<ObraEmpleado, double> LiquidarEmpleadoObra(ObraEmpleado oe, DateTime desde, DateTime hasta)
-        //{
-        //    return RepositorioEmpleado.LiquidacionObraEmpleado(oe, desde, hasta);
-        //}
-
-        //public Dictionary<ObraEmpleado, double> LiquidarEmpleado(Empleado empleado, DateTime desde, DateTime hasta)
-        //{
-        //    return RepositorioEmpleado.LiquidacionEmpleado(empleado, desde, hasta);
-        //}
-
-        //public Dictionary<ObraEmpleado, double> LiquidarObra(Obra obra, DateTime desde, DateTime hasta)
-        //{
-        //    return RepositorioEmpleado.LiquidacionObra(obra, desde, hasta);
-        //}
-
-        public void AgregarTodasLasMarcasPorIdEmpleado(int idEmpleado)
-        {
-             RepositorioEmpleado.AgregarTodasLasMarcasPorIdEmpleado(idEmpleado);
-        }
-
         public Obra BuscarObraPorNombre(string nombreObra)
         {
             return RepositorioObra.BuscarPorNombre(nombreObra);
@@ -538,57 +362,18 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioObra.TraerIdPorNombreObra(name);
         }
-
-        public bool ExistePlano(byte[] plano, string planoNombre)
-        {
-            return RepositorioPlano.ExistePlano(plano, planoNombre);
-        }
-
-
-        //----------------------------------------------
-
-
-
-        public TipoPlano BuscarTipoPlanoPorNombre(string nombreCarpeta)
-        {
-            return RepositorioPlano.TipoPlanoPorNombre(nombreCarpeta);
-        }
-
         public TipoPlano crearTipoPlanos(string nombreCarpeta, int idObra)
         {
             return RepositorioPlano.CrearTipoPlano(nombreCarpeta, idObra);
         }
-
-        public void ActualizarFechaUltimaModificacion(TipoPlano tipoPlanoActual, string ultimaModificacion)
-        {
-            RepositorioPlano.ActualizarFechaUltimaModificacion(tipoPlanoActual, ultimaModificacion);
-        }
-
         public List<TipoPlano> BuscarTiposPlanosPorObra(int idObra)
         {
             return RepositorioPlano.BuscarTipoPlanoPorObra(idObra);
         }
-
-        public int TraerIdPorNombreTipoPlano(string v)
-        {
-            return RepositorioPlano.TraerIdPorNombreTipoPlano(v);
-        }
-
-        public List<Solicitud> BuscarTodasLasSolicitudes()
-        {
-            return RepositorioSolicitud.TomarTodos2();
-        }
-
         public void CrearCarpeta(string path, string anterior, Obra obra)
         {
             RepositorioPlano.CrearCarpeta(path, anterior, obra);
         }
-
-        public Carpeta ConseguirCarpetaContenedora(string webUrl, Obra obra)
-        {
-            return RepositorioPlano.ConseguirCarpetaContenedora(webUrl, obra);
-        }
-
         public Carpeta ObtenerCarpeta(string name, Obra obra)
         {
             return RepositorioPlano.BuscarCarpeta(name, obra);

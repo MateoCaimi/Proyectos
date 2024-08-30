@@ -2,14 +2,6 @@
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones;
 using LogicaNegocio.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace LogicaAccesoDatos.Repositorios
 {
@@ -41,7 +33,7 @@ namespace LogicaAccesoDatos.Repositorios
                 Context.Materiales.Add(nuevoMaterial);
                 Context.SaveChanges();
             }
-            catch(MaterialException m)
+            catch (MaterialException m)
             {
                 throw new MaterialException(m.Message);
             }
@@ -89,7 +81,7 @@ namespace LogicaAccesoDatos.Repositorios
                 Context.Materiales.Update(material);
                 Context.SaveChanges();
             }
-            catch(MaterialException e)
+            catch (MaterialException e)
             {
                 throw new MaterialException(e.Message);
             }

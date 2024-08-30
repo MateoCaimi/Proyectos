@@ -6,12 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using MVC.Models;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text.Json.Serialization;
 using System.Text.Json;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using Microsoft.AspNetCore.Http;
+using System.Text.Json.Serialization;
 namespace MVC.Controllers
 {
     public class ObraController : Controller
@@ -262,7 +259,7 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-           
+
 
             try
             {
@@ -483,7 +480,7 @@ namespace MVC.Controllers
         [HttpGet("{id}/cronograma")]
         public IActionResult ObtenerCronograma(int id)
         {
-        
+
             if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
                 return RedirectToAction("Index", "Usuario");
@@ -560,7 +557,7 @@ namespace MVC.Controllers
 
             var location = new Uri($"{Request.Scheme}://{Request.Host}{Request.Path}{Request.QueryString}");
 
-            var uri = location.AbsoluteUri.Replace(location.AbsolutePath,"");
+            var uri = location.AbsoluteUri.Replace(location.AbsolutePath, "");
 
             string data = uri + $"/Plano?idObra={id}"; //Se cambia el link una vez hecho el deploy, pero la idea sería esta.
             string url = $"https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&qzone=30&data={data}";
@@ -594,9 +591,9 @@ namespace MVC.Controllers
 
 
         }
-            [HttpGet("{id}/Qr")]
-            public IActionResult Qr(int id)
-            {
+        [HttpGet("{id}/Qr")]
+        public IActionResult Qr(int id)
+        {
 
             if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
@@ -619,30 +616,30 @@ namespace MVC.Controllers
 
             Obra obra = Fachada.BuscarObra(id);
 
-                if (obra == null || obra.QR == null)
-                {
-                    return NotFound();
-                }
-                MemoryStream stream = new MemoryStream(obra.QR);
-                Bitmap bitmap = new Bitmap(stream);
-                Bitmap tempBitmap = new Bitmap(bitmap.Width, bitmap.Height); //Se crea uno vacío y se dibuja sobre ese.
-                Graphics graphics = Graphics.FromImage(tempBitmap);
-                {
+            if (obra == null || obra.QR == null)
+            {
+                return NotFound();
+            }
+            MemoryStream stream = new MemoryStream(obra.QR);
+            Bitmap bitmap = new Bitmap(stream);
+            Bitmap tempBitmap = new Bitmap(bitmap.Width, bitmap.Height); //Se crea uno vacío y se dibuja sobre ese.
+            Graphics graphics = Graphics.FromImage(tempBitmap);
+            {
                 // Draw the original bitmap onto the graphics of the new bitmap
-                    graphics.DrawImage(bitmap, 0, 0);
-                }
-                Font arial = new Font("Arial", 50, FontStyle.Regular);
-                Brush brush = new SolidBrush(Color.Black);
-                string text = "  Obra: " + obra.Nombre;
-                Rectangle rectangle = new Rectangle(0, 0, 1000, 200);
-                Pen pen = new Pen(Color.White, 2);
-                graphics.DrawRectangle(pen, rectangle);
-                graphics.DrawString(text, arial, brush, rectangle);
-                //tempBitmap.Save("C:\\Users\\user\\Desktop\\image.png");
-                ImageConverter converter = new ImageConverter();
+                graphics.DrawImage(bitmap, 0, 0);
+            }
+            Font arial = new Font("Arial", 50, FontStyle.Regular);
+            Brush brush = new SolidBrush(Color.Black);
+            string text = "  Obra: " + obra.Nombre;
+            Rectangle rectangle = new Rectangle(0, 0, 1000, 200);
+            Pen pen = new Pen(Color.White, 2);
+            graphics.DrawRectangle(pen, rectangle);
+            graphics.DrawString(text, arial, brush, rectangle);
+            //tempBitmap.Save("C:\\Users\\user\\Desktop\\image.png");
+            ImageConverter converter = new ImageConverter();
 
             return File((byte[])converter.ConvertTo(tempBitmap, typeof(byte[])), "image/png", obra.Nombre + " - QR.png");
-            }
+        }
 
 
         // GET: ObraController/Consumo
@@ -712,13 +709,13 @@ namespace MVC.Controllers
 
             try
             {
-                if(TempData["ListaActualConsumo"] == null)
+                if (TempData["ListaActualConsumo"] == null)
                 {
                     throw new ObraException("No se pudo consumir ningun material");
                 }
                 List<MaterialConsumoViewModel> item = JsonConvert.DeserializeObject<List<MaterialConsumoViewModel>>((string)TempData["ListaActualConsumo"]);
                 Obra obra = Fachada.BuscarObra(IdObra);
-                if(Fachada.MaterialesCheckStock(item, obra))
+                if (Fachada.MaterialesCheckStock(item, obra))
                 {
                     throw new ObraException("No se puede consumir más que el stock de un material en específico");
                 }
@@ -742,9 +739,9 @@ namespace MVC.Controllers
                     };
                     HttpContext.Session.SetString("MaterialesAlertar", System.Text.Json.JsonSerializer.Serialize(materialesAlertar, opciones)); //Uso el distinct para no repetir alertas. Ej: se baja de la barrera, y se consume de vuelta
                 }
-                ViewBag.Mensaje ="Materiales consumidos con exito";
+                ViewBag.Mensaje = "Materiales consumidos con exito";
                 return RedirectToAction("Consumo", new { idObra = IdObra });
-                
+
             }
             catch (Exception e)
             {

@@ -3,12 +3,6 @@ using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones;
 using LogicaNegocio.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LogicaAccesoDatos.Repositorios
 {
@@ -52,12 +46,6 @@ namespace LogicaAccesoDatos.Repositorios
 
             return Context.Solicitudes.ToList();
         }
-
-        public List<Solicitud> TomarTodos2()
-        {
-            return Context.Solicitudes.Include(s => s.Obra).Include(s => s.Solicitante).Include(s => s.Aprovador).ToList();
-        }
-
         public IEnumerable<Solicitud> SolicitudesDeObra(int idObra)
         {
             return Context.Solicitudes.Include(s => s.Solicitante).Include(s => s.Obra).Where(s => s.IdObra == idObra);
@@ -92,44 +80,6 @@ namespace LogicaAccesoDatos.Repositorios
             solicitud.Estado = Estado.Solicitado;
             solicitud.Comentario = comentario;
             return solicitud;
-        }
-
-        //internal void AsignarMat(SolicitudMaterial solicitudMaterial)
-        //{
-        //    Fachada fachada = new Fachada();
-        //    if (solicitudMaterial != null)
-        //    {
-        //        solicitudMaterial.Material = fachada.BuscarMaterial(solicitudMaterial.IdMaterial);
-        //        Context.SaveChanges();
-        //    }
-        //}
-
-        internal IEnumerable<Solicitud> BuscarSolicitudesPendientes()
-        {
-            IEnumerable<Solicitud> solicitudesPendientes = Context.Solicitudes.Include(s => s.Obra).Include(s => s.Solicitante).Include(s => s.Aprovador).Where(sp => sp.Estado == Estado.Solicitado);
-
-            //foreach (Solicitud soli in solicitudesPendientes)
-            //{
-            //    soli.Obra = fachada.BuscarObra(soli.IdObra);
-            //    soli.Solicitante = fachada.BuscarUsuarioObra(soli.IdUsuario);
-            //}
-
-            return solicitudesPendientes;
-        }
-
-        internal IEnumerable<Solicitud> BuscarSolicitudesAprobadas()
-        {
-            return Context.Solicitudes.Where(sp => sp.Estado == Estado.Aprobado);
-        }
-
-        internal IEnumerable<Solicitud> BuscarSolicitudesRechazadas()
-        {
-            return Context.Solicitudes.Where(sp => sp.Estado == Estado.Rechazado);
-        }
-
-        internal IEnumerable<Solicitud> BuscarSolicitudesRecibido()
-        {
-            return Context.Solicitudes.Where(sp => sp.Estado == Estado.Rechazado);
         }
 
         internal void ConfigurarMaterial(IEnumerable<SolicitudMaterial> laSolicitudConMateriales, Dictionary<int, int> materialesSeleccionadosConCantidad)
@@ -193,28 +143,28 @@ namespace LogicaAccesoDatos.Repositorios
         }
         internal void ConfirmarSolicitud(Solicitud solicitud, Usuario logueado)
         {
-           
-                List<SolicitudMaterial> materialesSolicitud = MaterialesDeSolicitud(solicitud.Id).ToList();
-                foreach (SolicitudMaterial sm in materialesSolicitud)
+
+            List<SolicitudMaterial> materialesSolicitud = MaterialesDeSolicitud(solicitud.Id).ToList();
+            foreach (SolicitudMaterial sm in materialesSolicitud)
+            {
+                ObraMaterial obraMaterialExistente = ExisteMaterialEnObra(solicitud, sm);
+                if (obraMaterialExistente != null)
                 {
-                    ObraMaterial obraMaterialExistente = ExisteMaterialEnObra(solicitud, sm);
-                    if (obraMaterialExistente != null)
-                    {
-                        obraMaterialExistente.Stock += sm.Cantidad;
-                    }
-                    else
-                    {
-                        ObraMaterial om = new ObraMaterial();
-                        om.IdMaterial = sm.IdMaterial;
-                        om.IdObra = solicitud.IdObra;
-                        om.Stock = sm.Cantidad;
-                        om.Validar();
-                        Context.ObrasMateriales.Add(om);
-                    }
+                    obraMaterialExistente.Stock += sm.Cantidad;
                 }
-                solicitud.Estado = Estado.Recibido;
-                Context.SaveChanges();
-           
+                else
+                {
+                    ObraMaterial om = new ObraMaterial();
+                    om.IdMaterial = sm.IdMaterial;
+                    om.IdObra = solicitud.IdObra;
+                    om.Stock = sm.Cantidad;
+                    om.Validar();
+                    Context.ObrasMateriales.Add(om);
+                }
+            }
+            solicitud.Estado = Estado.Recibido;
+            Context.SaveChanges();
+
         }
 
         private ObraMaterial ExisteMaterialEnObra(Solicitud solicitud, SolicitudMaterial sm)
@@ -227,19 +177,6 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return Context.Solicitudes.Include(s => s.Obra).Where(sp => sp.Estado == Estado.Solicitado).ToList();
         }
-
-        internal List<Solicitud> BuscarSolicitudesAprobadasParaUnUObra(string? nomObrero)
-        {
-            Usuario u = this.BuscarUsuarioXNombreU(nomObrero);
-            return Context.Solicitudes.Include(s => s.Obra).Where(sp => sp.Estado == Estado.Aprobado && sp.Obra.UsuarioACargo.Id == u.Id).ToList();
-       //     return Context.Solicitudes.Include(s => s.Obra).Include(s => s.Solicitante).Where(sp => sp.Estado == Estado.Aprobado && sp.Obra.IdACargo == u.Id).ToList();
-        }
-
-        private Usuario BuscarUsuarioXNombreU(string? nomObrero)
-        {
-            return Context.Usuarios.Where(u => u.NombreUsuario == nomObrero).FirstOrDefault();
-        }
-
         internal List<Solicitud> BuscarSolicitudConfirmada()
         {
             return Context.Solicitudes.Include(s => s.Obra).Where(sp => sp.Estado == Estado.Recibido).ToList();

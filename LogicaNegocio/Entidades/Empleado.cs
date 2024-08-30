@@ -1,12 +1,7 @@
 ﻿using LogicaNegocio.Excepciones;
 using LogicaNegocio.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LogicaNegocio.Entidades
 {
@@ -32,7 +27,7 @@ namespace LogicaNegocio.Entidades
         public string? Banco { get; set; }
         public decimal IncentivoXHora { get; set; }
 
-        public bool Activo {  get; set; }
+        public bool Activo { get; set; }
 
 
         public Empleado()
@@ -115,7 +110,7 @@ namespace LogicaNegocio.Entidades
 
         public void ValidarNulos()
         {
-            if(this.FechaIngreso == null)
+            if (this.FechaIngreso == null)
             {
                 throw new EmpleadoException("Debe seleccionar una fecha de ingreso.");
             }

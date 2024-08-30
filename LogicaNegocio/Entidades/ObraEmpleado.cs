@@ -1,13 +1,8 @@
 ﻿using LogicaNegocio.Excepciones;
 using LogicaNegocio.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LogicaNegocio.Entidades
 {
@@ -26,13 +21,13 @@ namespace LogicaNegocio.Entidades
 
         public ObraEmpleado()
         {
-            
+
         }
 
         public void Validar()
         {
             ValidarFechaIngreso();
-            
+
         }
 
         public void ValidarFechaIngreso() //Esto podemos cambiarlo capaz

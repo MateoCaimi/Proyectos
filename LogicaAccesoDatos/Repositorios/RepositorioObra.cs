@@ -4,12 +4,6 @@ using LogicaNegocio.Excepciones;
 using LogicaNegocio.Interfaces;
 using LogicaNegocio.ViewModel;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace LogicaAccesoDatos.Repositorios
 {
@@ -201,7 +195,7 @@ namespace LogicaAccesoDatos.Repositorios
             }
             return retorno;
             //No estaba funcionando la consulta. Nose porque
-           // return Context.Obras.Where(o=> o.IdObra == id).Include(o=>o.UsuarioACargo).FirstOrDefault();
+            // return Context.Obras.Where(o=> o.IdObra == id).Include(o=>o.UsuarioACargo).FirstOrDefault();
         }
 
         public Material MaterialMasSolicitado(int IdObra)
@@ -262,31 +256,6 @@ namespace LogicaAccesoDatos.Repositorios
                 return null;
             }
         }
-        /*public Proveedor ProveedorMasComun(int IdObra)
-        {
-            Dictionary<Proveedor, int> retorno = new Dictionary<Proveedor, int>();
-            IEnumerable<Solicitud> solicitudesObra = Context.Solicitudes.Where(s => s.IdObra == IdObra);
-            foreach (Solicitud s in solicitudesObra)
-            {
-                KeyValuePair<Proveedor, int> var = retorno.First(r => r.Key.Id == s.IdProveedor);
-                if (var.Key != null)
-                {
-                    retorno.Add(BuscarProveedor((int)s.IdProveedor), 1);
-                }
-                else
-                {
-                    var = new KeyValuePair<Proveedor, int>(BuscarProveedor((int)s.IdProveedor), var.Value + 1);
-                }
-            }
-            if (retorno.Count > 0)
-            {
-                return retorno.Max().Key;
-            }
-            else
-            {
-                return null;
-            }
-        }*/
         public Usuario SolicitanteMasComun(int IdObra)
         {
             Dictionary<Usuario, int> retorno = new Dictionary<Usuario, int>();
@@ -337,11 +306,6 @@ namespace LogicaAccesoDatos.Repositorios
                 return null;
             }
         }
-        /*private Proveedor BuscarProveedor(int idProveedor)
-        {
-            return Context.Proveedores.Find(idProveedor);
-        }*/
-
         private bool TieneSolicitudesPendientes(Obra obra)
         {
             return Context.Solicitudes.Where(s => s.Obra.IdObra == obra.IdObra && s.Estado == Estado.Solicitado).Any();
@@ -466,43 +430,6 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return Context.Marcas.Where(m => m.Entrada.Day == dia.Day && m.Salida.Day == dia.Day && m.IdEmpleado == oe.IdEmpleado).FirstOrDefault();
         }
-
-        public int HorasEmpleadoEnObra(ObraEmpleado oe, DateTime fechaDesde, DateTime fechaHasta)
-        {
-            int horas = 0;
-            List<Marca> marcasEmpleado = this.marcasEmpleado(oe, fechaDesde, fechaHasta);
-
-            foreach (Marca m in marcasEmpleado)
-            {
-                int marcaEnHoras = m.HorasTrabajadas();
-                horas += marcaEnHoras;
-            }
-
-            return horas;
-        }
-
-        public int HorasLluviaEmpleadoEnObra(ObraEmpleado oe, DateTime fechaDesde, DateTime fechaHasta)
-        {
-            int horas = 0;
-            List<Marca> marcasEmpleado = this.marcasEmpleado(oe, fechaDesde, fechaHasta);
-
-            foreach (Marca m in marcasEmpleado)
-            {
-                int marcaEnHoras = m.HorasLluvia;
-                horas += marcaEnHoras;
-            }
-
-            return horas;
-        }
-
-        private List<Marca> marcasEmpleado(ObraEmpleado oemp, DateTime fechaDesde, DateTime fechaHasta)
-        {
-            return Context.Marcas.Where(ma => ma.Empleado.IdObra == oemp.IdObra
-            && ma.Empleado.IdEmpleado == oemp.IdEmpleado
-            && ma.Entrada.Day == fechaDesde.Day
-            && ma.Salida.Day == fechaHasta.Day).ToList();
-        }
-
         public List<ObraEmpleado> GetEmpleadosObra(Obra obra)
         {
             return Context.ObrasEmpleados.Where(oe => oe.IdObra == obra.IdObra).Include(oe => oe.Empleado).Include(oe => oe.Empleado.TipoEmpleado).Include(oe => oe.Obra).ToList();
@@ -513,28 +440,9 @@ namespace LogicaAccesoDatos.Repositorios
             return Context.ObrasEmpleados.Where(oe => oe.IdObra == idObra && oe.IdEmpleado == idEmpleado).Include(oe => oe.Empleado).Include(oe => oe.Obra).Include(oe => oe.Empleado.TipoEmpleado).FirstOrDefault();
         }
 
-        public void DarEgreso(ObraEmpleado empleado, DateTime fecha)
-        {
-            try
-            {
-                empleado = this.EmpleadoObra(empleado.IdEmpleado, empleado.IdObra);
-                empleado.FechaEgreso = fecha;
-                Context.SaveChanges();
-            }
-            catch (EmpleadoException ee)
-            {
-                throw new EmpleadoException(ee.Message);
-            }
-        }
-
-        private bool ExisteEmpleadoEnObra(ObraEmpleado oe)
-        {
-            return Context.ObrasEmpleados.Where(e => e.IdObra == oe.IdObra && e.IdEmpleado == oe.IdEmpleado).Any();
-        }
-
         internal decimal CalcularTotalLiquidacion(List<ObraEmpleadoLiquidacionViewModel> vm)
         {
-           decimal total = 0;
+            decimal total = 0;
 
             foreach (ObraEmpleadoLiquidacionViewModel emp in vm)
             {
@@ -547,7 +455,7 @@ namespace LogicaAccesoDatos.Repositorios
         internal int TraerIdPorNombreObra(string name)
         {
             Obra obra = Context.Obras.Where(o => name.ToLower().Contains(o.Nombre.ToLower())).FirstOrDefault();
-            if(obra == null)
+            if (obra == null)
             {
                 return 0;
             }
@@ -556,26 +464,9 @@ namespace LogicaAccesoDatos.Repositorios
                 return obra.IdObra;
             }
         }
-
-        internal void Precarga()
-        {
-            int cantObras = this.TomarTodos().Count();
-            if(cantObras == 0)
-            {
-                Obra obraGenerica = new Obra();
-                obraGenerica.Nombre = "<<A INGRESAR>>";
-                obraGenerica.Direccion = "<<A INGRESAR>>";
-                obraGenerica.FechaInicio = DateTime.Now;
-                obraGenerica.IdACargo = 1;
-                obraGenerica.Validar();
-                Context.Obras.Add(obraGenerica);
-                Context.SaveChanges();
-            }
-        }
-
         internal bool ActualizarPlanosEnObra(Obra obra)
         {
-            if(obra.UltimaActualizacion != null)
+            if (obra.UltimaActualizacion != null)
             {
                 TimeSpan? diff = DateTime.Now - obra.UltimaActualizacion;
                 return diff.Value.Minutes > 5; //solo cada cinco minutos actualizar
@@ -591,7 +482,7 @@ namespace LogicaAccesoDatos.Repositorios
 
         internal Obra BuscarObraPorCapataz(string? nomObrero)
         {
-           return Context.Obras.Where(o => o.UsuarioACargo.NombreUsuario == nomObrero).FirstOrDefault();
+            return Context.Obras.Where(o => o.UsuarioACargo.NombreUsuario == nomObrero).FirstOrDefault();
         }
     }
 }

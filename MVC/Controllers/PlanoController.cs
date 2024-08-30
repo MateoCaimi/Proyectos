@@ -1,36 +1,17 @@
-﻿using Azure.Core;
-using LogicaAccesoDatos.EF;
+﻿using Azure.Identity;
 using LogicaAccesoDatos.Repositorios;
 using LogicaNegocio.Entidades;
+using LogicaNegocio.Entidades.DTOs;
 using LogicaNegocio.Excepciones;
-using LogicaNegocio.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Graph.Models;
 using Microsoft.Graph;
+using Microsoft.Graph.Models;
 using Microsoft.Identity.Client;
-using Microsoft.IdentityModel.Tokens;
 using MVC.Models;
-using Microsoft.Graph.Authentication;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net.Http.Headers;
-using System.Numerics;
 using System.Text.RegularExpressions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using Azure.Identity;
-using System.Net.Http;
-using Microsoft.Graph.Models.TermStore;
-using static System.Formats.Asn1.AsnWriter;
-using NuGet.Protocol;
-using ServiceStack.Web;
-using Newtonsoft.Json;
-using System.Security.Policy;
-using LogicaNegocio.Entidades.DTOs;
-using ServiceStack;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.IO;
-using NuGet.Common;
 
 
 namespace MVC.Controllers
@@ -67,12 +48,12 @@ namespace MVC.Controllers
             {
                 if (Fachada.ActualizarPlanosEnObra(obra))
                 {
-                Fachada.ActualizarFechaUltimaActualizacion(obra);
+                    Fachada.ActualizarFechaUltimaActualizacion(obra);
 
-                list = await GraphRecursivoParalelizado(idObra);//await TomarPdfRecursivo(siteId, path);
-                Fachada.MapearTíposACarpetas();
-                List<Plano> planos = await this.FormateoDePlanos(list);
-                List<Plano> planos2 = Fachada.TomarTodosPlanos().ToList();
+                    list = await GraphRecursivoParalelizado(idObra);//await TomarPdfRecursivo(siteId, path);
+                    Fachada.MapearTíposACarpetas();
+                    List<Plano> planos = await this.FormateoDePlanos(list);
+                    List<Plano> planos2 = Fachada.TomarTodosPlanos().ToList();
                 }
             }
 
@@ -82,7 +63,7 @@ namespace MVC.Controllers
                 carpetaActual = Fachada.ObtenerRoot(obra);
             }
 
-            
+
             //Dictionary<string, int> carpetas = Fachada.CarpetasConCantidad();
             try
             {
@@ -93,7 +74,7 @@ namespace MVC.Controllers
                 TempData["Error"] = null;
                 ViewBag.IdObra = idObra;
                 ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
-                if(carpetaActual != null)
+                if (carpetaActual != null)
                 {
                     ViewBag.CarpetasPosteriores = Fachada.CarpetasPosteriores(carpetaActual);
                 }
@@ -101,7 +82,7 @@ namespace MVC.Controllers
                 {
                     ViewBag.CarpetasPosteriores = new List<Carpeta>();
                 }
-               // ViewBag.TiposdePlano = Fachada.BuscarTiposPlanosPorObra(idObra);
+                // ViewBag.TiposdePlano = Fachada.BuscarTiposPlanosPorObra(idObra);
                 return View(carpetaActual);
             }
             catch (ObraException e) //Solo manda ObraException si no existe obra
@@ -110,7 +91,7 @@ namespace MVC.Controllers
                 errorModel.RequestId = e.Message;
                 ViewBag.IdObra = idObra;
                 ViewBag.TiposdePlano = Fachada.BuscarTiposPlanos();
-                
+
                 return View("Error", errorModel); //usar shared hasta tener vistas de error para cada coso
             }
             catch (Exception e)
@@ -389,7 +370,7 @@ namespace MVC.Controllers
             try
             {
                 using (HttpClient httpClient = new HttpClient())
-                {   
+                {
                     string tokenAcceso = ObtenerTokenDeAccesoGraph().Result;
 
                     var scopes = new[] { "https://graph.microsoft.com/.default" };
@@ -425,7 +406,7 @@ namespace MVC.Controllers
                     // var folderAttachmentsId = "01TXBKQWRZF2PDJIHD7BD2NSNQDMK7T4RF";
                     var content = response.Content.ReadAsStringAsync();
                     var archivosRoot = content.Result; //los values
-                    DriveDTO driveRoot = JsonConvert.DeserializeObject<DriveDTO>(archivosRoot); 
+                    DriveDTO driveRoot = JsonConvert.DeserializeObject<DriveDTO>(archivosRoot);
                     ArchivoDTO archivo1 = driveRoot.value.First(); //El primer sitio va a traer lo mismo que los demás.
                     string driveId = "b!8nhpxotooUOpTxumD-yUZZftdxCsZtRDrtbWUXMo4Wtrc_pqCXxFQb6jFYOVPZwf"; //Es el mismo para cada sitio. Con hardcodear uno alcanza.
                     var getUrl3 = $"https://graph.microsoft.com/v1.0/sites/{archivo1.Id}/drives/{driveId}/root/search(q='')";
@@ -593,7 +574,7 @@ namespace MVC.Controllers
                         {
                             //pruebita
                         }
-                        
+
                     }
                 }
 
@@ -607,10 +588,11 @@ namespace MVC.Controllers
             string rutaNueva = Uri.UnescapeDataString(ruta);
             List<string> arrayStrings = rutaNueva.Split("/").ToList();
             arrayStrings.Reverse();
-            foreach(TipoPlano tipo in tipos)
+            foreach (TipoPlano tipo in tipos)
             {
-                foreach (string posible in arrayStrings) { 
-                    if(tipo.Categoria.ToLower() == posible.ToLower())
+                foreach (string posible in arrayStrings)
+                {
+                    if (tipo.Categoria.ToLower() == posible.ToLower())
                     {
                         return tipo;
                     }
@@ -665,7 +647,7 @@ namespace MVC.Controllers
         private Obra EstaEnObra(string url)
         {
             IEnumerable<Obra> obras = Fachada.TomarTodasObras();
-            foreach(Obra obra in obras)
+            foreach (Obra obra in obras)
             {
                 if (url.ToLower().Contains(obra.Nombre.ToLower()))
                 {
@@ -788,7 +770,7 @@ namespace MVC.Controllers
 
 
                             var subPath = $"{path}/{item["name"]}";
-                       //         Lanzar tarea asíncrona para procesamiento paralelo
+                            //         Lanzar tarea asíncrona para procesamiento paralelo
                             tasks.Add(TomarPdfsInterno(siteId, subPath, pdfs, token, obra));
                             // Esperar a que todas las tareas se completen
                             await Task.WhenAll(tasks);

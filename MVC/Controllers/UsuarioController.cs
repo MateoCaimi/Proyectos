@@ -1,12 +1,8 @@
 ﻿using LogicaAccesoDatos.Repositorios;
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MVC.Controllers
 {
@@ -21,9 +17,9 @@ namespace MVC.Controllers
         {
             Fachada.Precarga();
 
-            if(HttpContext.Session.GetString("UsuarioLogueado") != null)
+            if (HttpContext.Session.GetString("UsuarioLogueado") != null)
             {
-                return RedirectToAction("Index", "Plano", new {idObra = id});
+                return RedirectToAction("Index", "Plano", new { idObra = id });
             }
             ViewBag.IdObra = id;
             return View();
@@ -49,7 +45,7 @@ namespace MVC.Controllers
                 HttpContext.Session.SetString("UsuarioLogueado", u.NombreUsuario);
                 HttpContext.Session.SetString("UsuarioTipo", u.Tipo);
                 Obra obra = Fachada.BuscarObra(idObra);
-                if(obra != null)
+                if (obra != null)
                 {
                     return RedirectToAction("Index", "Plano", new { idObra = idObra });
                 }
@@ -63,7 +59,7 @@ namespace MVC.Controllers
                 ViewBag.Error = e.Message;
                 return View();
             }
-            
+
         }
 
         // GET: UsuarioController
@@ -133,7 +129,7 @@ namespace MVC.Controllers
                 //Si es usuario normal no pasa
                 return RedirectToAction("Index", "Obra");
             }
-            catch(UsuarioException u)
+            catch (UsuarioException u)
             {
                 ViewBag.Error = u.Message;
                 ViewBag.nom = NombreUsuario;

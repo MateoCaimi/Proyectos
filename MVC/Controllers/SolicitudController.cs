@@ -1,21 +1,12 @@
 ﻿using LogicaAccesoDatos.Repositorios;
 using LogicaNegocio.Entidades;
-using LogicaNegocio.ViewModel;
-using Microsoft.AspNetCore.Http;
+using LogicaNegocio.Excepciones;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis;
-using Microsoft.Graph.Models;
-using Microsoft.Graph.Models.Security;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
-using System.Collections.Generic;
-using PdfSharp.Pdf.Advanced;
-using System.IO;
-using LogicaNegocio.Excepciones;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace MVC.Controllers
 {
@@ -61,7 +52,7 @@ namespace MVC.Controllers
             if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario de obra")
             {
                 string nomObrero = HttpContext.Session.GetString("UsuarioLogueado");
-              //  List<Solicitud> solicitudesAprobadas = Fachada.BuscarSolicitudAprobadasParaUnUObra(nomObrero);
+                //  List<Solicitud> solicitudesAprobadas = Fachada.BuscarSolicitudAprobadasParaUnUObra(nomObrero);
                 List<Solicitud> solicitudesAprobadas = Fachada.BuscarSolicitudAprobadasPorObra(nomObrero);
 
                 var opciones3 = new JsonSerializerOptions
@@ -375,7 +366,7 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Plano");
             }
-            
+
 
             Solicitud solicitud = Fachada.BuscarSolicitud(idSolicitud);
             IEnumerable<SolicitudMaterial> solicitudMateriales = Fachada.BuscarMaterialesSolicitud(idSolicitud);
@@ -402,7 +393,7 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Index", "Plano");
             }
-           
+
             try
             {
                 Solicitud solicitud = Fachada.BuscarSolicitud(idSolicitud);
@@ -446,7 +437,7 @@ namespace MVC.Controllers
 
             IEnumerable<SolicitudMaterial> materialesSolicitud = Fachada.BuscarMaterialesSolicitud(solicitud.Id);
 
-            
+
 
             PdfDocument document = new PdfDocument();
             PdfPage page = document.AddPage();
@@ -456,8 +447,8 @@ namespace MVC.Controllers
             XFont fontHeader = new XFont("Verdana", 15, XFontStyleEx.Italic);
             XFont fontFooter = new XFont("Verdana", 12, XFontStyleEx.BoldItalic);
             XFont fontComment = new XFont("Verdana", 12, XFontStyleEx.Regular);
-          
-           
+
+
 
             double margin = 40;
             double yPos = margin;
@@ -538,7 +529,7 @@ namespace MVC.Controllers
 
 
             string filename = $"{solicitud.Obra.Nombre} - {solicitud.Solicitante.Nombre}.pdf";
-           
+
 
 
 

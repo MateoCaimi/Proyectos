@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LogicaNegocio.Excepciones;
+﻿using LogicaNegocio.Excepciones;
 using LogicaNegocio.Interfaces;
-using System.Text.Json.Serialization;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LogicaNegocio.Entidades
 {
@@ -30,9 +24,9 @@ namespace LogicaNegocio.Entidades
         [Display(Name = "Tipo de usuario")]
 
         public virtual string Tipo { get; set; }
-        public bool CambioContrasenia { get; set; } 
+        public bool CambioContrasenia { get; set; }
         public int IntentosFallidos { get; set; }
-        public bool UsuarioBloqueado { get; set; } 
+        public bool UsuarioBloqueado { get; set; }
         public DateTime? TiempoDeBloqueo { get; set; }
 
 
@@ -46,16 +40,16 @@ namespace LogicaNegocio.Entidades
             this.IntentosFallidos = 0;
 
         }
-        public Usuario( string nomUsuario, string pass)
+        public Usuario(string nomUsuario, string pass)
         {
 
             this.NombreUsuario = nomUsuario;
             this.Contrasenia = pass;
 
         }
-        public Usuario()        
+        public Usuario()
         {
-            
+
         }
 
 
@@ -67,7 +61,7 @@ namespace LogicaNegocio.Entidades
             //falta caracter especial
             if (this.Contrasenia.Length >= 8 && this.Contrasenia.Any(char.IsUpper) && this.Contrasenia.Any(char.IsDigit))
             {
-                
+
             }
             else
             {

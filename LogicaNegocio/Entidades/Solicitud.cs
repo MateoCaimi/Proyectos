@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using LogicaNegocio.Interfaces;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LogicaNegocio.Interfaces;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LogicaNegocio.Entidades
 {
@@ -25,11 +20,11 @@ namespace LogicaNegocio.Entidades
         public string? Comentario { get; set; }
 
         public Estado Estado { get; set; }
-       
 
 
 
-        public Solicitud (int id, int idProveedor, Proveedor? proveedor, int idObra, Obra? obra, int idUsuario, Usuario? solicitante, int idUDeOficina, UDeOficina? aprovador, Estado estado)
+
+        public Solicitud(int id, int idProveedor, Proveedor? proveedor, int idObra, Obra? obra, int idUsuario, Usuario? solicitante, int idUDeOficina, UDeOficina? aprovador, Estado estado)
         {
             Id = id;
             IdProveedor = idProveedor;
@@ -44,7 +39,7 @@ namespace LogicaNegocio.Entidades
 
         }
 
-        public Solicitud () { }
+        public Solicitud() { }
 
         public void Validar()
         {

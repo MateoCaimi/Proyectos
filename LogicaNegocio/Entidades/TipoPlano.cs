@@ -1,15 +1,9 @@
-﻿using LogicaNegocio.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LogicaNegocio.Entidades
 {
-    public class TipoPlano 
+    public class TipoPlano
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
@@ -17,7 +11,7 @@ namespace LogicaNegocio.Entidades
 
         [Required(ErrorMessage = "Ingrese una categoria")]
         public string Categoria { get; set; }
-        public int IdObra {  get; set; }
+        public int IdObra { get; set; }
 
         public TipoPlano() { }
 

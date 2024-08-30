@@ -1,6 +1,4 @@
-﻿using LogicaNegocio.Entidades;
-
-namespace MVC.Models
+﻿namespace MVC.Models
 {
     public class EmpleadoModel
     {

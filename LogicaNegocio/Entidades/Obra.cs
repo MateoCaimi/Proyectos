@@ -1,14 +1,7 @@
 ﻿using LogicaNegocio.Excepciones;
 using LogicaNegocio.Interfaces;
-using Microsoft.Extensions.Logging.Abstractions;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LogicaNegocio.Entidades
 {
@@ -89,7 +82,7 @@ namespace LogicaNegocio.Entidades
         }
         public void ValidarFechaFinal()
         {
-            if(this.FechaFinalizacion != null)
+            if (this.FechaFinalizacion != null)
             {
                 if (this.FechaFinalizacion < this.FechaInicio)
                 {
@@ -110,7 +103,7 @@ namespace LogicaNegocio.Entidades
 
         public void ValidarDireccion()
         {
-            
+
             if (this.Direccion.All(char.IsDigit))
             {
                 throw new ObraException("Debe escribir una direccion");
@@ -131,7 +124,7 @@ namespace LogicaNegocio.Entidades
         {
             return this.Nombre;
         }
- 
+
 
     }
 }

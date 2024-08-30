@@ -18,10 +18,10 @@ namespace MVC.Controllers
         {
             _logger = logger;
             Fachada = new Fachada();
-         
+
 
         }
-         
+
         public IActionResult Index()
         {
             Fachada.Precarga();
@@ -34,7 +34,7 @@ namespace MVC.Controllers
                 }
                 catch (Exception ex)
                 {
-                    ViewBag.ApiError = "Para recargar las marcas ingrese denuevo en 1 minuto"; 
+                    ViewBag.ApiError = "Para recargar las marcas ingrese denuevo en 1 minuto";
                 }
 
             }
@@ -42,7 +42,7 @@ namespace MVC.Controllers
             if (HttpContext.Session.GetString("UsuarioLogueado") == null)
             {
 
-            return RedirectToAction("Index", "Usuario");
+                return RedirectToAction("Index", "Usuario");
             }
             else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
             {
@@ -121,11 +121,11 @@ namespace MVC.Controllers
 
 
 
-             //  List<Solicitud> solicitudesAprobadas = Fachada.BuscarSolicitudAprobadasParaUnUObra(nomObrero);
+                //  List<Solicitud> solicitudesAprobadas = Fachada.BuscarSolicitudAprobadasParaUnUObra(nomObrero);
                 List<Solicitud> solicitudesAprobadas = Fachada.BuscarSolicitudAprobadasPorObra(nomObrero);
-                
 
-           //     List<Solicitud> solicitudesAprobadas2 = Fachada.BuscarSolicitudAprobadasPorObra(nomObrero);
+
+                //     List<Solicitud> solicitudesAprobadas2 = Fachada.BuscarSolicitudAprobadasPorObra(nomObrero);
                 var opciones3 = new JsonSerializerOptions
                 {
                     ReferenceHandler = ReferenceHandler.IgnoreCycles,
@@ -141,7 +141,7 @@ namespace MVC.Controllers
             //if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario de oficina")
             //{
             //    List<Solicitud> solicitudesPendientes = Fachada.BuscarSolicitudPendientesLista();
-               
+
 
             //    var opciones = new JsonSerializerOptions
             //    {
@@ -154,7 +154,7 @@ namespace MVC.Controllers
 
             //    if (solicitudesPendientes != null)
             //    {
-                    
+
             //        return View(solicitudesPendientes);
             //    }
             //}

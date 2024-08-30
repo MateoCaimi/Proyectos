@@ -1,13 +1,7 @@
-﻿using LogicaNegocio.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using LogicaNegocio.Excepciones;
+using LogicaNegocio.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using LogicaNegocio.Excepciones;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LogicaNegocio.Entidades
 {
@@ -16,13 +10,13 @@ namespace LogicaNegocio.Entidades
     {
         [ForeignKey("Obra")]
         public int IdObra { get; set; }
-        public Obra Obra {  get; set; }
+        public Obra Obra { get; set; }
         [ForeignKey("Material")]
         public int IdMaterial { get; set; }
-        public Material Material {  get; set; }
+        public Material Material { get; set; }
         public int Stock { get; set; }
 
-        
+
         public ObraMaterial() { }
         public void Validar()
         {

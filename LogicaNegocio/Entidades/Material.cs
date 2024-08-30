@@ -1,12 +1,5 @@
 ﻿using LogicaNegocio.Excepciones;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Timers;
 
 namespace LogicaNegocio.Entidades
 {
@@ -20,7 +13,7 @@ namespace LogicaNegocio.Entidades
         public string UnidadDeMedida { get; set; }
         public int BarreraDeStock { get; set; }
 
-    
+
         public Material(string nom, int stock, string unidadDeMedida)
         {
             this.Nombre = nom;
@@ -34,8 +27,8 @@ namespace LogicaNegocio.Entidades
 
         public void Validar()
         {
-           
-            if(this.Nombre == null)
+
+            if (this.Nombre == null)
             {
                 throw new MaterialException("Ingrese nombre de material");
             }
@@ -43,11 +36,11 @@ namespace LogicaNegocio.Entidades
             {
                 throw new MaterialException("Ingrese la unidad de medida");
             }
-            if(this.BarreraDeStock < 0)
+            if (this.BarreraDeStock < 0)
             {
                 throw new MaterialException("La barrera de stock no puede ser negativa");
             }
-            
+
         }
     }
 }

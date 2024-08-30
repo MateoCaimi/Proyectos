@@ -3,13 +3,6 @@ using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones;
 using LogicaNegocio.Interfaces;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LogicaAccesoDatos.Repositorios
 {
@@ -26,7 +19,7 @@ namespace LogicaAccesoDatos.Repositorios
         public void Precarga()
         {
             List<TipoPlano> cantTipoPlano = this.TomarTodosTipos().ToList();
-            if(cantTipoPlano.Count == 0) 
+            if (cantTipoPlano.Count == 0)
             {
                 TipoPlano tipoGenerico = new TipoPlano();
                 tipoGenerico.Categoria = "<<A INGRESAR>>";
@@ -58,7 +51,7 @@ namespace LogicaAccesoDatos.Repositorios
             //}
             try
             {
-                Obra obra = Context.Obras.FirstOrDefault(o => o.IdObra == plano.IdObra); 
+                Obra obra = Context.Obras.FirstOrDefault(o => o.IdObra == plano.IdObra);
                 plano.Obra = obra;
                 plano.FechaPublicado = DateTime.Now;
                 plano.Validar();
@@ -71,14 +64,9 @@ namespace LogicaAccesoDatos.Repositorios
             }
         }
 
-        private Plano BuscarPlanoConTipo(string nombre, int idTipoPlano)
-        {
-            return Context.Planos.Where(p => p.Nombre == nombre && p.IdTipoPlano == idTipoPlano).FirstOrDefault();
-        }
-
         public IEnumerable<Plano> BuscarPlanosDelTipoEnObra(int idTipoPlano, int idObra)
         {
-            return Context.Planos.Where(p => p.IdTipoPlano == idTipoPlano && p.IdObra ==idObra);
+            return Context.Planos.Where(p => p.IdTipoPlano == idTipoPlano && p.IdObra == idObra);
         }
 
         public void Eliminar(Plano plano)
@@ -105,12 +93,12 @@ namespace LogicaAccesoDatos.Repositorios
 
         public IEnumerable<Plano> PlanosFiltrados(Obra obra, int? idTipo, string? nombre, DateTime? fechaDesde, DateTime? fechaHasta)
         {
-          
+
             if (obra == null)
             {
                 throw new ObraException("No se pueden buscar planos en una obra nula.");
             }
-            IEnumerable<Plano> planos = Context.Planos.Where(p=>p.Obra.IdObra == obra.IdObra); //creo que es descendiente, revisar luego
+            IEnumerable<Plano> planos = Context.Planos.Where(p => p.Obra.IdObra == obra.IdObra); //creo que es descendiente, revisar luego
             if (idTipo != 0)
             {
                 planos = planos.Where(p => p.IdTipoPlano == idTipo);
@@ -144,13 +132,13 @@ namespace LogicaAccesoDatos.Repositorios
 
         public IEnumerable<Plano> PlanosTotales(Obra obra)
         {
- 
+
             if (obra == null)
             {
                 throw new ObraException("No se pueden buscar planos en una obra nula.");
             }
-            
-            IEnumerable<Plano> planos = Context.Planos.Where(p=> p.IdObra == obra.IdObra);
+
+            IEnumerable<Plano> planos = Context.Planos.Where(p => p.IdObra == obra.IdObra);
             return planos;
         }
         public IEnumerable<TipoPlano> BuscarTiposPlanos()
@@ -160,7 +148,7 @@ namespace LogicaAccesoDatos.Repositorios
 
         public TipoPlano BuscarTipoPlano(int idTipo)
         {
-            return Context.TiposPlanos.Where(tp=>tp.Id == idTipo).FirstOrDefault();
+            return Context.TiposPlanos.Where(tp => tp.Id == idTipo).FirstOrDefault();
         }
         public Plano Buscar(int id)
         {
@@ -176,53 +164,14 @@ namespace LogicaAccesoDatos.Repositorios
             return Context.Planos;
         }
 
-        public List<Plano> CrearPlanosMultiples(int idObra, int idTipoPlano, List<IFormFile> postedFiles)
-        {
-            List<Plano> list = new List<Plano>();
-            foreach (IFormFile f in postedFiles)
-            {
-                Plano p = new Plano();
-                p.IdObra = idObra;
-                p.Nombre = f.FileName;
-                p.IdTipoPlano = idTipoPlano;
-                p.NombrePdf = f.FileName;
-                p.TipoPdf = f.ContentType;
-                list.Add(p);
-            }
-
-            return list;
-        }
-
-        public bool ExistePlano(byte[] plano, string planoNombre)
-        {
-            return Context.Planos.Any(p => p.Pdf == plano || p.NombrePdf == planoNombre);
-        }
-
-
-
-
-
-
-
-
-
-        //------------------------------------------------------------------------------------
-
-
-
-        public TipoPlano TipoPlanoPorNombre(string nombreCarpeta)
-        {
-            return Context.TiposPlanos.Where(tp => tp.Categoria == nombreCarpeta).FirstOrDefault();
-        }
-
         public TipoPlano CrearTipoPlano(string nombreCarpeta, int idObra)
         {
             TipoPlano nuevoTipo = new TipoPlano(nombreCarpeta);
             nuevoTipo.IdObra = idObra;
             List<TipoPlano> tipos = this.BuscarTipoPlanoPorObra(idObra);
-            foreach(TipoPlano tipo in tipos)
+            foreach (TipoPlano tipo in tipos)
             {
-                if(tipo.Categoria == nuevoTipo.Categoria)
+                if (tipo.Categoria == nuevoTipo.Categoria)
                 {
                     return null;
                 }
@@ -232,13 +181,6 @@ namespace LogicaAccesoDatos.Repositorios
 
             return nuevoTipo;
         }
-
-        public void ActualizarFechaUltimaModificacion(TipoPlano tipoPlanoActual, string ultimaModificacion)
-        {
-            EliminarTipoPlano(tipoPlanoActual);
-
-        }
-
         public void EliminarTipoPlano(TipoPlano tipoPlanoActual)
         {
             foreach (var plano in Context.Planos)
@@ -268,12 +210,6 @@ namespace LogicaAccesoDatos.Repositorios
             return listaTP;
         }
 
-        internal int TraerIdPorNombreTipoPlano(string v)
-        {   
-            TipoPlano tipoplano = Context.TiposPlanos.Where(tp => tp.Categoria == v).FirstOrDefault();
-            return tipoplano.Id;
-        }
-
         public void CrearCarpeta(string path, string anterior, Obra obra)
         {
             Carpeta carpetaAnterior = this.BuscarCarpeta(anterior, obra);
@@ -282,9 +218,9 @@ namespace LogicaAccesoDatos.Repositorios
             {
                 carpeta.IdObra = obra.IdObra;
                 carpeta.Name = path;
-                if(carpetaAnterior != null)
+                if (carpetaAnterior != null)
                 {
-                    if(carpetaAnterior.IdTipo != null)
+                    if (carpetaAnterior.IdTipo != null)
                     {
                         carpeta.NameAnterior = carpetaAnterior.NameAnterior;
                     }
@@ -315,27 +251,16 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return Context.Carpetas.Where(c => c.Name == path && c.IdObra == obra.IdObra).FirstOrDefault();
         }
-
-        public Carpeta ConseguirCarpetaContenedora(string webUrl, Obra obra)
-        {
-            List<string> paths = webUrl.Split("/").ToList();
-            paths.RemoveAt(paths.Count - 1); //el ultimo siempre será el archivo, se elimina para agarrar a la carpeta contenedora
-            string ultimo = paths.LastOrDefault();
-            string path = ultimo;
-            Carpeta carpetaContenedora = this.BuscarCarpeta(path, obra);
-            return carpetaContenedora;
-        }
-
         public void MapearTiposACarpetas()
         {
             List<Plano> planos = this.TomarTodos().ToList();
             List<TipoPlano> tipos = this.TomarTodosTipos().ToList();
             List<Carpeta> carpetas = this.TomarTodasCarpetas().ToList();
-            foreach(Carpeta carpeta in carpetas)
+            foreach (Carpeta carpeta in carpetas)
             {
-                foreach(TipoPlano tipo in tipos)
+                foreach (TipoPlano tipo in tipos)
                 {
-                    if(carpeta.Name == tipo.Categoria && carpeta.IdObra == tipo.IdObra)
+                    if (carpeta.Name == tipo.Categoria && carpeta.IdObra == tipo.IdObra)
                     {
                         carpeta.IdTipo = tipo.Id;
                         Context.SaveChanges();
@@ -366,17 +291,17 @@ namespace LogicaAccesoDatos.Repositorios
             List<Plano> planos = Context.Planos.Where(p => p.IdObra == idObra).ToList();
             List<Carpeta> carpetas = Context.Carpetas.Where(p => p.IdObra == idObra).ToList();
             List<TipoPlano> tipos = Context.TiposPlanos.Where(p => p.IdObra == idObra).ToList();
-            foreach(Plano p in planos)
+            foreach (Plano p in planos)
             {
                 Context.Planos.Remove(p);
                 Context.SaveChanges();
             }
-            foreach(TipoPlano t in tipos)
+            foreach (TipoPlano t in tipos)
             {
                 Context.TiposPlanos.Remove(t);
                 Context.SaveChanges();
             }
-            foreach(Carpeta c in carpetas)
+            foreach (Carpeta c in carpetas)
             {
                 Context.Carpetas.Remove(c);
                 Context.SaveChanges();

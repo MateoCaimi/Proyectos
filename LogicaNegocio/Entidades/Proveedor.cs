@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LogicaNegocio.Excepciones;
-using System.Text.RegularExpressions;
+﻿using LogicaNegocio.Excepciones;
 using LogicaNegocio.Interfaces;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.RegularExpressions;
 
 namespace LogicaNegocio.Entidades
 {
@@ -17,13 +12,14 @@ namespace LogicaNegocio.Entidades
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int Id { get; set; }
-        [Required(ErrorMessage = "Ingrese un nombre")] 
+        [Required(ErrorMessage = "Ingrese un nombre")]
         public string Nombre { get; set; }
         public string Telefono { get; set; }
         public string Mail { get; set; }
 
-        public Proveedor(string nom, string tel, string mail) {
-            
+        public Proveedor(string nom, string tel, string mail)
+        {
+
             this.Nombre = nom;
             this.Telefono = tel;
             this.Mail = mail;
@@ -34,7 +30,7 @@ namespace LogicaNegocio.Entidades
 
         public void ValidarMail()
         {
-         
+
             string regla = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
 
             if (!Regex.IsMatch(this.Mail, regla))
@@ -53,6 +49,6 @@ namespace LogicaNegocio.Entidades
             ValidarMail();
             ValidarTelefono();
         }
-        
+
     }
 }

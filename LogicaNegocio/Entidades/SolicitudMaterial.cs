@@ -1,12 +1,7 @@
 ﻿using LogicaNegocio.Excepciones;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LogicaNegocio.Entidades
 {
@@ -27,7 +22,7 @@ namespace LogicaNegocio.Entidades
 
         public SolicitudMaterial()
         {
-            
+
         }
 
         public SolicitudMaterial(Solicitud solicitud, Material material, int cantidad)
@@ -42,7 +37,7 @@ namespace LogicaNegocio.Entidades
 
         public void Validar()
         {
-            if(this.Cantidad <= 0)
+            if (this.Cantidad <= 0)
             {
                 throw new SolicitudException("La cantidad no puede ser 0.");
             }

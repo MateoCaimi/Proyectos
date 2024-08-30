@@ -2,15 +2,9 @@
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones;
 using LogicaNegocio.ViewModel;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.Graph.Models;
-using MVC.Models;
-using Newtonsoft.Json;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
-using System.Collections.Generic;
 
 namespace MVC.Controllers
 {
@@ -53,7 +47,7 @@ namespace MVC.Controllers
                 //Liquidar();
                 //Fachada.AgregarEmpleadosAObra();
 
-                
+
                 return View(empleados);
             }
             catch (Exception e)
@@ -61,7 +55,7 @@ namespace MVC.Controllers
                 ViewBag.Error = e.Message;
                 return View(empleados);
             }
-            
+
         }
 
         // GET: EmpleadoController
@@ -100,7 +94,7 @@ namespace MVC.Controllers
             return View(empleados);
         }
 
-        
+
 
         public ActionResult Marcas(int id)
         {
@@ -131,7 +125,7 @@ namespace MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-    
+
         public ActionResult Marcas(int id, int IdObra, string FechaRango)
         {
             if (HttpContext.Session.GetString("UsuarioLogueado") == null)
@@ -161,10 +155,10 @@ namespace MVC.Controllers
                 var fechas = FechaRango.Split(" to ");
                 if (fechas.Length == 2)
                 {
-                     desde = DateTime.Parse(fechas[0]);
-                     hasta = DateTime.Parse(fechas[1]);
+                    desde = DateTime.Parse(fechas[0]);
+                    hasta = DateTime.Parse(fechas[1]);
 
-                   
+
                 }
             }
 
@@ -203,7 +197,7 @@ namespace MVC.Controllers
                 marcas = Fachada.MarcasDelEmpleadoEnLaObra(marcas, obra);
             }
 
-            
+
             ViewBag.Obras = Fachada.TomarTodasObras();
             ViewBag.IdEmp = empleado.Id;
             ViewBag.HorasTotales = Fachada.HorasTotales(marcas);
@@ -271,7 +265,7 @@ namespace MVC.Controllers
                 //}
                 return View();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 ViewBag.Error = e.Message;
                 return View();
@@ -416,7 +410,7 @@ namespace MVC.Controllers
 
             try
             {
-                if(tipo == null)
+                if (tipo == null)
                 {
                     throw new EmpleadoException("El tipo no puede ser nulo");
                 }
@@ -532,17 +526,17 @@ namespace MVC.Controllers
             ViewBag.Obras = Fachada.TomarTodasObras();
             ViewBag.Empleados = Fachada.TomarTodosEmpleados();
             List<ObraEmpleadoLiquidacionViewModel> vm = new List<ObraEmpleadoLiquidacionViewModel>();
-            if(idObra != 0)
+            if (idObra != 0)
             {
                 ViewBag.IdObra = idObra;
                 Obra obra = Fachada.BuscarObra(idObra);
-                ViewBag.Empleados = Fachada.TomarEmpleadosDeObra(obra); 
+                ViewBag.Empleados = Fachada.TomarEmpleadosDeObra(obra);
             }
             return View(vm);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Liquidar(int IdObra, int IdEmpleado,string FechaRango, bool inactivos)
+        public async Task<IActionResult> Liquidar(int IdObra, int IdEmpleado, string FechaRango, bool inactivos)
         {
 
             if (HttpContext.Session.GetString("UsuarioLogueado") == null)
@@ -581,15 +575,15 @@ namespace MVC.Controllers
                 Obra obra = Fachada.BuscarObra(IdObra);
                 List<ObraEmpleadoLiquidacionViewModel> vm = new List<ObraEmpleadoLiquidacionViewModel>();
                 Dictionary<ObraEmpleado, decimal> dic;
-                dic = Fachada.Liquidar(desde, hasta, obra, empleado, inactivos); 
-                foreach(KeyValuePair<ObraEmpleado, decimal> kv in dic) //No es lógica de negocio, es formateo de vista, entonces entiendo que es válido.
+                dic = Fachada.Liquidar(desde, hasta, obra, empleado, inactivos);
+                foreach (KeyValuePair<ObraEmpleado, decimal> kv in dic) //No es lógica de negocio, es formateo de vista, entonces entiendo que es válido.
                 {
                     vm.Add(new ObraEmpleadoLiquidacionViewModel(kv.Key, kv.Value));
                 }
                 ViewBag.Obras = Fachada.TomarTodasObras();
                 ViewBag.Empleados = Fachada.TomarTodosEmpleados();
                 ViewBag.TotalLiquidacion = Fachada.TotalLiquidacion(vm);
-                
+
                 return View(vm);
             }
             catch (Exception e)
@@ -631,7 +625,7 @@ namespace MVC.Controllers
             {
                 empleadosObra = Fachada.TomarTodosEmpleados().ToList();
             }
-            
+
             return PartialView("CambiarListadoLiquidacion", empleadosObra);
         }
 
@@ -688,25 +682,25 @@ namespace MVC.Controllers
         [HttpPost]
         public ActionResult DescargarPDF(List<ObraEmpleadoLiquidacionViewModel> ObraEmpleadoLiquidacionViewModelList)
         {
-            
 
-           
-                if (HttpContext.Session.GetString("UsuarioLogueado") == null)
-                {
-                    return RedirectToAction("Index", "Usuario");
-                }
-                else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
-                {
-                    return RedirectToAction("Listado", "Usuario");
-                }
-                else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
-                {
-                    return RedirectToAction("Index", "Plano");
-                }
-                
-           
 
-            
+
+            if (HttpContext.Session.GetString("UsuarioLogueado") == null)
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario administrador")
+            {
+                return RedirectToAction("Listado", "Usuario");
+            }
+            else if (HttpContext.Session.GetString("UsuarioTipo") == "Usuario normal")
+            {
+                return RedirectToAction("Index", "Plano");
+            }
+
+
+
+
 
             PdfDocument document = new PdfDocument();
             PdfPage page = document.AddPage();

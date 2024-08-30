@@ -3,12 +3,6 @@ using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones;
 using LogicaNegocio.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace LogicaAccesoDatos.Repositorios
@@ -110,56 +104,27 @@ namespace LogicaAccesoDatos.Repositorios
 
         public void Modificar(Usuario item)
         {
-           
-                item.Validar();
-                Usuario usuario = this.Buscar(item.Id);
-                if (usuario == null)
-                {
-                    throw new UsuarioException("No se encontró el usuario a modificar.");
-                }
-                Usuario yaExistente = this.UsuarioPorNombreUsuario(item.NombreUsuario);
-                if (yaExistente != null && yaExistente.Id != item.Id)
-                {
-                    throw new UsuarioException("El nombre de usuario ingresado ya está en uso. Elegir otro.");
-                }
-                usuario.Nombre = item.Nombre;
-                usuario.NombreUsuario = item.NombreUsuario;
-                usuario.Contrasenia = item.Contrasenia;
-                usuario.CambioContrasenia = true;
-                Context.Entry(usuario).State = EntityState.Modified;
-                Context.SaveChanges();
-            
-           
-        }
 
-        public void ModificarOpcionReinstanciar(Usuario item)
-        {
-            try
+            item.Validar();
+            Usuario usuario = this.Buscar(item.Id);
+            if (usuario == null)
             {
-                item.Validar();
-                Usuario usuario = this.Buscar(item.Id);
-                if (usuario == null)
-                {
-                    throw new UsuarioException("No se encontró el usuario a modificar.");
-                }
-                Usuario yaExistente = this.UsuarioPorNombreUsuario(item.NombreUsuario);
-                if (yaExistente != null && yaExistente.Id != item.Id)
-                {
-                    throw new UsuarioException("El nombre de usuario ingresado ya está en uso. Elegir otro.");
-                }
-                //Context.Database.ExecuteSql("SET IDENTITY_INSERT [dbo].[Usuarios] ON");
-                Context.Usuarios.Remove(usuario);
-                Context.Usuarios.Add(item);
-                //Context.Database.ExecuteSql("SET IDENTITY_INSERT [dbo].[Usuarios] OFF");
-                Context.Entry(usuario).State = EntityState.Modified;
-                Context.SaveChanges();
+                throw new UsuarioException("No se encontró el usuario a modificar.");
             }
-            catch (Exception ex)
+            Usuario yaExistente = this.UsuarioPorNombreUsuario(item.NombreUsuario);
+            if (yaExistente != null && yaExistente.Id != item.Id)
             {
-                throw new UsuarioException(ex.Message);
+                throw new UsuarioException("El nombre de usuario ingresado ya está en uso. Elegir otro.");
             }
-        }
+            usuario.Nombre = item.Nombre;
+            usuario.NombreUsuario = item.NombreUsuario;
+            usuario.Contrasenia = item.Contrasenia;
+            usuario.CambioContrasenia = true;
+            Context.Entry(usuario).State = EntityState.Modified;
+            Context.SaveChanges();
 
+
+        }
         public IEnumerable<Usuario> TomarTodos()
         {
             return Context.Usuarios.ToList();
