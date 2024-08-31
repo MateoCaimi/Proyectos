@@ -201,26 +201,28 @@ namespace LogicaAccesoDatos.Repositorios
         public Material MaterialMasSolicitado(int IdObra)
         {
             Dictionary<Material, int> retorno = new Dictionary<Material, int>();
-            IEnumerable<Solicitud> solicitudesObra = Context.Solicitudes.Where(s => s.IdObra == IdObra);
+            List<Solicitud> solicitudesObra = Context.Solicitudes.Where(s => s.IdObra == IdObra).ToList();
             foreach (Solicitud s in solicitudesObra)
             {
-                IEnumerable<SolicitudMaterial> MaterialesSolicitados = Context.SolicitudesMateriales.Where(m => m.IdSolicitud == s.Id);
+                List<SolicitudMaterial> MaterialesSolicitados = Context.SolicitudesMateriales.Where(m => m.IdSolicitud == s.Id).Include(s => s.Material).ToList();
                 foreach (SolicitudMaterial m in MaterialesSolicitados)
                 {
-                    KeyValuePair<Material, int> var = retorno.First(r => r.Key.Id == m.IdMaterial);
-                    if (var.Key != null)
+                    KeyValuePair<Material, int> var = retorno.FirstOrDefault(r => r.Key.Id == m.IdMaterial);
+                    if (var.Key == null)
                     {
                         retorno.Add(m.Material, m.Cantidad);
                     }
                     else
                     {
+                        retorno.Remove(var.Key);
                         var = new KeyValuePair<Material, int>(var.Key, var.Value + m.Cantidad);
+                        retorno.Add(var.Key, var.Value);
                     }
                 }
             }
             if (retorno.Count > 0)
             {
-                return retorno.Max().Key;
+                return retorno.Where(u => u.Value == retorno.Values.Max()).FirstOrDefault().Key;
             }
             else
             {
@@ -230,26 +232,28 @@ namespace LogicaAccesoDatos.Repositorios
         public Material MaterialMenosSolicitado(int IdObra)
         {
             Dictionary<Material, int> retorno = new Dictionary<Material, int>();
-            IEnumerable<Solicitud> solicitudesObra = Context.Solicitudes.Where(s => s.IdObra == IdObra);
+            List<Solicitud> solicitudesObra = Context.Solicitudes.Where(s => s.IdObra == IdObra).ToList();
             foreach (Solicitud s in solicitudesObra)
             {
-                IEnumerable<SolicitudMaterial> MaterialesSolicitados = Context.SolicitudesMateriales.Where(m => m.IdSolicitud == s.Id);
+                List<SolicitudMaterial> MaterialesSolicitados = Context.SolicitudesMateriales.Where(m => m.IdSolicitud == s.Id).Include(s => s.Material).ToList();
                 foreach (SolicitudMaterial m in MaterialesSolicitados)
                 {
-                    KeyValuePair<Material, int> var = retorno.First(r => r.Key.Id == m.IdMaterial);
-                    if (var.Key != null)
+                    KeyValuePair<Material, int> var = retorno.FirstOrDefault(r => r.Key.Id == m.IdMaterial);
+                    if (var.Key == null)
                     {
                         retorno.Add(m.Material, m.Cantidad);
                     }
                     else
                     {
+                        retorno.Remove(var.Key);
                         var = new KeyValuePair<Material, int>(var.Key, var.Value + m.Cantidad);
+                        retorno.Add(var.Key, var.Value);
                     }
                 }
             }
             if (retorno.Count > 0)
             {
-                return retorno.Min().Key;
+                return retorno.Where(u => u.Value == retorno.Values.Min()).FirstOrDefault().Key;
             }
             else
             {
@@ -259,22 +263,24 @@ namespace LogicaAccesoDatos.Repositorios
         public Usuario SolicitanteMasComun(int IdObra)
         {
             Dictionary<Usuario, int> retorno = new Dictionary<Usuario, int>();
-            IEnumerable<Solicitud> solicitudesObra = Context.Solicitudes.Where(s => s.IdObra == IdObra);
+            List<Solicitud> solicitudesObra = Context.Solicitudes.Where(s => s.IdObra == IdObra).Include(s => s.Solicitante).ToList();
             foreach (Solicitud s in solicitudesObra)
             {
-                KeyValuePair<Usuario, int> var = retorno.First(r => r.Key == s.Solicitante);
-                if (var.Key != null)
+                KeyValuePair<Usuario, int> var = retorno.FirstOrDefault(r => r.Key == s.Solicitante);
+                if (var.Key == null)
                 {
                     retorno.Add(s.Solicitante, 1);
                 }
                 else
                 {
+                    retorno.Remove(s.Solicitante);
                     var = new KeyValuePair<Usuario, int>(s.Solicitante, var.Value + 1);
+                    retorno.Add(var.Key, var.Value);
                 }
             }
             if (retorno.Count > 0)
             {
-                return retorno.Max().Key;
+                return retorno.Where(u => u.Value == retorno.Values.Max()).FirstOrDefault().Key;
             }
             else
             {
@@ -284,22 +290,24 @@ namespace LogicaAccesoDatos.Repositorios
         public UDeOficina AprobadorMasComun(int IdObra)
         {
             Dictionary<UDeOficina, int> retorno = new Dictionary<UDeOficina, int>();
-            IEnumerable<Solicitud> solicitudesObra = Context.Solicitudes.Where(s => s.IdObra == IdObra);
+            List<Solicitud> solicitudesObra = Context.Solicitudes.Where(s => s.IdObra == IdObra).Include(s => s.Aprovador).ToList();
             foreach (Solicitud s in solicitudesObra)
             {
-                KeyValuePair<UDeOficina, int> var = retorno.First(r => r.Key == s.Aprovador);
+                KeyValuePair<UDeOficina, int> var = retorno.FirstOrDefault(r => r.Key == s.Aprovador);
                 if (var.Key == null)
                 {
                     retorno.Add(s.Aprovador, 1);
                 }
                 else
                 {
+                    retorno.Remove(s.Aprovador);
                     var = new KeyValuePair<UDeOficina, int>(s.Aprovador, var.Value + 1);
+                    retorno.Add(var.Key, var.Value);
                 }
             }
             if (retorno.Count > 0)
             {
-                return retorno.Max().Key;
+                return retorno.Where(u => u.Value == retorno.Values.Max()).FirstOrDefault().Key;
             }
             else
             {

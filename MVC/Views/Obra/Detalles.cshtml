@@ -103,19 +103,25 @@
             Material más solicitado:
         </dt>
         <dd class="col-sm-9 value">
-            @Html.DisplayFor(model => model.MaterialMasSolicitado)
+            @Html.DisplayFor(model => model.MaterialMasSolicitado.Nombre)
         </dd>
         <dt class="col-sm-3 label">
             Material menos solicitado:
         </dt>
         <dd class="col-sm-9 value">
-            @Html.DisplayFor(model => model.MaterialMenosSolicitado)
+            @Html.DisplayFor(model => model.MaterialMenosSolicitado.Nombre)
         </dd>
         <dt class="col-sm-3 label">
             Solicitante más común:
         </dt>
         <dd class="col-sm-9 value">
-            @Html.DisplayFor(model => model.SolicitanteMasComun)
+            @Html.DisplayFor(model => model.SolicitanteMasComun.Nombre)
+        </dd>
+        <dt class="col-sm-3 label">
+            Aprobador más común:
+        </dt>
+        <dd class="col-sm-9 value">
+            @Html.DisplayFor(model => model.AprobadorMasComun.Nombre)
         </dd>
     </div>
 }

@@ -23,7 +23,7 @@ namespace LogicaAccesoDatos.EF
         {
             string cadenaConexion =
              @"SERVER=(localdb)\MSsqlLocaldb;
-            DATABASE=ProyectoIntegradorFinalProy;
+            DATABASE=ProyectoIntegradorFinalProy2;
             INTEGRATED SECURITY=TRUE;
             ENCRYPT=False"
             ;

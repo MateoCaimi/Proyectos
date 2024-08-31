@@ -157,7 +157,7 @@ namespace MVC.Controllers
                     obra.MaterialMasSolicitado = Fachada.MaterialMasSolicitado(obra.Obra.IdObra);
                     obra.MaterialMenosSolicitado = Fachada.MaterialMenosSolicitado(obra.Obra.IdObra);
                     obra.AprobadorMasComun = Fachada.AprobadorMasComun(obra.Obra.IdObra);
-                    //obra.ProveedorMasComun = Fachada.ProveedorMasComun(obra.Obra.IdObra);
+                    obra.SolicitanteMasComun = Fachada.SolicitanteMasComun(obra.Obra.IdObra);
                 }
                 return View(obra);
             }

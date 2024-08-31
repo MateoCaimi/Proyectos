@@ -44,6 +44,11 @@ namespace LogicaAccesoDatos.Repositorios
         {
             return RepositorioObra.AprobadorMasComun(IdObra);
         }
+
+        public Usuario SolicitanteMasComun(int IdObra)
+        {
+            return RepositorioObra.SolicitanteMasComun(IdObra);
+        }
         public void AgregarObra(Obra item)
         {
             RepositorioObra.Agregar(item);
