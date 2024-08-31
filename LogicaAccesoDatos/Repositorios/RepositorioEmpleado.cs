@@ -148,57 +148,76 @@ namespace LogicaAccesoDatos.Repositorios
         }
         public void PrecargaMarcasDelAño()
         {
-            DateTime hoy = DateTime.Now;
-            DateTime desde = new DateTime();
-            DateTime hasta = new DateTime();
-            int mesInicio = 1;
-
-            if (hoy.Month > 2) //Porque cloudTimes no acepta mas de 5 llamadas
+            if (!this.EstaEjecutandoMetodo())
             {
-                mesInicio = hoy.Month - 2;
-            }
+                this.CambiarEstadoMetodo(true);
+                DateTime hoy = DateTime.Now;
+                DateTime desde = new DateTime();
+                DateTime hasta = new DateTime();
+                int mesInicio = 1;
 
-            //Carga los ultimos 2 meses hasta la actualidad o desde principio de año
+                if (hoy.Month > 2) //Porque cloudTimes no acepta mas de 5 llamadas
+                {
+                    mesInicio = hoy.Month - 2;
+                }
 
-            for (int i = hoy.Month; i >= mesInicio; i--)
-            {
-                if (i == hoy.Month)
+                //Carga los ultimos 2 meses hasta la actualidad o desde principio de año
+
+                for (int i = hoy.Month; i >= mesInicio; i--)
                 {
-                    desde = new DateTime(hoy.Year, i, 01, 00, 00, 01);
-                    hasta = new DateTime(hoy.Year, i, hoy.Day, hoy.Hour, hoy.Minute, hoy.Second);
-                }
-                else if (i == 4 || i == 6 || i == 9 || i == 11)
-                {
-                    desde = new DateTime(hoy.Year, i, 01, 00, 00, 01);
-                    hasta = new DateTime(hoy.Year, i, 30, 23, 59, 59);
-                }
-                else if (i == 2)
-                {
-                    if (hoy.Year % 4 == 0)
+                    if (i == hoy.Month)
                     {
                         desde = new DateTime(hoy.Year, i, 01, 00, 00, 01);
-                        hasta = new DateTime(hoy.Year, i, 28, 23, 59, 59);
+                        hasta = new DateTime(hoy.Year, i, hoy.Day, hoy.Hour, hoy.Minute, hoy.Second);
+                    }
+                    else if (i == 4 || i == 6 || i == 9 || i == 11)
+                    {
+                        desde = new DateTime(hoy.Year, i, 01, 00, 00, 01);
+                        hasta = new DateTime(hoy.Year, i, 30, 23, 59, 59);
+                    }
+                    else if (i == 2)
+                    {
+                        if (hoy.Year % 4 == 0)
+                        {
+                            desde = new DateTime(hoy.Year, i, 01, 00, 00, 01);
+                            hasta = new DateTime(hoy.Year, i, 28, 23, 59, 59);
+                        }
+
+                        desde = new DateTime(hoy.Year, i, 01, 00, 00, 01);
+                        hasta = new DateTime(hoy.Year, i, 29, 23, 59, 59);
+                    }
+                    else
+                    {
+                        desde = new DateTime(hoy.Year, i, 01, 00, 00, 01);
+                        hasta = new DateTime(hoy.Year, i, 31, 23, 59, 59);
+
                     }
 
-                    desde = new DateTime(hoy.Year, i, 01, 00, 00, 01);
-                    hasta = new DateTime(hoy.Year, i, 29, 23, 59, 59);
-                }
-                else
-                {
-                    desde = new DateTime(hoy.Year, i, 01, 00, 00, 01);
-                    hasta = new DateTime(hoy.Year, i, 31, 23, 59, 59);
+                    AgregarEmpleadosAObraDTO(desde, hasta);
+                    ConseguirTodasLasMarcas(desde, hasta);
+
 
                 }
-
-                AgregarEmpleadosAObraDTO(desde, hasta);
-                ConseguirTodasLasMarcas(desde, hasta);
-
-
+                this.CambiarEstadoMetodo(false);
             }
+            
 
         }
 
+        private bool EstaEjecutandoMetodo()
+        {
+            return Context.Usuarios.Where(u => u.MetodoActivo).Any();
+        }
 
+        private void CambiarEstadoMetodo(bool estado)
+        {
+            List<Usuario> usuarios = Context.Usuarios.ToList();
+            foreach(Usuario usario in usuarios)
+            {
+                usario.MetodoActivo = estado;
+            }
+            Context.SaveChanges();
+        }
 
         private List<Usuario> GetUsuariosObra()
         {

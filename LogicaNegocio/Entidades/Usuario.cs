@@ -28,7 +28,7 @@ namespace LogicaNegocio.Entidades
         public int IntentosFallidos { get; set; }
         public bool UsuarioBloqueado { get; set; }
         public DateTime? TiempoDeBloqueo { get; set; }
-
+        public bool MetodoActivo { get; set; }
 
         public Usuario(string nombre, string nomUsuario, string pass)
         {
