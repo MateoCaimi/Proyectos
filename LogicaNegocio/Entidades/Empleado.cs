@@ -42,9 +42,19 @@ namespace LogicaNegocio.Entidades
             ValidarCi();
         }
 
+        private bool SoloDigitos(string str)
+        {
+            return str.All(c => c >= '0' && c <= '9');
+        }
+
         private void ValidarCi()
         {
-            Cedula = Cedula.Replace("-", "").Replace(" ", "");
+            if(this.Cedula.Length >= 9 || this.Cedula.Length <= 6)
+            {
+                throw new EmpleadoException("La cédula debe tener 7 u 8 carácteres.");
+            }
+            if(!this.SoloDigitos(this.Cedula)){ throw new EmpleadoException("La cédula solo puede contener digitos"); }
+            /*Cedula = Cedula.Replace("-", "").Replace(" ", "");
 
             // Verificar que tenga exactamente 8 dígitos
             if (Cedula.Length != 8)
@@ -90,7 +100,7 @@ namespace LogicaNegocio.Entidades
             if (calculado != digitoVerificador)
             {
                 throw new EmpleadoException("La CI no es valida");
-            }
+            }*/
 
         }
 
