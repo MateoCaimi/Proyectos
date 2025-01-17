@@ -1,0 +1,38 @@
+.section{
+margin-top: 5px;
+display: flex;
+background-color: orange;
+padding: 40px;
+}
+
+.form{
+width: 100%;
+color: rgb(255, 255, 255);
+
+}
+
+.select{
+display: inline-block;
+width: 35%;
+padding: 10px;
+border-radius: 15px;
+margin-right: 20px;
+}
+
+.input{
+    padding: 20px;
+
+}
+
+.button{
+    color: white;
+    background-color: black;
+    width: 150px;
+    border-radius: 30px;
+    border: none;
+}
+
+.label{
+    margin-right: 10px;
+    margin-bottom: 10px;
+}

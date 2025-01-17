@@ -1,0 +1,23 @@
+.contenedor{
+background-color: rgb(158, 155, 155);
+height: 150px;
+display: flex;
+align-items: center;
+}
+
+.ul{
+    list-style-type: none;
+    margin: 20px;
+    border-left: solid black 2px;
+    text-align: justify;
+    width: 50%;
+}
+
+.li{
+    margin-left: 300px;
+}
+
+.figure{
+    width: 50%;
+}
+    

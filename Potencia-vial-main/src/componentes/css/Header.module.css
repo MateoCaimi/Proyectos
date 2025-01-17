@@ -1,0 +1,25 @@
+.header{
+    display: flex;
+    justify-content: center;
+}
+
+.figure{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%; 
+    height: 200px;
+}
+
+.img{
+    height: 380px;
+    width: 50%;
+}
+
+.div{
+    width: 50%;
+}
+
+.section{
+    display: flex;
+}

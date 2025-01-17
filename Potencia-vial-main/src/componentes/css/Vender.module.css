@@ -1,0 +1,18 @@
+.contacto{
+width: 50%;
+justify-content: center;
+text-align: center;
+align-items: center;
+}
+
+.foto{
+    width: 50%;
+    text-align: center;
+}
+
+.contenedor{
+    margin: 20px 0 ;
+    align-items: center;
+    display: flex;
+    padding: 10px;
+}

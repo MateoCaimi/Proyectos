@@ -1,0 +1,28 @@
+.section {
+  background-image: url('../../imagenes/imageninicio.jpg');
+  width: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+  background-attachment: fixed;
+  height: 500px;
+}
+
+.h1 {
+  margin-top: 20px;
+  font-family: 'Titulo', sans-serif;
+}
+
+.p {
+  font-size: 20px;
+}
+
+@font-face {
+  font-family: 'Titulo';
+  src: url('../../fonts/BlackOpsOne-Regular.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
